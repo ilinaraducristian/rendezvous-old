@@ -1,0 +1,220 @@
+body {
+    margin: 0;
+    padding: 0;
+    /*color: white;*/
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: white;
+}
+
+.main {
+    position: absolute;
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.servers {
+    background-color: #202225;
+    width: 4rem;
+}
+
+.server-icon {
+    padding: 0.4rem 0.8rem;
+    cursor: pointer;
+}
+
+.channels-container {
+    display: flex;
+    flex-direction: column;
+    background-color: #2f3136;
+    width: 15rem;
+}
+
+.server-options-button {
+    color: white;
+    padding-top: 1rem;
+    padding-left: 1rem;
+
+}
+
+.server-options li {
+    margin-top: 0.6rem;
+    margin-bottom: 0.6rem;
+    cursor: pointer;
+}
+
+.transparent-button {
+    background-color: rgba(0, 0, 0, 0);
+    border-color: rgba(0, 0, 0, 0);
+    cursor: pointer;
+    text-align: start;
+}
+
+.server-options-dropdown {
+    position: absolute;
+    left: 5rem;
+    top: 2.5rem;
+    /*background-color: #2f3136;*/
+}
+
+.server-options {
+    background-color: #2f3136;
+}
+
+.channels-list {
+
+}
+
+.channel {
+    margin-top: 1rem;
+    margin-left: 2rem;
+    margin-right: 1rem;
+    cursor: pointer;
+    color: white;
+}
+
+.content {
+    background-color: #36393f;
+    flex-grow: 1;
+    word-wrap: break-word;
+    padding-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+    overflow-y: auto;
+    scrollbar-base-color: #36393f;
+}
+
+.message {
+    color: white;
+}
+
+.members {
+    background-color: #2f3136;
+    width: 15em;
+}
+
+.member {
+    padding-left: 2rem;
+    padding-top: 2rem;
+    color: white;
+}
+
+.overlay-container {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    position: absolute;
+    display: grid;
+    justify-items: center;
+    align-items: center;
+}
+
+#servername, #invitationcode {
+    max-width: 28rem;
+    margin-bottom: 2rem;
+}
+
+#createserver {
+    width: 10rem;
+    align-self: center;
+}
+
+.homepage-container {
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-rows: 2rem 1fr;
+    grid-template-areas:
+        "logo . open-app-button login-button"
+        "content content content content";
+}
+
+.logo {
+    grid-area: logo;
+    align-self: center;
+}
+
+.login-button {
+    grid-area: login-button;
+}
+
+.homepage-description {
+    grid-area: content;
+}
+
+.open-app-button {
+    margin-right: 3rem;
+    grid-area: open-app-button;
+}
+
+.overlay-holder {
+    display: flex;
+    flex-direction: column;
+    width: 25rem;
+    height: 30rem;
+    border-radius: 1rem;
+    background-color: #36393f;
+    color: white;
+}
+
+.overlay-close-button {
+    /*width: 3rem;*/
+    /*height: 3rem;*/
+    font-size: 3rem;
+    align-self: end;
+    color: white;
+    cursor: pointer;
+}
+
+.overlay-holder h1, h3 {
+    align-self: center;
+    margin: 0;
+}
+
+.overlay-holder h3 {
+    font-weight: normal;
+}
+
+.overlay-content-container {
+    display: grid;
+    flex-grow: 1;
+}
+
+.overlay-content-add-server {
+    background-color: #36393f;
+    /*width: 30rem;*/
+    /*height: 20rem;*/
+    display: grid;
+    /*flex-direction: column;*/
+    /*justify-content: flex-end;*/
+    padding: 3rem;
+    border-radius: 2rem;
+    grid-template-rows: repeat(6, 1fr);
+    grid-template-columns: 1fr 1fr;
+}
+
+.messages-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    background-color: #36393f;
+}
+
+.message-box {
+    display: flex;
+    flex-direction: column;
+}
+
+.message-box input {
+    width: 100%;
+}
+
+.message-box button {
+    /*background-color: ;*/
+    color: white;
+    align-self: end;
+}
