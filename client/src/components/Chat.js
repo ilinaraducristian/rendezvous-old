@@ -10,16 +10,17 @@ import CreateChannelOverlay from "./CreateChannelOverlay.js";
 import Backend from "../Backend";
 import Overlay from "./Overlay";
 import InvitationOverlay from "./InvitationOverlay";
+import {io} from "socket.io-client";
+import config from "../config.js";
+
+let socket;
 
 function Chat() {
 
     const {keycloak, initialized} = useKeycloak();
     Backend.keycloak = keycloak;
-    // TODO GET USERNAME:
-    let username;
-    // keycloak.profile or keycloak.userInfo
 
-    let socket, invitation;
+    let username = 'user1';
 
     const mockMessage1 = {
         timestamp: '13:45',
@@ -48,108 +49,75 @@ function Chat() {
     const mockServer = {
         id: 17,
         name: 'A nice server',
-        channels: new Map([[0, mockChannel]]),
-        members: new Map([[0, {username: 'user1', name: 'Display name'}]])
+        channels: new Map([[15, mockChannel]]),
+        members: new Map([[30, {username: 'user1', name: 'Display name'}]])
     };
 
-    // const [serversObject, setServersObject] = useState({servers: new Map([[0, mockServer]])});
+    // const [serversObject, setServersObject] = useState({servers: new Map([[17, mockServer]])});
     const [serversObject, setServersObject] = useState({servers: new Map()});
-    const [server, setServer] = useState({});
-    const [channel, setChannel] = useState({});
+    const [serverObject, setServerObject] = useState({});
+    const [channelObject, setChannelObject] = useState({});
     const [overlay, setOverlay] = useState({active: false});
 
-    useEffect(async () => {
-        if (initialized && !keycloak.authenticated) {
-            keycloak.login();
-        }
-        if (!initialized || !keycloak.authenticated) return;
-        const token = keycloak.token;
+    useEffect(() => {
+        async function _useEffect() {
+            if (initialized && !keycloak.authenticated) {
+                keycloak.login();
+            }
+            if (!initialized || !keycloak.authenticated) return;
+            await keycloak.loadUserProfile();
+            username = keycloak.profile.username;
 
-        const response = await Backend.getServers();
-        response.servers.forEach(server => {
-            server[1].channels.forEach(channel => {
-                channel[1].messages = new Map(channel[1].messages);
+            const token = keycloak.token;
+
+            const response = await Backend.getServers();
+            response.servers.forEach(server => {
+                server[1].channels.forEach(channel => {
+                    channel[1].messages = new Map(channel[1].messages);
+                });
+                server[1].channels = new Map(server[1].channels);
             });
-            server[1].channels = new Map(server[1].channels);
-        });
 
-        setServersObject({servers: new Map(response.servers)});
+            setServersObject({servers: new Map(response.servers)});
 
-        // socket = io(config.backend, {auth: {token}});
-        // socket.on('message_receivedd', onMessageReceived);
+            socket = io(config.backend, {
+                auth: {token}
+            });
+
+            socket.emit('join_servers', {servers: response.servers.map(server => server[0])});
+            console.log('useEffect()');
+        }
+
+        _useEffect();
+
     }, []);
 
     function onMessageReceived(payload) {
+        if (!(serversObject?.servers && channelObject?.channel && serverObject?.server)) return;
+        const id = channelObject.channel.id;
         serversObject
-            .servers.get(payload.server_id)
-            .channels.get(payload.channel_id)
-            .messages.set(payload.message.id, payload.text);
-        setServersObject({severs: serversObject.severs});
+            .servers.get(payload['server_id'])
+            .channels.get(payload['channel_id'])
+            .messages.set(payload['message']['id'], payload['message']);
+        setServersObject({servers: serversObject.servers});
+        setChannelObject({channel: serverObject.server.channels.get(id)});
     }
 
-    function deleteServer() {
-
-    }
-
-
-    function showInvitationOverlay() {
-        const overlay = {
-            title: 'Invite friends',
-            description: 'Share this invitation code with your friends'
-        };
-        Backend.createInvitation(server.id)
-            .then(response => {
-                overlay.content = (<InvitationOverlay invitation={response.invitation}/>);
-                setOverlay(overlay);
-            });
-    }
-
-    function createChannel(name) {
-        Backend.createChannel(server.id, name)
-            .then(response => {
-                const channel = serversObject.servers.get(server.id).channels.set(response.id, {
-                    id: response.id,
-                    name
-                });
-                setServersObject({servers: serversObject.servers});
-                setOverlay(false);
-                setChannel(channel);
-            });
-    }
-
-    function showNewChannelOverlay() {
-        setOverlay({
-            title: 'New channel',
-            description: 'Enter the channel name',
-            content: <CreateChannelOverlay onCreateChannel={createChannel}/>,
-            active: true
+    function onChannelCreated(payload) {
+        const server = serversObject.servers.get(payload['server_id']);
+        server.channels.set(payload['id'], {
+            id: payload['id'],
+            name: payload['channel_name'],
+            messages: new Map()
         });
+        setServersObject({servers: serversObject.servers});
+        setServerObject({server});
     }
 
-    function createServer(name) {
-        Backend.createServer(name)
-            .then((response) => {
-                serversObject.servers.set(response.id, {id: response.id, name});
-                setServersObject({servers: serversObject.servers});
-                setOverlay({active: false});
-            });
-    }
-
-    function joinServer(invitation) {
-        Backend.joinServer(invitation)
-            .then((response) => {
-                const server = response.server;
-                server.channels.forEach(channel => {
-                    channel[1].messages = new Map(channel[1].messages);
-                });
-                server.channels = new Map(server.channels);
-                serversObject.servers.set(server.id, server);
-                setServersObject({servers: serversObject.servers});
-                setChannel({});
-                setServer(server);
-                setOverlay({active: false});
-            });
-    }
+    useEffect(() => {
+        socket?.on('message_received', onMessageReceived);
+        socket?.on('channel_created', onChannelCreated);
+    }, [socket, serversObject, serverObject, channelObject]);
 
     function showAddServerOverlay() {
         setOverlay({
@@ -160,14 +128,91 @@ function Chat() {
         });
     }
 
-    function sendMessage(message) {
-        socket.emit('send_message', {
-            message, channel_id: channel.id, cb: ({status, timestamp}) => {
-                console.log(status); // ok or not
-                // if ok display message
-                channel.messages.push({sender: username, message, timestamp});
-            }
+    function createServer(name) {
+        Backend.createServer(socket.id, name)
+            .then((response) => {
+                serversObject.servers.set(response.id, {id: response.id, name, channels: new Map()});
+                setServersObject({servers: serversObject.servers});
+                setOverlay({active: false});
+            });
+    }
+
+    function joinServer(invitation) {
+        Backend.joinServer(socket.id, invitation)
+            .then((response) => {
+                const server = response.server;
+                server.channels.forEach(channel => {
+                    channel[1].messages = new Map(channel[1].messages);
+                });
+                server.channels = new Map(server.channels);
+                serversObject.servers.set(server.id, server);
+                setServersObject({servers: serversObject.servers});
+                setChannelObject({});
+                setServerObject({server});
+                setOverlay({active: false});
+            });
+    }
+
+    function showCreateChannelOverlay() {
+        setOverlay({
+            title: 'New channel',
+            description: 'Enter the channel name',
+            content: <CreateChannelOverlay onCreateChannel={createChannel}/>,
+            active: true
         });
+    }
+
+    function createChannel(name) {
+        Backend.createChannel(socket.id, serverObject.server?.id, name)
+            .then(response => {
+                const channel = {
+                    id: response.id,
+                    name,
+                    messages: new Map()
+                };
+                serversObject.servers.get(serverObject.server?.id).channels.set(response.id, channel);
+                setServersObject({servers: serversObject.servers});
+                // setServerObject({server: serversObject.servers.get(serverObject.server?.id)});
+                setChannelObject({channel});
+                setOverlay(false);
+            });
+    }
+
+    function showInvitationOverlay() {
+        const overlay = {
+            active: true,
+            title: 'Invite friends',
+            description: 'Share this invitation code with your friends'
+        };
+        Backend.createInvitation(serverObject.server?.id)
+            .then(response => {
+                overlay.content = <InvitationOverlay invitation={response.invitation}/>;
+                setOverlay(overlay);
+            });
+    }
+
+    function deleteServer() {
+
+    }
+
+    function sendMessage(text) {
+        socket.emit('send_message', {
+                server_id: serverObject.server.id,
+                channel_id: channelObject.channel.id,
+                text
+            },
+            (payload) => {
+                serversObject.servers.get(serverObject.server.id)
+                    .channels.get(channelObject.channel.id)
+                    .messages.set(payload.id, {
+                    sender: username,
+                    text,
+                    timestamp: payload['timestamp']
+                });
+                setServersObject({servers: serversObject.servers});
+                setChannelObject({channel: channelObject.channel});
+            }
+        );
     }
 
     if (!keycloak?.authenticated) return (<Loading/>);
@@ -178,28 +223,30 @@ function Chat() {
                 servers={serversObject.servers}
                 onAddServer={showAddServerOverlay}
                 onSelectServer={id => {
-                    setChannel({});
-                    setServer(serversObject.servers.get(id));
+                    setChannelObject({});
+                    setServerObject({server: serversObject.servers.get(id)});
                 }}
             />
 
             <ChannelsPanel
-                channels={server.channels}
-                serverName={server.name}
-                onSelectChannel={id => setChannel(server.channels.get(id))}
-                onCreateChannel={showNewChannelOverlay}
+                channels={serverObject.server?.channels}
+                serverName={serverObject.server?.name}
+                onSelectChannel={id => {
+                    setChannelObject({channel: serverObject.server.channels.get(id)});
+                }}
+                onCreateChannel={showCreateChannelOverlay}
                 onCreateInvitation={showInvitationOverlay}
                 onDeleteServer={id => {
                 }}
             />
 
             <MessagesPanel
-                messages={channel.messages}
+                messages={channelObject.channel?.messages}
                 onSendMessage={sendMessage}
             />
 
             <MembersPanel
-                members={server.members}
+                members={serverObject.server?.members}
             />
 
         </div>

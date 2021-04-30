@@ -13,14 +13,14 @@ CREATE DATABASE `capp`;
 CREATE TABLE `capp`.`servers`
 (
     `id`      int PRIMARY KEY AUTO_INCREMENT,
-    `user_id` char(36),
+    `user_id` char(36)     NOT NULL,
     `name`    varchar(255) NOT NULL
 );
 
 CREATE TABLE `capp`.`invitations`
 (
     `id`              int PRIMARY KEY AUTO_INCREMENT,
-    `server_id`       int,
+    `server_id`       int          NOT NULL,
     `invitation`      varchar(255) NOT NULL,
     `expiration_date` datetime     NOT NULL
 );
@@ -28,26 +28,25 @@ CREATE TABLE `capp`.`invitations`
 CREATE TABLE `capp`.`members`
 (
     `id`        int PRIMARY KEY AUTO_INCREMENT,
-    `user_id`   char(36),
-    `server_id` int
+    `user_id`   char(36) NOT NULL,
+    `server_id` int      NOT NULL
 );
 
 CREATE TABLE `capp`.`channels`
 (
     `id`        int PRIMARY KEY AUTO_INCREMENT,
-    `server_id` int,
-    `name`      varchar(255)
+    `server_id` int          NOT NULL,
+    `name`      varchar(255) NOT NULL
 );
 
 CREATE TABLE `capp`.`messages`
 (
     `id`         int PRIMARY KEY AUTO_INCREMENT,
-    `user_id`    char(36),
-    `channel_id` int,
-    `text`       varchar(255)
+    `user_id`    char(36)     NOT NULL,
+    `channel_id` int          NOT NULL,
+    `timestamp`  datetime     NOT NULL,
+    `text`       varchar(255) NOT NULL
 );
-
-
 
 ALTER TABLE `capp`.`members`
     ADD UNIQUE `member_index` (`user_id`, `server_id`);
@@ -74,57 +73,3 @@ ALTER TABLE `capp`.`messages`
 
 ALTER TABLE `capp`.`messages`
     ADD FOREIGN KEY (`channel_id`) REFERENCES `capp`.`channels` (`id`);
-
-
-# SELECT *
-# FROM `capp`.`invitations`
-# WHERE invitation = 'cad05176-b37f-4354-ad20-797d2f638f5d';
-#
-# SELECT s.`id`      AS `server_id`,
-#        s.`name`    AS `server_name`,
-#        c.`id`      AS `channel_id`,
-#        c.`name`    AS `channel_name`,
-#        m.`id`      AS `message_id`,
-#        m.`user_id` AS `sender`,
-#        m.`text`    AS `message`
-# FROM `capp`.`servers` s
-#          JOIN `capp`.`members` on `s`.id = `members`.`server_id`
-#          LEFT JOIN `capp`.`channels` c ON s.id = c.server_id
-#          LEFT JOIN `capp`.`messages` m ON m.channel_id = c.id
-# WHERE `members`.`user_id` = '509652db-483c-4328-85b1-120573723b3a'
-# ORDER BY `server_id`, `channel_id`;
-#
-# SELECT s.`id`      AS `server_id`,
-#        s.`name`    AS `server_name`,
-#        c.`id`      AS `channel_id`,
-#        c.`name`    AS `channel_name`,
-#        m.`id`      AS `message_id`,
-#        m.`user_id` AS `sender`,
-#        m.`text`    AS `message`
-# FROM `capp`.`servers` s
-#          LEFT JOIN `capp`.`channels` c ON s.id = c.server_id
-#          LEFT JOIN `capp`.`messages` m ON m.channel_id = c.id
-# WHERE s.id = 1;
-#
-# SELECT s.`id`         AS `server_id`,
-#        s.`name`       AS `server_name`,
-#        c.`id`         AS `channel_id`,
-#        c.`name`       AS `channel_name`,
-#        m.`channel_id` AS `message_channel`,
-#        m.`user_id`    AS `sender`,
-#        m.`text`       AS `message`
-# FROM `capp`.`servers` s
-#          LEFT JOIN `capp`.`channels` c ON s.id = c.server_id
-#          LEFT JOIN `capp`.`messages` m ON m.channel_id = c.id
-# WHERE s.id = 1;
-#
-# INSERT INTO `capp`.`servers` (user_id, name)
-# VALUES ('509652db-483c-4328-85b1-120573723b3a', 'root@localhost');
-#
-# INSERT INTO `capp`.`members` (user_id, server_id)
-# VALUES ('509652db-483c-4328-85b1-120573723b3a', 1);
-# INSERT INTO `capp`.`channels` (server_id, name)
-# VALUES (1, 'vc');
-#
-# INSERT INTO `capp`.`messages` (user_id, channel_id, text)
-# VALUES ('509652db-483c-4328-85b1-120573723b3a', 1, 'Alt mesaj');

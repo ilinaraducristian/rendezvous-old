@@ -4,31 +4,24 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {ReactKeycloakProvider} from '@react-keycloak/web';
 import keycloak from './keycloak';
-import Loading from "./components/Loading";
-import {BrowserRouter, Route, Switch} from "react-router-dom";
-import Chat from "./components/Chat";
-import Homepage from "./components/Homepage";
+import {BrowserRouter, Switch} from "react-router-dom";
+import routes from "./routes.js";
 
 function onEvent(event) {
-    console.log('keycloak event:');
-    console.log(event);
+    // console.log('keycloak event:');
+    // console.log(event);
 }
 
 ReactDOM.render(
     <React.StrictMode>
         <ReactKeycloakProvider
             authClient={keycloak}
-            LoadingComponent={<Loading/>}
+            // LoadingComponent={<Loading/>}
             onEvent={onEvent}
         >
             <BrowserRouter>
                 <Switch>
-                    <Route path="/chat">
-                        <Chat/>
-                    </Route>
-                    <Route path="/">
-                        <Homepage/>
-                    </Route>
+                    {routes}
                 </Switch>
             </BrowserRouter>
         </ReactKeycloakProvider>

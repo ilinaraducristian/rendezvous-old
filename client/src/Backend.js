@@ -17,26 +17,26 @@ const Backend = {
             .then(response => response.json());
     },
 
-    createServer: function (name) {
+    createServer: function (socketId, name) {
         return fetch(`${config.backend}/servers`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 ...tokenHeader()
             },
-            body: JSON.stringify({name})
+            body: JSON.stringify({socket_id: socketId, name})
         })
             .then(response => response.json());
     },
 
-    createChannel: function (serverId, name) {
+    createChannel: function (socketId, serverId, name) {
         return fetch(`${config.backend}/servers/${serverId}/channels`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 ...tokenHeader()
             },
-            body: JSON.stringify({channel_name: name})
+            body: JSON.stringify({socket_id: socketId, channel_name: name})
         })
             .then(response => response.json());
     },
@@ -53,14 +53,14 @@ const Backend = {
             .then(response => response.json());
     },
 
-    joinServer: function (invitation) {
+    joinServer: function (socketId, invitation) {
         return fetch(`${config.backend}/joinserver`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 ...tokenHeader(),
             },
-            body: JSON.stringify({invitation})
+            body: JSON.stringify({socket_id: socketId, invitation})
         })
             .then(response => response.json());
     }

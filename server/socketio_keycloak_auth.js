@@ -1,19 +1,23 @@
-function socketioKeycloakAuth(options) {
+import fetch from "node-fetch";
 
+function socketioKeycloakAuth(options) {
     return (socket, next) => {
         const token = socket.handshake.auth.token;
-        fetch(options.token_introspection_endpoint, {
+        fetch(options.tokenIntrospectionEndpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
             },
-            body: `token=${token}&client_id=${options.client_id}&client_secret=${options.client_secret}`
+            body: `token=${token}&client_id=${options.clientId}&client_secret=${options.clientSecret}`
         })
             .then(response => response.json())
             .then(response => {
-                if (!response.active) return next(new Error('Invalid token'));
+                if (!response.active) {
+                    console.log('invalid token');
+                    return next(new Error('Invalid token'));
+                }
                 socket.handshake.auth.username = response.username;
-                socket.handshake.auth.user_id = response.sub;
+                socket.handshake.auth.userId = response.sub;
                 next();
             })
             .catch(err => {
