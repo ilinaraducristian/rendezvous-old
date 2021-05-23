@@ -1,6 +1,6 @@
 window.addEventListener('load', onLoad);
 
-const socket = io('https://localhost:3000');
+let socket;
 
 const servers = {
     iceServers: [
@@ -11,35 +11,67 @@ const servers = {
     iceCandidatePoolSize: 10,
 };
 
-const pcs = new Map();
-let localStream;
-let streams;
+const peers = new Map();
+let localStream, streams;
+let token, message;
+let loginButton, joinVCButton, sendMessageButton;
 
 async function onLoad() {
 
-    localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
+    // localStream = await navigator.mediaDevices.getUserMedia({video: true, audio: true});
 
     streams = document.querySelector('#streams');
+    token = document.querySelector('#token');
+    loginButton = document.querySelector('#login');
+    joinVCButton = document.querySelector('#joinVC');
+    sendMessageButton = document.querySelector('#sendMessage');
+    message = document.querySelector('#message');
+
+    loginButton.addEventListener('click', login);
+    joinVCButton.addEventListener('click', () => {
+        socket.emit("call_me");
+    });
+
+    sendMessageButton.addEventListener('click', sendMessage);
+
+}
+
+async function login() {
+    socket = io('https://localhost:3000', {
+        auth: {
+            token: token.value
+        }
+    });
+
+    socket.on('connect_error', err => {
+        console.log(err);
+    });
 
     socket.on('connect', socketOnConnect);
     socket.on('disconnect', socketOnDisconnect);
 
+    socket.on('message_received', messageReceived);
+
+    // voice/video channel
     socket.on('create_offering', createOffering);
     socket.on('offer_created', offerCreated);
     socket.on('answer_created', answerCreated);
-
-
 }
 
-async function socketOnConnect() {
-    socket.emit('call_me');
+async function sendMessage() {
+    socket.emit('send_message', {message: message.value});
+}
+
+async function messageReceived(payload) {
+    console.log("Message received from " + payload.username);
+    console.log(payload.message)
 }
 
 async function createOffering(payload) {
     const initiator = payload.initiator;
     const pc = new RTCPeerConnection(servers);
     const remoteStream = new MediaStream();
-    pcs.set(initiator, {pc, remoteStream});
+    peers.set(initiator, {pc, remoteStream});
     createVideo(remoteStream);
     console.log('ok');
     localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
@@ -75,10 +107,10 @@ async function createOffering(payload) {
 
 async function offerCreated(payload) {
     if (payload.initiator !== socket.id) return;
-    const caller_id = payload.caller_id;
+    const caller = payload.caller;
     const pc = new RTCPeerConnection(servers);
     const remoteStream = new MediaStream();
-    pcs.set(caller_id, {pc, remoteStream});
+    peers.set(caller, {pc, remoteStream});
     createVideo(remoteStream);
 
     localStream.getTracks().forEach(track => pc.addTrack(track, localStream));
@@ -116,8 +148,8 @@ async function offerCreated(payload) {
 }
 
 async function answerCreated(payload) {
-    if (payload.caller_id !== socket.id) return;
-    const pc_data = pcs.get(payload.initiator);
+    if (payload.caller !== socket.id) return;
+    const pc_data = peers.get(payload.initiator);
     const pc = pc_data.pc;
     if (!pc.currentRemoteDescription && payload.answer) {
         const answerDescription = new RTCSessionDescription(payload.answer);
@@ -134,6 +166,9 @@ function createVideo(stream) {
     video.setAttribute('playsinline', '');
     video.srcObject = stream;
     streams.appendChild(video);
+}
+
+async function socketOnConnect() {
 }
 
 async function socketOnDisconnect() {

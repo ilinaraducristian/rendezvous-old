@@ -7,11 +7,9 @@ const MemberModel = {
                            SELECT 1
                            FROM members
                            WHERE user_id = '${userId}'
-                             AND server_id IN (${serverIds}))
-        `)
-            .then(result =>
-                result[0][0][result[1][0]['name']] === 1
-            );
+                             AND server_id IN (${serverIds})
+                       )
+        `).then(result => result[0][0][result[1][0]['name']] === 1);
     },
 
     findOneByUserIdAndServerId: function (userId, serverId) {
