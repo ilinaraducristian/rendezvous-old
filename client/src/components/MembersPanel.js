@@ -1,7 +1,11 @@
 import React from "react";
 
 function MembersPanel({members}) {
-    const elements = [];
+    const elements = [
+        (<li className="member-container">
+
+        </li>)
+    ];
     members?.forEach((member, id) => {
         elements.push(
             <li key={`member_${id}`} className="member">
@@ -10,7 +14,7 @@ function MembersPanel({members}) {
         );
     });
     return (
-        <ul className="members" id="members">
+        <ul id="members-panel">
             {elements}
         </ul>
     );

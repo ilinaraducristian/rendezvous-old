@@ -1,25 +1,18 @@
-import AddIcon from "../add.svg";
 import React from "react";
-import ServerPlaceholderIcon from "../server-placeholder-icon.svg";
+import AddServerSVG from "../assets/addServerSVG.js";
 
 function ServersPanel({servers, onSelectServer: selectServer, onAddServer: addServer}) {
-    const elements = [];
-    servers?.forEach((server, key) =>
-        elements.push(<li key={`server_${key}`}>
-            <img
-                src={server.icon || ServerPlaceholderIcon}
-                alt={server.name}
-                title={server.name}
-                className="server-icon"
-                onClick={() => selectServer(key)}
-            />
-        </li>)
-    );
     return (
-        <ul className="servers" id="servers">
-            {elements}
-            <li>
-                <img src={AddIcon} onClick={addServer} alt="Add server" className="server-icon"/>
+        <ul className="ul--servers-panel">
+            {
+                servers.map(server =>
+                    <li key={`server_${server.id}`} className="li--server-icon" onClick={() => selectServer(server.id)}>
+                        <button className="button--universal">{server.name[0]}</button>
+                    </li>
+                )
+            }
+            <li className="li--server-icon" onClick={addServer}>
+                <AddServerSVG/>
             </li>
         </ul>
     );

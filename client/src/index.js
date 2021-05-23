@@ -9,7 +9,7 @@ import routes from "./routes.js";
 
 function onEvent(event) {
     // console.log('keycloak event:');
-    // console.log(event);
+    console.log(event);
 }
 
 ReactDOM.render(
@@ -30,3 +30,5 @@ ReactDOM.render(
 );
 
 reportWebVitals();
+
+// <div>Icons made by <a href="" title="Kiranshastry">Kiranshastry</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
