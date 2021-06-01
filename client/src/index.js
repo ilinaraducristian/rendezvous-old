@@ -6,6 +6,7 @@ import {ReactKeycloakProvider} from '@react-keycloak/web';
 import keycloak from './keycloak';
 import {BrowserRouter, Switch} from "react-router-dom";
 import routes from "./routes.js";
+import {SortedMap} from "./SortedMap.js";
 
 function onEvent(event) {
     // console.log('keycloak event:');

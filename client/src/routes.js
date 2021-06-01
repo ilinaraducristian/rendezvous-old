@@ -1,10 +1,10 @@
 import {Route} from "react-router-dom";
-import Chat from "./components/Chat.js";
+import App from "./components/App.js";
 import Homepage from "./components/Homepage.js";
 
 const routes = [
     <Route path="/chat" key={"path_chat"}>
-        <Chat/>
+        <App/>
     </Route>,
     <Route path="/" key={"path_home"}>
         <Homepage/>
