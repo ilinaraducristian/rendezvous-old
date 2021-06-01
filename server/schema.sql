@@ -14,9 +14,15 @@ CREATE TABLE USER_ENTITY
 
 CREATE TABLE servers
 (
-    id      int PRIMARY KEY AUTO_INCREMENT,
-    name    varchar(255) NOT NULL,
-    user_id char(36)     NOT NULL REFERENCES USER_ENTITY (id) COMMENT 'owner'
+    id             int PRIMARY KEY AUTO_INCREMENT,
+    name           varchar(255) NOT NULL,
+    user_id        char(36)     NOT NULL REFERENCES USER_ENTITY (id) COMMENT 'owner',
+    invitation     char(36),
+    invitation_exp datetime,
+    CHECK (
+            (invitation IS NULL AND invitation_exp IS NULL) OR
+            (invitation IS NOT NULL AND invitation_exp IS NOT NULL)
+        )
 );
 
 CREATE TABLE `groups`
@@ -59,7 +65,7 @@ CREATE TABLE messages
 CREATE UNIQUE INDEX unique_member
     ON members (server_id, user_id);
 
-CREATE TRIGGER insert_server
+CREATE TRIGGER before_insert_server
     BEFORE INSERT
     ON servers
     FOR EACH ROW
@@ -70,7 +76,7 @@ BEGIN
     END IF;
 END;
 
-CREATE TRIGGER new_server
+CREATE TRIGGER after_insert_server
     AFTER INSERT
     ON servers
     FOR EACH ROW
@@ -127,7 +133,6 @@ CREATE TRIGGER insert_message
     ON messages
     FOR EACH ROW
 BEGIN
-    SET @TYPE = null;
     SELECT type INTO @TYPE FROM channels WHERE NEW.channel_id = id;
     IF (@TYPE IS NULL) THEN
         SIGNAL SQLSTATE '45000'
@@ -157,8 +162,8 @@ SELECT s.id       AS server_id,
        m.user_id  AS member_uid,
        m.order    AS server_order
 FROM servers s
+         LEFT JOIN channels c ON s.id = c.server_id
          LEFT JOIN `groups` g ON s.id = g.server_id
-         LEFT JOIN channels c ON ((c.group_id IS NOT NULL AND g.id = c.group_id) XOR (s.id = c.server_id))
          LEFT JOIN members m ON s.id = m.server_id;
 
 CREATE PROCEDURE get_server_data(sid int, uid char(36))
@@ -172,17 +177,97 @@ BEGIN
     SELECT * FROM get_server_data WHERE server_id = sid;
 END;
 
+CREATE FUNCTION create_invitation(sid int, uid char(36)) RETURNS char(36)
+BEGIN
+    SELECT s.invitation, s.invitation_exp, m.user_id
+    INTO @INVITATION, @INVITATION_EXP, @mid
+    FROM servers s
+             LEFT JOIN members m ON s.id = m.server_id AND uid = m.user_id
+    WHERE sid = s.id;
+    IF (@mid IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User is not a member of this server';
+    END IF;
+    IF (@INVITATION IS NOT NULL AND @INVITATION_EXP > NOW()) THEN
+        RETURN @INVITATION;
+    END IF;
+    SET @INVITATION = UUID();
+    UPDATE servers s SET invitation = @INVITATION, invitation_exp = DATE_ADD(NOW(), INTERVAL 7 DAY) WHERE sid = s.id;
+    RETURN @INVITATION;
+END;
+
+CREATE PROCEDURE join_server(invitation char(36), uid char(36))
+BEGIN
+    SELECT s.id, s.invitation, s.invitation_exp, m.user_id
+    INTO @SID, @INVITATION, @INVITATION_EXP, @mid
+    FROM servers s
+             LEFT JOIN members m ON s.id = m.server_id AND uid = m.user_id
+    WHERE invitation = s.invitation;
+    IF (@INVITATION IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Bad invitation';
+    END IF;
+    IF (@mid IS NOT NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User already a member of this server';
+    END IF;
+    IF (@INVITATION_EXP < NOW()) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Invitation expired';
+    END IF;
+    SELECT * FROM get_server_data WHERE server_id = @SID;
+END;
+
+CREATE FUNCTION send_message(cid int, uid char(36), txt varchar(255)) RETURNS int
+BEGIN
+    SELECT m.id
+    INTO @ID
+    FROM members m
+             JOIN servers s on m.server_id = s.id
+    WHERE m.user_id = uid;
+    IF (@ID IS NOT NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User is not a member of this server';
+    END IF;
+    INSERT INTO messages (channel_id, user_id, text) VALUES (cid, uid, txt);
+
+    RETURN LAST_INSERT_ID();
+
+END;
+
+CREATE FUNCTION create_channel(sid int, gid int, typ ENUM ('text', 'voice'), nam varchar(255), uid char(36)) RETURNS int
+BEGIN
+    SELECT id INTO @ID from members m WHERE uid = m.user_id AND sid = m.server_id;
+    IF (@ID IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User is not a member of this server';
+    END IF;
+    INSERT INTO channels (server_id, group_id, type, name) VALUES (sid, gid, typ, nam);
+    RETURN LAST_INSERT_ID();
+END;
+
+CREATE FUNCTION create_group(sid int, nam varchar(255), uid char(36)) RETURNS int
+BEGIN
+    SELECT id INTO @ID from members m WHERE uid = m.user_id AND sid = m.server_id;
+    IF (@ID IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User is not a member of this server';
+    END IF;
+    INSERT INTO `groups` (server_id, name) VALUES (sid, nam);
+    RETURN LAST_INSERT_ID();
+END;
+
 CREATE PROCEDURE get_messages(cid int, uid char(36), offset int)
 BEGIN
-    SET @id = NULL;
+    SET @ID = NULL;
 
     SELECT m.id
-    INTO @id
+    INTO @ID
     FROM members m
              JOIN servers s ON m.server_id = s.id
              JOIN channels c ON cid = c.id
     WHERE m.user_id = uid;
-    IF (@id IS NULL) THEN
+    IF (@ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
