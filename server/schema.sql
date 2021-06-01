@@ -168,9 +168,9 @@ FROM servers s
 
 CREATE PROCEDURE get_server_data(sid int, uid char(36))
 BEGIN
-    SET @id = NULL;
-    SELECT id INTO @id FROM members WHERE server_id = sid AND user_id = uid;
-    IF (@id IS NULL) THEN
+    SET @MEMBER_ID = NULL;
+    SELECT id INTO @MEMBER_ID FROM members WHERE server_id = sid AND user_id = uid;
+    IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
@@ -218,27 +218,27 @@ BEGIN
     SELECT * FROM get_server_data WHERE server_id = @SID;
 END;
 
-CREATE FUNCTION send_message(cid int, uid char(36), txt varchar(255)) RETURNS int
+CREATE PROCEDURE send_message(cid int, txt varchar(255), uid char(36))
 BEGIN
-    SELECT m.id
-    INTO @ID
+    SELECT m.id, s.id
+    INTO @MEMBER_ID, @SERVER_ID
     FROM members m
              JOIN servers s on m.server_id = s.id
     WHERE m.user_id = uid;
-    IF (@ID IS NOT NULL) THEN
+    IF (@MEMBER_ID IS NOT NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
     INSERT INTO messages (channel_id, user_id, text) VALUES (cid, uid, txt);
 
-    RETURN LAST_INSERT_ID();
+    SELECT m.id AS message_id, @SERVER_ID AS server_id, timestamp FROM messages m WHERE LAST_INSERT_ID() = m.id;
 
 END;
 
 CREATE FUNCTION create_channel(sid int, gid int, typ ENUM ('text', 'voice'), nam varchar(255), uid char(36)) RETURNS int
 BEGIN
-    SELECT id INTO @ID from members m WHERE uid = m.user_id AND sid = m.server_id;
-    IF (@ID IS NULL) THEN
+    SELECT id INTO @MEMBER_ID from members m WHERE uid = m.user_id AND sid = m.server_id;
+    IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
@@ -248,8 +248,8 @@ END;
 
 CREATE FUNCTION create_group(sid int, nam varchar(255), uid char(36)) RETURNS int
 BEGIN
-    SELECT id INTO @ID from members m WHERE uid = m.user_id AND sid = m.server_id;
-    IF (@ID IS NULL) THEN
+    SELECT id INTO @MEMBER_ID from members m WHERE uid = m.user_id AND sid = m.server_id;
+    IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
@@ -259,15 +259,15 @@ END;
 
 CREATE PROCEDURE get_messages(cid int, uid char(36), offset int)
 BEGIN
-    SET @ID = NULL;
+    SET @MEMBER_ID = NULL;
 
     SELECT m.id
-    INTO @ID
+    INTO @MEMBER_ID
     FROM members m
              JOIN servers s ON m.server_id = s.id
              JOIN channels c ON cid = c.id
     WHERE m.user_id = uid;
-    IF (@ID IS NULL) THEN
+    IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
