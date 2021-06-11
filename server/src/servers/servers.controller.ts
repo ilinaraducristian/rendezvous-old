@@ -2,11 +2,16 @@ import { Body, Controller, Get, Param, Post } from "@nestjs/common";
 import { AppService } from "../app.service";
 import { AuthenticatedUser } from "nest-keycloak-connect";
 import { Server } from "socket.io";
+import { WebSocketServer } from "@nestjs/websockets";
+import User from "../User";
 
 @Controller("servers")
 export class ServersController {
 
-  constructor(private readonly appService: AppService, private readonly server: Server) {
+  @WebSocketServer()
+  server: Server;
+
+  constructor(private readonly appService: AppService) {
   }
 
   @Post()
@@ -22,13 +27,13 @@ export class ServersController {
     @AuthenticatedUser() user: any,
     @Param("id") sid: number
   ): Promise<string> {
-    return this.appService.getServerData(sid, user.sub);
+    return this.appService.getServerData(user.sub, sid);
   }
 
   @Get()
   async getServers(
-    @AuthenticatedUser() user: any
-  ): Promise<string> {
+    @AuthenticatedUser() user: User
+  ): Promise<any[]> {
     return this.appService.getServersData(user.sub);
   }
 
@@ -37,7 +42,7 @@ export class ServersController {
     @AuthenticatedUser() user: any,
     @Param("id") sid: number
   ): Promise<string> {
-    return this.appService.createInvitation(sid, user.sub);
+    return this.appService.createInvitation(user.sub, sid);
   }
 
   @Post(":id/invitations/:invitation")
@@ -46,8 +51,8 @@ export class ServersController {
     @Param("invitation") invitation: string,
     @Body() socket: any
   ): Promise<string> {
-    const result = await this.appService.joinServer(invitation, user.sub);
-    this.server.sockets.sockets.get(socket.socket_id).join(`server_${result.server_id}`)
+    const result = await this.appService.joinServer(user.sub, invitation);
+    this.server.sockets.sockets.get(socket.socket_id).join(`server_${result.server_id}`);
     return result;
   }
 

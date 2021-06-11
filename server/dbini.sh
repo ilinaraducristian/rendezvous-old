@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-/bin/mysql -hpercona -uroot -proot < /tmp/schema.sql
+MYSQL_PWD=root /bin/mysql -hdb -uroot < /tmp/schema.sql

@@ -4,7 +4,7 @@ services:
     image: quay.io/keycloak/keycloak:12.0.4
     environment:
       - DB_VENDOR=MYSQL
-      - DB_ADDR=percona
+      - DB_ADDR=db
       - DB_DATABASE=keycloak
       - DB_USER=root
       - DB_PASSWORD=root
@@ -15,7 +15,7 @@ services:
       - "./CAPP.json:/tmp/CAPP.json"
     ports:
       - "8180:8080"
-  percona:
+  db:
     image: percona:8
     environment:
       - MYSQL_ROOT_PASSWORD=root

@@ -1,19 +1,15 @@
 import { INestApplicationContext } from "@nestjs/common";
 import { isFunction, isNil } from "@nestjs/common/utils/shared.utils";
-import {
-  AbstractWsAdapter,
-  MessageMappingProperties
-} from "@nestjs/websockets";
+import { AbstractWsAdapter, MessageMappingProperties } from "@nestjs/websockets";
 import { DISCONNECT_EVENT } from "@nestjs/websockets/constants";
 import { fromEvent, Observable } from "rxjs";
 import { filter, first, map, mergeMap, share, takeUntil } from "rxjs/operators";
 import { Server } from "socket.io";
-import config from "./config";
 
 export class SocketIoAdapter extends AbstractWsAdapter {
   constructor(
     appOrHttpServer?: INestApplicationContext | any,
-    private readonly corsOrigins = []
+    private readonly corsOrigins: any[] | boolean = []
   ) {
     super(appOrHttpServer);
   }
@@ -54,11 +50,11 @@ export class SocketIoAdapter extends AbstractWsAdapter {
     } else {
       server = new Server(port, options);
     }
-    server.use(this.socketIOKeycloakAuth({
-      tokenIntrospectionEndpoint: config.keycloak.tokenIntrospectionEndpoint,
-      clientId: config.keycloak.clientId,
-      secret: config.keycloak.secret
-    }));
+    // server.use(this.socketIOKeycloakAuth({
+    //   tokenIntrospectionEndpoint: config.keycloak.tokenIntrospectionEndpoint,
+    //   clientId: config.keycloak.clientId,
+    //   secret: config.keycloak.secret
+    // }));
     return server;
   }
 

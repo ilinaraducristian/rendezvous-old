@@ -1,0 +1,29 @@
+import React from "react";
+import ReactDOM from "react-dom";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import {ReactKeycloakProvider} from "@react-keycloak/web";
+import config from "./config";
+import App from "./components/app/App";
+
+function onEvent(event: any) {
+
+}
+
+ReactDOM.render(
+    <React.StrictMode>
+      <ReactKeycloakProvider
+          authClient={config.keycloakInstance}
+          // LoadingComponent={<Loading/>}
+          onEvent={onEvent}
+      >
+        <App/>
+      </ReactKeycloakProvider>
+    </React.StrictMode>,
+    document.getElementById("root")
+);
+
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
