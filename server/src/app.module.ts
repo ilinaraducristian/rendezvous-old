@@ -4,7 +4,7 @@ import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthGuard, KeycloakConnectModule, ResourceGuard, RoleGuard } from "nest-keycloak-connect";
 import { APP_GUARD } from "@nestjs/core";
-import { Server } from "./entities/server.entity";
+import { ServerEntity } from "./entities/server.entity";
 import { MessagesController } from "./message/messages.controller";
 import { SocketIOGateway } from "./socketio.gateway";
 import { ChannelsController } from "./channels/channels.controller";
@@ -19,7 +19,7 @@ import config from "./config";
     //       autoLoadEntities: true,
     //     }),
     // })
-    TypeOrmModule.forFeature([Server]),
+    TypeOrmModule.forFeature([ServerEntity]),
     KeycloakConnectModule.register({
       authServerUrl: config.keycloak.authServerUrl,
       realm: config.keycloak.realm,

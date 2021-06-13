@@ -22,6 +22,7 @@ class SortedMap<V = any> extends Map<number, V> {
     if (this.sortedKeys === undefined) return this;
     if (this.sortedKeys.findIndex(val => val === key) === -1) {
       this.sortedKeys.push(key);
+      this.sortedKeys.sort();
     }
     super.set(key, value);
     this._size = this.sortedKeys.length;
@@ -72,7 +73,6 @@ class SortedMap<V = any> extends Map<number, V> {
   // }
 
   toArray<T = any>(mappingfn?: (value: V, index: number, map: Map<number, V>, key: number) => T): (V | T)[] {
-    this.sortedKeys.sort();
     return this.sortedKeys.map((key, index) => {
       const val = super.get(key);
       if (val === undefined) throw new Error("Value cannot be undefined");
@@ -80,6 +80,17 @@ class SortedMap<V = any> extends Map<number, V> {
         return mappingfn(val, index, this, key);
       else return val;
     });
+  }
+
+  toArrayLikeMap(): ([number, any])[] {
+    return this.sortedKeys.map(key => {
+      const value = super.get(key);
+      if (value instanceof SortedMap) {
+        return [key, value.toArrayLikeMap()];
+      }
+      return [key, value];
+    });
+
   }
 
 }

@@ -4,6 +4,7 @@ import { AuthenticatedUser } from "nest-keycloak-connect";
 import { Server } from "socket.io";
 import { WebSocketServer } from "@nestjs/websockets";
 import User from "../User";
+import NewServer from "../models/NewServer";
 
 @Controller("servers")
 export class ServersController {
@@ -18,23 +19,15 @@ export class ServersController {
   async createServer(
     @AuthenticatedUser() user: any,
     @Body() server: any
-  ): Promise<number> {
+  ): Promise<NewServer> {
     return this.appService.createServer(user.sub, server.name);
-  }
-
-  @Get(":id")
-  async getServer(
-    @AuthenticatedUser() user: any,
-    @Param("id") sid: number
-  ): Promise<string> {
-    return this.appService.getServerData(user.sub, sid);
   }
 
   @Get()
   async getServers(
     @AuthenticatedUser() user: User
-  ): Promise<any[]> {
-    return this.appService.getServersData(user.sub);
+  ): Promise<any> {
+    return this.appService.getUserServersData(user.sub);
   }
 
   @Post(":id/invitations")
