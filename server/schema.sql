@@ -145,36 +145,12 @@ FROM servers s
          LEFT JOIN `groups` g ON s.id = g.server_id
          LEFT JOIN members m ON s.id = m.server_id;
 
-CREATE PROCEDURE get_user_servers(uid char(36))
+CREATE PROCEDURE get_user_servers(userId char(36))
 BEGIN
     SELECT *
     FROM servers
-             JOIN members ON servers.id = members.server_id AND members.user_id = uid;
+             JOIN members ON servers.id = members.server_id AND members.user_id = userId;
 END $$
-
-# CALL get_user_servers_data('509652db-483c-4328-85b1-120573723b3a');
-# SELECT s.id, s.name, s.user_id, s.invitation, s.invitation_exp
-# FROM servers s
-#          JOIN members m ON s.id = m.server_id
-# WHERE m.user_id = '509652db-483c-4328-85b1-120573723b3a';
-# SELECT g.id, g.server_id, g.name, g.`order`
-# FROM `groups` g
-#          JOIN members m ON g.server_id = m.server_id
-# WHERE m.user_id = '509652db-483c-4328-85b1-120573723b3a';
-# SELECT c.id, c.server_id, c.group_id, c.type, c.name, c.`order`
-# FROM channels c
-#          JOIN members m ON c.server_id = m.server_id
-# WHERE m.user_id = '509652db-483c-4328-85b1-120573723b3a';
-# SELECT m1.id, m1.server_id, m1.channel_id, m1.user_id, m1.timestamp, m1.text
-# FROM messages m1
-#          JOIN members m2 ON m1.server_id = m2.server_id
-# WHERE m2.user_id = '509652db-483c-4328-85b1-120573723b3a';
-
-# CALL create_server('509652db-483c-4328-85b1-120573723b3a', 'a new server');
-#
-# CALL send_message('509652db-483c-4328-85b1-120573723b3a', 1, 1, 'mesaj');
-
-# CALL get_server_data('509652db-483c-4328-85b1-120573723b3a', 1);
 
 CREATE PROCEDURE get_user_servers_data(userId char(36))
 BEGIN
@@ -185,11 +161,11 @@ BEGIN
     SELECT g.id, g.server_id, g.name, g.`order`
     FROM `groups` g
              JOIN members m ON g.server_id = m.server_id
-        AND m.user_id = user_id;
+        AND m.user_id = userId;
     SELECT c.id, c.server_id, c.group_id, c.type, c.name, c.`order`
     FROM channels c
              JOIN members m ON c.server_id = m.server_id
-        AND m.user_id = user_id;
+        AND m.user_id = userId;
     SELECT m1.id, m1.server_id, m1.user_id, m1.`order`
     FROM members m1
              JOIN members m2 ON m1.server_id = m2.server_id
@@ -208,29 +184,25 @@ BEGIN
     WHERE members.server_id = serverId;
 END $$
 
-# SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1);
-#
-# CALL join_server('8161216d-c1c8-4d01-b21a-ba1f559d29e9', '310829e7-cb29-11eb-82c5-0242ac120003');
-
-CREATE PROCEDURE get_user_server_data(uid char(36), sid int)
+CREATE PROCEDURE get_user_server_data(userId char(36), serverId int)
 BEGIN
     SET @MEMBER_ID = NULL;
-    SELECT id INTO @MEMBER_ID FROM members WHERE server_id = sid AND user_id = uid;
+    SELECT id INTO @MEMBER_ID FROM members WHERE server_id = serverId AND user_id = userId;
     IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
-    SELECT * FROM get_server_data WHERE server_id = sid;
+    SELECT * FROM get_server_data WHERE server_id = serverId;
 END $$
 
-CREATE FUNCTION create_invitation(uid char(36), sid int) RETURNS char(36)
+CREATE FUNCTION create_invitation(userId char(36), serverId int) RETURNS char(36)
     MODIFIES SQL DATA DETERMINISTIC
 BEGIN
     SELECT s.invitation, s.invitation_exp, m.user_id
     INTO @INVITATION, @INVITATION_EXP, @mid
     FROM servers s
-             LEFT JOIN members m ON s.id = m.server_id AND uid = m.user_id
-    WHERE sid = s.id;
+             LEFT JOIN members m ON s.id = m.server_id AND userId = m.user_id
+    WHERE serverId = s.id;
     IF (@mid IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
@@ -242,16 +214,16 @@ BEGIN
     UPDATE servers s
     SET invitation     = @INVITATION,
         invitation_exp = DATE_ADD(NOW(), INTERVAL 7 DAY)
-    WHERE sid = s.id;
+    WHERE serverId = s.id;
     RETURN @INVITATION;
 END $$
 
-CREATE PROCEDURE join_server(uid char(36), invitation char(36))
+CREATE PROCEDURE join_server(userId char(36), invitation char(36))
 BEGIN
     SELECT s.id, s.invitation, s.invitation_exp, m.user_id
     INTO @SID, @INVITATION, @INVITATION_EXP, @mid
     FROM servers s
-             LEFT JOIN members m ON s.id = m.server_id AND uid = m.user_id
+             LEFT JOIN members m ON s.id = m.server_id AND userId = m.user_id
     WHERE invitation = s.invitation;
     IF (@INVITATION IS NULL) THEN
         SIGNAL SQLSTATE '45000'
@@ -265,8 +237,7 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Invitation expired';
     END IF;
-    INSERT INTO members (server_id, user_id) VALUES (@SID, uid);
-    SELECT * FROM get_server_data WHERE server_id = @SID;
+    INSERT INTO members (server_id, user_id) VALUES (@SID, userId);
 END $$
 
 CREATE FUNCTION send_message(userId char(36), serverId int, channelId int, messageText varchar(255)) RETURNS int
@@ -287,7 +258,7 @@ BEGIN
 
 END $$
 
-CREATE PROCEDURE create_server(userId char(36), serverName varchar(255))
+CREATE PROCEDURE create_server(userId char(36), serverName varchar(255), serverOrder int)
 BEGIN
     IF (LENGTH(TRIM(serverName)) = 0) THEN
         SIGNAL SQLSTATE '45000'
@@ -295,7 +266,7 @@ BEGIN
     END IF;
     INSERT INTO servers (name, user_id) VALUES (serverName, userId);
     SET @SID = LAST_INSERT_ID();
-    INSERT INTO `groups` (server_id, name) VALUES (@SID, 'Text channels');
+    INSERT INTO `groups` (server_id, name, `order`) VALUES (@SID, 'Text channels', 0);
     SET @G1ID = LAST_INSERT_ID();
     INSERT INTO `groups` (server_id, name, `order`) VALUES (@SID, 'Voice channels', 1);
     SET @G2ID = LAST_INSERT_ID();
@@ -303,7 +274,11 @@ BEGIN
     SET @C1ID = LAST_INSERT_ID();
     INSERT INTO channels (server_id, group_id, type, name) VALUES (@SID, @G2ID, 'voice', 'General');
     SET @C2ID = LAST_INSERT_ID();
-    INSERT INTO members (server_id, user_id) VALUES (@SID, userId);
+    IF serverOrder IS NULL THEN
+        INSERT INTO members (server_id, user_id) VALUES (@SID, userId);
+    ELSE
+        INSERT INTO members (server_id, user_id, `order`) VALUES (@SID, userId, serverOrder);
+    END IF;
     SET @MID = LAST_INSERT_ID();
     SELECT @SID  as server_id,
            @G1ID as group1_id,
@@ -313,25 +288,26 @@ BEGIN
            @MID  as member_id;
 END $$
 
-CREATE FUNCTION create_group(user_id char(36), server_id int, group_name varchar(255)) RETURNS int DETERMINISTIC
+CREATE FUNCTION create_group(userId char(36), serverId int, groupName varchar(255),
+                             groupOrder int) RETURNS int DETERMINISTIC
     MODIFIES SQL DATA
 BEGIN
     SELECT id
     INTO @MEMBER_ID
     from members m
-    WHERE user_id = m.user_id
-      AND server_id = m.server_id;
+    WHERE userId = m.user_id
+      AND serverId = m.server_id;
     IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
-    INSERT INTO `groups` (server_id, name) VALUES (server_id, group_name);
+    INSERT INTO `groups` (server_id, name, `order`) VALUES (serverId, groupName, groupOrder);
     RETURN LAST_INSERT_ID();
 END $$
 
 CREATE FUNCTION create_channel(userId char(36), serverId int, groupId int,
                                channelType ENUM ('text', 'voice'),
-                               channelName varchar(255))
+                               channelName varchar(255), channelOrder int)
     RETURNS int DETERMINISTIC
     MODIFIES SQL DATA
 BEGIN
@@ -344,12 +320,12 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
-    INSERT INTO channels (server_id, group_id, type, name)
-    VALUES (serverId, groupId, channelType, channelName);
+    INSERT INTO channels (server_id, group_id, type, name, `order`)
+    VALUES (serverId, groupId, channelType, channelName, channelOrder);
     RETURN LAST_INSERT_ID();
 END $$
 
-CREATE PROCEDURE get_messages(uid char(36), cid int, offset int)
+CREATE PROCEDURE get_messages(userId char(36), channelId int, offset int)
 BEGIN
     SET @MEMBER_ID = NULL;
 
@@ -357,8 +333,8 @@ BEGIN
     INTO @MEMBER_ID
     FROM members m
              JOIN servers s ON m.server_id = s.id
-             JOIN channels c ON cid = c.id
-    WHERE m.user_id = uid;
+             JOIN channels c ON channelId = c.id
+    WHERE m.user_id = userId;
     IF (@MEMBER_ID IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
@@ -370,7 +346,25 @@ BEGIN
            m.text       AS message
     FROM messages m
              LEFT JOIN channels c ON m.channel_id = c.id
-    WHERE c.id = cid
+    WHERE c.id = channelId
     ORDER BY timestamp DESC, message_id DESC
     LIMIT 30 OFFSET offset;
 END $$
+
+CALL create_server('509652db-483c-4328-85b1-120573723b3a', 'a new server', 0);
+
+SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, NULL, 'text', 'channel without group', 0);
+SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 1, 'text', 'text channel in the first group', 1);
+SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 2, 'voice', 'voice channel in the second group', 1);
+
+SELECT create_group('509652db-483c-4328-85b1-120573723b3a', 1, 'a new group', 2);
+SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 3, 'text', 'text channel in the third group', 0);
+SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 3, 'voice', 'voice channel in the third group', 1);
+
+# SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1);
+CALL join_server('8161216d-c1c8-4d01-b21a-ba1f559d29e9', (
+    SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1)
+));
+
+CALL get_user_servers_data('509652db-483c-4328-85b1-120573723b3a');
+CALL get_user_servers_data('8161216d-c1c8-4d01-b21a-ba1f559d29e9');
