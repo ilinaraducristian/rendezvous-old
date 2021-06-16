@@ -22,6 +22,7 @@ class SortedMap<V = any> extends Map<number, V> {
     if (this.sortedKeys === undefined) return this;
     if (this.sortedKeys.findIndex(val => val === key) === -1) {
       this.sortedKeys.push(key);
+      this.sortedKeys.sort();
     }
     super.set(key, value);
     this._size = this.sortedKeys.length;
@@ -36,6 +37,11 @@ class SortedMap<V = any> extends Map<number, V> {
     return value;
   }
 
+  last(): V | undefined {
+    if(this.size === 0) return;
+    return super.get(this.sortedKeys[this.size-1]);
+  }
+
   delete(key: number): boolean {
     let keyIndex;
     if ((keyIndex = this.sortedKeys.findIndex(val => val === key)) === -1) {
@@ -48,7 +54,6 @@ class SortedMap<V = any> extends Map<number, V> {
   }
 
   forEach(callbackfn: (value: V, index: number, map: Map<number, V>, key: number) => void): void {
-    this.sortedKeys.sort();
     this.sortedKeys.forEach((key, index) => {
       callbackfn(this.get(key), index, this, key);
     });

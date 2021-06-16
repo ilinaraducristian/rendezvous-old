@@ -13,14 +13,16 @@ const Backend = {
     }).then(response => response.json());
   },
 
-  createServer: function (serverName: string) {
+  createServer: function (name: string, order: number) {
     return fetch(`${config.backend}/servers`, {
       method: "POST",
       headers: {
-        Authorization: Backend.token
+        Authorization: Backend.token,
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        server_name: serverName
+        name,
+        order
       })
     }).then(response => response.json());
   }

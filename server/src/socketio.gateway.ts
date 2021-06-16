@@ -35,10 +35,10 @@ export class SocketIOGateway implements OnGatewayConnection<Socket> {
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
-    const servers = await this.appService.getUserServers(client.handshake.auth.sub);
-    servers.forEach(server => {
-      client.join(`server_${server.id}`);
-    });
+    // const servers = await this.appService.getUserServersData(client.handshake.auth.sub);
+    // servers.forEach(server => {
+    //   client.join(`server_${server.id}`);
+    // });
   }
 
 }

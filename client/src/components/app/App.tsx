@@ -5,13 +5,12 @@ import Channel from "../channel/Channel";
 import Member from "../member/Member";
 import Message from "../message/Message";
 import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
-import {io, Socket} from "socket.io-client";
+import {Socket} from "socket.io-client";
 import MessagesPanel from "../messages-panel/MessagesPanel";
 import Overlay from "../overlay/Overlay";
 import {useKeycloak} from "@react-keycloak/web";
-import config from "../../config";
 import Backend from "../../Backend";
-import {log} from "util";
+import SortedMap from "../../util/SortedMap";
 
 let socket: Socket;
 let staticData: any;
@@ -26,15 +25,17 @@ staticData = {
   members: mockMembers
 };
 
-function parseServerData(server: any) {
-  server.members.forEach((member: any) => staticData.members.set(member.id, member));
-  server.messages.forEach((message: any) => staticData.messages.set(message.id, message));
-  server.groups.forEach((group: any) => staticData.groups.set(group.id, group));
-  server.channels.forEach((channel: any) => staticData.channels.set(channel.id, channel));
-  staticData.servers.set(server.id, server);
+function parseServersData(serversData: any) {
+  staticData.users = new SortedMap(serversData.users.map((user: any) => [user.id, user]));
+  staticData.servers = new SortedMap(serversData.servers.map((server: any) => [server.id, server]));
+  staticData.channels = new SortedMap(serversData.channels.map((channel: any) => [channel.id, channel]));
+  staticData.groups = new SortedMap(serversData.groups.map((group: any) => [group.id, group]));
+  staticData.messages = new SortedMap(serversData.messages.map((message: any) => [message.id, message]));
+  staticData.members = new SortedMap(serversData.members.map((member: any) => [member.id, member]));
+  console.log(staticData);
 }
 
-// in dev assume keycloak user logged in
+// in ui dev assume keycloak user logged in
 function App() {
 
   const {keycloak, initialized} = useKeycloak();
@@ -89,9 +90,12 @@ function App() {
   }, []);
 
   const selectServer = useCallback((id: number) => {
-    setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null).sort(channelSorter).map(channelMapper));
-    setGroups(staticData.groups.toArray(groupMapper));
-    setMembers(staticData.members.toArray(memberMapper));
+    setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null && channel.server_id === id).sort(channelSorter).map((a: any) => {
+      console.log(a);
+      return a;
+    }).map(channelMapper));
+    setGroups(staticData.groups.toArray().filter((group: any) => group.server_id === id).map(groupMapper));
+    setMembers(staticData.members.toArray().filter((member: any) => member.server_id === id).map(memberMapper));
     setServer({id});
   }, [channelMapper, channelSorter, groupMapper, memberMapper]);
 
@@ -106,17 +110,25 @@ function App() {
       keycloak.login();
       return;
     }
-    console.log(keycloak.subject);
-    // register socketio
-    socket = io(config.backend, {
-      auth: {
-        sub: keycloak.subject
-      }
-    });
-    // TODO update data from backend
-    // staticData = Backend.getServers();
-    //
-    // setServers(staticData.servers.toArray(serverMapper));
+    Backend.token = `Bearer ${keycloak.token}`;
+    (async () => {
+
+      // register socketio
+      // socket = io(config.backend, {
+      //   auth: {
+      //     sub: keycloak.subject
+      //   }
+      // });
+      // TODO update data from backend
+      parseServersData(await Backend.getServers());
+
+      setServers(
+          staticData.servers.toArray()
+              .sort((server1: any, server2: any) => server1.order - server2.order)
+              .map(serverMapper)
+      );
+
+    })();
 
   }, [serverMapper, initialized, keycloak]);
 
@@ -168,16 +180,67 @@ function App() {
 
   }, []);
 
-  const createServer = useCallback((serverName) => {
-    Backend.createServer(serverName).then(server => {
+  const createServer = useCallback((serverName: string) => {
+    const lastServer = staticData.servers.last();
+    console.log('last server');
+    console.log(lastServer);
+    let order = 0;
+    if(lastServer !== undefined) {
+      order = lastServer.order+1;
+    }
+    Backend.createServer(serverName, order).then(serverData => {
       setMembers([]);
       setMessages([]);
-      parseServerData(server);
+      staticData.servers.set(serverData.id, {
+        id: serverData.id,
+        name: serverName,
+        user_id: keycloak.subject,
+        order
+      });
+
+      staticData.groups.set(serverData.group1_id, {
+        id: serverData.group1_id,
+        server_id: serverData.id,
+        name: "Text channels",
+        order: 0
+      });
+
+      staticData.groups.set(serverData.group2_id, {
+        id: serverData.group2_id,
+        server_id: serverData.id,
+        name: "Voice channels",
+        order: 0
+      });
+
+      staticData.channels.set(serverData.channel1_id, {
+        id: serverData.channel1_id,
+        server_id: serverData.id,
+        group_id: serverData.group1_id,
+        type: "text",
+        name: "general",
+        order: 0
+      });
+
+      staticData.channels.set(serverData.channel2_id, {
+        id: serverData.channel2_id,
+        server_id: serverData.id,
+        group_id: serverData.group2_id,
+        type: "voice",
+        name: "General",
+        order: 0
+      });
+
+      staticData.members.set(serverData.member_id, {
+        id: serverData.member_id,
+        server_id: serverData.id,
+        user_id: keycloak.subject
+      });
+
     });
-  }, []);
+  }, [keycloak]);
 
   const addServer = useCallback(() => {
-    setOverlay(<Overlay onJoinServer={joinServer} onCreateServer={createServer}/>);
+    setOverlay(<Overlay onJoinServer={joinServer} onCreateServer={createServer} onClose={() => setOverlay(null)}/>);
   }, [createServer, joinServer]);
 
   if (!initialized) return null;

@@ -5,6 +5,7 @@ import { ServerEntity } from "./entities/server.entity";
 import Server from "./models/Server";
 import ChannelType from "./models/ChannelType";
 import NewServer from "./models/NewServer";
+import { UserServersData } from "./servers/servers.controller";
 
 @Injectable()
 export class AppService {
@@ -15,8 +16,8 @@ export class AppService {
   ) {
   }
 
-  async createServer(uid: string, name: string): Promise<NewServer> {
-    return this.connection.query("CALL create_server(?,?)", [uid, name])
+  async createServer(uid: string, name: string, order: number): Promise<NewServer> {
+    return this.connection.query("CALL create_server(?,?,?)", [uid, name, order])
       .then(oldResult => {
         const result = oldResult[0][0];
         Object.entries(result).forEach((entry: [string, string]) => {
@@ -50,16 +51,27 @@ export class AppService {
     return this.connection.query("CALL get_server_data(?,?)", [uid, sid]);
   }
 
-  async getUserServersData(uid: string): Promise<any> {
-    return this.connection.query("CALL get_user_servers_data(?)", [uid])
-      .then(result => {
-        return {
-          servers: result[0],
-          groups: result[1],
-          channels: result[2],
-          members: result[3]
-        };
-      });
+  async getUserServersData(uid: string): Promise<UserServersData> {
+    const query1Result = await this.connection.query("CALL get_user_servers_data(?)", [uid]);
+    const serversTable = query1Result[0];
+    const groupsTable = query1Result[1];
+    const channelsTable = query1Result[2];
+    const membersTable = query1Result[3];
+    let query2Result: any = [];
+    if (membersTable.length > 0) {
+      const membersUserIds = membersTable.map(member => `'${member.user_id}'`).join();
+      query2Result = await this.connection.query(`SELECT *
+                                                  FROM get_users
+                                                  WHERE id IN (${membersUserIds})`);
+    }
+    return {
+      users: query2Result,
+      servers: serversTable,
+      channels: channelsTable,
+      groups: groupsTable,
+      messages: [],
+      members: membersTable
+    };
   }
 
   // async getUserServersData(uid: string): Promise<Map<number, Server>> {

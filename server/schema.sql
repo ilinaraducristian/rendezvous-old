@@ -145,16 +145,13 @@ FROM servers s
          LEFT JOIN `groups` g ON s.id = g.server_id
          LEFT JOIN members m ON s.id = m.server_id;
 
-CREATE PROCEDURE get_user_servers(userId char(36))
-BEGIN
-    SELECT *
-    FROM servers
-             JOIN members ON servers.id = members.server_id AND members.user_id = userId;
-END $$
+CREATE VIEW get_users AS
+SELECT u.id AS id, u.USERNAME AS username, u.FIRST_NAME as first_name, u.LAST_NAME AS last_name
+FROM keycloak.USER_ENTITY u;
 
 CREATE PROCEDURE get_user_servers_data(userId char(36))
 BEGIN
-    SELECT s.id, s.name, s.user_id as owner, s.invitation, s.invitation_exp
+    SELECT s.id, s.name, s.user_id as owner, s.invitation, s.invitation_exp, m.order
     FROM servers s
              JOIN members m ON s.id = m.server_id
         AND m.user_id = userId;
@@ -182,17 +179,6 @@ BEGIN
     FROM keycloak.USER_ENTITY
              JOIN capp.members ON USER_ENTITY.ID = members.user_id
     WHERE members.server_id = serverId;
-END $$
-
-CREATE PROCEDURE get_user_server_data(userId char(36), serverId int)
-BEGIN
-    SET @MEMBER_ID = NULL;
-    SELECT id INTO @MEMBER_ID FROM members WHERE server_id = serverId AND user_id = userId;
-    IF (@MEMBER_ID IS NULL) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'User is not a member of this server';
-    END IF;
-    SELECT * FROM get_server_data WHERE server_id = serverId;
 END $$
 
 CREATE FUNCTION create_invitation(userId char(36), serverId int) RETURNS char(36)
@@ -351,20 +337,20 @@ BEGIN
     LIMIT 30 OFFSET offset;
 END $$
 
-CALL create_server('509652db-483c-4328-85b1-120573723b3a', 'a new server', 0);
-
-SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, NULL, 'text', 'channel without group', 0);
-SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 1, 'text', 'text channel in the first group', 1);
-SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 2, 'voice', 'voice channel in the second group', 1);
-
-SELECT create_group('509652db-483c-4328-85b1-120573723b3a', 1, 'a new group', 2);
-SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 3, 'text', 'text channel in the third group', 0);
-SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 3, 'voice', 'voice channel in the third group', 1);
-
-# SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1);
-CALL join_server('8161216d-c1c8-4d01-b21a-ba1f559d29e9', (
-    SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1)
-));
-
-CALL get_user_servers_data('509652db-483c-4328-85b1-120573723b3a');
-CALL get_user_servers_data('8161216d-c1c8-4d01-b21a-ba1f559d29e9');
+# CALL create_server('509652db-483c-4328-85b1-120573723b3a', 'a new server', 0);
+#
+# SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, NULL, 'text', 'channel without group', 0);
+# SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 1, 'text', 'text channel in the first group', 1);
+# SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 2, 'voice', 'voice channel in the second group', 1);
+#
+# SELECT create_group('509652db-483c-4328-85b1-120573723b3a', 1, 'a new group', 2);
+# SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 3, 'text', 'text channel in the third group', 0);
+# SELECT create_channel('509652db-483c-4328-85b1-120573723b3a', 1, 3, 'voice', 'voice channel in the third group', 1);
+#
+# # SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1);
+# CALL join_server('8161216d-c1c8-4d01-b21a-ba1f559d29e9', (
+#     SELECT create_invitation('509652db-483c-4328-85b1-120573723b3a', 1)
+# ));
+#
+# CALL get_user_servers_data('509652db-483c-4328-85b1-120573723b3a');
+# CALL get_user_servers_data('8161216d-c1c8-4d01-b21a-ba1f559d29e9');

@@ -1,9 +1,12 @@
 import {useState} from "react";
 
-function Overlay({
-                   onJoinServer: joinServer,
-                   onCreateServer: createServer
-                 }: { onJoinServer: Function, onCreateServer: Function }) {
+function Overlay(
+    {
+      onJoinServer: joinServer,
+      onCreateServer: createServer,
+      onClose: close
+    }: { onJoinServer: Function, onCreateServer: Function, onClose: Function }
+) {
 
   const [invitation, setInvitation] = useState("");
   const [serverName, setServerName] = useState("");
@@ -17,8 +20,16 @@ function Overlay({
             <input type="text" name="invitation" onChange={e => setInvitation(e.target.value)}/>
             <label htmlFor="server-name">Server name:</label>
             <input type="text" name="server-name" onChange={e => setServerName(e.target.value)}/>
-            <button type="button" onClick={() => joinServer(invitation)}>Join server</button>
-            <button type="button" onClick={() => createServer(serverName)}>Create server</button>
+            <button type="button" onClick={async () => {
+              await joinServer(invitation);
+              close();
+            }}>Join server
+            </button>
+            <button type="button" onClick={async () => {
+              await createServer(serverName);
+              close();
+            }}>Create server
+            </button>
           </form>
         </div>
       </div>

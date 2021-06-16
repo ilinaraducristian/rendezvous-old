@@ -38,14 +38,14 @@ export const mockChannels = new SortedMap([[1, {
   server_id: 1,
   group_id: null,
   type: "text",
-  name: "genpop",
+  name: "a new channel",
   order: 1
 }], [4, {
   id: 4,
   server_id: 1,
   group_id: null,
   type: "text",
-  name: "gata",
+  name: "another channel",
   order: 0
 }]]);
 
@@ -54,7 +54,7 @@ export const mockMessages = new SortedMap([[1, {
   channel_id: 1,
   user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
   timestamp: new Date(),
-  text: "test message",
+  text: "a new message from user1",
 }]]);
 
 export const mockMembers = new SortedMap([[1, {
@@ -67,4 +67,10 @@ export const mockServers = new SortedMap([[1, {
   id: 1,
   name: "test server",
   user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
+  order: 1
+}], [2, {
+  id: 2,
+  name: "test server 2",
+  user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
+  order: 0
 }]]);
