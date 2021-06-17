@@ -26,13 +26,9 @@ staticData = {
 };
 
 function parseServersData(serversData: any) {
-  staticData.users = new SortedMap(serversData.users.map((user: any) => [user.id, user]));
-  staticData.servers = new SortedMap(serversData.servers.map((server: any) => [server.id, server]));
-  staticData.channels = new SortedMap(serversData.channels.map((channel: any) => [channel.id, channel]));
-  staticData.groups = new SortedMap(serversData.groups.map((group: any) => [group.id, group]));
-  staticData.messages = new SortedMap(serversData.messages.map((message: any) => [message.id, message]));
-  staticData.members = new SortedMap(serversData.members.map((member: any) => [member.id, member]));
-  console.log(staticData);
+  Object.keys(serversData).forEach((key: string) => {
+    staticData[key] = new SortedMap(serversData[key].map((value: any) => [value.id, value]));
+  });
 }
 
 // in ui dev assume keycloak user logged in
@@ -103,78 +99,12 @@ function App() {
     return <Server key={`server_${server.id}`} id={server.id} name={server.name} onSelectServer={selectServer}/>;
   }, [selectServer]);
 
-  // initialization
-  useEffect(() => {
-    if (!initialized) return;
-    if (!keycloak.authenticated) {
-      keycloak.login();
-      return;
-    }
-    Backend.token = `Bearer ${keycloak.token}`;
-    (async () => {
-
-      // register socketio
-      // socket = io(config.backend, {
-      //   auth: {
-      //     sub: keycloak.subject
-      //   }
-      // });
-      // TODO update data from backend
-      parseServersData(await Backend.getServers());
-
-      setServers(
-          staticData.servers.toArray()
-              .sort((server1: any, server2: any) => server1.order - server2.order)
-              .map(serverMapper)
-      );
-
-    })();
-
-  }, [serverMapper, initialized, keycloak]);
 
   const sendMessage = useCallback((message: any) => {
     socket?.emit("send_message", {channel_id: channel.id, text: message.text});
   }, [channel]);
 
-  useEffect(() => {
 
-    socket?.on("message_received", message => {
-      message.timestamp = new Date(message.timestamp);
-      staticData.messages.set(message.id, message);
-      if (channel !== null)
-        setMessages(staticData.messages.toArray().filter((message: any) => message.channel_id === channel.id).map(messageMapper));
-    });
-
-  }, [channel, messageMapper]);
-
-  useEffect(() => {
-
-    socket?.on("channel_created", channel => {
-      staticData.channels.set(channel.id, channel);
-      if (server !== null)
-        setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null).sort(channelSorter).map(channelMapper));
-    });
-
-    socket?.on("channel_removed", channel => {
-      staticData.channels.delete(channel.id);
-      setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null).sort(channelSorter).map(channelMapper));
-    });
-
-  }, [channelMapper, channelSorter, server]);
-
-  useEffect(() => {
-
-    socket?.on("member_entered", member => {
-      staticData.members.set(member.id, member);
-      setMembers(staticData.members.toArray(memberMapper));
-    });
-
-    socket?.on("member_left", member => {
-      staticData.members.set(member.id, member);
-      setMembers(staticData.members.toArray(memberMapper));
-    });
-
-  }, [memberMapper]);
 
   const joinServer = useCallback((invitation) => {
 
@@ -182,8 +112,6 @@ function App() {
 
   const createServer = useCallback((serverName: string) => {
     const lastServer = staticData.servers.last();
-    console.log('last server');
-    console.log(lastServer);
     let order = 0;
     if(lastServer !== undefined) {
       order = lastServer.order+1;
@@ -191,6 +119,10 @@ function App() {
     Backend.createServer(serverName, order).then(serverData => {
       setMembers([]);
       setMessages([]);
+      setChannels([]);
+      setGroups([]);
+      setChannel(null);
+      setServer(null);
       staticData.servers.set(serverData.id, {
         id: serverData.id,
         name: serverName,
@@ -235,13 +167,82 @@ function App() {
         server_id: serverData.id,
         user_id: keycloak.subject
       });
-
+      setServers(
+          staticData.servers.toArray()
+              .sort((server1: any, server2: any) => server1.order - server2.order)
+              .map(serverMapper)
+      );
     });
-  }, [keycloak]);
+  }, [keycloak, serverMapper]);
 
   const addServer = useCallback(() => {
     setOverlay(<Overlay onJoinServer={joinServer} onCreateServer={createServer} onClose={() => setOverlay(null)}/>);
   }, [createServer, joinServer]);
+
+  // initialization
+  useEffect(() => {
+    if (!initialized) return;
+    if (!keycloak.authenticated) {
+      keycloak.login();
+      return;
+    }
+    Backend.token = `Bearer ${keycloak.token}`;
+    (async () => {
+
+      // register socketio
+      // socket = io(config.backend, {
+      //   auth: {
+      //     sub: keycloak.subject
+      //   }
+      // });
+      // TODO update data from backend
+      parseServersData(await Backend.getServers());
+
+      setServers(
+          staticData.servers.toArray()
+              .sort((server1: any, server2: any) => server1.order - server2.order)
+              .map(serverMapper)
+      );
+
+    })();
+
+  }, [serverMapper, initialized, keycloak]);
+
+  useEffect(() => {
+
+    socket?.on("message_received", message => {
+      message.timestamp = new Date(message.timestamp);
+      staticData.messages.set(message.id, message);
+      if (channel !== null)
+        setMessages(staticData.messages.toArray().filter((message: any) => message.channel_id === channel.id).map(messageMapper));
+    });
+
+  }, [channel, messageMapper]);
+
+  useEffect(() => {
+
+    socket?.on("channel_created", channel => {
+      staticData.channels.set(channel.id, channel);
+      if (server !== null)
+        setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null).sort(channelSorter).map(channelMapper));
+    });
+
+    socket?.on("channel_removed", channel => {
+      staticData.channels.delete(channel.id);
+      setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null).sort(channelSorter).map(channelMapper));
+    });
+
+    socket?.on("member_entered", member => {
+      staticData.members.set(member.id, member);
+      setMembers(staticData.members.toArray(memberMapper));
+    });
+
+    socket?.on("member_left", member => {
+      staticData.members.set(member.id, member);
+      setMembers(staticData.members.toArray(memberMapper));
+    });
+
+  }, [channelMapper, channelSorter, memberMapper, server]);
 
   if (!initialized) return null;
   if (!keycloak.authenticated) return null;
@@ -252,6 +253,7 @@ function App() {
           <div id="servers-container">
             {servers}
             <button type="button" onClick={addServer}>Add server</button>
+            <button type="button" onClick={addServer}>Create invitation link</button>
           </div>
           <div id="channels-container">
             {channels}
