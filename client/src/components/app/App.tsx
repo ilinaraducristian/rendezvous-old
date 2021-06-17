@@ -31,6 +31,75 @@ function parseServersData(serversData: any) {
   });
 }
 
+function messageMapper(message: any) {
+  return <Message
+      key={`message_${message.id}`}
+      username={staticData.users.get(message.user_id)?.username || ""}
+      timestamp={message.timestamp}
+      text={message.text}
+  />;
+}
+
+function channelSorter(firstChannel: { order: number }, secondChannel: { order: number }) {
+  return firstChannel.order - secondChannel.order;
+}
+
+function memberMapper(member: any) {
+  console.log(staticData.users);
+  console.log(member);
+  return <Member
+      key={`member_${member.id}`}
+      name={staticData.users.get(member.user_id)?.username || ""}
+  />;
+}
+
+function parseNewServerData(serverData: any) {
+  staticData.servers.set(serverData.id, {
+    id: serverData.id,
+    name: serverData.serverName,
+    user_id: serverData.sub,
+    order: serverData.order
+  });
+
+  staticData.groups.set(serverData.group1_id, {
+    id: serverData.group1_id,
+    server_id: serverData.id,
+    name: "Text channels",
+    order: 0
+  });
+
+  staticData.groups.set(serverData.group2_id, {
+    id: serverData.group2_id,
+    server_id: serverData.id,
+    name: "Voice channels",
+    order: 0
+  });
+
+  staticData.channels.set(serverData.channel1_id, {
+    id: serverData.channel1_id,
+    server_id: serverData.id,
+    group_id: serverData.group1_id,
+    type: "text",
+    name: "general",
+    order: 0
+  });
+
+  staticData.channels.set(serverData.channel2_id, {
+    id: serverData.channel2_id,
+    server_id: serverData.id,
+    group_id: serverData.group2_id,
+    type: "voice",
+    name: "General",
+    order: 0
+  });
+
+  staticData.members.set(serverData.member_id, {
+    id: serverData.member_id,
+    server_id: serverData.id,
+    user_id: serverData.sub
+  });
+}
+
 // in ui dev assume keycloak user logged in
 function App() {
 
@@ -47,28 +116,15 @@ function App() {
 
   const [overlay, setOverlay] = useState<any>(null);
 
-  const messageMapper = useCallback((message) => {
-    return <Message
-        key={`message_${message.id}`}
-        username={staticData.users.get(message.user_id)?.username || ""}
-        timestamp={message.timestamp}
-        text={message.text}
-    />;
-  }, []);
-
   const selectChannel = useCallback((id: number, name: string) => {
     const channel = {id, name};
     setChannel(channel);
     setMessages(staticData.messages.toArray().filter((message: any) => message.channel_id === channel.id).map(messageMapper));
-  }, [messageMapper]);
+  }, []);
 
   const channelMapper = useCallback((channel) => {
     return <Channel key={`channel_${channel.id}`} id={channel.id} name={channel.name} onSelectChannel={selectChannel}/>;
   }, [selectChannel]);
-
-  const channelSorter = useCallback((firstChannel: any, secondChannel: any) => {
-    return firstChannel.order - secondChannel.order;
-  }, []);
 
   const groupMapper = useCallback((group) => {
     return <Group key={`group_${group.id}`} name={group.name}>
@@ -76,103 +132,51 @@ function App() {
         staticData.channels.toArray().filter((channel: any) => channel.group_id === group.id).sort(channelSorter).map(channelMapper)
       }
     </Group>;
-  }, [channelMapper, channelSorter]);
-
-  const memberMapper = useCallback((member) => {
-    return <Member
-        key={`member_${member.id}`}
-        name={staticData.users.get(member.user_id)?.username || ""}
-    />;
-  }, []);
+  }, [channelMapper]);
 
   const selectServer = useCallback((id: number) => {
-    setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null && channel.server_id === id).sort(channelSorter).map((a: any) => {
-      console.log(a);
-      return a;
-    }).map(channelMapper));
+    setChannels(staticData.channels.toArray().filter((channel: any) => channel.group_id === null && channel.server_id === id).sort(channelSorter).map(channelMapper));
     setGroups(staticData.groups.toArray().filter((group: any) => group.server_id === id).map(groupMapper));
+    console.log("SELECT SERVER");
+    console.log(staticData.members);
     setMembers(staticData.members.toArray().filter((member: any) => member.server_id === id).map(memberMapper));
     setServer({id});
-  }, [channelMapper, channelSorter, groupMapper, memberMapper]);
+  }, [channelMapper, groupMapper]);
 
   const serverMapper = useCallback((server) => {
     return <Server key={`server_${server.id}`} id={server.id} name={server.name} onSelectServer={selectServer}/>;
   }, [selectServer]);
 
-
   const sendMessage = useCallback((message: any) => {
     socket?.emit("send_message", {channel_id: channel.id, text: message.text});
   }, [channel]);
-
-
 
   const joinServer = useCallback((invitation) => {
 
   }, []);
 
-  const createServer = useCallback((serverName: string) => {
+  const createServer = useCallback(async (serverName: string) => {
     const lastServer = staticData.servers.last();
     let order = 0;
-    if(lastServer !== undefined) {
-      order = lastServer.order+1;
+    if (lastServer !== undefined) {
+      order = lastServer.order + 1;
     }
-    Backend.createServer(serverName, order).then(serverData => {
-      setMembers([]);
-      setMessages([]);
-      setChannels([]);
-      setGroups([]);
-      setChannel(null);
-      setServer(null);
-      staticData.servers.set(serverData.id, {
-        id: serverData.id,
-        name: serverName,
-        user_id: keycloak.subject,
-        order
-      });
-
-      staticData.groups.set(serverData.group1_id, {
-        id: serverData.group1_id,
-        server_id: serverData.id,
-        name: "Text channels",
-        order: 0
-      });
-
-      staticData.groups.set(serverData.group2_id, {
-        id: serverData.group2_id,
-        server_id: serverData.id,
-        name: "Voice channels",
-        order: 0
-      });
-
-      staticData.channels.set(serverData.channel1_id, {
-        id: serverData.channel1_id,
-        server_id: serverData.id,
-        group_id: serverData.group1_id,
-        type: "text",
-        name: "general",
-        order: 0
-      });
-
-      staticData.channels.set(serverData.channel2_id, {
-        id: serverData.channel2_id,
-        server_id: serverData.id,
-        group_id: serverData.group2_id,
-        type: "voice",
-        name: "General",
-        order: 0
-      });
-
-      staticData.members.set(serverData.member_id, {
-        id: serverData.member_id,
-        server_id: serverData.id,
-        user_id: keycloak.subject
-      });
-      setServers(
-          staticData.servers.toArray()
-              .sort((server1: any, server2: any) => server1.order - server2.order)
-              .map(serverMapper)
-      );
-    });
+    const serverData = await Backend.createServer(serverName, order);
+    setMembers([]);
+    setMessages([]);
+    setChannels([]);
+    setGroups([]);
+    setChannel(null);
+    setServer(null);
+    serverData.serverName = serverName;
+    serverData.order = order;
+    serverData.sub = keycloak.subject;
+    parseNewServerData(serverData);
+    setServers(
+        staticData.servers.toArray()
+            .sort((server1: any, server2: any) => server1.order - server2.order)
+            .map(serverMapper)
+    );
   }, [keycloak, serverMapper]);
 
   const addServer = useCallback(() => {
@@ -217,7 +221,7 @@ function App() {
         setMessages(staticData.messages.toArray().filter((message: any) => message.channel_id === channel.id).map(messageMapper));
     });
 
-  }, [channel, messageMapper]);
+  }, [channel]);
 
   useEffect(() => {
 
@@ -242,7 +246,7 @@ function App() {
       setMembers(staticData.members.toArray(memberMapper));
     });
 
-  }, [channelMapper, channelSorter, memberMapper, server]);
+  }, [channelMapper, server]);
 
   if (!initialized) return null;
   if (!keycloak.authenticated) return null;
@@ -253,9 +257,14 @@ function App() {
           <div id="servers-container">
             {servers}
             <button type="button" onClick={addServer}>Add server</button>
-            <button type="button" onClick={addServer}>Create invitation link</button>
           </div>
           <div id="channels-container">
+            {
+              channel ?
+                  <button type="button">Create invitation link</button>
+                  :
+                  null
+            }
             {channels}
             {groups}
           </div>
