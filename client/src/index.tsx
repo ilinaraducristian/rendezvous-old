@@ -4,7 +4,8 @@ import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import {ReactKeycloakProvider} from "@react-keycloak/web";
 import config from "./config";
-import App from "./components/app/App";
+import AppComponent from "./components/app/App.component";
+import {IoProvider} from "socket.io-react-hook";
 
 function onEvent(event: any) {
 
@@ -17,7 +18,9 @@ ReactDOM.render(
           // LoadingComponent={<Loading/>}
           onEvent={onEvent}
       >
-        <App/>
+        <IoProvider>
+          <AppComponent/>
+        </IoProvider>
       </ReactKeycloakProvider>
     </React.StrictMode>,
     document.getElementById("root")

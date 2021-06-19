@@ -2,8 +2,38 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="update">
+      <change afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/server/Server.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/server/ServerCo.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/SortedMap.test.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/combine-contexts.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/util/use-socket-io.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/app/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Backend.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/app/App.test.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/app/App.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.test.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/ChannelComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/group/Group.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/GroupComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/member/Member.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/member/MemberComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/message/Message.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/server/Server.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mock-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mock-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/util/SortedMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/SortedMap.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/servers/servers.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/servers/servers.controller.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,7 +70,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$USER_HOME$/react-playground/testapp" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs.jest.jest_package" value="$PROJECT_DIR$/node_modules/react-scripts" />
@@ -64,6 +94,19 @@
     </key>
   </component>
   <component name="RunManager" selected="npm.start">
+    <configuration name="SortedMap testing" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <node-options value="" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/util/SortedMap.test.ts" />
+      <test-names>
+        <test-name value="SortedMap testing" />
+      </test-names>
+      <method v="2" />
+    </configuration>
     <configuration name="channel pure component" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
       <node-interpreter value="project" />
       <node-options value="" />
@@ -100,6 +143,7 @@
     <recent_temporary>
       <list>
         <item itemvalue="npm.start" />
+        <item itemvalue="Jest.SortedMap testing" />
         <item itemvalue="npm.test" />
         <item itemvalue="Jest.channel pure component" />
       </list>
@@ -139,7 +183,20 @@
       <workItem from="1623748458397" duration="10843000" />
       <workItem from="1623833800244" duration="5870000" />
       <workItem from="1623903040354" duration="356000" />
-      <workItem from="1623908959831" duration="5989000" />
+      <workItem from="1623908959831" duration="10687000" />
+      <workItem from="1623932361324" duration="1795000" />
+      <workItem from="1623950847040" duration="1763000" />
+      <workItem from="1623986957369" duration="8992000" />
+      <workItem from="1624006750229" duration="3970000" />
+      <workItem from="1624031648048" duration="1429000" />
+      <workItem from="1624033141449" duration="2337000" />
+      <workItem from="1624043381225" duration="1203000" />
+      <workItem from="1624075700654" duration="7293000" />
+      <workItem from="1624087516991" duration="1275000" />
+      <workItem from="1624092067796" duration="6974000" />
+      <workItem from="1624108264837" duration="1659000" />
+      <workItem from="1624113043367" duration="4890000" />
+      <workItem from="1624126099159" duration="2010000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -148,7 +205,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623909125021</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="update">
+      <created>1623921150909</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1623921150909</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

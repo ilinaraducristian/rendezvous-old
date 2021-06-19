@@ -1,13 +1,14 @@
 import SortedMap from "./util/SortedMap";
+import {Channel, ChannelType, Group, Member, Message, Server, User} from "./types";
 
-export const mockUsers = new Map([["97a8ffc2-10cd-47dd-b915-cf8243d5bfc4", {
+export const mockUsers = new Map<string, User>([["97a8ffc2-10cd-47dd-b915-cf8243d5bfc4", {
   id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
   username: "user1",
   firstName: "Firstname",
   lastName: "Lastname"
 }]]);
 
-export const mockGroups = new SortedMap([[1, {
+export const mockGroups = new SortedMap<Group>([[1, {
   id: 1,
   server_id: 1,
   name: "Text channels",
@@ -19,58 +20,42 @@ export const mockGroups = new SortedMap([[1, {
   order: 1
 }]]);
 
-export const mockChannels = new SortedMap([[1, {
+export const mockChannels = new SortedMap<Channel>([[1, {
   id: 1,
   server_id: 1,
   group_id: 1,
-  type: "text",
+  type: ChannelType.Text,
   name: "general",
-  order: 0
+  order: 0,
 }], [2, {
   id: 2,
   server_id: 1,
   group_id: 2,
-  type: "voice",
+  type: ChannelType.Voice,
   name: "General",
-  order: 0
-}], [3, {
-  id: 3,
-  server_id: 1,
-  group_id: null,
-  type: "text",
-  name: "a new channel",
-  order: 1
-}], [4, {
-  id: 4,
-  server_id: 1,
-  group_id: null,
-  type: "text",
-  name: "another channel",
-  order: 0
+  order: 0,
 }]]);
 
-export const mockMessages = new SortedMap([[1, {
+export const mockMessages = new SortedMap<Message>([[1, {
   id: 1,
+  server_id: 1,
   channel_id: 1,
   user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
   timestamp: new Date(),
-  text: "a new message from user1",
+  text: "a message",
 }]]);
 
-export const mockMembers = new SortedMap([[1, {
+export const mockMembers = new SortedMap<Member>([[1, {
   id: 1,
   server_id: 1,
   user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4"
 }]]);
 
-export const mockServers = new SortedMap([[1, {
+export const mockServers = new SortedMap<Server>([[1, {
   id: 1,
-  name: "test server",
+  name: "Server",
   user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
-  order: 1
-}], [2, {
-  id: 2,
-  name: "test server 2",
-  user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
+  invitation: null,
+  invitation_exp: null,
   order: 0
 }]]);

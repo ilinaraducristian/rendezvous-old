@@ -1,6 +1,6 @@
 import {useState} from "react";
 
-function Group({name, children}: { name: string, children: any }) {
+function GroupComponent({name, children}: { name: string, children: any }) {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -15,4 +15,4 @@ function Group({name, children}: { name: string, children: any }) {
   );
 }
 
-export default Group;
+export default GroupComponent;
