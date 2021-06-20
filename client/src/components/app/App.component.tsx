@@ -7,6 +7,10 @@ import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUs
 import ServersPanelComponent from "../server/ServersPanel.component";
 import ChannelComponent from "../channel/Channel.component";
 import GroupComponent from "../group/Group.component";
+import MemberComponent from "../member/MemberComponent";
+import MessagesPanelComponent from "../message/MessagesPanel.component";
+import useSocketIo from "../../util/use-socket-io";
+import {useSocketEvent} from "socket.io-react-hook";
 
 
 // type GlobalContextType = {
@@ -24,7 +28,7 @@ export {GlobalContext};
 function AppComponent() {
 
   const {keycloak, initialized} = useKeycloak();
-  const {getUserServers: apiGetUserServers} = useBackend();
+  const {getUserServersData: apiGetUserServersData, getUsersData: apiGetUsersData} = useBackend();
 
   // if (!keycloak.authenticated)
   //   keycloak.login();
@@ -39,10 +43,16 @@ function AppComponent() {
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null);
 
   const [overlay, setOverlay] = useState<any>(null);
-  // const [selectedServer, setSelectedServer] = useState<Server | null>(null);
 
-  // const io = useSocketIo();
-  // const messageReceivedEvent = useSocketEvent<any>(io.socket, "message_received");
+  const io = useSocketIo();
+  const messageReceivedEvent = useSocketEvent<Message>(io.socket, "message_received");
+
+  useEffect(() => {
+    setMessages((messages: SortedMap<Message>) => {
+      messages.set(messageReceivedEvent.lastMessage.id, messageReceivedEvent.lastMessage);
+      return messages;
+    });
+  }, [messageReceivedEvent]);
 
   const setServers = useCallback((value: ((prevState: SortedMap<Server>) => SortedMap<Server>) | SortedMap<Server>) => {
     if (selectedServer === null)
@@ -87,31 +97,32 @@ function AppComponent() {
 
   useEffect(() => {
 
-    // if (!keycloak.authenticated || keycloak.token === undefined) return;
-
-    // Backend.token = `Bearer ${keycloak.token}`;
-    //
-    // keycloak.onAuthRefreshSuccess = () => {
-    //   Backend.token = `Bearer ${keycloak.token}`;
-    // };
+    if (!keycloak.authenticated || keycloak.token === undefined) return;
 
     (async () => {
       // dev only
-      // const data1 = mockServers;
-      // const data2 = mockUsers;
-      // const data1 = await apiGetUserServers();
-      // const data2 = await apiGetUsers();
-      setServers(mockServers);
-      setChannels(mockChannels);
-      setGroups(mockGroups);
+      const apiServers = {
+        servers: mockServers,
+        channels: mockChannels,
+        groups: mockGroups,
+        members: mockMembers,
+      };
+      const apiUsers = mockUsers;
+      // const apiServers = await apiGetUserServersData();
+      // const apiUsers = await apiGetUsersData(apiServers.members.map<string>(member => member.user_id).toArray() as string[])
+
+      setServers(apiServers.servers);
+      setChannels(apiServers.channels);
+      setGroups(apiServers.groups);
+      setMembers(apiServers.members);
+      // setMessages(new SortedMap<Message>());
       setMessages(mockMessages);
-      setMembers(mockMembers);
-      setUsers(mockUsers);
+      setUsers(apiUsers);
     })();
 
-  }, [apiGetUserServers, keycloak, setServers, setChannels]);
+  }, [apiGetUserServersData, keycloak, setChannels, setServers]);
 
-  // if (!initialized || !keycloak.authenticated) return null;
+  if (!initialized || !keycloak.authenticated) return null;
 
   return (
       <GlobalContext.Provider value={{
@@ -126,16 +137,11 @@ function AppComponent() {
         overlay: [overlay, setOverlay]
       }}>
         <ServersPanelComponent/>
-        {/*<ol className="servers">*/}
-        {/*  {*/}
-        {/*    servers.map(server =>*/}
-        {/*        <li>*/}
-        {/*          <button type="button" onClick={() => setSelectedServer(server)}>{server.name}</button>*/}
-        {/*        </li>*/}
-        {/*    )*/}
-        {/*  }*/}
-        {/*</ol>*/}
         <ol className="channels">
+          {
+            selectedServer === null ||
+            <button className="button" type="button">{selectedServer.name}</button>
+          }
           {
             channels.filter(channel => channel.server_id === selectedServer?.id && channel.group_id === null)
                 .map(channel =>
@@ -150,60 +156,18 @@ function AppComponent() {
                 )
           }
         </ol>
-        <ol className="messages">
+        <MessagesPanelComponent/>
+        <ol className="members">
           {
-            messages.filter(message => message.channel_id === selectedChannel?.id)
-                .map(message =>
-                    <li>
-                      {message.text}
-                    </li>
+            members.filter((member: Member) => member.server_id === selectedServer?.id)
+                .map((member: Member) => users.get(member.user_id) as User)
+                .map((user: User) =>
+                    <MemberComponent name={user.firstName}/>
                 )
           }
         </ol>
       </GlobalContext.Provider>
   );
-
-  // return (
-  //     <GlobalContext.Provider value={{
-  //       servers: [servers, setServers],
-  //       channels: [channels, setChannels],
-  //       groups: [groups, setGroups],
-  //       messages: [messages, setMessages],
-  //       members: [members, setMembers],
-  //       overlay: [overlay, setOverlay],
-  //       selectedServer: [selectedServer, setSelectedServer]
-  //     }}>
-  //       <div className="app-container">
-  //         <ServersPanelComponent/>
-  //         <ol className="list channels-container">
-  //           {
-  //             selectedServer === null ||
-  //             <button className="button" type="button">{selectedServer.name}</button>
-  //           }
-  //           {
-  //             channels.map(channel =>
-  //                 <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
-  //             )}
-  //           {
-  //             groups.map(group =>
-  //                 <GroupComponent key={`group_${group.id}`} group={group}/>
-  //             )}
-  //         </ol>
-  //         <div className="messages-container">
-  //           <MessagesPanelComponent/>
-  //         </div>
-  //         <ol className="list members-container">
-  //           {
-  //             members.map(member =>
-  //                 <li key={`member_${member.id}`}>
-  //                   {`${member.firstName} ${member.lastName}`}
-  //                 </li>
-  //             )}
-  //         </ol>
-  //         {overlay}
-  //       </div>
-  //     </GlobalContext.Provider>
-  // );
 
 }
 

@@ -2,6 +2,7 @@ import {useCallback, useState} from "react";
 import {Server} from "../../types";
 import {GlobalContext} from "../app/App.component";
 import useBackend from "../../hooks/backend.hook";
+import SortedMap from "../../util/SortedMap";
 
 function OverlayComponent() {
 
@@ -18,8 +19,8 @@ function OverlayComponent() {
 
     function addServer(server: Server) {
       // TODO check if this works
-      setServers((oldServers: Server[]) => {
-        oldServers.push(server);
+      setServers((oldServers: SortedMap<Server>) => {
+        oldServers.set(server.id, server);
         return oldServers;
       });
     }

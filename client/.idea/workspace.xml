@@ -1,36 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/server/Server.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/server/ServerCo.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/SortedMap.test.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/combine-contexts.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/util/use-socket-io.ts" afterDir="false" />
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="new state">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Backend.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/Backend.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/app/App.test.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/app/App.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.test.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.test.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/ChannelComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/group/Group.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/GroupComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/member/Member.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/member/MemberComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/message/Message.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/server/Server.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/mock-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mock-data.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Backend.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/app/App.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/SortedMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/SortedMap.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/servers/servers.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/servers/servers.controller.ts" afterDir="false" />
@@ -197,6 +175,10 @@
       <workItem from="1624108264837" duration="1659000" />
       <workItem from="1624113043367" duration="4890000" />
       <workItem from="1624126099159" duration="2010000" />
+      <workItem from="1624131521645" duration="631000" />
+      <workItem from="1624160310252" duration="3529000" />
+      <workItem from="1624164966905" duration="3517000" />
+      <workItem from="1624196375294" duration="460000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -212,7 +194,14 @@
       <option name="project" value="LOCAL" />
       <updated>1623921150909</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="new state">
+      <created>1624131550071</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1624131550071</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -234,7 +223,8 @@
     <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="update" />
-    <option name="LAST_COMMIT_MESSAGE" value="update" />
+    <MESSAGE value="new state" />
+    <option name="LAST_COMMIT_MESSAGE" value="new state" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

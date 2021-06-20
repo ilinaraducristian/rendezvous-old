@@ -71,7 +71,7 @@ class SortedMap<V = any> extends Map<number, V> {
     return filteredMap;
   }
 
-  map<K = any>(callbackFn: (value: V, key: number, map: SortedMap) => K): SortedMap {
+  map<K = any>(callbackFn: (value: V, key: number, map: SortedMap) => K): SortedMap<K> {
     const newSortedMap = new SortedMap<K>();
     this.sortedKeys.forEach((key) => {
       newSortedMap.set(key, callbackFn(this.get(key) as V, key, this));
