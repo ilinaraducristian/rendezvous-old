@@ -1,23 +1,26 @@
-import {Channel} from "../../types";
 import {useState} from "react";
-import ChannelComponent from "../channel/Channel.component";
-import SortedMap from "../../util/SortedMap";
+import ChannelsListComponent from "../channel/ChannelsList.component";
+import ArrowSVG from "../../svg/Arrow.svg";
 
-function GroupComponent({name, channels}: { name: string, channels: SortedMap<Channel> }) {
+type ComponentProps = {
+  id: number,
+  name: string
+}
+
+function GroupComponent({id, name}: ComponentProps) {
 
   const [isCollapsed, setIsExpanded] = useState(true);
 
   return (
       <li>
-        <button className="button" type="button" onClick={() => setIsExpanded(!isCollapsed)}>{name}</button>
-        <ol className="list">
-          {
-            isCollapsed ||
-            channels.map(channel => (
-                <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
-            ))
-          }
-        </ol>
+        <button className="btn btn__group" type="button" onClick={() => setIsExpanded(!isCollapsed)}>
+          <ArrowSVG className={"svg__arrow" + (isCollapsed ? " svg__arrow--active" : "")}/>
+          <span>{name}</span>
+        </button>
+        {
+          isCollapsed ||
+          <ChannelsListComponent groupId={id}/>
+        }
       </li>
   );
 

@@ -5,12 +5,8 @@ import useBackend from "../../hooks/backend.hook";
 import SortedMap from "../../util/SortedMap";
 import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
 import ServersPanelComponent from "../server/ServersPanel.component";
-import ChannelComponent from "../channel/Channel.component";
-import GroupComponent from "../group/Group.component";
-import MemberComponent from "../member/MemberComponent";
-import MessagesPanelComponent from "../message/MessagesPanel.component";
-import useSocketIo from "../../util/use-socket-io";
-import {useSocketEvent} from "socket.io-react-hook";
+import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
+import ContentPanelComponent from "../content/ContentPanel.component";
 
 
 // type GlobalContextType = {
@@ -28,7 +24,7 @@ export {GlobalContext};
 function AppComponent() {
 
   const {keycloak, initialized} = useKeycloak();
-  const {getUserServersData: apiGetUserServersData, getUsersData: apiGetUsersData} = useBackend();
+  const Backend = useBackend();
 
   // if (!keycloak.authenticated)
   //   keycloak.login();
@@ -44,15 +40,31 @@ function AppComponent() {
 
   const [overlay, setOverlay] = useState<any>(null);
 
-  const io = useSocketIo();
-  const messageReceivedEvent = useSocketEvent<Message>(io.socket, "message_received");
+  // const io = useSocketIo();
+  // const messageReceivedEvent = useSocketEvent<Message>(io.socket, "message_received");
+  // const newMemberEvent = useSocketEvent<Member>(io.socket, "new_member");
+  // const userInfoUpdateEvent = useSocketEvent<User>(io.socket, "user_info_update");
 
-  useEffect(() => {
-    setMessages((messages: SortedMap<Message>) => {
-      messages.set(messageReceivedEvent.lastMessage.id, messageReceivedEvent.lastMessage);
-      return messages;
-    });
-  }, [messageReceivedEvent]);
+  // useEffect(() => {
+  //   setMessages((messages: SortedMap<Message>) => {
+  //     messages.set(messageReceivedEvent.lastMessage.id, messageReceivedEvent.lastMessage);
+  //     return messages;
+  //   });
+  // }, [messageReceivedEvent]);
+  //
+  // useEffect(() => {
+  //   setMembers(members => {
+  //     members.set(newMemberEvent.lastMessage.id, newMemberEvent.lastMessage);
+  //     return members;
+  //   });
+  // }, [newMemberEvent]);
+  //
+  // useEffect(() => {
+  //   setUsers(users => {
+  //     users.set(userInfoUpdateEvent.lastMessage.id, userInfoUpdateEvent.lastMessage);
+  //     return users;
+  //   });
+  // }, [userInfoUpdateEvent]);
 
   const setServers = useCallback((value: ((prevState: SortedMap<Server>) => SortedMap<Server>) | SortedMap<Server>) => {
     if (selectedServer === null)
@@ -97,7 +109,7 @@ function AppComponent() {
 
   useEffect(() => {
 
-    if (!keycloak.authenticated || keycloak.token === undefined) return;
+    // if (!keycloak.authenticated || keycloak.token === undefined) return;
 
     (async () => {
       // dev only
@@ -120,9 +132,9 @@ function AppComponent() {
       setUsers(apiUsers);
     })();
 
-  }, [apiGetUserServersData, keycloak, setChannels, setServers]);
+  }, [Backend.getUserServersData, keycloak, setChannels, setServers]);
 
-  if (!initialized || !keycloak.authenticated) return null;
+  // if (!initialized || !keycloak.authenticated) return null;
 
   return (
       <GlobalContext.Provider value={{
@@ -137,35 +149,9 @@ function AppComponent() {
         overlay: [overlay, setOverlay]
       }}>
         <ServersPanelComponent/>
-        <ol className="channels">
-          {
-            selectedServer === null ||
-            <button className="button" type="button">{selectedServer.name}</button>
-          }
-          {
-            channels.filter(channel => channel.server_id === selectedServer?.id && channel.group_id === null)
-                .map(channel =>
-                    <ChannelComponent channel={channel}/>
-                )
-          }
-          {
-            groups.filter(group => group.server_id === selectedServer?.id)
-                .map(group =>
-                    <GroupComponent name={group.name}
-                                    channels={channels.filter(channel => channel.group_id === group.id)}/>
-                )
-          }
-        </ol>
-        <MessagesPanelComponent/>
-        <ol className="members">
-          {
-            members.filter((member: Member) => member.server_id === selectedServer?.id)
-                .map((member: Member) => users.get(member.user_id) as User)
-                .map((user: User) =>
-                    <MemberComponent name={user.firstName}/>
-                )
-          }
-        </ol>
+        <ChannelsPanelComponent/>
+        {/*<MessagesPanelComponent/>*/}
+        <ContentPanelComponent/>
       </GlobalContext.Provider>
   );
 

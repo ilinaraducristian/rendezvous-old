@@ -1,17 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="new state">
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="new state update 1">
+      <change afterPath="$PROJECT_DIR$/src/components/channel/ChannelsList.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/svg/Arrow.svg.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/svg/ArrowX.svg.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/svg/Channel.svg.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/svg/Members.svg.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/svg/Plus.svg.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../server/src/types/types.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../server/src/users/users.controller.spec.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../server/src/users/users.controller.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Backend.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/app/App.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.test.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/ChannelComponent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/group/Group.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/server/Server.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/server/Server.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/SortedMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/SortedMap.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/models/NewServer.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/servers/servers.controller.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/servers/servers.controller.spec.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/servers/servers.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/servers/servers.controller.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/util/SortedMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/util/SortedMap.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,12 +61,13 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/react-playground/testapp" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/svg" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="nodejs.jest.jest_package" value="$PROJECT_DIR$/node_modules/react-scripts" />
@@ -60,6 +79,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/svg" />
       <recent name="$PROJECT_DIR$/src/components/member" />
       <recent name="$PROJECT_DIR$/src" />
     </key>
@@ -178,7 +198,12 @@
       <workItem from="1624131521645" duration="631000" />
       <workItem from="1624160310252" duration="3529000" />
       <workItem from="1624164966905" duration="3517000" />
-      <workItem from="1624196375294" duration="460000" />
+      <workItem from="1624196375294" duration="1844000" />
+      <workItem from="1624199365829" duration="1995000" />
+      <workItem from="1624247763210" duration="1471000" />
+      <workItem from="1624255497646" duration="12298000" />
+      <workItem from="1624301589234" duration="6540000" />
+      <workItem from="1624418206716" duration="18414000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -201,7 +226,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624131550071</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="new state update 1">
+      <created>1624196853696</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1624196853696</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -224,7 +256,8 @@
     <option name="CHECK_NEW_TODO" value="false" />
     <MESSAGE value="update" />
     <MESSAGE value="new state" />
-    <option name="LAST_COMMIT_MESSAGE" value="new state" />
+    <MESSAGE value="new state update 1" />
+    <option name="LAST_COMMIT_MESSAGE" value="new state update 1" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

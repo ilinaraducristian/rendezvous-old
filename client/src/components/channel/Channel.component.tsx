@@ -1,19 +1,24 @@
 import {GlobalContext} from "../app/App.component";
 import {useCallback} from "react";
 import {Channel} from "../../types";
+import ChannelSVG from "../../svg/Channel.svg";
 
-function ChannelComponent({channel}: { channel: Channel }) {
+type Props = {
+  channel: Channel
+}
 
-  const consumer = useCallback((
-      {
-        selectedChannel: [selectedChannel, setSelectedChannel]
-      }) => {
+function ChannelComponent({channel}: Props) {
+
+  const consumer = useCallback(props => {
 
     return (
         <li>
-          <button className="button" type="button" onClick={() => {
-            setSelectedChannel(channel);
-          }}>{channel.name}</button>
+          <button className="btn btn__channel" type="button" onClick={() => {
+            props.selectedChannel[1](channel);
+          }}>
+            <ChannelSVG type={channel.type} isPrivate={false} className="svg__text-channel svg__text-channel--private"/>
+            <span className="span__channel-name">{channel.name}</span>
+          </button>
         </li>
     );
 

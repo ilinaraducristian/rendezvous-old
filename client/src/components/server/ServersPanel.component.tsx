@@ -20,13 +20,13 @@ function ServersPanelComponent() {
     }
 
     return (
-        <ol className="list servers-container">
+        <ol className="list list__panel list__servers-panel">
           {servers.map((server: Server) =>
               <ServerComponent key={`server_${server.id}`} server={server} onSelectServer={() => selectServer(server)}/>
           )}
-          <li>
-            <button className="button" type="button" onClick={() => setOverlay(<OverlayComponent/>)}>
-              Add server
+          <li className="li li__server">
+            <button className="btn btn__server" type="button" onClick={() => setOverlay(<OverlayComponent/>)}>
+              +
             </button>
           </li>
         </ol>

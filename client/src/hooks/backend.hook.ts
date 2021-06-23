@@ -24,14 +24,7 @@ function useBackend() {
         "Content-Type": "application/json"
       }
     });
-    const json = await response.json();
-    const servers = new SortedMap<Server>(json.servers.map((server: Server) => [server.id, server]));
-    const channels = new SortedMap<Channel>(json.channels.map((channel: Channel) => [channel.id, channel]));
-    const groups = new SortedMap<Group>(json.groups.map((group: Group) => [group.id, group]));
-    const members = new SortedMap<Member>(json.members.map((member: Member) => [member.id, member]));
-    return {
-      servers, channels, groups, members
-    };
+    return await response.json();
   }, [keycloak]);
 
   const getUsersData = useCallback(async (usersIds: string[]): Promise<Map<string, User>> => {
@@ -43,7 +36,6 @@ function useBackend() {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({usersIds})
-
     });
     const json = await response.json();
     return new Map<string, User>(json.users.map((user: User) => [user.id, user]));
