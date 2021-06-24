@@ -1,28 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="new state update 1">
-      <change afterPath="$PROJECT_DIR$/src/components/channel/ChannelsList.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/svg/Arrow.svg.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/svg/ArrowX.svg.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/svg/Channel.svg.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/svg/Members.svg.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/svg/Plus.svg.tsx" afterDir="false" />
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="started working on UI">
       <change afterPath="$PROJECT_DIR$/../server/src/types/types.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../server/src/users/users.controller.spec.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../server/src/users/users.controller.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/app/App.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.test.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/ChannelComponent.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/group/Group.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/server/Server.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/server/Server.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/svg/GIF.svg.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/svg/GIF.svg.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
@@ -84,11 +71,11 @@
       <recent name="$PROJECT_DIR$/src" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/assets" />
       <recent name="$PROJECT_DIR$/src/components/messages-panel" />
       <recent name="$PROJECT_DIR$/src/components/app" />
       <recent name="$PROJECT_DIR$/src/util" />
       <recent name="$PROJECT_DIR$/src/components/server" />
-      <recent name="$PROJECT_DIR$/src/components/overlay" />
     </key>
   </component>
   <component name="RunManager" selected="npm.start">
@@ -203,7 +190,7 @@
       <workItem from="1624247763210" duration="1471000" />
       <workItem from="1624255497646" duration="12298000" />
       <workItem from="1624301589234" duration="6540000" />
-      <workItem from="1624418206716" duration="18414000" />
+      <workItem from="1624418206716" duration="24479000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -233,7 +220,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624196853696</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="started working on UI">
+      <created>1624456352968</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1624456352968</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -257,7 +251,8 @@
     <MESSAGE value="update" />
     <MESSAGE value="new state" />
     <MESSAGE value="new state update 1" />
-    <option name="LAST_COMMIT_MESSAGE" value="new state update 1" />
+    <MESSAGE value="started working on UI" />
+    <option name="LAST_COMMIT_MESSAGE" value="started working on UI" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

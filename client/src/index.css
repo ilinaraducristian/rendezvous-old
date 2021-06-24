@@ -9,6 +9,7 @@
     --color-forth: rgba(79, 84, 92, 0.32);
     --color-fifth: #40444b;
     --small-shadow-bar: 0 1px 0 rgba(4, 4, 5, 0.2), 0 2px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
+    --members-panel-width: 15em;
 }
 
 #root {
@@ -74,6 +75,10 @@ body {
     color: white;
 }
 
+.span__header-channel-name {
+    flex-grow: 1;
+}
+
 .btn {
     cursor: pointer;
     padding: 0;
@@ -119,6 +124,17 @@ body {
     display: flex;
 }
 
+.btn__emoji {
+    background-image: url("assets/emojis.png");
+    background-position: 0 0;
+    background-size: 242px 110px;
+    background-repeat: no-repeat;
+    width: 22px;
+    height: 22px;
+    transform: scale(1);
+    filter: grayscale(100%);
+}
+
 .channels-panel-header {
     margin: 0.2em 0 0.2em 0.5em;
     border-style: none none solid none;
@@ -154,6 +170,15 @@ body {
     box-shadow: var(--small-shadow-bar);
 }
 
+.content__header__main {
+    flex-grow: 1;
+    display: flex;
+}
+
+.content__header__members {
+    width: var(--members-panel-width);
+}
+
 .content__body {
     display: flex;
     /*flex-direction: column;*/
@@ -171,7 +196,7 @@ body {
 }
 
 .content__body__members {
-    width: 15em;
+    width: var(--members-panel-width);
     background-color: var(--color-third);
     height: 100%;
 }
@@ -193,6 +218,6 @@ body {
     flex-grow: 1;
 }
 
-input:focus {
+.input__content-footer:focus {
     outline: none;
 }
