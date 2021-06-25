@@ -1,5 +1,5 @@
-import {GlobalContext} from "../app/App.component";
-import {useCallback} from "react";
+import {GlobalStates} from "../app/App.component";
+import {useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelComponent from "./Channel.component";
 
@@ -9,23 +9,18 @@ type ComponentProps = {
 
 function ChannelsListComponent({groupId = null}: ComponentProps) {
 
-  const consumer = useCallback(props => {
-    return (
-        props.channels[0].filter((channel: Channel) =>
-            channel.server_id === props.selectedServer[0]?.id && channel.group_id === groupId
-        )
-            .map((channel: Channel) =>
-                <ChannelComponent channel={channel}/>
+  const {state} = useContext(GlobalStates);
+
+  return useMemo(() =>
+          <>{
+            state.channels.filter((channel: Channel) =>
+                channel.server_id === state.selectedServer?.id && channel.group_id === groupId
             )
-    );
-
-  }, [groupId]);
-
-  return (
-      <GlobalContext.Consumer>
-        {consumer}
-      </GlobalContext.Consumer>
-  );
+                .map((channel: Channel) =>
+                    <ChannelComponent channel={channel}/>
+                )
+          }</>
+      , [groupId, state.channels, state.selectedServer?.id]);
 
 }
 
