@@ -1,6 +1,11 @@
 import {useState} from "react";
 
-function GroupComponent({name, children}: { name: string, children: any }) {
+type ComponentProps = {
+  name: string,
+  children: any
+}
+
+function GroupComponent({name, children}: ComponentProps) {
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 

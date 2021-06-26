@@ -1,6 +1,11 @@
 import {Server} from "../../types";
 
-function ServerComponent({server, onSelectServer: selectServer}: { server: Server, onSelectServer: Function }) {
+type ComponentProps = {
+  server: Server,
+  onSelectServer: Function
+}
+
+function ServerComponent({server, onSelectServer: selectServer}: ComponentProps) {
 
   return (
       <li className="li li__server">

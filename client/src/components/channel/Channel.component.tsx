@@ -3,11 +3,11 @@ import {useCallback, useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelSVG from "../../svg/Channel.svg";
 
-type Props = {
+type ComponentProps = {
   channel: Channel
 }
 
-function ChannelComponent({channel}: Props) {
+function ChannelComponent({channel}: ComponentProps) {
 
   const {dispatch} = useContext(GlobalStates);
 
