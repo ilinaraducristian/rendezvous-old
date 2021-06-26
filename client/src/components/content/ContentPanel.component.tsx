@@ -1,5 +1,5 @@
 import {GlobalStates} from "../../global-state";
-import {useContext, useMemo, useState} from "react";
+import {useCallback, useContext, useMemo, useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
 import PlusSVG from "../../svg/Plus.svg";
@@ -9,6 +9,11 @@ function ContentPanelComponent() {
 
   const [isMembersSelected, setIsMembersSelected] = useState(true);
   const {state} = useContext(GlobalStates);
+
+  const sendMessage = useCallback(e => {
+    if (e.code.includes("Enter"))
+      console.log((e.target as any).innerText);
+  }, []);
 
   return useMemo(() => {
     if (state.selectedChannel === null) return null;
@@ -29,17 +34,22 @@ function ContentPanelComponent() {
           <div className="content__body">
             <div className="content__body__main">
               <div className="content__body__messages">mesaje</div>
-              <footer className="content__footer">
+              <footer
+                  className="content__footer"
+              >
                 <button type="button" className="btn">
                   <PlusSVG/>
                 </button>
-                <textarea className="input__content-footer"
-                          placeholder={`Message #${state.selectedChannel.name}`}>
-
-                        </textarea>
-                {/*<text ref={inputRef} type="text" className="input__content-footer"*/}
-                {/*       placeholder={`Message #${props.selectedChannel[0].name}`}*/}
-                {/*       onChange={onChange}*/}
+                <span className="span__input-message"
+                      role="textbox"
+                      contentEditable
+                      onKeyUp={sendMessage}
+                />
+                {/*<textarea*/}
+                {/*    style={{height: '100%'}}*/}
+                {/*    className="input__content-footer"*/}
+                {/*    placeholder={`Message #${state.selectedChannel.name}`}*/}
+                {/*    onChange={onChange}*/}
                 {/*/>*/}
                 <button type="button" className="btn">
                   <GIFSVG/>
@@ -56,26 +66,26 @@ function ContentPanelComponent() {
           </div>
         </div>
     );
-  }, [isMembersSelected, state.selectedChannel]);
+  }, [isMembersSelected, sendMessage, state.selectedChannel]);
 
 }
 
-{/*<ol className="members">*/
-}
-{/*  {*/
-}
-{/*    members.filter((member: Member) => member.server_id === selectedServer?.id)*/
-}
-{/*        .map((member: Member) => users.get(member.user_id) as User)*/
-}
-{/*        .map((user: User) =>*/
-}
-{/*            <MemberComponent name={user.firstName}/>*/
-}
-{/*        )*/
-}
-{/*  }*/
-}
-{/*</ol>*/
-}
+/*<ol className="members">*/
+
+/*  {*/
+
+/*    members.filter((member: Member) => member.server_id === selectedServer?.id)*/
+
+/*        .map((member: Member) => users.get(member.user_id) as User)*/
+
+/*        .map((user: User) =>*/
+
+/*            <MemberComponent name={user.firstName}/>*/
+
+/*        )*/
+
+/*  }*/
+
+/*</ol>*/
+
 export default ContentPanelComponent;

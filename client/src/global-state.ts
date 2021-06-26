@@ -95,7 +95,7 @@ function reducer(state: GlobalStatesType, action: Action) {
     default:
       throw new Error(`${action.type} action not defined`);
   }
-  return state;
+  return {...state};
 }
 
 export {initialState, GlobalStates, Actions, reducer};

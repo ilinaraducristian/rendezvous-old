@@ -211,13 +211,13 @@ body {
     align-items: center;
 }
 
-.input__content-footer {
+.span__input-message {
     background: none;
     border: none;
     color: white;
     flex-grow: 1;
 }
 
-.input__content-footer:focus {
+.ispan__input-message:focus {
     outline: none;
 }

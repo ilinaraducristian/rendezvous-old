@@ -17,7 +17,7 @@ function ChannelsListComponent({groupId = null}: ComponentProps) {
                 channel.server_id === state.selectedServer?.id && channel.group_id === groupId
             )
                 .map((channel: Channel) =>
-                    <ChannelComponent channel={channel}/>
+                    <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
                 )
           }</>
       , [groupId, state.channels, state.selectedServer?.id]);

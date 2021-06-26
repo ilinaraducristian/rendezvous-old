@@ -31,7 +31,7 @@ function ChannelsPanelComponent() {
           {
             state.groups.filter((group: Group) => group.server_id === state.selectedServer?.id)
                 .map((group: Group) =>
-                    <GroupComponent id={group.id} name={group.name}/>
+                    <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
                 )
           }
         </ol>

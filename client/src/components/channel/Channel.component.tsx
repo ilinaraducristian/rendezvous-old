@@ -1,7 +1,7 @@
 import {useCallback, useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelSVG from "../../svg/Channel.svg";
-import {GlobalStates} from "../../global-state";
+import {Actions, GlobalStates} from "../../global-state";
 
 type ComponentProps = {
   channel: Channel
@@ -12,7 +12,7 @@ function ChannelComponent({channel}: ComponentProps) {
   const {dispatch} = useContext(GlobalStates);
 
   const selectedChannel = useCallback(() => {
-    dispatch({type: "CHANNEL_SET", payload: channel});
+    dispatch({type: Actions.CHANNEL_SELECTED, payload: channel});
   }, [channel, dispatch]);
 
   return useMemo(() => (

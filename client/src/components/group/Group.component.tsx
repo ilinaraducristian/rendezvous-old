@@ -19,7 +19,9 @@ function GroupComponent({id, name}: ComponentProps) {
         </button>
         {
           isCollapsed ||
-          <ChannelsListComponent groupId={id}/>
+          <ol className="list">
+              <ChannelsListComponent groupId={id}/>
+          </ol>
         }
       </li>
   );

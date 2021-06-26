@@ -5,7 +5,6 @@ import ServersPanelComponent from "../server/ServersPanel.component";
 import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
 import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
-import SocketIOListeners from "../../SocketIOListeners";
 import {Actions, GlobalStates, initialState, reducer} from "../../global-state";
 
 function AppComponent() {
@@ -49,7 +48,7 @@ function AppComponent() {
 
   return (
       <GlobalStates.Provider value={{state, dispatch}}>
-        <SocketIOListeners/>
+        {/*<SocketIOListeners/>*/}
         <ServersPanelComponent/>
         <ChannelsPanelComponent/>
         <ContentPanelComponent/>
