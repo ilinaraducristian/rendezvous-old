@@ -1,6 +1,6 @@
 import {useCallback, useContext, useState} from "react";
 import {Server} from "../../types";
-import {GlobalStates} from "../app/App.component";
+import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
 import SortedMap from "../../util/SortedMap";
 
@@ -15,7 +15,7 @@ function OverlayComponent() {
   const addServer = useCallback((server: Server) => {
     // TODO check if this works
     context.dispatch({
-      type: "SERVERS_SET", payload: (oldServers: SortedMap<Server>) => {
+      type: Actions.SERVERS_SET, payload: (oldServers: SortedMap<Server>) => {
         oldServers.set(server.id, server);
         return oldServers;
       }

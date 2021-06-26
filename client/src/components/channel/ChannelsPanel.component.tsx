@@ -1,4 +1,4 @@
-import {GlobalStates} from "../app/App.component";
+import {GlobalStates} from "../../global-state";
 import {useCallback, useContext, useMemo, useState} from "react";
 import GroupComponent from "../group/Group.component";
 import {Group} from "../../types";

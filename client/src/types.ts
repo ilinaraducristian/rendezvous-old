@@ -1,3 +1,6 @@
+import {Dispatch} from "react";
+import SortedMap from "./util/SortedMap";
+
 export type User = {
   id: string,
   username: string,
@@ -48,4 +51,25 @@ export type Server = {
   invitation: string | null,
   invitation_exp: Date | null,
   order: number
+}
+
+export type Action = {
+  type: string,
+  payload?: any | ((oldState: any) => any)
+}
+
+export type GlobalStatesType = {
+  servers: SortedMap<Server>,
+  channels: SortedMap<Channel>,
+  groups: SortedMap<Group>,
+  messages: SortedMap<Message>,
+  members: SortedMap<Member>,
+  users: Map<string, User>,
+  selectedServer: Server | null,
+  selectedChannel: Channel | null,
+  overlay: any
+}
+
+export type GlobalContextType = {
+  state: GlobalStatesType, dispatch: Dispatch<Action>
 }

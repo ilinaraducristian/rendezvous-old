@@ -2,7 +2,7 @@ import useSocketIo from "../../util/use-socket-io";
 import {useSocketEvent} from "socket.io-react-hook";
 import {useCallback, useContext, useMemo, useState} from "react";
 import {Message, User} from "../../types";
-import {GlobalStates} from "../app/App.component";
+import {GlobalStates} from "../../global-state";
 
 function MessagesPanelComponent() {
 

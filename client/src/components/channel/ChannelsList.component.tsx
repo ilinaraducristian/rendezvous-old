@@ -1,7 +1,7 @@
-import {GlobalStates} from "../app/App.component";
 import {useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelComponent from "./Channel.component";
+import {GlobalStates} from "../../global-state";
 
 type ComponentProps = {
   groupId?: number | null

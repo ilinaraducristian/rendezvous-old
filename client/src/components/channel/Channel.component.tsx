@@ -1,7 +1,7 @@
-import {GlobalStates} from "../app/App.component";
 import {useCallback, useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelSVG from "../../svg/Channel.svg";
+import {GlobalStates} from "../../global-state";
 
 type ComponentProps = {
   channel: Channel

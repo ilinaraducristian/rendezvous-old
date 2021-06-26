@@ -1,4 +1,4 @@
-import {GlobalStates} from "../app/App.component";
+import {GlobalStates} from "../../global-state";
 import {useContext, useMemo, useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
