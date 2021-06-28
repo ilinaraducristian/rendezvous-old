@@ -79,11 +79,10 @@ export class AppService {
     }]);
     const usersTable = query1Result[3].map(member => [member.user_id, {
       id: member.user_id,
-      username: member.username,
-      firstName: member.first_name,
-      lastName: member.last_name
+      username: member.USERNAME,
+      firstName: member.FIRST_NAME,
+      lastName: member.LAST_NAME
     }]);
-
     // if (membersTable.length > 0) {
     //   const membersUserIds = membersTable.map(member => `'${member.user_id}'`).join();
     //   query2Result = await this.connection.query(`SELECT *

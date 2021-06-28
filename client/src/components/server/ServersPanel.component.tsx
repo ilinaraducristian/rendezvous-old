@@ -2,7 +2,7 @@ import ServerComponent from "./Server.component";
 import {Server} from "../../types";
 import {useCallback, useContext, useMemo} from "react";
 import {Actions, GlobalStates} from "../../global-state";
-import OverlayComponent from "../overlay/Overlay.component";
+import AddServerOverlayComponent from "../overlay/AddServerOverlayComponent";
 
 function ServersPanelComponent() {
 
@@ -14,7 +14,7 @@ function ServersPanelComponent() {
   }, [dispatch]);
 
   const setOverlay = useCallback(() => {
-    dispatch({type: Actions.OVERLAY_SET, payload: <OverlayComponent/>});
+    dispatch({type: Actions.OVERLAY_SET, payload: <AddServerOverlayComponent/>});
   }, [dispatch]);
 
   return useMemo(() => {

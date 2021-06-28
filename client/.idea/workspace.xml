@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="update works">
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="selective rendering">
+      <change afterPath="$PROJECT_DIR$/src/components/member/MembersComponent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlay/AddServerOverlayComponent.tsx" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/components/overlay/JoinServerOverlayComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SocketIOListeners.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SocketIOListeners.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/app/App.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/member/MemberComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/member/MemberComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlay/Overlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlay/Overlay.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/SortedMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/SortedMap.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -46,7 +52,7 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/svg" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/overlay" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
@@ -60,6 +66,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/components/overlay" />
       <recent name="$PROJECT_DIR$/src/svg" />
       <recent name="$PROJECT_DIR$/src/components/member" />
       <recent name="$PROJECT_DIR$/src" />
@@ -197,7 +204,7 @@
       <workItem from="1624784079577" duration="1201000" />
       <workItem from="1624799361049" duration="7367000" />
       <workItem from="1624849341149" duration="5861000" />
-      <workItem from="1624866932291" duration="6543000" />
+      <workItem from="1624866932291" duration="13550000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -283,7 +290,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624878827446</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="selective rendering">
+      <created>1624880319129</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1624880319129</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -313,7 +327,8 @@
     <MESSAGE value="organization" />
     <MESSAGE value="UI update" />
     <MESSAGE value="update works" />
-    <option name="LAST_COMMIT_MESSAGE" value="update works" />
+    <MESSAGE value="selective rendering" />
+    <option name="LAST_COMMIT_MESSAGE" value="selective rendering" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

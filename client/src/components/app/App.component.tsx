@@ -27,6 +27,7 @@ function AppComponent() {
     if (oneTime) return;
     oneTime = true;
 
+
     (async () => {
       // dev only
       // const apiServers = {
@@ -39,7 +40,6 @@ function AppComponent() {
 
       // PROD
       const serversData = await Backend.getUserServersData();
-
       // setMessages(new SortedMap<Message>());
       dispatch({
         type: Actions.INITIAL_DATA_GATHERED,

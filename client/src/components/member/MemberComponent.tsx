@@ -4,9 +4,9 @@ type ComponentProps = {
 
 function MemberComponent({name}: ComponentProps) {
   return (
-      <div id="member-container">
+      <li>
         {name}
-      </div>
+      </li>
   );
 }
 
