@@ -1,5 +1,11 @@
-import {Dispatch} from "react";
-import SortedMap from "./util/SortedMap";
+export type KeycloakUser = {
+  sub: string,
+  preferred_username: string,
+  email: string, name: string,
+  nickname: string,
+  given_name: string,
+  family_name: string
+}
 
 export type User = {
   id: string,
@@ -26,7 +32,7 @@ export type Channel = {
   groupId: number,
   type: ChannelType,
   name: string,
-  order: number,
+  order: number
 }
 
 export type Message = {
@@ -53,23 +59,19 @@ export type Server = {
   order: number
 }
 
-export type Action = {
-  type: string,
-  payload?: any | ((oldState: any) => any)
+export type UserServersData = {
+  servers: [number, Server][],
+  channels: [number, Channel][],
+  groups: [number, Group][],
+  members: [number, Member][],
+  users: [string, User][]
 }
 
-export type GlobalStatesType = {
-  servers: SortedMap<Server>,
-  channels: SortedMap<Channel>,
-  groups: SortedMap<Group>,
-  messages: SortedMap<Message>,
-  members: SortedMap<Member>,
-  users: Map<string, User>,
-  selectedServer: Server | null,
-  selectedChannel: Channel | null,
-  overlay: any
-}
-
-export type GlobalContextType = {
-  state: GlobalStatesType, dispatch: Dispatch<Action>
-}
+export type NewServer = {
+  id: number,
+  group1_id: number,
+  group2_id: number,
+  channel1_id: number,
+  channel2_id: number,
+  member_id: number,
+};

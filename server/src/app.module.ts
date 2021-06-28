@@ -1,24 +1,19 @@
 import { Module } from "@nestjs/common";
-import { ServersController } from "./servers/servers.controller";
+import { ServersController } from "./controllers/servers/servers.controller";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { AuthGuard, KeycloakConnectModule, ResourceGuard, RoleGuard } from "nest-keycloak-connect";
 import { APP_GUARD } from "@nestjs/core";
 import { ServerEntity } from "./entities/server.entity";
-import { MessagesController } from "./message/messages.controller";
 import { SocketIOGateway } from "./socketio.gateway";
-import { ChannelsController } from "./channels/channels.controller";
+import { ChannelsController } from "./controllers/channels/channels.controller";
+import { UsersController } from "./controllers/users/users.controller";
+import { InvitationsController } from "./controllers/invitations/invitations.controller";
 import config from "./config";
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot(),
-    // TypeOrmModule.forRootAsync({
-    //   useFactory: async () =>
-    //     Object.assign(await getConnectionOptions(), {
-    //       autoLoadEntities: true,
-    //     }),
-    // })
+TypeOrmModule.forRoot(),
     TypeOrmModule.forFeature([ServerEntity]),
     KeycloakConnectModule.register({
       authServerUrl: config.keycloak.authServerUrl,
@@ -31,7 +26,7 @@ import config from "./config";
       logLevels: ["warn"]
     })
   ],
-  controllers: [ServersController, MessagesController, ChannelsController],
+  controllers: [ServersController, ChannelsController, UsersController, InvitationsController],
   providers: [
     {
       provide: APP_GUARD,

@@ -11,8 +11,9 @@ function ContentPanelComponent() {
   const {state} = useContext(GlobalStates);
 
   const sendMessage = useCallback(e => {
+    let message: string;
     if (e.code.includes("Enter"))
-      console.log((e.target as any).innerText);
+      message = (e.target as any).innerText;
   }, []);
 
   return useMemo(() => {
@@ -66,7 +67,7 @@ function ContentPanelComponent() {
           </div>
         </div>
     );
-  }, [isMembersSelected, sendMessage, state.selectedChannel]);
+  }, [isMembersSelected, sendMessage, state]);
 
 }
 

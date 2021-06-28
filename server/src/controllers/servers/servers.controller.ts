@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { AppService } from "../app.service";
+import { AppService } from "../../app.service";
 import { AuthenticatedUser } from "nest-keycloak-connect";
 import { Server as IOServer } from "socket.io";
 import { WebSocketServer } from "@nestjs/websockets";
-import NewServerResponse from "../models/NewServer";
+import { KeycloakUser, UserServersData } from "../../types";
 
 export type NewServerRequest = {
   name: string,
@@ -19,52 +19,25 @@ export class ServersController {
   constructor(private readonly appService: AppService) {
   }
 
-  @Post()
-  async createServer(
-    @AuthenticatedUser() user: any,
-    @Body("name") name: string,
-    @Body("order") order: number
-  ): Promise<NewServerResponse> {
-    return this.appService.createServer(user.sub, name, order);
-  }
-
   @Get()
-  async getServers(
+  async getUserServersData(
     @AuthenticatedUser() user: KeycloakUser
   ): Promise<UserServersData> {
     return await this.appService.getUserServersData(user.sub);
   }
 
-  @Post(":id/invitations")
-  async createInvitation(
+  @Post()
+  async createServer(
     @AuthenticatedUser() user: any,
-    @Param("id") sid: number
-  ): Promise<string> {
-    return this.appService.createInvitation(user.sub, sid);
-  }
-
-  @Post(":id/invitations/:invitation")
-  async joinServer(
-    @AuthenticatedUser() user: any,
-    @Param("invitation") invitation: string,
-    @Body() socket: any
-  ): Promise<string> {
-    const result = await this.appService.joinServer(user.sub, invitation);
-    // this.server.sockets.sockets.get(socket.socket_id).join(`server_${result.server_id}`);
-    // return result;
-    return "";
+    @Body("name") name: string,
+    @Body("order") order: number
+  ): Promise<any> {
+    return this.appService.createServer(user.sub, name, order);
   }
 
 }
 
-export type KeycloakUser = {
-  sub: string,
-  preferred_username: string,
-  email: string, name: string,
-  nickname: string,
-  given_name: string,
-  family_name: string
-}
+
 
 export type User = {
   id: string,
@@ -110,11 +83,3 @@ export type Member = {
   user_id: string
 }
 
-export type UserServersData = {
-  users: User[],
-  servers: Server[],
-  channels: Channel[],
-  groups: Group[],
-  messages: Message[],
-  members: Member[]
-}

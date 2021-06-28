@@ -59,7 +59,7 @@ describe("SortedMap testing", () => {
     });
 
     for (const a of sortedMap) {
-      console.log(a);
+
     }
 
   });

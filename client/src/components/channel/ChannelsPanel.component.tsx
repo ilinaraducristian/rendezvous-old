@@ -27,16 +27,20 @@ function ChannelsPanelComponent() {
           }
         </button>
         <ol className="list list__panel list__channels-panel">
-          <ChannelsListComponent/>
-          {
-            state.groups.filter((group: Group) => group.server_id === state.selectedServer?.id)
-                .map((group: Group) =>
-                    <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
-                )
+          {state.selectedServer === null ||
+          <>
+              <ChannelsListComponent/>
+            {
+              state.groups.filter((group: Group) => group.serverId === state.selectedServer?.id)
+                  .map((group: Group) =>
+                      <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
+                  )
+            }
+          </>
           }
         </ol>
       </div>
-  ), [isDropdownShown, state.groups, state.selectedServer, toggleDropdown]);
+  ), [isDropdownShown, state, toggleDropdown]);
 
 }
 

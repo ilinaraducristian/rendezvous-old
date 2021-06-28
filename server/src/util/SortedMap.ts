@@ -6,10 +6,11 @@ class SortedMap<V = any> extends Map<number, V> {
     super();
     this.sortedKeys = [];
     entries?.forEach(entry => {
-      this.sortedKeys.push(entry[0]);
-      super.set(entry[0], entry[1]);
+      this.set(entry[0], entry[1]);
     });
     this._size = this.sortedKeys.length;
+    // @ts-ignore
+    this[Symbol.iterator] = this.iteratorFunction;
   }
 
   private _size: number;
@@ -29,12 +30,9 @@ class SortedMap<V = any> extends Map<number, V> {
     return this;
   }
 
-  get(key: number): V {
-    const value = super.get(key);
-    if (value === undefined) {
-      throw new Error("Value cannot be undefined");
-    }
-    return value;
+  last(): V | undefined {
+    if (this.size === 0) return;
+    return this.get(this.sortedKeys[this.size - 1]);
   }
 
   delete(key: number): boolean {
@@ -49,9 +47,8 @@ class SortedMap<V = any> extends Map<number, V> {
   }
 
   forEach(callbackfn: (value: V, index: number, map: Map<number, V>, key: number) => void): void {
-    this.sortedKeys.sort();
     this.sortedKeys.forEach((key, index) => {
-      callbackfn(this.get(key), index, this, key);
+      callbackfn(this.get(key) as V, index, this, key);
     });
   }
 
@@ -64,33 +61,45 @@ class SortedMap<V = any> extends Map<number, V> {
     super.clear();
   }
 
-  // map<K = any>(callbackfn: (value: V, index: number, map: Map<number, V>, key: number) => K) {
-  //     const newSortedMap = new SortedMap<K>();
-  //     this.sortedKeys.forEach((key, index) => {
-  //         newSortedMap.set(key, callbackfn(this.get(key), index, this, key));
-  //     });
-  //     return newSortedMap;
-  // }
-
-  toArray<T = any>(mappingfn?: (value: V, index: number, map: Map<number, V>, key: number) => T): (V | T)[] {
-    return this.sortedKeys.map((key, index) => {
-      const val = super.get(key);
-      if (val === undefined) throw new Error("Value cannot be undefined");
-      if (mappingfn !== undefined)
-        return mappingfn(val, index, this, key);
-      else return val;
+  filter(callbackFn: (element: V, key: number, map: SortedMap) => boolean): SortedMap<V> {
+    const filteredMap = new SortedMap<V>();
+    this.sortedKeys.filter((value: number) => {
+      return callbackFn(this.get(value) as V, value, this);
+    }).forEach(value => {
+      filteredMap.set(value, this.get(value) as V);
     });
+    return filteredMap;
   }
 
-  toArrayLikeMap(): ([number, any])[] {
-    return this.sortedKeys.map(key => {
-      const value = super.get(key);
-      if (value instanceof SortedMap) {
-        return [key, value.toArrayLikeMap()];
-      }
-      return [key, value];
+  map<K = any>(callbackFn: (value: V, key: number, map: SortedMap) => K): SortedMap<K> {
+    const newSortedMap = new SortedMap<K>();
+    this.sortedKeys.forEach((key) => {
+      newSortedMap.set(key, callbackFn(this.get(key) as V, key, this));
     });
+    return newSortedMap;
+  }
 
+  toArray(mapLike: boolean = false): [number, V][] | V[] {
+    if (mapLike)
+      return this.sortedKeys.map(value => [value, this.get(value) as V]);
+    return this.sortedKeys.map(value => this.get(value) as V);
+  }
+
+  // toArray<T = any>(mappingfn?: (value: V, index: number, map: Map<number, V>, key: number) => T): (V | T)[] {
+  //   this.sortedKeys.sort();
+  //   return this.sortedKeys.map((key, index) => {
+  //     const val = super.get(key);
+  //     if (val === undefined) throw new Error("Value cannot be undefined");
+  //     if (mappingfn !== undefined)
+  //       return mappingfn(val, index, this, key);
+  //     else return val;
+  //   });
+  // }
+
+  private* iteratorFunction(): Generator<V> {
+    for (const i of this.sortedKeys) {
+      yield this.get(i) as V;
+    }
   }
 
 }

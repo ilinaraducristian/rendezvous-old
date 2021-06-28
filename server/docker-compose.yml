@@ -10,9 +10,10 @@ services:
       - DB_PASSWORD=root
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
-      - KEYCLOAK_IMPORT=/tmp/CAPP.json
+      - KEYCLOAK_IMPORT=/tmp/capp.json
     volumes:
-      - "./CAPP.json:/tmp/CAPP.json"
+      - "./capp.json:/tmp/capp.json"
+      - "./create-test-realm.sh:/tmp/create-test-realm.sh"
     ports:
       - "8180:8080"
   db:

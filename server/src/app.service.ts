@@ -4,8 +4,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { ServerEntity } from "./entities/server.entity";
 import Server from "./models/Server";
 import ChannelType from "./models/ChannelType";
-import NewServer from "./models/NewServer";
-import { UserServersData } from "./servers/servers.controller";
+import { NewServer, UserServersData } from "./types";
 
 @Injectable()
 export class AppService {
@@ -17,18 +16,16 @@ export class AppService {
   }
 
   async createServer(uid: string, name: string, order: number): Promise<NewServer> {
-    return this.connection.query("CALL create_server(?,?,?)", [uid, name, order])
-      .then(oldResult => {
-        const result = oldResult[0][0];
-        Object.entries(result).forEach((entry: [string, string]) => {
-          const entryAsNumber = parseInt(entry[1]);
-          if (isNaN(entryAsNumber)) throw new Error("id is NaN, database error");
-          result[entry[0]] = entryAsNumber;
-        });
-        result.id = result.server_id;
-        delete result.server_id;
-        return result;
-      });
+    let result = await this.connection.query("CALL create_server(?,?,?)", [uid, name, order]);
+    result = result[0][0];
+    Object.entries(result).forEach((entry: [string, string]) => {
+      const entryAsNumber = parseInt(entry[1]);
+      if (isNaN(entryAsNumber)) throw new Error("id is NaN, database error");
+      result[entry[0]] = entryAsNumber;
+    });
+    result.id = result.server_id;
+    delete result.server_id;
+    return result;
   }
 
   async createInvitation(uid: string, sid: number): Promise<string> {
@@ -47,30 +44,59 @@ export class AppService {
     return this.connection.query("SELECT send_message(?,?,?,?)", [uid, sid, cid, text]).then(result => Object.entries(result[0])[0][1] as number);
   }
 
-  async getServerData(uid: string, sid: number): Promise<any> {
-    return this.connection.query("CALL get_server_data(?,?)", [uid, sid]);
+  async getUsersData(serverIds: number[]) {
+    const results = await Promise.all(serverIds.map(serverId => this.connection.query("CALL get_users_data(?)", [serverId])));
+    console.log(results);
   }
 
   async getUserServersData(uid: string): Promise<UserServersData> {
     const query1Result = await this.connection.query("CALL get_user_servers_data(?)", [uid]);
-    const serversTable = query1Result[0];
-    const groupsTable = query1Result[1];
-    const channelsTable = query1Result[2];
-    const membersTable = query1Result[3];
-    let query2Result: any = [];
-    if (membersTable.length > 0) {
-      const membersUserIds = membersTable.map(member => `'${member.user_id}'`).join();
-      query2Result = await this.connection.query(`SELECT *
-                                                  FROM get_users
-                                                  WHERE id IN (${membersUserIds})`);
-    }
+    const serversTable = query1Result[0].map(server => [server.id, {
+      id: server.id,
+      name: server.name,
+      userId: server.owner,
+      invitation: server.invitation,
+      invitationExp: server.invitation_exp,
+      order: server.order
+    }]);
+    const groupsTable = query1Result[1].map(group => [group.id, {
+      id: group.id,
+      serverId: group.server_id,
+      name: group.name,
+      order: group.order
+    }]);
+    const channelsTable = query1Result[2].map(channel => [channel.id, {
+      id: channel.id,
+      serverId: channel.server_id,
+      groupId: channel.group_id,
+      type: channel.type,
+      name: channel.name,
+      order: channel.order
+    }]);
+    const membersTable = query1Result[3].map(member => [member.id, {
+      id: member.id,
+      userId: member.user_id,
+      serverId: member.server_id
+    }]);
+    const usersTable = query1Result[3].map(member => [member.user_id, {
+      id: member.user_id,
+      username: member.username,
+      firstName: member.first_name,
+      lastName: member.last_name
+    }]);
+
+    // if (membersTable.length > 0) {
+    //   const membersUserIds = membersTable.map(member => `'${member.user_id}'`).join();
+    //   query2Result = await this.connection.query(`SELECT *
+    //                                               FROM get_users
+    //                                               WHERE id IN (${membersUserIds})`);
+    // }
     return {
-      users: query2Result,
       servers: serversTable,
       channels: channelsTable,
       groups: groupsTable,
-      messages: [],
-      members: membersTable
+      members: membersTable,
+      users: usersTable
     };
   }
 

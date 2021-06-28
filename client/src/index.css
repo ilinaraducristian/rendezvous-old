@@ -39,6 +39,7 @@ body {
     flex-direction: column;
     background-color: var(--color-primary);
     width: 4.5em;
+    overflow-y: auto;
 }
 
 .list__channels-panel {

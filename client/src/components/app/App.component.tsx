@@ -1,60 +1,70 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useEffect, useReducer} from "react";
 import useBackend from "../../hooks/backend.hook";
+import {Actions, GlobalStates, initialState, reducer} from "../../global-state";
 import ServersPanelComponent from "../server/ServersPanel.component";
 import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
-import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
-import {Actions, GlobalStates, initialState, reducer} from "../../global-state";
+
+let oneTime = false;
 
 function AppComponent() {
 
-  const {keycloak} = useKeycloak();
+  const {keycloak, initialized} = useKeycloak();
   const Backend = useBackend();
-
-  // if (!keycloak.authenticated)
-  //   keycloak.login();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
+    if (!initialized)
+      return;
+    if (!keycloak.authenticated) {
+      keycloak.login();
+      return;
+    }
+    if (keycloak.token === undefined) return;
 
-    // if (!keycloak.authenticated || keycloak.token === undefined) return;
+    if (oneTime) return;
+    oneTime = true;
 
     (async () => {
       // dev only
-      const apiServers = {
-        servers: mockServers,
-        channels: mockChannels,
-        groups: mockGroups,
-        members: mockMembers,
-      };
-      const apiUsers = mockUsers;
-      // const apiServers = await apiGetUserServersData();
-      // const apiUsers = await apiGetUsersData(apiServers.members.map<string>(member => member.user_id).toArray() as string[])
+      // const apiServers = {
+      //   servers: mockServers,
+      //   channels: mockChannels,
+      //   groups: mockGroups,
+      //   members: mockMembers,
+      // };
+      // const apiUsers = mockUsers;
+
+      // PROD
+      const serversData = await Backend.getUserServersData();
 
       // setMessages(new SortedMap<Message>());
-      dispatch({type: Actions.SERVERS_SET, payload: apiServers.servers});
-      dispatch({type: Actions.CHANNELS_SET, payload: apiServers.channels});
-      dispatch({type: Actions.GROUPS_SET, payload: apiServers.groups});
-      dispatch({type: Actions.MEMBERS_SET, payload: apiServers.members});
-      dispatch({type: Actions.MESSAGES_SET, payload: mockMessages});
-      dispatch({type: Actions.USERS_SET, payload: apiUsers});
+      dispatch({
+        type: Actions.INITIAL_DATA_GATHERED,
+        payload: {...serversData}
+      });
+
     })();
 
-  }, [Backend.getUserServersData, keycloak]);
-
-  // if (!initialized || !keycloak.authenticated) return null;
+  }, [Backend, initialized, keycloak]);
 
   return (
-      <GlobalStates.Provider value={{state, dispatch}}>
-        {/*<SocketIOListeners/>*/}
-        <ServersPanelComponent/>
-        <ChannelsPanelComponent/>
-        <ContentPanelComponent/>
+      <GlobalStates.Provider value={{state, dispatch}}>{
+        (!initialized || !keycloak.authenticated) ||
+        <>
+          {/*<SocketIOListeners/>*/}
+            <ServersPanelComponent/>
+            <ChannelsPanelComponent/>
+            <ContentPanelComponent/>
+          {state.overlay}
+        </>
+      }
       </GlobalStates.Provider>
   );
 
 }
 
 export default AppComponent;
+

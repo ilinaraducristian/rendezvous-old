@@ -14,13 +14,13 @@ function ChannelsListComponent({groupId = null}: ComponentProps) {
   return useMemo(() =>
           <>{
             state.channels.filter((channel: Channel) =>
-                channel.server_id === state.selectedServer?.id && channel.group_id === groupId
+                channel.serverId === state.selectedServer?.id && channel.groupId === groupId
             )
                 .map((channel: Channel) =>
                     <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
                 )
           }</>
-      , [groupId, state.channels, state.selectedServer?.id]);
+      , [groupId, state]);
 
 }
 

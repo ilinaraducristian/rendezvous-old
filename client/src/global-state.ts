@@ -34,6 +34,7 @@ enum Actions {
   MESSAGES_SET = "MESSAGES_SET",
   MEMBERS_SET = "MEMBERS_SET",
   USERS_SET = "USERS_SET",
+  INITIAL_DATA_GATHERED = "INITIAL_DATA_GATHERED",
   SERVER_SELECTED = "SERVER_SELECTED",
   CHANNEL_SELECTED = "CHANNEL_SELECTED",
   OVERLAY_SET = "OVERLAY_SET",
@@ -82,6 +83,13 @@ function reducer(state: GlobalStatesType, action: Action) {
       break;
     case Actions.USERS_SET:
       updateState(state, "users", action.payload);
+      break;
+    case Actions.INITIAL_DATA_GATHERED:
+      updateState(state, "servers", action.payload.servers);
+      updateState(state, "channels", action.payload.channels);
+      updateState(state, "groups", action.payload.groups);
+      updateState(state, "members", action.payload.members);
+      updateState(state, "users", action.payload.users);
       break;
     case Actions.SERVER_SELECTED:
       updateState(state, "selectedServer", action.payload);

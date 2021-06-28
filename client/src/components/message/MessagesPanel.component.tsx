@@ -20,10 +20,11 @@ function MessagesPanelComponent() {
           <>
             <ol className="list messages-body">
               {
-                state.messages.filter((message: Message) => message.channel_id === state.selectedChannel?.id)
+                state.messages.filter((message: Message) => message.channelId === state.selectedChannel?.id)
                     .map((message: Message) =>
                         <li key={`channel_${message.id}`}>
-                          <span style={{marginRight: "0.5em"}}>{(state.users.get(message.user_id) as User).username}</span>
+                          <span
+                              style={{marginRight: "0.5em"}}>{(state.users.get(message.userId) as User).username}</span>
                           <span style={{marginRight: "0.5em"}}>{
                             `${message.timestamp.getHours()}:${message.timestamp.getMinutes()}`
                           }</span>
@@ -40,7 +41,7 @@ function MessagesPanelComponent() {
               />
             }
           </>
-      , [sendMessage, state.messages, state.selectedChannel, state.users]);
+      , [sendMessage, state]);
 
 }
 
