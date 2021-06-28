@@ -2,20 +2,22 @@ import {useCallback, useContext, useState} from "react";
 import {Server} from "../../types";
 import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
+import SortedMap from "../../util/SortedMap";
 
 function OverlayComponent() {
   const Backend = useBackend();
 
   const [serverName, setServerName] = useState<string>("");
   const [invitation, setInvitation] = useState<string>("");
-  const {state, dispatch} = useContext(GlobalStates);
+  const {dispatch} = useContext(GlobalStates);
 
   const addServer = useCallback((server: Server) => {
     // TODO check if this works
     dispatch({
-      type: Actions.SERVERS_SET, payload: state.servers.set(server.id, server)
+      type: Actions.SERVERS_SET,
+      payload: (oldServers: SortedMap<Server>) => new SortedMap<Server>(oldServers.set(server.id, server))
     });
-  }, [dispatch, state]);
+  }, [dispatch]);
 
   async function createServer(serverName: string, order: number) {
     const server = await Backend.createServer(serverName, order);

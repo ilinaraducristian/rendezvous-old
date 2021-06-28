@@ -43,7 +43,7 @@ function AppComponent() {
       // setMessages(new SortedMap<Message>());
       dispatch({
         type: Actions.INITIAL_DATA_GATHERED,
-        payload: {...serversData}
+        payload: serversData
       });
 
     })();

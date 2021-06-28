@@ -2,13 +2,16 @@ class SortedMap<V = any> extends Map<number, V> {
 
   private readonly sortedKeys: number[];
 
-  constructor(entries?: readonly (readonly [number, V])[] | null) {
+  constructor(entries?: [number, V][] | null | SortedMap<V>) {
     super();
     this.sortedKeys = [];
+    this._size = 0;
+    if (entries instanceof SortedMap) {
+      entries = entries.toArray(true) as [number, V][];
+    }
     entries?.forEach(entry => {
       this.set(entry[0], entry[1]);
     });
-    this._size = this.sortedKeys.length;
     // @ts-ignore
     this[Symbol.iterator] = this.iteratorFunction;
   }

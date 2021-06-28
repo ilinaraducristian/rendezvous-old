@@ -12,7 +12,7 @@ function ChannelComponent({channel}: ComponentProps) {
   const {dispatch} = useContext(GlobalStates);
 
   const selectedChannel = useCallback(() => {
-    dispatch({type: Actions.CHANNEL_SELECTED, payload: channel});
+    dispatch({type: Actions.CHANNEL_SELECTED, payload: {...channel}});
   }, [channel, dispatch]);
 
   return useMemo(() => (

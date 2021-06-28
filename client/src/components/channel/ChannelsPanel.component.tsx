@@ -40,7 +40,7 @@ function ChannelsPanelComponent() {
           }
         </ol>
       </div>
-  ), [isDropdownShown, state, toggleDropdown]);
+  ), [isDropdownShown, state.groups, state.selectedServer, toggleDropdown]);
 
 }
 

@@ -20,7 +20,7 @@ function ChannelsListComponent({groupId = null}: ComponentProps) {
                     <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
                 )
           }</>
-      , [groupId, state]);
+      , [groupId, state.channels, state.selectedServer]);
 
 }
 

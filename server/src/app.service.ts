@@ -46,7 +46,6 @@ export class AppService {
 
   async getUsersData(serverIds: number[]) {
     const results = await Promise.all(serverIds.map(serverId => this.connection.query("CALL get_users_data(?)", [serverId])));
-    console.log(results);
   }
 
   async getUserServersData(uid: string): Promise<UserServersData> {

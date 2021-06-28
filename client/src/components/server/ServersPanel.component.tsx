@@ -10,7 +10,7 @@ function ServersPanelComponent() {
 
   const selectServer = useCallback((server: Server) => {
     dispatch({type: Actions.CHANNEL_SELECTED, payload: null});
-    dispatch({type: Actions.SERVER_SELECTED, payload: server});
+    dispatch({type: Actions.SERVER_SELECTED, payload: {...server}});
   }, [dispatch]);
 
   const setOverlay = useCallback(() => {
@@ -29,7 +29,7 @@ function ServersPanelComponent() {
         </button>
       </li>
     </ol>;
-  }, [selectServer, setOverlay, state]);
+  }, [selectServer, setOverlay, state.servers]);
 
 
 }

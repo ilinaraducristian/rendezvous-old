@@ -16,28 +16,22 @@ function SocketIOListeners() {
 
   useEffect(() => {
     dispatch({
-      type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) => {
-        messages.set(messageReceivedEvent.lastMessage.id, messageReceivedEvent.lastMessage);
-        return messages;
-      }
+      type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) =>
+          new SortedMap<Message>(messages.set(messageReceivedEvent.lastMessage.id, messageReceivedEvent.lastMessage))
     });
   }, [dispatch, messageReceivedEvent]);
 
   useEffect(() => {
     dispatch({
-      type: Actions.MEMBERS_SET, payload: (members: SortedMap<Member>) => {
-        members.set(newMemberEvent.lastMessage.id, newMemberEvent.lastMessage);
-        return members;
-      }
+      type: Actions.MEMBERS_SET, payload: (members: SortedMap<Member>) =>
+          new SortedMap<Member>(members.set(newMemberEvent.lastMessage.id, newMemberEvent.lastMessage))
     });
   }, [dispatch, newMemberEvent]);
 
   useEffect(() => {
     dispatch({
-      type: Actions.USERS_SET, payload: (users: Map<string, User>) => {
-        users.set(userInfoUpdateEvent.lastMessage.id, userInfoUpdateEvent.lastMessage);
-        return users;
-      }
+      type: Actions.USERS_SET, payload: (users: Map<string, User>) =>
+          new Map<string, User>(users.set(userInfoUpdateEvent.lastMessage.id, userInfoUpdateEvent.lastMessage))
     });
   }, [dispatch, userInfoUpdateEvent]);
 

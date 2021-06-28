@@ -41,7 +41,7 @@ function MessagesPanelComponent() {
               />
             }
           </>
-      , [sendMessage, state]);
+      , [sendMessage, state.messages, state.selectedChannel, state.users]);
 
 }
 

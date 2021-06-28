@@ -67,7 +67,7 @@ function ContentPanelComponent() {
           </div>
         </div>
     );
-  }, [isMembersSelected, sendMessage, state]);
+  }, [isMembersSelected, sendMessage, state.selectedChannel]);
 
 }
 
