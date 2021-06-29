@@ -1,18 +1,29 @@
-import {GlobalStates} from "../../global-state";
+import {Actions, GlobalStates} from "../../global-state";
 import {useCallback, useContext, useMemo, useState} from "react";
 import GroupComponent from "../group/Group.component";
-import {Group} from "../../types";
+import {Group, Server} from "../../types";
 import ArrowXSVG from "../../svg/ArrowX.svg";
 import ChannelsListComponent from "./ChannelsList.component";
+import useBackend from "../../hooks/backend.hook";
+import SortedMap from "../../util/SortedMap";
 
 function ChannelsPanelComponent() {
 
+  const Backend = useBackend();
   const [isDropdownShown, setIsDropdownShown] = useState(false);
-  const {state} = useContext(GlobalStates);
+  const {state, dispatch} = useContext(GlobalStates);
 
-  const toggleDropdown = useCallback(() => {
+  const toggleDropdown = useCallback(async () => {
     setIsDropdownShown(!isDropdownShown);
-  }, [isDropdownShown]);
+    console.log(state.selectedServer);
+    const selectedServer = state.selectedServer as Server;
+    const invitation = await Backend.createInvitation(selectedServer.id);
+    dispatch({
+      type: Actions.SERVERS_SET,
+      payload: new SortedMap<Server>(state.servers.set(selectedServer.id, selectedServer))
+    });
+    alert(invitation);
+  }, [Backend, dispatch, isDropdownShown, state.selectedServer, state.servers]);
 
   return useMemo(() => (
       <div className="channels-panel">

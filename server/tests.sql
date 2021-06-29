@@ -1,4 +1,9 @@
 USE capp;
+SELECT m.`order` FROM members m WHERE m.user_id = '40ede82c-41a3-44b9-97d7-25dc25bde568' ORDER BY m.`order` DESC LIMIT 1;
+CALL create_server('40ede82c-41a3-44b9-97d7-25dc25bde568', 'fffff', 1)
+
+CALL create_server('40ede82c-41a3-44b9-97d7-25dc25bde568', 'asdsa', 0)
+
 # 100 test users
 SET @user1 = '40ede82c-41a3-44b9-97d7-25dc25bde568';
 SET @user10 = '02609aeb-1317-47c9-a8d0-d3c7b98c26e3';

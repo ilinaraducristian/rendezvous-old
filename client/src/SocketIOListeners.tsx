@@ -1,9 +1,9 @@
-import useSocketIo from "./util/use-socket-io";
 import {useSocketEvent} from "socket.io-react-hook";
 import {Member, Message, User} from "./types";
 import {useContext, useEffect} from "react";
 import SortedMap from "./util/SortedMap";
 import {Actions, GlobalStates} from "./global-state";
+import useSocketIo from "./hooks/socketio.hook";
 
 function SocketIOListeners() {
 

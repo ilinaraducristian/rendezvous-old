@@ -23,7 +23,6 @@ CREATE TABLE `groups`
     id        int PRIMARY KEY AUTO_INCREMENT,
     server_id int          NOT NULL,
     name      varchar(255) NOT NULL,
-    `order`   int          NOT NULL DEFAULT 0 COMMENT 'group order',
     FOREIGN KEY (server_id) REFERENCES servers (id)
 )$$
 
@@ -34,7 +33,6 @@ CREATE TABLE channels
     group_id  int,
     type      ENUM ('text', 'voice') NOT NULL,
     name      varchar(255)           NOT NULL,
-    `order`   int                    NOT NULL DEFAULT 0 COMMENT 'channel order',
     FOREIGN KEY (server_id) REFERENCES servers (id),
     FOREIGN KEY (group_id) REFERENCES `groups` (id)
 )$$
@@ -44,7 +42,6 @@ CREATE TABLE members
     id        int PRIMARY KEY AUTO_INCREMENT,
     server_id int      NOT NULL,
     user_id   char(36) NOT NULL,
-    `order`   int      NOT NULL DEFAULT 0 COMMENT 'user server order preference',
     FOREIGN KEY (server_id) REFERENCES servers (id),
     FOREIGN KEY (user_id) REFERENCES keycloak.USER_ENTITY (id)
 )$$
@@ -121,30 +118,6 @@ BEGIN
     END IF;
 END $$
 
-CREATE VIEW get_server_data AS
-SELECT s.id       AS server_id,
-       s.name     AS server_name,
-       s.user_id  AS owner,
-       g.id       AS group_id,
-       g.name     AS group_name,
-       g.order    AS group_order,
-       c.id       AS channel_id,
-       c.name     AS channel_name,
-       c.group_id AS channel_gid,
-       c.type     AS channel_type,
-       c.order    AS channel_order,
-       m.id       AS member_id,
-       m.user_id  AS member_uid,
-       m.order    AS server_order
-FROM servers s
-         LEFT JOIN channels c ON s.id = c.server_id
-         LEFT JOIN `groups` g ON s.id = g.server_id
-         LEFT JOIN members m ON s.id = m.server_id;
-
-CREATE VIEW get_users AS
-SELECT u.id AS id, u.USERNAME AS username, u.FIRST_NAME as first_name, u.LAST_NAME AS last_name
-FROM keycloak.USER_ENTITY u;
-
 CREATE PROCEDURE get_user_servers_data(userId char(36))
 BEGIN
     SELECT s.id, s.name, s.user_id as owner, s.invitation, s.invitation_exp, m.order
@@ -166,28 +139,14 @@ BEGIN
     WHERE m2.user_id = userId;
 END $$
 
-CREATE PROCEDURE get_users_data(userId int)
-BEGIN
-    SELECT keycloak.USER_ENTITY.ID         as id,
-           keycloak.USER_ENTITY.EMAIL      as email,
-           keycloak.USER_ENTITY.FIRST_NAME as first_name,
-           keycloak.USER_ENTITY.LAST_NAME  as last_name,
-           keycloak.USER_ENTITY.USERNAME   as username
-    FROM keycloak.USER_ENTITY
-             JOIN capp.members m ON USER_ENTITY.ID = m.user_id
-             LEFT JOIN capp.servers s ON m.server_id = s.id AND m.user_id = userId
-    GROUP BY id;
-END $$
-
 CREATE FUNCTION create_invitation(userId char(36), serverId int) RETURNS char(36)
     MODIFIES SQL DATA DETERMINISTIC
 BEGIN
     SELECT s.invitation, s.invitation_exp, m.user_id
-    INTO @INVITATION, @INVITATION_EXP, @mid
+    INTO @INVITATION, @INVITATION_EXP, @memberId
     FROM servers s
-             LEFT JOIN members m ON s.id = m.server_id AND userId = m.user_id
-    WHERE serverId = s.id;
-    IF (@mid IS NULL) THEN
+             LEFT JOIN members m ON s.id = serverId AND userId = m.user_id;
+    IF (@memberId IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
@@ -205,34 +164,52 @@ END $$
 CREATE PROCEDURE join_server(userId char(36), invitation char(36))
 BEGIN
     SELECT s.id, s.invitation, s.invitation_exp, m.user_id
-    INTO @SID, @INVITATION, @INVITATION_EXP, @mid
+    INTO @serverId, @invitation, @invitationExp, @memberId
     FROM servers s
              LEFT JOIN members m ON s.id = m.server_id AND userId = m.user_id
     WHERE invitation = s.invitation;
-    IF (@INVITATION IS NULL) THEN
+    IF (@invitation IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Bad invitation';
     END IF;
-    IF (@mid IS NOT NULL) THEN
+    IF (@memberId IS NOT NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User already a member of this server';
     END IF;
-    IF (@INVITATION_EXP < NOW()) THEN
+    IF (@invitationExp < NOW()) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Invitation expired';
     END IF;
-    INSERT INTO members (server_id, user_id) VALUES (@SID, userId);
+    INSERT INTO members (server_id, user_id) VALUES (@serverId, userId);
+
+    SELECT s.id, s.name, s.user_id as owner, s.invitation, s.invitation_exp
+    FROM servers s
+    WHERE s.id = @serverId;
+
+    SELECT g.id, g.server_id, g.name
+    FROM `groups` g
+    WHERE g.server_id = @serverId;
+
+    SELECT c.id, c.server_id, c.group_id, c.type, c.name
+    FROM channels c
+    WHERE c.server_id = @serverId;
+
+    SELECT m1.id, m1.server_id, m1.user_id, e.USERNAME, e.FIRST_NAME, e.LAST_NAME
+    FROM members m1
+             JOIN members m2 ON m1.server_id = @serverId
+             JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID
+    WHERE m2.user_id = userId;
 END $$
 
 CREATE FUNCTION send_message(userId char(36), serverId int, channelId int, messageText varchar(255)) RETURNS int
     MODIFIES SQL DATA DETERMINISTIC
 BEGIN
     SELECT m.id
-    INTO @MEMBER_ID
+    INTO @memberId
     FROM members m
     WHERE m.user_id = userId
       AND m.server_id = serverId;
-    IF (@MEMBER_ID IS NULL) THEN
+    IF (@memberId IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
@@ -242,95 +219,49 @@ BEGIN
 
 END $$
 
-CREATE PROCEDURE create_server(userId char(36), serverName varchar(255), serverOrder int)
+CREATE PROCEDURE create_server(userId char(36), serverName varchar(255))
 BEGIN
-    IF (LENGTH(TRIM(serverName)) = 0) THEN
+    SET @serverName = TRIM(serverName);
+    SET @group1Name = 'Text channels';
+    SET @group2Name = 'Voice channels';
+    SET @channel1Name = 'general';
+    SET @channel2Name = 'General';
+
+    IF (LENGTH(@serverName) = 0) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Server name must not be empty';
     END IF;
-    INSERT INTO servers (name, user_id) VALUES (serverName, userId);
-    SET @SID = LAST_INSERT_ID();
-    INSERT INTO `groups` (server_id, name, `order`) VALUES (@SID, 'Text channels', 0);
-    SET @G1ID = LAST_INSERT_ID();
-    INSERT INTO `groups` (server_id, name, `order`) VALUES (@SID, 'Voice channels', 1);
-    SET @G2ID = LAST_INSERT_ID();
-    INSERT INTO channels (server_id, group_id, type, name) VALUES (@SID, @G1ID, 'text', 'general');
-    SET @C1ID = LAST_INSERT_ID();
-    INSERT INTO channels (server_id, group_id, type, name) VALUES (@SID, @G2ID, 'voice', 'General');
-    SET @C2ID = LAST_INSERT_ID();
-    IF serverOrder IS NULL THEN
-        INSERT INTO members (server_id, user_id) VALUES (@SID, userId);
-    ELSE
-        INSERT INTO members (server_id, user_id, `order`) VALUES (@SID, userId, serverOrder);
-    END IF;
-    SET @MID = LAST_INSERT_ID();
-    SELECT @SID  as server_id,
-           @G1ID as group1_id,
-           @G2ID as group2_id,
-           @C1ID as channel1_id,
-           @C2ID as channel2_id,
-           @MID  as member_id;
-END $$
+    INSERT INTO servers (name, user_id) VALUES (@serverName, userId);
+    SET @serverId = LAST_INSERT_ID();
+    INSERT INTO `groups` (server_id, name) VALUES (@serverId, @group1Name);
+    SET @group1Id = LAST_INSERT_ID();
+    INSERT INTO `groups` (server_id, name) VALUES (@serverId, @group2Name);
+    SET @group2Id = LAST_INSERT_ID();
+    INSERT INTO channels (server_id, group_id, type, name) VALUES (@serverId, @group1Id, 'text', @channel1Name);
+    INSERT INTO channels (server_id, group_id, type, name) VALUES (@serverId, @group2Id, 'voice', @channel2Name);
 
-CREATE FUNCTION create_group(userId char(36), serverId int, groupName varchar(255),
-                             groupOrder int) RETURNS int DETERMINISTIC
-    MODIFIES SQL DATA
-BEGIN
-    SELECT id
-    INTO @MEMBER_ID
-    from members m
-    WHERE userId = m.user_id
-      AND serverId = m.server_id;
-    IF (@MEMBER_ID IS NULL) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'User is not a member of this server';
-    END IF;
-    INSERT INTO `groups` (server_id, name, `order`) VALUES (serverId, groupName, groupOrder);
-    RETURN LAST_INSERT_ID();
-END $$
+    INSERT INTO members (server_id, user_id) VALUES (@serverId, userId);
 
-CREATE FUNCTION create_channel(userId char(36), serverId int, groupId int,
-                               channelType ENUM ('text', 'voice'),
-                               channelName varchar(255), channelOrder int)
-    RETURNS int DETERMINISTIC
-    MODIFIES SQL DATA
-BEGIN
-    SELECT id
-    INTO @MEMBER_ID
-    from members m
-    WHERE userId = m.user_id
-      AND serverId = m.server_id;
-    IF (@MEMBER_ID IS NULL) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'User is not a member of this server';
-    END IF;
-    INSERT INTO channels (server_id, group_id, type, name, `order`)
-    VALUES (serverId, groupId, channelType, channelName, channelOrder);
-    RETURN LAST_INSERT_ID();
-END $$
+    SELECT s.id, s.name, s.user_id as userId, s.invitation, s.invitation_exp as invitationExp
+    FROM servers s
+    WHERE id = @serverId;
 
-CREATE PROCEDURE get_messages(userId char(36), channelId int, offset int)
-BEGIN
-    SET @MEMBER_ID = NULL;
+    SELECT g.id, g.server_id as serverId, g.name
+    FROM `groups` g
+    WHERE server_id = @serverId;
 
-    SELECT m.id
-    INTO @MEMBER_ID
-    FROM members m
-             JOIN servers s ON m.server_id = s.id
-             JOIN channels c ON channelId = c.id
-    WHERE m.user_id = userId;
-    IF (@MEMBER_ID IS NULL) THEN
-        SIGNAL SQLSTATE '45000'
-            SET MESSAGE_TEXT = 'User is not a member of this server';
-    END IF;
-    SELECT m.id         AS message_id,
-           m.user_id    AS user_id,
-           m.timestamp  AS timestamp,
-           m.channel_id AS channel_id,
-           m.text       AS message
-    FROM messages m
-             LEFT JOIN channels c ON m.channel_id = c.id
-    WHERE c.id = channelId
-    ORDER BY timestamp DESC, message_id DESC
-    LIMIT 30 OFFSET offset;
+    SELECT c.id, c.server_id as serverId, c.group_id as groupId, c.type, c.name
+    FROM channels c
+    WHERE server_id = @serverId;
+
+    SELECT m1.id,
+           m1.server_id as serverId,
+           m1.user_id   as userId,
+           e.USERNAME   as username,
+           e.FIRST_NAME as firstName,
+           e.LAST_NAME  as lastName
+    FROM members m1
+             JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID
+    WHERE m1.server_id = @serverId;
+
 END $$

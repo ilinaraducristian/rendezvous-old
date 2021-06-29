@@ -17,8 +17,7 @@ export type User = {
 export type Group = {
   id: number,
   serverId: number,
-  name: string,
-  order: number,
+  name: string
 }
 
 export enum ChannelType {
@@ -31,8 +30,7 @@ export type Channel = {
   serverId: number,
   groupId: number,
   type: ChannelType,
-  name: string,
-  order: number
+  name: string
 }
 
 export type Message = {
@@ -55,8 +53,7 @@ export type Server = {
   name: string,
   userId: string,
   invitation: string | null,
-  invitationExp: Date | null,
-  order: number
+  invitationExp: Date | null
 }
 
 export type UserServersData = {

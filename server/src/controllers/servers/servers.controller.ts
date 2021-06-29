@@ -3,7 +3,7 @@ import { AppService } from "../../app.service";
 import { AuthenticatedUser } from "nest-keycloak-connect";
 import { Server as IOServer } from "socket.io";
 import { WebSocketServer } from "@nestjs/websockets";
-import { KeycloakUser, UserServersData } from "../../types";
+import { KeycloakUser, NewServer, UserServersData } from "../../types";
 
 export type NewServerRequest = {
   name: string,
@@ -31,7 +31,7 @@ export class ServersController {
     @AuthenticatedUser() user: any,
     @Body("name") name: string,
     @Body("order") order: number
-  ): Promise<any> {
+  ): Promise<NewServer> {
     return this.appService.createServer(user.sub, name, order);
   }
 

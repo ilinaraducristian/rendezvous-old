@@ -1,4 +1,3 @@
-import useSocketIo from "../../util/use-socket-io";
 import {useSocketEvent} from "socket.io-react-hook";
 import {useCallback, useContext, useMemo} from "react";
 import {GlobalStates} from "../../global-state";
@@ -6,6 +5,7 @@ import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./MessageComponent";
 import {User} from "../../types";
+import useSocketIo from "../../hooks/socketio.hook";
 
 function MessagesPanelComponent() {
 

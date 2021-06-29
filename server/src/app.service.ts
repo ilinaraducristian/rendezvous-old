@@ -2,7 +2,6 @@ import { Injectable } from "@nestjs/common";
 import { Connection, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ServerEntity } from "./entities/server.entity";
-import Server from "./models/Server";
 import ChannelType from "./models/ChannelType";
 import { NewServer, UserServersData } from "./types";
 
@@ -15,8 +14,10 @@ export class AppService {
   ) {
   }
 
-  async createServer(uid: string, name: string, order: number): Promise<NewServer> {
+  async createServer(uid: string, name: string, order: number): Promise<UserServersData> {
     let result = await this.connection.query("CALL create_server(?,?,?)", [uid, name, order]);
+    console.log('in createServer');
+    console.log(result.map(a => a[0]));
     result = result[0][0];
     Object.entries(result).forEach((entry: [string, string]) => {
       const entryAsNumber = parseInt(entry[1]);
@@ -24,12 +25,11 @@ export class AppService {
       result[entry[0]] = entryAsNumber;
     });
     result.id = result.server_id;
-    delete result.server_id;
     return result;
   }
 
-  async createInvitation(uid: string, sid: number): Promise<string> {
-    return this.connection.query("SELECT create_invitation(?,?)", [uid, sid]).then(result => Object.entries(result[0])[0][1] as string);
+  async createInvitation(userId: string, serverId: number): Promise<string> {
+    return this.connection.query("SELECT create_invitation(?,?)", [userId, serverId]).then(result => Object.entries(result[0])[0][1] as string);
   }
 
   async createGroup(uid: string, sid: number, name: string): Promise<number> {
@@ -49,8 +49,17 @@ export class AppService {
   }
 
   async getUserServersData(uid: string): Promise<UserServersData> {
-    const query1Result = await this.connection.query("CALL get_user_servers_data(?)", [uid]);
-    const serversTable = query1Result[0].map(server => [server.id, {
+    const result = await this.connection.query("CALL get_user_servers_data(?)", [uid]);
+    return this.processQuery(result);
+  }
+
+  async joinServer(uid: string, invitation: string): Promise<UserServersData> {
+    const result = await this.connection.query("CALL join_server(?,?)", [uid, invitation]);
+    return await this.processQuery(result);
+  }
+
+  async processQuery(result: any): Promise<UserServersData> {
+    const serversTable = result[0].map(server => [server.id, {
       id: server.id,
       name: server.name,
       userId: server.owner,
@@ -58,13 +67,13 @@ export class AppService {
       invitationExp: server.invitation_exp,
       order: server.order
     }]);
-    const groupsTable = query1Result[1].map(group => [group.id, {
+    const groupsTable = result[1].map(group => [group.id, {
       id: group.id,
       serverId: group.server_id,
       name: group.name,
       order: group.order
     }]);
-    const channelsTable = query1Result[2].map(channel => [channel.id, {
+    const channelsTable = result[2].map(channel => [channel.id, {
       id: channel.id,
       serverId: channel.server_id,
       groupId: channel.group_id,
@@ -72,23 +81,17 @@ export class AppService {
       name: channel.name,
       order: channel.order
     }]);
-    const membersTable = query1Result[3].map(member => [member.id, {
+    const membersTable = result[3].map(member => [member.id, {
       id: member.id,
       userId: member.user_id,
       serverId: member.server_id
     }]);
-    const usersTable = query1Result[3].map(member => [member.user_id, {
+    const usersTable = result[3].map(member => [member.user_id, {
       id: member.user_id,
       username: member.USERNAME,
       firstName: member.FIRST_NAME,
       lastName: member.LAST_NAME
     }]);
-    // if (membersTable.length > 0) {
-    //   const membersUserIds = membersTable.map(member => `'${member.user_id}'`).join();
-    //   query2Result = await this.connection.query(`SELECT *
-    //                                               FROM get_users
-    //                                               WHERE id IN (${membersUserIds})`);
-    // }
     return {
       servers: serversTable,
       channels: channelsTable,
@@ -134,9 +137,6 @@ export class AppService {
     return this.connection.query("CALL get_user_servers_data(?)", [uid]).then(result => result[0]);
   }
 
-  async joinServer(uid: string, invitation: string): Promise<Server> {
-    return this.connection.query("CALL join_server(?,?)", [uid, invitation]);
-  }
 
 }
 

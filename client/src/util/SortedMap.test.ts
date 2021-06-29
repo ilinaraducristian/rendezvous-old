@@ -52,15 +52,12 @@ describe("SortedMap testing", () => {
   });
 
   it.only("simple test", () => {
-    const unsortedArray = Array.from(Array(10).keys()).sort(() => Math.random() - 0.5);
+    const sortedMap = new SortedMap<string>();
 
-    unsortedArray.forEach(value => {
-      sortedMap.set(value, {key: "value" + value});
-    });
+    sortedMap.set(6, "text1");
+    sortedMap.set(3, "text2");
 
-    for (const a of sortedMap) {
-
-    }
+    console.log(...sortedMap);
 
   });
 

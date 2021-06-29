@@ -12,9 +12,11 @@ export class InvitationsController {
   @Post()
   async createInvitation(
     @AuthenticatedUser() user: KeycloakUser,
-    @Body("server_id") serverId: number
+    @Body("serverId") serverId: number
   ) {
-    return this.appService.createInvitation(user.sub, serverId);
+    console.log(serverId);
+    console.log(user.sub);
+    return { invitation: await this.appService.createInvitation(user.sub, serverId) };
   }
 
   @Post(":invitation")
@@ -22,6 +24,7 @@ export class InvitationsController {
     @AuthenticatedUser() user: KeycloakUser,
     @Param("invitation") invitation: string
   ) {
+    console.log(user.sub);
     return this.appService.joinServer(user.sub, invitation);
   }
 

@@ -88,16 +88,12 @@ class SortedMap<V = any> extends Map<number, V> {
     return this.sortedKeys.map(value => this.get(value) as V);
   }
 
-  // toArray<T = any>(mappingfn?: (value: V, index: number, map: Map<number, V>, key: number) => T): (V | T)[] {
-  //   this.sortedKeys.sort();
-  //   return this.sortedKeys.map((key, index) => {
-  //     const val = super.get(key);
-  //     if (val === undefined) throw new Error("Value cannot be undefined");
-  //     if (mappingfn !== undefined)
-  //       return mappingfn(val, index, this, key);
-  //     else return val;
-  //   });
-  // }
+  concat(sortedMap: SortedMap<V>): this {
+    sortedMap.forEach((value, key) => {
+      this.set(key, value);
+    });
+    return this;
+  }
 
   private* iteratorFunction(): Generator<V> {
     for (const i of this.sortedKeys) {
