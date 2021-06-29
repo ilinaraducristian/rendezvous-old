@@ -118,24 +118,52 @@ BEGIN
     END IF;
 END $$
 
+CREATE VIEW servers_view
+AS
+SELECT s.id, s.name, s.user_id as userId, s.invitation, s.invitation_exp as invitationExp
+FROM servers s $$
+
+CREATE VIEW groups_view
+AS
+SELECT g.id, g.server_id as serverId, g.name
+FROM `groups` g $$
+
+CREATE VIEW channels_view
+AS
+SELECT c.id, c.server_id as serverId, c.group_id as groupId, c.type, c.name
+FROM channels c $$
+
+CREATE VIEW members_view
+AS
+SELECT m1.id,
+       m1.server_id as serverId,
+       m1.user_id   as userId,
+       e.USERNAME   as username,
+       e.FIRST_NAME as firstName,
+       e.LAST_NAME  as lastName
+FROM members m1
+         JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID $$
+
 CREATE PROCEDURE get_user_servers_data(userId char(36))
 BEGIN
-    SELECT s.id, s.name, s.user_id as owner, s.invitation, s.invitation_exp, m.order
-    FROM servers s
-             JOIN members m ON s.id = m.server_id
+    SELECT *
+    FROM servers_view
+             JOIN members m ON servers_view.id = m.server_id
         AND m.user_id = userId;
-    SELECT g.id, g.server_id, g.name, g.`order`
-    FROM `groups` g
-             JOIN members m ON g.server_id = m.server_id
+
+    SELECT *
+    FROM groups_view
+             JOIN members m ON groups_view.serverId = m.server_id
         AND m.user_id = userId;
-    SELECT c.id, c.server_id, c.group_id, c.type, c.name, c.`order`
-    FROM channels c
-             JOIN members m ON c.server_id = m.server_id
+
+    SELECT *
+    FROM channels_view
+             JOIN members m ON channels_view.serverId = m.server_id
         AND m.user_id = userId;
-    SELECT m1.id, m1.server_id, m1.user_id, e.USERNAME, e.FIRST_NAME, e.LAST_NAME
-    FROM members m1
-             JOIN members m2 ON m1.server_id = m2.server_id
-             JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID
+
+    SELECT *
+    FROM members_view
+             JOIN members m2 ON members_view.serverId = m2.server_id
     WHERE m2.user_id = userId;
 END $$
 
@@ -145,7 +173,9 @@ BEGIN
     SELECT s.invitation, s.invitation_exp, m.user_id
     INTO @INVITATION, @INVITATION_EXP, @memberId
     FROM servers s
-             LEFT JOIN members m ON s.id = serverId AND userId = m.user_id;
+             JOIN members m ON s.id = m.server_id
+    WHERE userId = m.user_id
+      AND s.id = serverId;
     IF (@memberId IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
@@ -180,24 +210,24 @@ BEGIN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'Invitation expired';
     END IF;
+
     INSERT INTO members (server_id, user_id) VALUES (@serverId, userId);
 
-    SELECT s.id, s.name, s.user_id as owner, s.invitation, s.invitation_exp
-    FROM servers s
-    WHERE s.id = @serverId;
+    SELECT *
+    FROM servers_view
+    WHERE id = @serverId;
 
-    SELECT g.id, g.server_id, g.name
-    FROM `groups` g
-    WHERE g.server_id = @serverId;
+    SELECT *
+    FROM groups_view
+    WHERE groups_view.serverId = @serverId;
 
-    SELECT c.id, c.server_id, c.group_id, c.type, c.name
-    FROM channels c
-    WHERE c.server_id = @serverId;
+    SELECT *
+    FROM channels_view
+    WHERE channels_view.serverId = @serverId;
 
-    SELECT m1.id, m1.server_id, m1.user_id, e.USERNAME, e.FIRST_NAME, e.LAST_NAME
-    FROM members m1
-             JOIN members m2 ON m1.server_id = @serverId
-             JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID
+    SELECT *
+    FROM members_view
+             JOIN members m2 ON members_view.serverId = @serverId
     WHERE m2.user_id = userId;
 END $$
 
@@ -242,26 +272,20 @@ BEGIN
 
     INSERT INTO members (server_id, user_id) VALUES (@serverId, userId);
 
-    SELECT s.id, s.name, s.user_id as userId, s.invitation, s.invitation_exp as invitationExp
-    FROM servers s
+    SELECT *
+    FROM servers_view
     WHERE id = @serverId;
 
-    SELECT g.id, g.server_id as serverId, g.name
-    FROM `groups` g
-    WHERE server_id = @serverId;
+    SELECT *
+    FROM groups_view
+    WHERE groups_view.serverId = @serverId;
 
-    SELECT c.id, c.server_id as serverId, c.group_id as groupId, c.type, c.name
-    FROM channels c
-    WHERE server_id = @serverId;
+    SELECT *
+    FROM channels_view
+    WHERE channels_view.serverId = @serverId;
 
-    SELECT m1.id,
-           m1.server_id as serverId,
-           m1.user_id   as userId,
-           e.USERNAME   as username,
-           e.FIRST_NAME as firstName,
-           e.LAST_NAME  as lastName
-    FROM members m1
-             JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID
-    WHERE m1.server_id = @serverId;
+    SELECT *
+    FROM members_view
+    WHERE members_view.serverId = @serverId;
 
 END $$

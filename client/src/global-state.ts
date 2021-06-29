@@ -35,6 +35,7 @@ enum Actions {
   MEMBERS_SET = "MEMBERS_SET",
   USERS_SET = "USERS_SET",
   INITIAL_DATA_GATHERED = "INITIAL_DATA_GATHERED",
+  SERVER_ADDED = "SERVER_ADDED",
   SERVER_SELECTED = "SERVER_SELECTED",
   CHANNEL_SELECTED = "CHANNEL_SELECTED",
   OVERLAY_SET = "OVERLAY_SET",
@@ -85,11 +86,18 @@ function reducer(state: GlobalStatesType, action: Action) {
       updateState(state, "users", action.payload);
       break;
     case Actions.INITIAL_DATA_GATHERED:
-      updateState(state, "servers", action.payload.servers);
-      updateState(state, "channels", action.payload.channels);
-      updateState(state, "groups", action.payload.groups);
-      updateState(state, "members", action.payload.members);
-      updateState(state, "users", action.payload.users);
+      updateState(state, "servers", new SortedMap<Server>(action.payload.servers));
+      updateState(state, "channels", new SortedMap<Channel>(action.payload.channels));
+      updateState(state, "groups", new SortedMap<Group>(action.payload.groups));
+      updateState(state, "members", new SortedMap<Member>(action.payload.members));
+      updateState(state, "users", new Map<string, User>(action.payload.users));
+      break;
+    case Actions.SERVER_ADDED:
+      updateState(state, "servers", new SortedMap<Server>(state.servers.concat(action.payload.servers)));
+      updateState(state, "channels", new SortedMap<Channel>(state.channels.concat(action.payload.channels)));
+      updateState(state, "groups", new SortedMap<Group>(state.groups.concat(action.payload.groups)));
+      updateState(state, "members", new SortedMap<Member>(state.members.concat(action.payload.members)));
+      updateState(state, "users", new Map<string, User>([...state.users, ...action.payload.users]));
       break;
     case Actions.SERVER_SELECTED:
       updateState(state, "selectedServer", action.payload);

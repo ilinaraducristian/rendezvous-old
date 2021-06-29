@@ -89,7 +89,7 @@ class SortedMap<V = any> extends Map<number, V> {
   }
 
   concat(sortedMap: SortedMap<V>): this {
-    sortedMap.forEach((value, key) => {
+    sortedMap.forEach((value, index, map, key) => {
       this.set(key, value);
     });
     return this;

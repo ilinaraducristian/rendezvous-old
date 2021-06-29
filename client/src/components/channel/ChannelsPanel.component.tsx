@@ -15,8 +15,9 @@ function ChannelsPanelComponent() {
 
   const toggleDropdown = useCallback(async () => {
     setIsDropdownShown(!isDropdownShown);
-    console.log(state.selectedServer);
     const selectedServer = state.selectedServer as Server;
+    console.log('SELECTED SERVER');
+    console.log(selectedServer);
     const invitation = await Backend.createInvitation(selectedServer.id);
     dispatch({
       type: Actions.SERVERS_SET,

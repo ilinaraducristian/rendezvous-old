@@ -20,21 +20,7 @@ function useBackend() {
     response = await response.json();
     response = responseToSortedMap(response);
     return response;
-  }, [keycloak]);
-
-  // const getUsersData = useCallback(async (serversIds: number[]): Promise<Map<string, User>> => {
-  //   if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
-  //   const response = await fetch(`${config.backend}/users/get-data`, {
-  //     method: "POST",
-  //     headers: {
-  //       Authorization: keycloak.token,
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({servers_ids: serversIds})
-  //   });
-  //   const json = await response.json();
-  //   return new Map<string, User>(json.users.map((user: User) => [user.id, user]));
-  // }, [keycloak.token]);
+  }, [keycloak.token]);
 
   const createServer = useCallback(async (name: string) => {
     if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
@@ -49,8 +35,8 @@ function useBackend() {
       })
     });
     response = await response.json();
-    return response;
-  }, [keycloak]);
+    return responseToSortedMap(response);
+  }, [keycloak.token]);
 
   const createInvitation = useCallback(async (serverId: number) => {
     if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
@@ -63,7 +49,6 @@ function useBackend() {
       body: JSON.stringify({serverId})
     });
     response = await response.json();
-    console.log(response);
     return response.invitation;
   }, [keycloak.token]);
 
@@ -77,7 +62,7 @@ function useBackend() {
     });
     response = await response.json();
     return response;
-  }, [keycloak]);
+  }, [keycloak.token]);
 
   return {
     getUserServersData,

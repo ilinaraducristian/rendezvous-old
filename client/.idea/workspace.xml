@@ -1,26 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="update">
-      <change afterPath="$PROJECT_DIR$/src/util/functions.ts" afterDir="false" />
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="removed order">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SocketIOListeners.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SocketIOListeners.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/overlay/JoinServerOverlayComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/JoinServerOverlayComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/server/ServersPanel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/global-state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/global-state.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/SortedMap.test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/SortedMap.test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mock-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mock-data.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/util/SortedMap.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/util/SortedMap.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/util/use-socket-io.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/app.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.spec.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/controllers/invitations/invitations.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/controllers/invitations/invitations.controller.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/controllers/servers/servers.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/controllers/servers/servers.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/util/uuid-regex.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/util/uuid-regex.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/socket-io.adapter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/socket-io.adapter.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/tests.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/tests.sql" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -213,7 +209,7 @@
       <workItem from="1624849341149" duration="5861000" />
       <workItem from="1624866932291" duration="13613000" />
       <workItem from="1624888719153" duration="8910000" />
-      <workItem from="1624939839897" duration="5516000" />
+      <workItem from="1624939839897" duration="12113000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -313,7 +309,14 @@
       <option name="project" value="LOCAL" />
       <updated>1624887683540</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="removed order">
+      <created>1624958791121</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1624958791121</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -344,7 +347,8 @@
     <MESSAGE value="update works" />
     <MESSAGE value="selective rendering" />
     <MESSAGE value="update" />
-    <option name="LAST_COMMIT_MESSAGE" value="update" />
+    <MESSAGE value="removed order" />
+    <option name="LAST_COMMIT_MESSAGE" value="removed order" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

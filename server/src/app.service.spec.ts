@@ -2,7 +2,6 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ServerEntity } from "./entities/server.entity";
-import { ChannelType } from "./types";
 
 describe("AppServiceTest", () => {
   let appService: AppService;
@@ -39,8 +38,7 @@ describe("AppServiceTest", () => {
 
   describe("basic functionality", () => {
     it("should create a new server", async () => {
-      const data = await appService.createServer(uid1, "a new server", 0);
-      console.log(data);
+      const data = await appService.createServer(uid1, "a new server");
       expect(data).toBeTruthy();
       // expect(data.servers.)
       // expect(typeof server.id).toBe('number');

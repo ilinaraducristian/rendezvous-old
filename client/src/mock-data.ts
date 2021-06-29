@@ -11,13 +11,11 @@ export const mockUsers = new Map<string, User>([["97a8ffc2-10cd-47dd-b915-cf8243
 export const mockGroups = new SortedMap<Group>([[1, {
   id: 1,
   serverId: 1,
-  name: "Text channels",
-  order: 0
+  name: "Text channels"
 }], [2, {
   id: 2,
   serverId: 1,
-  name: "Voice channels",
-  order: 1
+  name: "Voice channels"
 }]]);
 
 export const mockChannels = new SortedMap<Channel>([[1, {
@@ -25,15 +23,13 @@ export const mockChannels = new SortedMap<Channel>([[1, {
   serverId: 1,
   groupId: 1,
   type: ChannelType.Text,
-  name: "general",
-  order: 0,
+  name: "general"
 }], [2, {
   id: 2,
   serverId: 1,
   groupId: 2,
   type: ChannelType.Voice,
-  name: "General",
-  order: 0,
+  name: "General"
 }]]);
 
 export const mockMessages = new SortedMap<Message>([[1, {
@@ -56,6 +52,5 @@ export const mockServers = new SortedMap<Server>([[1, {
   name: "Server",
   userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
   invitation: null,
-  invitationExp: null,
-  order: 0
+  invitationExp: null
 }]]);

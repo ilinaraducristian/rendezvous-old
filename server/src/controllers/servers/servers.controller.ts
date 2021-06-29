@@ -1,9 +1,9 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Post } from "@nestjs/common";
 import { AppService } from "../../app.service";
 import { AuthenticatedUser } from "nest-keycloak-connect";
 import { Server as IOServer } from "socket.io";
 import { WebSocketServer } from "@nestjs/websockets";
-import { KeycloakUser, NewServer, UserServersData } from "../../types";
+import { KeycloakUser, UserServersData } from "../../types";
 
 export type NewServerRequest = {
   name: string,
@@ -29,10 +29,9 @@ export class ServersController {
   @Post()
   async createServer(
     @AuthenticatedUser() user: any,
-    @Body("name") name: string,
-    @Body("order") order: number
-  ): Promise<NewServer> {
-    return this.appService.createServer(user.sub, name, order);
+    @Body("name") name: string
+  ): Promise<any> {
+    return this.appService.createServer(user.sub, name);
   }
 
 }

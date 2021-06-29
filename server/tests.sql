@@ -1,6 +1,11 @@
 USE capp;
-SELECT m.`order` FROM members m WHERE m.user_id = '40ede82c-41a3-44b9-97d7-25dc25bde568' ORDER BY m.`order` DESC LIMIT 1;
-CALL create_server('40ede82c-41a3-44b9-97d7-25dc25bde568', 'fffff', 1)
+SELECT s.invitation, s.invitation_exp, m.user_id
+
+SELECT s.id, s.invitation, s.invitation_exp, m.user_id
+
+FROM servers s
+         LEFT JOIN members m ON s.id = m.server_id AND '02609aeb-1317-47c9-a8d0-d3c7b98c26e3' = m.user_id
+WHERE '7e194f7c-d8d2-11eb-99d1-0242ac120003' = s.invitation;
 
 CALL create_server('40ede82c-41a3-44b9-97d7-25dc25bde568', 'asdsa', 0)
 

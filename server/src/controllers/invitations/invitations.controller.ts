@@ -14,8 +14,6 @@ export class InvitationsController {
     @AuthenticatedUser() user: KeycloakUser,
     @Body("serverId") serverId: number
   ) {
-    console.log(serverId);
-    console.log(user.sub);
     return { invitation: await this.appService.createInvitation(user.sub, serverId) };
   }
 
@@ -24,7 +22,6 @@ export class InvitationsController {
     @AuthenticatedUser() user: KeycloakUser,
     @Param("invitation") invitation: string
   ) {
-    console.log(user.sub);
     return this.appService.joinServer(user.sub, invitation);
   }
 
