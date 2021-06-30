@@ -5,6 +5,8 @@ import { DISCONNECT_EVENT } from "@nestjs/websockets/constants";
 import { fromEvent, Observable } from "rxjs";
 import { filter, first, map, mergeMap, share, takeUntil } from "rxjs/operators";
 import { Server } from "socket.io";
+import config from "./config";
+import fetch from "node-fetch";
 
 export class SocketIoAdapter extends AbstractWsAdapter {
   constructor(
@@ -45,44 +47,16 @@ export class SocketIoAdapter extends AbstractWsAdapter {
         // Allow 1MB of data per request.
         maxHttpBufferSize: 1e6
       });
-
-      return server;
     } else {
       server = new Server(port, options);
     }
-    // server.use(this.socketIOKeycloakAuth({
-    //   tokenIntrospectionEndpoint: config.keycloak.tokenIntrospectionEndpoint,
-    //   clientId: config.keycloak.clientId,
-    //   secret: config.keycloak.secret
-    // }));
-    return server;
-  }
 
-  private socketIOKeycloakAuth(options: any) {
-    return async (socket, next) => {
-      const token = socket.handshake.auth.token;
-      try {
-        let response: any = await fetch(options.tokenIntrospectionEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-          },
-          body: `token=${token}&client_id=${options.clientId}&client_secret=${options.secret}`
-        });
-        response = await response.json();
-        if (!response.active) {
-          console.log("invalid token");
-          return next(new Error("Invalid token"));
-        }
-        socket.handshake.auth.username = response.username;
-        socket.handshake.auth.userId = response.sub;
-        next();
-      } catch (err) {
-        console.log("Keycloak token introspection error:");
-        console.log(err);
-        next(new Error("500 Internal Server Error"));
-      }
-    };
+    server.use(this.socketIOKeycloakAuth({
+      tokenIntrospectionEndpoint: config.keycloak.tokenIntrospectionEndpoint,
+      clientId: config.keycloak.clientId,
+      secret: config.keycloak.secret
+    }));
+    return server;
   }
 
   public bindMessageHandlers(
@@ -129,5 +103,32 @@ export class SocketIoAdapter extends AbstractWsAdapter {
       };
     }
     return { data: payload };
+  }
+
+  private socketIOKeycloakAuth(options: any) {
+    return async (socket, next) => {
+      const token = socket.handshake.auth.token;
+      try {
+        let response: any = await fetch(options.tokenIntrospectionEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: `token=${token}&client_id=${options.clientId}&client_secret=${options.secret}`
+        });
+        response = await response.json();
+        if (!response.active) {
+          console.log("invalid token");
+          return next(new Error("Invalid token"));
+        }
+        socket.handshake.auth.username = response.username;
+        socket.handshake.auth.sub = response.sub;
+        next();
+      } catch (err) {
+        console.log("Keycloak token introspection error:");
+        console.log(err);
+        next(new Error("500 Internal Server Error"));
+      }
+    };
   }
 }

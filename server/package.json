@@ -32,7 +32,8 @@
     "@nestjs/typeorm": "^7.1.5",
     "mysql2": "^2.2.5",
     "typeorm": "^0.2.32",
-    "nest-keycloak-connect": "^1.5.3"
+    "nest-keycloak-connect": "^1.5.3",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.6.0",

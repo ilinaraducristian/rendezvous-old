@@ -1,6 +1,7 @@
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { AppService } from "./app.service";
+import { UserServersData } from "./types";
 
 @WebSocketGateway()
 export class SocketIOGateway implements OnGatewayConnection<Socket> {
@@ -11,34 +12,34 @@ export class SocketIOGateway implements OnGatewayConnection<Socket> {
   constructor(private readonly appService: AppService) {
   }
 
-  @SubscribeMessage("send_message")
-  handleMessage(client: any, payload: string) {
-    this.server.emit("message_received", {
-      id: 2,
-      channel_id: 3,
-      user_id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
-      timestamp: new Date(),
-      text: payload
-    });
+  @SubscribeMessage("create_server")
+  async createServer(client: Socket, payload: { name: string }): Promise<UserServersData> {
+    const result = await this.appService.createServer(client.handshake.auth.sub, payload.name);
+    client.join(`server_${result.servers[0][1].id}`);
+    return result;
   }
 
-  @SubscribeMessage("create_channel")
-  createChannel(client: any, payload: any) {
-    this.server.emit("channel_created", {
-      id: 4,
-      server_id: 1,
-      group_id: 1,
-      type: "text",
-      name: payload,
-      order: 1
-    });
+  @SubscribeMessage("join_server")
+  async joinServer(client: Socket, payload: { invitation: string }): Promise<UserServersData> {
+    const result = await this.appService.joinServer(client.handshake.auth.sub, payload.invitation);
+    const newMember = result.members.map(member => member[1]).find(member =>
+      member.userId === client.handshake.auth.sub
+    );
+    const newUser = result.users.map(user => user[1]).find(user => user.id === client.handshake.auth.sub);
+
+    client.to(`server_${result.servers[0][0]}`)
+      .emit("new_member", {
+        member: newMember,
+        user: newUser
+      });
+    return result;
   }
 
   async handleConnection(client: Socket, ...args: any[]) {
-    // const servers = await this.appService.getUserServersData(client.handshake.auth.sub);
-    // servers.forEach(server => {
-    //   client.join(`server_${server.id}`);
-    // });
+    const response = await this.appService.getUserServersData(client.handshake.auth.sub);
+    response.servers.forEach(server => {
+      client.join(`server_${server[0]}`);
+    });
   }
 
 }

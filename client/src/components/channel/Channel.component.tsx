@@ -19,7 +19,7 @@ function ChannelComponent({channel}: ComponentProps) {
       <li>
         <button className="btn btn__channel" type="button" onClick={selectedChannel}>
           <ChannelSVG type={channel.type} isPrivate={false} className="svg__text-channel svg__text-channel--private"/>
-          <span className="span__channel-name">{channel.name}</span>
+          <span className="span">{channel.name}</span>
         </button>
       </li>
   ), [channel.name, channel.type, selectedChannel]);

@@ -2,9 +2,14 @@ import { Body, Controller, Param, Post } from "@nestjs/common";
 import { AuthenticatedUser } from "nest-keycloak-connect";
 import { KeycloakUser } from "../../types";
 import { AppService } from "../../app.service";
+import { WebSocketServer } from "@nestjs/websockets";
+import { Server as IOServer } from "socket.io";
 
 @Controller("invitations")
 export class InvitationsController {
+
+  @WebSocketServer()
+  server: IOServer;
 
   constructor(private readonly appService: AppService) {
   }

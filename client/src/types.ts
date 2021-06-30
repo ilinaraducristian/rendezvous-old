@@ -50,12 +50,14 @@ export type Server = {
   invitationExp: Date | null
 }
 
+export type Users = Map<string, User>;
+
 export type ServersData = {
   servers: SortedMap<Server>,
   channels: SortedMap<Channel>,
   groups: SortedMap<Group>,
   members: SortedMap<Member>,
-  users: Map<string, User>
+  users: Users
 }
 
 export type Action = {
@@ -69,7 +71,7 @@ export type GlobalStatesType = {
   groups: SortedMap<Group>,
   messages: SortedMap<Message>,
   members: SortedMap<Member>,
-  users: Map<string, User>,
+  users: Users,
   selectedServer: Server | null,
   selectedChannel: Channel | null,
   overlay: any

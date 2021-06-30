@@ -2,8 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Connection, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ServerEntity } from "./entities/server.entity";
-import ChannelType from "./models/ChannelType";
-import { UserServersData } from "./types";
+import { ChannelType, UserServersData } from "./types";
 
 @Injectable()
 export class AppService {
@@ -35,10 +34,6 @@ export class AppService {
     return this.connection.query("SELECT send_message(?,?,?,?)", [uid, sid, cid, text]).then(result => Object.entries(result[0])[0][1] as number);
   }
 
-  async getUsersData(serverIds: number[]) {
-    const results = await Promise.all(serverIds.map(serverId => this.connection.query("CALL get_users_data(?)", [serverId])));
-  }
-
   async getUserServersData(uid: string): Promise<UserServersData> {
     const result = await this.connection.query("CALL get_user_servers_data(?)", [uid]);
     return this.processQuery(result);
@@ -55,22 +50,19 @@ export class AppService {
       name: server.name,
       userId: server.userId,
       invitation: server.invitation,
-      invitationExp: server.invitationExp,
-      order: server.order
+      invitationExp: server.invitationExp
     }]);
     const groupsTable = result[1].map(group => [group.id, {
       id: group.id,
       serverId: group.serverId,
-      name: group.name,
-      order: group.order
+      name: group.name
     }]);
     const channelsTable = result[2].map(channel => [channel.id, {
       id: channel.id,
       serverId: channel.serverId,
       groupId: channel.groupId,
       type: channel.type,
-      name: channel.name,
-      order: channel.order
+      name: channel.name
     }]);
     const membersTable = result[3].map(member => [member.id, {
       id: member.id,
@@ -90,10 +82,6 @@ export class AppService {
       members: membersTable,
       users: usersTable
     };
-  }
-
-  async getServersData(uid: string): Promise<any[]> {
-    return this.connection.query("CALL get_user_servers_data(?)", [uid]).then(result => result[0]);
   }
 
 

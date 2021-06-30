@@ -1,9 +1,6 @@
 USE capp;
-SELECT s.invitation, s.invitation_exp, m.user_id
-
-SELECT s.id, s.invitation, s.invitation_exp, m.user_id
-
-FROM servers s
+CALL join_server('588ed943-d335-4b2c-89fc-98e1745e8859', 'ec753f4f-d987-11eb-b5dc-0242ac130003')
+    FROM servers s
          LEFT JOIN members m ON s.id = m.server_id AND '02609aeb-1317-47c9-a8d0-d3c7b98c26e3' = m.user_id
 WHERE '7e194f7c-d8d2-11eb-99d1-0242ac120003' = s.invitation;
 

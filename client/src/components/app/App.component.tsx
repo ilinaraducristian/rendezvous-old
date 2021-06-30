@@ -5,6 +5,7 @@ import {Actions, GlobalStates, initialState, reducer} from "../../global-state";
 import ServersPanelComponent from "../server/ServersPanel.component";
 import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
+import SocketIoListeners from "../../SocketIoListeners";
 
 let oneTime = false;
 
@@ -54,7 +55,7 @@ function AppComponent() {
       <GlobalStates.Provider value={{state, dispatch}}>{
         (!initialized || !keycloak.authenticated) ||
         <>
-          {/*<SocketIOListeners/>*/}
+            <SocketIoListeners/>
             <ServersPanelComponent/>
             <ChannelsPanelComponent/>
             <ContentPanelComponent/>

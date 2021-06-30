@@ -11,7 +11,6 @@ function ServersPanelComponent() {
   const selectServer = useCallback((server: Server) => {
     dispatch({type: Actions.CHANNEL_SELECTED, payload: null});
     dispatch({type: Actions.SERVER_SELECTED, payload: server});
-    console.log(server);
   }, [dispatch]);
 
   const setOverlay = useCallback(() => {
@@ -19,7 +18,6 @@ function ServersPanelComponent() {
   }, [dispatch]);
 
   return useMemo(() => {
-    console.log(state.servers);
     return <ol className="list list__panel list__servers-panel">
       {state.servers.map((server: Server) =>
           <ServerComponent key={`server_${server.id}`} server={server}

@@ -72,12 +72,22 @@ body {
     color: white
 }
 
-.span__channel-name {
+.span {
     color: white;
 }
 
 .span__header-channel-name {
     flex-grow: 1;
+}
+
+.span__input-message {
+    background: none;
+    border: none;
+    flex-grow: 1;
+}
+
+.span__input-message:focus {
+    outline: none;
 }
 
 .btn {
@@ -216,17 +226,6 @@ body {
     margin: 0 1em 1.5em 1em;
     display: flex;
     align-items: center;
-}
-
-.span__input-message {
-    background: none;
-    border: none;
-    color: white;
-    flex-grow: 1;
-}
-
-.span__input-message:focus {
-    outline: none;
 }
 
 .overlay {

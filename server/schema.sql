@@ -146,24 +146,24 @@ FROM members m1
 
 CREATE PROCEDURE get_user_servers_data(userId char(36))
 BEGIN
-    SELECT *
-    FROM servers_view
-             JOIN members m ON servers_view.id = m.server_id
+    SELECT s.id, s.name, s.userId, s.invitation, s.invitationExp
+    FROM servers_view s
+             JOIN members m ON s.id = m.server_id
         AND m.user_id = userId;
 
-    SELECT *
-    FROM groups_view
-             JOIN members m ON groups_view.serverId = m.server_id
+    SELECT g.id, g.serverId, g.name
+    FROM groups_view g
+             JOIN members m ON g.serverId = m.server_id
         AND m.user_id = userId;
 
-    SELECT *
-    FROM channels_view
-             JOIN members m ON channels_view.serverId = m.server_id
+    SELECT c.id, c.serverId, c.groupId, c.type, c.name
+    FROM channels_view c
+             JOIN members m ON c.serverId = m.server_id
         AND m.user_id = userId;
 
-    SELECT *
-    FROM members_view
-             JOIN members m2 ON members_view.serverId = m2.server_id
+    SELECT m1.id, m1.serverId, m1.userId, m1.username, m1.firstName, m1.lastName
+    FROM members_view m1
+             JOIN members m2 ON m1.serverId = m2.server_id
     WHERE m2.user_id = userId;
 END $$
 
@@ -213,21 +213,21 @@ BEGIN
 
     INSERT INTO members (server_id, user_id) VALUES (@serverId, userId);
 
-    SELECT *
-    FROM servers_view
+    SELECT s.id, s.name, s.userId, s.invitation, s.invitationExp
+    FROM servers_view s
     WHERE id = @serverId;
 
-    SELECT *
-    FROM groups_view
-    WHERE groups_view.serverId = @serverId;
+    SELECT g.id, g.serverId, g.name
+    FROM groups_view g
+    WHERE g.serverId = @serverId;
 
-    SELECT *
-    FROM channels_view
-    WHERE channels_view.serverId = @serverId;
+    SELECT c.id, c.serverId, c.groupId, c.type, c.name
+    FROM channels_view c
+    WHERE c.serverId = @serverId;
 
-    SELECT *
-    FROM members_view
-             JOIN members m2 ON members_view.serverId = @serverId
+    SELECT m1.id, m1.serverId, m1.userId, m1.username, m1.firstName, m1.lastName
+    FROM members_view m1
+             JOIN members m2 ON m1.serverId = @serverId
     WHERE m2.user_id = userId;
 END $$
 
@@ -272,20 +272,20 @@ BEGIN
 
     INSERT INTO members (server_id, user_id) VALUES (@serverId, userId);
 
-    SELECT *
-    FROM servers_view
+    SELECT s.id, s.name, s.userId, s.invitation, s.invitationExp
+    FROM servers_view s
     WHERE id = @serverId;
 
-    SELECT *
-    FROM groups_view
-    WHERE groups_view.serverId = @serverId;
+    SELECT g.id, g.serverId, g.name
+    FROM groups_view g
+    WHERE g.serverId = @serverId;
 
-    SELECT *
-    FROM channels_view
-    WHERE channels_view.serverId = @serverId;
+    SELECT c.id, c.serverId, c.groupId, c.type, c.name
+    FROM channels_view c
+    WHERE c.serverId = @serverId;
 
-    SELECT *
-    FROM members_view
-    WHERE members_view.serverId = @serverId;
+    SELECT m1.id, m1.serverId, m1.userId, m1.username, m1.firstName, m1.lastName
+    FROM members_view m1
+    WHERE m1.serverId = @serverId;
 
 END $$

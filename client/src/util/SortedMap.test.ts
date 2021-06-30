@@ -57,8 +57,6 @@ describe("SortedMap testing", () => {
     sortedMap.set(6, "text1");
     sortedMap.set(3, "text2");
 
-    console.log(...sortedMap);
-
   });
 
 });
