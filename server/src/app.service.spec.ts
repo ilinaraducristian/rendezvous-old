@@ -38,8 +38,8 @@ describe("AppServiceTest", () => {
 
   describe("basic functionality", () => {
     it("should create a new server", async () => {
-      await appService.createServer(uid1, 'a new server')
-      console.log(await appService.sendMessage(uid1, 1, 'asd2'));
+      // await appService.createServer(uid1, 'a new server')
+      console.log((await appService.getMessages(uid1, 1, 0))[0]);
     });
   });
 

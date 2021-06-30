@@ -23,7 +23,6 @@ function SocketIoListeners() {
 
 
   useEffect(() => {
-    console.log(newMessageEvent.lastMessage);
     if (newMessageEvent.lastMessage === undefined) return;
     dispatch({
       type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) => {

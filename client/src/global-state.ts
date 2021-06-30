@@ -1,16 +1,5 @@
 import SortedMap from "./util/SortedMap";
-import {
-  Action,
-  Channel,
-  GlobalContextType,
-  GlobalStatesType,
-  Group,
-  Member,
-  Message,
-  Server,
-  User,
-  UsersMap
-} from "./types";
+import {Action, Channel, GlobalContextType, GlobalStatesType, Group, Member, Message, Server, UsersMap} from "./types";
 import {createContext} from "react";
 
 const initialState = {
@@ -47,6 +36,7 @@ enum Actions {
   USERS_SET = "USERS_SET",
   INITIAL_DATA_GATHERED = "INITIAL_DATA_GATHERED",
   SERVER_ADDED = "SERVER_ADDED",
+  MESSAGES_ADDED = "MESSAGES_ADDED",
   SERVER_SELECTED = "SERVER_SELECTED",
   CHANNEL_SELECTED = "CHANNEL_SELECTED",
   OVERLAY_SET = "OVERLAY_SET",
@@ -97,18 +87,18 @@ function reducer(state: GlobalStatesType, action: Action) {
       updateState(state, "users", action.payload);
       break;
     case Actions.INITIAL_DATA_GATHERED:
-      updateState(state, "servers", new SortedMap<Server>(action.payload.servers));
-      updateState(state, "channels", new SortedMap<Channel>(action.payload.channels));
-      updateState(state, "groups", new SortedMap<Group>(action.payload.groups));
-      updateState(state, "members", new SortedMap<Member>(action.payload.members));
-      updateState(state, "users", new Map<string, User>(action.payload.users));
+      updateState(state, "servers", action.payload.servers.clone());
+      updateState(state, "channels", action.payload.channels.clone());
+      updateState(state, "groups", action.payload.groups.clone());
+      updateState(state, "members", action.payload.members.clone());
+      updateState(state, "users", new UsersMap(action.payload.users));
       break;
     case Actions.SERVER_ADDED:
-      updateState(state, "servers", new SortedMap<Server>(state.servers.concat(action.payload.servers)));
-      updateState(state, "channels", new SortedMap<Channel>(state.channels.concat(action.payload.channels)));
-      updateState(state, "groups", new SortedMap<Group>(state.groups.concat(action.payload.groups)));
-      updateState(state, "members", new SortedMap<Member>(state.members.concat(action.payload.members)));
-      updateState(state, "users", new Map<string, User>([...state.users, ...action.payload.users]));
+      updateState(state, "servers", state.servers.concat(action.payload.servers).clone());
+      updateState(state, "channels", state.channels.concat(action.payload.channels).clone());
+      updateState(state, "groups", state.groups.concat(action.payload.groups).clone());
+      updateState(state, "members", state.members.concat(action.payload.members).clone());
+      updateState(state, "users", new UsersMap(action.payload.users));
       break;
     case Actions.SERVER_SELECTED:
       updateState(state, "selectedServer", action.payload);
@@ -118,6 +108,10 @@ function reducer(state: GlobalStatesType, action: Action) {
       break;
     case Actions.OVERLAY_SET:
       updateState(state, "overlay", action.payload);
+      break;
+    case Actions.MESSAGES_ADDED:
+      console.log(action.payload);
+      updateState(state, "messages", state.messages.concat(action.payload));
       break;
     default:
       throw new Error(`${action.type} action not defined`);

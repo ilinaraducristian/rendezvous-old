@@ -1,9 +1,10 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useCallback} from "react";
 import config from "../config";
-import {ProcessedServersData, ServersData} from "../types";
+import {Message, ProcessedServersData, ServersData} from "../types";
 import {responseToSortedMap} from "../util/functions";
 import useSocketIo from "./socketio.hook";
+import SortedMap from "../util/SortedMap";
 
 function useBackend() {
 
@@ -32,6 +33,24 @@ function useBackend() {
     });
   }, [socket]);
 
+  const getMessages = useCallback(async (channelId: number, offset: number) => {
+    if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
+    let response: any = await fetch(`${config.backend}/channels/${channelId}/messages?offset=${offset}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${keycloak.token}`,
+        "Content-Type": "application/json"
+      }
+    });
+    response = await response.json();
+    response = response.map((message: [number, Message]) => {
+      message[1].timestamp = new Date(message[1].timestamp);
+      return message;
+    });
+    response = new SortedMap<Message>(response);
+    return response;
+  }, [keycloak.token]);
+
   const joinServer = useCallback(async (invitation: string) => {
     return new Promise((resolve, reject) => {
       socket.emit("join_server", {invitation}, (serversData: ServersData) => {
@@ -58,7 +77,8 @@ function useBackend() {
     getUserServersData,
     createServer,
     createInvitation,
-    joinServer
+    joinServer,
+    getMessages
   };
 
 }

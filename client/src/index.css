@@ -46,6 +46,10 @@ body {
 
 }
 
+.list__messages {
+    overflow-y: auto;
+}
+
 .svg__arrow-x {
     color: white;
     transition: transform .2s ease-out, stroke-dasharray .2s ease-out, -webkit-transform .2s ease-out;

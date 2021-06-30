@@ -1,10 +1,4 @@
 USE capp;
-CALL join_server('588ed943-d335-4b2c-89fc-98e1745e8859', 'ec753f4f-d987-11eb-b5dc-0242ac130003')
-    FROM servers s
-         LEFT JOIN members m ON s.id = m.server_id AND '02609aeb-1317-47c9-a8d0-d3c7b98c26e3' = m.user_id
-WHERE '7e194f7c-d8d2-11eb-99d1-0242ac120003' = s.invitation;
-
-CALL create_server('40ede82c-41a3-44b9-97d7-25dc25bde568', 'asdsa', 0)
 
 # 100 test users
 SET @user1 = '40ede82c-41a3-44b9-97d7-25dc25bde568';
@@ -107,6 +101,12 @@ SET @user96 = '16b09fc1-4aab-4256-a30a-faea8efba91b';
 SET @user97 = 'a14b0631-2fc1-4470-9ffc-051efd571fe9';
 SET @user98 = 'ff2ce64e-4a00-401e-bb8b-7d033920a11b';
 SET @user99 = 'fff170b3-2e1e-4b24-9b9a-972b1d6fea37';
+
+USE capp;
+CALL get_messages(@user1, 1, 30);
+CALL send_message(@user1, 1, 'test message4');
+CALL create_server(@user1, 'a new server');
+
 
 # create 9 servers
 CALL create_server(@user1, 'a new server 1', 0);

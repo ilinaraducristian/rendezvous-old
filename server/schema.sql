@@ -308,3 +308,26 @@ BEGIN
     WHERE m1.serverId = @serverId;
 
 END $$
+
+CREATE PROCEDURE get_messages(userId char(36), channelId int, offset int)
+BEGIN
+
+    SELECT m.id
+    INTO @MEMBER_ID
+    FROM members m
+             JOIN servers s ON m.server_id = s.id
+    WHERE m.user_id = userId;
+
+    IF (@MEMBER_ID IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'User is not a member of this server';
+    END IF;
+
+    SELECT m.id, m.serverId, m.channelId, m.userId, m.timestamp, m.text
+    FROM messages_view m
+             JOIN channels c ON m.channelId = c.id
+    WHERE c.id = channelId
+    ORDER BY timestamp DESC, m.id DESC
+    LIMIT 30 OFFSET offset;
+
+END $$

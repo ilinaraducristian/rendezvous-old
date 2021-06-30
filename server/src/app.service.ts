@@ -6,7 +6,8 @@ import {
   Channel,
   ChannelType,
   Group,
-  Member, Message,
+  Member,
+  Message,
   Server,
   User,
   UserServersData,
@@ -41,7 +42,7 @@ export class AppService {
 
   async sendMessage(userId: string, channelId: number, message: string): Promise<Message> {
     const result = await this.connection.query("CALL send_message(?,?,?)", [userId, channelId, message]);
-    return result[0][0]
+    return result[0][0];
   }
 
   async getUserServersData(uid: string): Promise<UserServersData> {
@@ -54,6 +55,11 @@ export class AppService {
     return this.processQuery(result);
   }
 
+  async getMessages(userId: string, channelId: number, offset: number): Promise<[number, Message][]> {
+    const result = await this.connection.query("CALL get_messages(?,?,?)", [userId, channelId, offset]);
+    return result[0].map(result => [result.id, result])
+  }
+
   processQuery(result: UserServersDataQueryResult): UserServersData {
     const serversTable = result[0].map<[number, Server]>((server: Server) => [server.id, {
       id: server.id,
@@ -62,12 +68,12 @@ export class AppService {
       invitation: server.invitation,
       invitationExp: server.invitationExp
     }]);
-    const groupsTable = result[1].map<[number, Group] >((group: Group) => [group.id, {
+    const groupsTable = result[1].map<[number, Group]>((group: Group) => [group.id, {
       id: group.id,
       serverId: group.serverId,
       name: group.name
     }]);
-    const channelsTable = result[2].map<[number, Channel] >((channel: Channel) => [channel.id, {
+    const channelsTable = result[2].map<[number, Channel]>((channel: Channel) => [channel.id, {
       id: channel.id,
       serverId: channel.serverId,
       groupId: channel.groupId,

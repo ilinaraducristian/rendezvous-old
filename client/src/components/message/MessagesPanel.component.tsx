@@ -36,13 +36,14 @@ function MessagesPanelComponent() {
   return useMemo(() =>
           <div className="content__body__main">
             <div className="content__body__messages">
-              <ol className="list">
+              <ol className="list list__messages">
                 {
                   state.messages
                       .filter(message => message.channelId === state.selectedChannel?.id)
                       .map(message => {
                         const user = state.users.get(message.userId) as User;
-                        return <MessageComponent key={`message_${message.id}`} username={user.username} text={message.text}
+                        return <MessageComponent key={`message_${message.id}`} username={user.username}
+                                                 text={message.text}
                                                  timestamp={message.timestamp}/>;
                       })
                 }
