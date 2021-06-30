@@ -6,8 +6,9 @@ import ServersPanelComponent from "../server/ServersPanel.component";
 import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
 import SocketIoListeners from "../../SocketIoListeners";
+import Fuse from "../../util/fuse";
 
-let oneTime = false;
+const backendInitialized: Fuse = new Fuse();
 
 function AppComponent() {
 
@@ -25,29 +26,26 @@ function AppComponent() {
     }
     if (keycloak.token === undefined) return;
 
-    if (oneTime) return;
-    oneTime = true;
+    if (backendInitialized.state) return;
+    backendInitialized.blow();
 
+    // dev only
+    // const apiServers = {
+    //   servers: mockServers,
+    //   channels: mockChannels,
+    //   groups: mockGroups,
+    //   members: mockMembers,
+    // };
+    // const apiUsers = mockUsers;
 
-    (async () => {
-      // dev only
-      // const apiServers = {
-      //   servers: mockServers,
-      //   channels: mockChannels,
-      //   groups: mockGroups,
-      //   members: mockMembers,
-      // };
-      // const apiUsers = mockUsers;
-
-      // PROD
-      const serversData = await Backend.getUserServersData();
-      // setMessages(new SortedMap<Message>());
-      dispatch({
-        type: Actions.INITIAL_DATA_GATHERED,
-        payload: serversData
-      });
-
-    })();
+    // PROD
+    Backend.getUserServersData()
+        .then(serversData => {
+          dispatch({
+            type: Actions.INITIAL_DATA_GATHERED,
+            payload: serversData
+          });
+        });
 
   }, [Backend, initialized, keycloak]);
 

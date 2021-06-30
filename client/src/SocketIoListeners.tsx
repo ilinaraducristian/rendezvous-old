@@ -10,15 +10,9 @@ function SocketIoListeners() {
   const {dispatch} = useContext(GlobalStates);
 
   const io = useSocketIo();
-  const messageReceivedEvent = useSocketEvent<Message>(io.socket, "message_received");
+  const newMessageEvent = useSocketEvent<Message>(io.socket, "new_message");
   const newMemberEvent = useSocketEvent<{ member: Member, user: User }>(io.socket, "new_member");
   const userInfoUpdateEvent = useSocketEvent<User>(io.socket, "user_info_update");
-  const testEvent = useSocketEvent<User>(io.socket, "test");
-
-  useEffect(() => {
-    if (testEvent.lastMessage === undefined) return;
-    console.log(testEvent.lastMessage);
-  }, [testEvent.lastMessage]);
 
   // useEffect(() => {
   //   console.log(io.connected);
@@ -28,17 +22,18 @@ function SocketIoListeners() {
   // }, [io.connected, io.socket]);
 
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) =>
-  //         new SortedMap<Message>(messages.set(messageReceivedEvent.lastMessage.id, messageReceivedEvent.lastMessage))
-  //   });
-  // }, [dispatch, messageReceivedEvent]);
-  //
+  useEffect(() => {
+    console.log(newMessageEvent.lastMessage);
+    if (newMessageEvent.lastMessage === undefined) return;
+    dispatch({
+      type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) => {
+        newMessageEvent.lastMessage.timestamp = new Date(newMessageEvent.lastMessage.timestamp);
+        return new SortedMap<Message>(messages.set(newMessageEvent.lastMessage.id, newMessageEvent.lastMessage));
+      }
+    });
+  }, [dispatch, newMessageEvent.lastMessage]);
 
   useEffect(() => {
-    console.log(newMemberEvent.lastMessage);
-
     if (newMemberEvent.lastMessage === undefined) return;
     dispatch({
       type: Actions.MEMBERS_SET, payload: (members: SortedMap<Member>) =>

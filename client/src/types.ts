@@ -53,6 +53,14 @@ export type Server = {
 export type Users = Map<string, User>;
 
 export type ServersData = {
+  servers: [number, Server][],
+  channels: [number, Channel][],
+  groups: [number, Group][],
+  members: [number, Member][],
+  users: [string, User][]
+}
+
+export type ProcessedServersData = {
   servers: SortedMap<Server>,
   channels: SortedMap<Channel>,
   groups: SortedMap<Group>,

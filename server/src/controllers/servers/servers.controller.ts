@@ -3,11 +3,6 @@ import { AppService } from "../../app.service";
 import { AuthenticatedUser } from "nest-keycloak-connect";
 import { KeycloakUser, UserServersData } from "../../types";
 
-export type NewServerRequest = {
-  name: string,
-  order: number
-}
-
 @Controller("servers")
 export class ServersController {
 

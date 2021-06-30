@@ -1,7 +1,7 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useCallback} from "react";
 import config from "../config";
-import {ServersData} from "../types";
+import {ProcessedServersData, ServersData} from "../types";
 import {responseToSortedMap} from "../util/functions";
 import useSocketIo from "./socketio.hook";
 
@@ -10,7 +10,7 @@ function useBackend() {
   const {keycloak} = useKeycloak();
   const {socket} = useSocketIo();
 
-  const getUserServersData = useCallback(async (): Promise<ServersData> => {
+  const getUserServersData = useCallback(async (): Promise<ProcessedServersData> => {
     if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
     let response: any = await fetch(`${config.backend}/servers`, {
       method: "GET",
@@ -42,16 +42,16 @@ function useBackend() {
 
   const createServer = useCallback((name: string) => {
     return new Promise((resolve, reject) => {
-      socket.emit("create_server", {name}, (pac: any) => {
-        resolve(responseToSortedMap(pac));
+      socket.emit("create_server", {name}, (serversData: ServersData) => {
+        resolve(responseToSortedMap(serversData));
       });
     });
   }, [socket]);
 
   const joinServer = useCallback(async (invitation: string) => {
     return new Promise((resolve, reject) => {
-      socket.emit("join_server", {invitation}, (pac: any) => {
-        resolve(pac);
+      socket.emit("join_server", {invitation}, (serversData: ServersData) => {
+        resolve(responseToSortedMap(serversData));
       });
     });
   }, [socket]);

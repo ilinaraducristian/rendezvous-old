@@ -38,12 +38,8 @@ describe("AppServiceTest", () => {
 
   describe("basic functionality", () => {
     it("should create a new server", async () => {
-      const data = await appService.createServer(uid1, "a new server");
-      expect(data).toBeTruthy();
-      // expect(data.servers.)
-      // expect(typeof server.id).toBe('number');
-      // expect(server.id).toBeGreaterThan(0);
-      // expect(server.).toBeTruthy();
+      await appService.createServer(uid1, 'a new server')
+      console.log(await appService.sendMessage(uid1, 1, 'asd2'));
     });
   });
 

@@ -1,7 +1,6 @@
 import {useCallback, useContext, useMemo, useRef} from "react";
 import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
-import {responseToSortedMap} from "../../util/functions";
 
 function JoinServerOverlayComponent() {
   const Backend = useBackend();
@@ -11,7 +10,6 @@ function JoinServerOverlayComponent() {
 
   const joinServer = useCallback(async () => {
     let response = await Backend.joinServer(ref.current?.value as string);
-    response = responseToSortedMap(response);
     dispatch({type: Actions.SERVER_ADDED, payload: response});
     dispatch({type: Actions.OVERLAY_SET, payload: null});
   }, [Backend, dispatch]);

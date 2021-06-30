@@ -1,7 +1,7 @@
 import { OnGatewayConnection, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { AppService } from "./app.service";
-import { UserServersData } from "./types";
+import { Message, UserServersData } from "./types";
 
 @WebSocketGateway()
 export class SocketIOGateway implements OnGatewayConnection<Socket> {
@@ -22,17 +22,26 @@ export class SocketIOGateway implements OnGatewayConnection<Socket> {
   @SubscribeMessage("join_server")
   async joinServer(client: Socket, payload: { invitation: string }): Promise<UserServersData> {
     const result = await this.appService.joinServer(client.handshake.auth.sub, payload.invitation);
-    const newMember = result.members.map(member => member[1]).find(member =>
-      member.userId === client.handshake.auth.sub
-    );
+    const newMember = result.members.map(member => member[1]).find(member => member.userId === client.handshake.auth.sub);
     const newUser = result.users.map(user => user[1]).find(user => user.id === client.handshake.auth.sub);
+    const serverId = result.servers[0][0];
 
-    client.to(`server_${result.servers[0][0]}`)
+    client.join(`server_${serverId}`);
+    client.to(`server_${serverId}`)
       .emit("new_member", {
         member: newMember,
         user: newUser
       });
+
     return result;
+  }
+
+  @SubscribeMessage("send_message")
+  async sendMessage(client: Socket, payload: { channelId: number, message: string }): Promise<Message> {
+    console.log('received');
+    const message = await this.appService.sendMessage(client.handshake.auth.sub, payload.channelId, payload.message);
+    client.to(`server_${message.serverId}`).emit('new_message', message);
+    return message;
   }
 
   async handleConnection(client: Socket, ...args: any[]) {

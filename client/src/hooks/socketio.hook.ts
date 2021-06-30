@@ -11,6 +11,10 @@ function useSocketIo() {
     autoConnect: false
   });
 
+  socket.socket.on("disconnect", () => {
+    window.location.reload();
+  });
+
   useEffect(() => {
     if (keycloak.token === undefined) {
       socket.socket.disconnect();

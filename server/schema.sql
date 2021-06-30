@@ -144,6 +144,16 @@ SELECT m1.id,
 FROM members m1
          JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID $$
 
+CREATE VIEW messages_view
+AS
+SELECT m.id,
+       m.server_id  as serverId,
+       m.channel_id as channelId,
+       m.user_id    as userId,
+       m.timestamp,
+       m.text
+FROM messages m;
+
 CREATE PROCEDURE get_user_servers_data(userId char(36))
 BEGIN
     SELECT s.id, s.name, s.userId, s.invitation, s.invitationExp
@@ -231,21 +241,30 @@ BEGIN
     WHERE m2.user_id = userId;
 END $$
 
-CREATE FUNCTION send_message(userId char(36), serverId int, channelId int, messageText varchar(255)) RETURNS int
-    MODIFIES SQL DATA DETERMINISTIC
+CREATE PROCEDURE send_message(userId char(36), channelId int, message varchar(255))
 BEGIN
+
+    SELECT c.server_id INTO @serverId FROM channels c WHERE c.id = channelId;
+
+    IF (@serverId IS NULL) THEN
+        SIGNAL SQLSTATE '45000'
+            SET MESSAGE_TEXT = 'Channel doesn\'t exist';
+    END IF;
+
     SELECT m.id
     INTO @memberId
     FROM members m
     WHERE m.user_id = userId
-      AND m.server_id = serverId;
+      AND m.server_id = @serverId;
+
     IF (@memberId IS NULL) THEN
         SIGNAL SQLSTATE '45000'
             SET MESSAGE_TEXT = 'User is not a member of this server';
     END IF;
-    INSERT INTO messages (server_id, channel_id, user_id, text) VALUES (serverId, channelId, userId, messageText);
 
-    RETURN LAST_INSERT_ID();
+    INSERT INTO messages (server_id, channel_id, user_id, text) VALUES (@serverId, channelId, userId, message);
+
+    SELECT * FROM messages_view m WHERE m.id = LAST_INSERT_ID();
 
 END $$
 

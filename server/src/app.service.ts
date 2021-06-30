@@ -2,7 +2,16 @@ import { Injectable } from "@nestjs/common";
 import { Connection, Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { ServerEntity } from "./entities/server.entity";
-import { ChannelType, UserServersData } from "./types";
+import {
+  Channel,
+  ChannelType,
+  Group,
+  Member, Message,
+  Server,
+  User,
+  UserServersData,
+  UserServersDataQueryResult
+} from "./types";
 
 @Injectable()
 export class AppService {
@@ -30,8 +39,9 @@ export class AppService {
     return this.connection.query("SELECT create_channel(?,?,?,?,?)", [userId, serverId, groupId, type, name]).then(result => Object.entries(result[0])[0][1] as number);
   }
 
-  async sendMessage(uid: string, sid: number, cid: number, text: string): Promise<number> {
-    return this.connection.query("SELECT send_message(?,?,?,?)", [uid, sid, cid, text]).then(result => Object.entries(result[0])[0][1] as number);
+  async sendMessage(userId: string, channelId: number, message: string): Promise<Message> {
+    const result = await this.connection.query("CALL send_message(?,?,?)", [userId, channelId, message]);
+    return result[0][0]
   }
 
   async getUserServersData(uid: string): Promise<UserServersData> {
@@ -44,37 +54,44 @@ export class AppService {
     return this.processQuery(result);
   }
 
-  processQuery(result: any): UserServersData {
-    const serversTable = result[0].map(server => [server.id, {
+  processQuery(result: UserServersDataQueryResult): UserServersData {
+    const serversTable = result[0].map<[number, Server]>((server: Server) => [server.id, {
       id: server.id,
       name: server.name,
       userId: server.userId,
       invitation: server.invitation,
       invitationExp: server.invitationExp
     }]);
-    const groupsTable = result[1].map(group => [group.id, {
+    const groupsTable = result[1].map<[number, Group] >((group: Group) => [group.id, {
       id: group.id,
       serverId: group.serverId,
       name: group.name
     }]);
-    const channelsTable = result[2].map(channel => [channel.id, {
+    const channelsTable = result[2].map<[number, Channel] >((channel: Channel) => [channel.id, {
       id: channel.id,
       serverId: channel.serverId,
       groupId: channel.groupId,
       type: channel.type,
       name: channel.name
     }]);
-    const membersTable = result[3].map(member => [member.id, {
-      id: member.id,
-      userId: member.userId,
-      serverId: member.serverId
-    }]);
-    const usersTable = result[3].map(user => [user.userId, {
-      id: user.userId,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName
-    }]);
+
+    const membersTable: [number, Member][] = [];
+    const usersTable: [string, User][] = [];
+
+    result[3].forEach((member: Member & User) => {
+      membersTable.push([member.id, {
+        id: member.id,
+        userId: member.userId,
+        serverId: member.serverId
+      }]);
+      usersTable.push([member.userId, {
+        id: member.userId,
+        username: member.username,
+        firstName: member.firstName,
+        lastName: member.lastName
+      }]);
+    });
+
     return {
       servers: serversTable,
       channels: channelsTable,
@@ -82,8 +99,8 @@ export class AppService {
       members: membersTable,
       users: usersTable
     };
-  }
 
+  }
 
 }
 

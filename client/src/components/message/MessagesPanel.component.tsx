@@ -1,24 +1,37 @@
-import {useSocketEvent} from "socket.io-react-hook";
 import {useCallback, useContext, useMemo} from "react";
-import {GlobalStates} from "../../global-state";
+import {Actions, GlobalStates} from "../../global-state";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./MessageComponent";
-import {User} from "../../types";
+import {Message, User} from "../../types";
 import useSocketIo from "../../hooks/socketio.hook";
+import SortedMap from "../../util/SortedMap";
 
 function MessagesPanelComponent() {
 
-  const {state} = useContext(GlobalStates);
+  const {state, dispatch} = useContext(GlobalStates);
   const io = useSocketIo();
-  const socketEvent = useSocketEvent<any>(io.socket, "send_message");
 
-  const sendMessage = useCallback(e => {
-    let message: string;
-    if (e.code.includes("Enter"))
-      message = (e.target as any).innerText;
-  }, []);
+  const sendMessage = useCallback(event => {
+    if (!event.code.includes("Enter")) return;
+    event.preventDefault();
+    const message = (event.target as any).innerText;
+    (event.target as any).innerText = "";
+    const payload = {
+      channelId: state.selectedChannel?.id,
+      message
+    };
+    io.socket.emit("send_message", payload, (message: Message) => {
+      dispatch({
+        type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) => {
+          message.timestamp = new Date(message.timestamp);
+          return new SortedMap<Message>(messages.set(message.id, message));
+        }
+      });
+    });
 
+
+  }, [dispatch, io.socket, state.selectedChannel?.id]);
 
   return useMemo(() =>
           <div className="content__body__main">
@@ -44,7 +57,7 @@ function MessagesPanelComponent() {
               <span className="span__input-message"
                     role="textbox"
                     contentEditable
-                    onKeyUp={sendMessage}
+                    onKeyPress={sendMessage}
               />
               {/*<textarea*/}
               {/*    style={{height: '100%'}}*/}
@@ -58,34 +71,7 @@ function MessagesPanelComponent() {
               <button type="button" className="btn btn__emoji"/>
             </footer>
           </div>
-      , [sendMessage]);
-
-  // return useMemo(() =>
-  //         <>
-  //           <ol className="list messages-body">
-  //             {
-  //               state.messages.filter((message: Message) => message.channelId === state.selectedChannel?.id)
-  //                   .map((message: Message) =>
-  //                       <li key={`channel_${message.id}`}>
-  //                         <span
-  //                             style={{marginRight: "0.5em"}}>{(state.users.get(message.userId) as User).username}</span>
-  //                         <span style={{marginRight: "0.5em"}}>{
-  //                           `${message.timestamp.getHours()}:${message.timestamp.getMinutes()}`
-  //                         }</span>
-  //                         <span style={{marginRight: "0.5em"}}>{message.text}</span>
-  //                       </li>
-  //                   )
-  //             }
-  //           </ol>
-  //           {
-  //             state.selectedChannel === null ||
-  //             <input type="text"
-  //                    onChange={e => setMessage(e.target.value)}
-  //                    onKeyUp={e => !e.code.includes("Enter") || sendMessage()}
-  //             />
-  //           }
-  //         </>
-  //     , [sendMessage, state.messages, state.selectedChannel, state.users]);
+      , [sendMessage, state.messages, state.selectedChannel?.id, state.users]);
 
 }
 
