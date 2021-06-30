@@ -1,5 +1,5 @@
 import SortedMap from "./SortedMap";
-import {Channel, Group, Member, ProcessedServersData, Server, ServersData, User} from "../types";
+import {Channel, Group, Member, ProcessedServersData, Server, ServersData, UsersMap} from "../types";
 
 export function responseToSortedMap(response: ServersData): ProcessedServersData {
   return {
@@ -7,6 +7,6 @@ export function responseToSortedMap(response: ServersData): ProcessedServersData
     channels: new SortedMap<Channel>(response.channels),
     groups: new SortedMap<Group>(response.groups),
     members: new SortedMap<Member>(response.members),
-    users: new Map<string, User>(response.users),
+    users: new UsersMap(response.users),
   };
 }

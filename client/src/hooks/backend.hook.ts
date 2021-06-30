@@ -24,22 +24,6 @@ function useBackend() {
     return response;
   }, [keycloak.token]);
 
-  // const createServer = useCallback(async (name: string) => {
-  //   if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
-  //   let response: any = await fetch(`${config.backend}/servers`, {
-  //     method: "POST",
-  //     headers: {
-  //       Authorization: `Bearer ${keycloak.token}`,
-  //       "Content-Type": "application/json"
-  //     },
-  //     body: JSON.stringify({
-  //       name
-  //     })
-  //   });
-  //   response = await response.json();
-  //   return responseToSortedMap(response);
-  // }, [keycloak.token]);
-
   const createServer = useCallback((name: string) => {
     return new Promise((resolve, reject) => {
       socket.emit("create_server", {name}, (serversData: ServersData) => {
@@ -69,18 +53,6 @@ function useBackend() {
     response = await response.json();
     return response.invitation;
   }, [keycloak.token]);
-
-  // const joinServer = useCallback(async (invitation: string) => {
-  //   if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
-  //   let response: any = await fetch(`${config.backend}/invitations/${invitation}`, {
-  //     method: "POST",
-  //     headers: {
-  //       Authorization: `Bearer ${keycloak.token}`
-  //     }
-  //   });
-  //   response = await response.json();
-  //   return response;
-  // }, [keycloak.token]);
 
   return {
     getUserServersData,

@@ -95,6 +95,14 @@ class SortedMap<V = any> extends Map<number, V> {
     return this;
   }
 
+  clone(): SortedMap<V> {
+    const newSortedMap = new SortedMap<V>();
+    this.sortedKeys.forEach((key: number) => {
+      newSortedMap.set(key, this.get(key) as V);
+    });
+    return newSortedMap;
+  }
+
   private* iteratorFunction(): Generator<V> {
     for (const i of this.sortedKeys) {
       yield this.get(i) as V;

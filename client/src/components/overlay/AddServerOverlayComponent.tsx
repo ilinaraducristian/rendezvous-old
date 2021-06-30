@@ -17,7 +17,7 @@ function AddServerOverlayComponent() {
     // TODO check if this works
     dispatch({
       type: Actions.SERVERS_SET,
-      payload: (oldServers: SortedMap<Server>) => new SortedMap<Server>(oldServers.set(server.id, server))
+      payload: (oldServers: SortedMap<Server>) => oldServers.set(server.id, server).clone()
     });
   }, [dispatch]);
 

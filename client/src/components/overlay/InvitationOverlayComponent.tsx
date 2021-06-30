@@ -36,7 +36,7 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
               </div>
             </div>
           </div>
-      , [copyToClipboard, invitation, status]);
+      , [close, copyToClipboard, invitation, status]);
 
 }
 

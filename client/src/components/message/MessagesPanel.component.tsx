@@ -25,7 +25,7 @@ function MessagesPanelComponent() {
       dispatch({
         type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) => {
           message.timestamp = new Date(message.timestamp);
-          return new SortedMap<Message>(messages.set(message.id, message));
+          return messages.set(message.id, message).clone();
         }
       });
     });

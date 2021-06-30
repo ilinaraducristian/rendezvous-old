@@ -50,7 +50,29 @@ export type Server = {
   invitationExp: Date | null
 }
 
-export type Users = Map<string, User>;
+export class UsersMap extends Map<string, User> {
+
+  constructor(entries?: readonly (readonly [string, User])[] | Map<string, User> | null) {
+    super();
+    if (entries === undefined || null) return;
+    if (entries instanceof Array) {
+      entries.forEach(value => {
+        this.set(value[0], value[1]);
+      });
+    } else if (entries instanceof Map) {
+      entries.forEach((value, key) => {
+        this.set(key, value);
+      });
+    }
+  }
+
+  clone() {
+    const newMap = new Map<string, User>();
+    this.forEach((value, key) => newMap.set(key, value));
+    return newMap;
+  }
+
+}
 
 export type ServersData = {
   servers: [number, Server][],
@@ -65,7 +87,7 @@ export type ProcessedServersData = {
   channels: SortedMap<Channel>,
   groups: SortedMap<Group>,
   members: SortedMap<Member>,
-  users: Users
+  users: UsersMap
 }
 
 export type Action = {
@@ -79,7 +101,7 @@ export type GlobalStatesType = {
   groups: SortedMap<Group>,
   messages: SortedMap<Message>,
   members: SortedMap<Member>,
-  users: Users,
+  users: UsersMap,
   selectedServer: Server | null,
   selectedChannel: Channel | null,
   overlay: any

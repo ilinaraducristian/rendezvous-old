@@ -5,7 +5,6 @@ import {Group, Server} from "../../types";
 import ArrowXSVG from "../../svg/ArrowX.svg";
 import ChannelsListComponent from "./ChannelsList.component";
 import useBackend from "../../hooks/backend.hook";
-import SortedMap from "../../util/SortedMap";
 import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
 
 function ChannelsPanelComponent() {
@@ -20,7 +19,7 @@ function ChannelsPanelComponent() {
     const invitation = await Backend.createInvitation(selectedServer.id);
     dispatch({
       type: Actions.SERVERS_SET,
-      payload: new SortedMap<Server>(state.servers.set(selectedServer.id, selectedServer))
+      payload: state.servers.set(selectedServer.id, selectedServer).clone()
     });
     dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
   }, [Backend, dispatch, isDropdownShown, state.selectedServer, state.servers]);

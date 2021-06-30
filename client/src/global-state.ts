@@ -1,5 +1,16 @@
 import SortedMap from "./util/SortedMap";
-import {Action, Channel, GlobalContextType, GlobalStatesType, Group, Member, Message, Server, User} from "./types";
+import {
+  Action,
+  Channel,
+  GlobalContextType,
+  GlobalStatesType,
+  Group,
+  Member,
+  Message,
+  Server,
+  User,
+  UsersMap
+} from "./types";
 import {createContext} from "react";
 
 const initialState = {
@@ -8,7 +19,7 @@ const initialState = {
   groups: new SortedMap<Group>(),
   messages: new SortedMap<Message>(),
   members: new SortedMap<Member>(),
-  users: new Map<string, User>(),
+  users: new UsersMap(),
   selectedServer: null,
   selectedChannel: null,
   overlay: null,

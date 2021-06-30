@@ -1,7 +1,7 @@
 import {useContext, useEffect} from "react";
 import {Actions, GlobalStates} from "./global-state";
 import useSocketIo from "./hooks/socketio.hook";
-import {Member, Message, User, Users} from "./types";
+import {Member, Message, User, UsersMap} from "./types";
 import {useSocketEvent} from "socket.io-react-hook";
 import SortedMap from "./util/SortedMap";
 
@@ -28,7 +28,7 @@ function SocketIoListeners() {
     dispatch({
       type: Actions.MESSAGES_SET, payload: (messages: SortedMap<Message>) => {
         newMessageEvent.lastMessage.timestamp = new Date(newMessageEvent.lastMessage.timestamp);
-        return new SortedMap<Message>(messages.set(newMessageEvent.lastMessage.id, newMessageEvent.lastMessage));
+        return messages.set(newMessageEvent.lastMessage.id, newMessageEvent.lastMessage).clone();
       }
     });
   }, [dispatch, newMessageEvent.lastMessage]);
@@ -37,11 +37,11 @@ function SocketIoListeners() {
     if (newMemberEvent.lastMessage === undefined) return;
     dispatch({
       type: Actions.MEMBERS_SET, payload: (members: SortedMap<Member>) =>
-          new SortedMap<Member>(members.set(newMemberEvent.lastMessage.member.id, newMemberEvent.lastMessage.member))
+          members.set(newMemberEvent.lastMessage.member.id, newMemberEvent.lastMessage.member).clone()
     });
     dispatch({
-      type: Actions.USERS_SET, payload: (users: Users) =>
-          new Map<string, User>([...users.set(newMemberEvent.lastMessage.user.id, newMemberEvent.lastMessage.user)])
+      type: Actions.USERS_SET, payload: (users: UsersMap) =>
+          new UsersMap(users.set(newMemberEvent.lastMessage.user.id, newMemberEvent.lastMessage.user))
     });
   }, [dispatch, newMemberEvent.lastMessage]);
   //

@@ -17,19 +17,19 @@ function ServersPanelComponent() {
     dispatch({type: Actions.OVERLAY_SET, payload: <AddServerOverlayComponent/>});
   }, [dispatch]);
 
-  return useMemo(() => {
-    return <ol className="list list__panel list__servers-panel">
-      {state.servers.map((server: Server) =>
-          <ServerComponent key={`server_${server.id}`} server={server}
-                           onSelectServer={() => selectServer(server)}/>
-      )}
-      <li className="li li__server">
-        <button className="btn btn__server" type="button" onClick={setOverlay}>
-          +
-        </button>
-      </li>
-    </ol>;
-  }, [selectServer, setOverlay, state.servers]);
+  return useMemo(() =>
+          <ol className="list list__panel list__servers-panel">
+            {state.servers.map((server: Server) =>
+                <ServerComponent key={`server_${server.id}`} server={server}
+                                 onSelectServer={() => selectServer(server)}/>
+            )}
+            <li className="li li__server">
+              <button className="btn btn__server" type="button" onClick={setOverlay}>
+                +
+              </button>
+            </li>
+          </ol>
+      , [selectServer, setOverlay, state.servers]);
 
 
 }
