@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="getting messages at startup">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/app/App.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/group/Group.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="fixed overflow">
       <change beforePath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mock-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mock-data.ts" afterDir="false" />
     </list>
@@ -211,7 +203,7 @@
       <workItem from="1625052132304" duration="14882000" />
       <workItem from="1625077020260" duration="612000" />
       <workItem from="1625079505894" duration="2557000" />
-      <workItem from="1625111038868" duration="8465000" />
+      <workItem from="1625111038868" duration="12886000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -339,7 +331,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625083664029</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="fixed overflow">
+      <created>1625200069865</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1625200069865</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -374,7 +373,8 @@
     <MESSAGE value="send/receive message working" />
     <MESSAGE value="client cleanup" />
     <MESSAGE value="getting messages at startup" />
-    <option name="LAST_COMMIT_MESSAGE" value="getting messages at startup" />
+    <MESSAGE value="fixed overflow" />
+    <option name="LAST_COMMIT_MESSAGE" value="fixed overflow" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

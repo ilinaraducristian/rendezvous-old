@@ -42,6 +42,7 @@ body {
     background-color: var(--color-primary);
     width: 4.5em;
     overflow-y: auto;
+    flex-shrink: 0;
 }
 
 .list__channels-panel {
@@ -49,6 +50,15 @@ body {
 }
 
 .list__messages {
+    word-break: break-all;
+}
+
+.message-container {
+    display: flex;
+}
+
+.channels-panel {
+    flex-shrink: 0;
 }
 
 .svg__arrow-x {
@@ -93,6 +103,15 @@ body {
 
 .span__input-message:focus {
     outline: none;
+}
+
+.span__username {
+    font-weight: 1000;
+    flex-shrink: 0;
+}
+
+.span__message {
+    margin: 0 1em;
 }
 
 .btn {
@@ -248,6 +267,7 @@ body {
     width: var(--members-panel-width);
     background-color: var(--color-third);
     height: 100%;
+    flex-shrink: 0;
 }
 
 .footer__content {
@@ -294,3 +314,9 @@ body {
     color: white;
     margin: 0;
 }
+
+.time {
+    margin: 0 1em;
+    flex-shrink: 0;
+}
+

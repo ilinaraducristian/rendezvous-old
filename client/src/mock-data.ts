@@ -41,7 +41,7 @@ export const mockMessages = (() => {
       channelId: 1,
       userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
       timestamp: new Date(),
-      text: "a message " + i,
+      text: "a loooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong message " + i,
     });
   }
   return map;

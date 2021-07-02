@@ -5,13 +5,16 @@ type ComponentProps = {
 }
 
 function MessageComponent({username, timestamp, text}: ComponentProps) {
+
   return (
       <div className="message-container">
-        {username}
-        {timestamp.getHours()} : {timestamp.getMinutes()}
-        {text}
+        <time className="time"
+              dateTime={timestamp.toISOString()}>{timestamp.getHours()} : {timestamp.getMinutes()}</time>
+        <span className="span__username">{username}</span>
+        <span className="span__message">{text}</span>
       </div>
   );
+
 }
 
 export default MessageComponent;
