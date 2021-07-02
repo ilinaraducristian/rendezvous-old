@@ -99,6 +99,10 @@ body {
     background: none;
     border: none;
     flex-grow: 1;
+    word-wrap: anywhere;
+    max-height: inherit;
+    overflow-y: auto;
+    align-self: center;
 }
 
 .span__input-message:focus {
@@ -142,7 +146,6 @@ body {
 .btn__icon {
     padding: 0.3em;
     margin: 0.3em;
-    height: 100%;
 }
 
 .btn__server {
@@ -272,12 +275,12 @@ body {
 
 .footer__content {
     background-color: var(--color-fifth);
-    /*margin: 1em;*/
     border-radius: 0.5em;
-    height: 2.75em;
+    max-height: 12.5em;
     margin: 0 1em 1.5em 1em;
     display: flex;
-    align-items: center;
+    align-items: start;
+
 }
 
 .overlay {

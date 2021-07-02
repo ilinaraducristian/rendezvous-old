@@ -1,4 +1,4 @@
-import {useCallback, useContext, useMemo} from "react";
+import {ClipboardEvent, useCallback, useContext, useMemo} from "react";
 import {Actions, GlobalStates} from "../../global-state";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
@@ -12,7 +12,15 @@ function MessagesPanelComponent() {
   const {state, dispatch} = useContext(GlobalStates);
   const io = useSocketIo();
 
-  const sendMessage = useCallback(event => {
+  const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    const selection = document.getSelection();
+    const clipboard = event.clipboardData;
+    if (selection === null || clipboard === null) return;
+    clipboard.setData("text/plain", selection.toString());
+  }, []);
+
+  const onKeyPress = useCallback(event => {
     if (!event.code.includes("Enter")) return;
     event.preventDefault();
     const message = (event.target as any).innerText;
@@ -58,7 +66,8 @@ function MessagesPanelComponent() {
               <span className="span__input-message"
                     role="textbox"
                     contentEditable
-                    onKeyPress={sendMessage}
+                    onKeyPress={onKeyPress}
+                    onCopy={onCopy}
               />
               {/*<textarea*/}
               {/*    style={{height: '100%'}}*/}
@@ -74,7 +83,7 @@ function MessagesPanelComponent() {
               </button>
             </footer>
           </div>
-      , [sendMessage, state.messages, state.selectedChannel?.id, state.users]);
+      , [onCopy, onKeyPress, state.messages, state.selectedChannel?.id, state.users]);
 
 }
 
