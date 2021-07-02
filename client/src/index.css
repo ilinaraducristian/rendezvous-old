@@ -8,6 +8,10 @@
     --color-third: #2f3136;
     --color-forth: rgba(79, 84, 92, 0.32);
     --color-fifth: #40444b;
+    --color-sixth: #fff;
+    --color-seventh: #dcddde;
+    --color-8th: #b9bbb3;
+    --color-9th: #8e9297;
     --small-shadow-bar: 0 1px 0 rgba(4, 4, 5, 0.2), 0 2px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
     --members-panel-width: 15em;
 }
@@ -17,6 +21,7 @@
     position: absolute;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 }
 
 body {
@@ -28,9 +33,6 @@ body {
     list-style: none;
     padding: 0;
     margin: 0;
-}
-
-.list__panel {
 }
 
 .list__servers-panel {
@@ -47,7 +49,6 @@ body {
 }
 
 .list__messages {
-    overflow-y: auto;
 }
 
 .svg__arrow-x {
@@ -103,6 +104,28 @@ body {
     color: white;
 }
 
+.btn--off {
+    color: var(--color-8th);
+}
+
+.btn--active {
+    color: var(--color-sixth);
+}
+
+.btn--gray {
+    color: var(--color-9th)
+}
+
+.btn--hover:hover {
+    color: var(--color-seventh);
+}
+
+.btn__icon {
+    padding: 0.3em;
+    margin: 0.3em;
+    height: 100%;
+}
+
 .btn__server {
     background-color: var(--color-secondary);
     border: thin solid var(--color-secondary);
@@ -139,7 +162,7 @@ body {
     display: flex;
 }
 
-.btn__emoji {
+.div__emoji {
     background-image: url("assets/emojis.png");
     background-position: 0 0;
     background-size: 242px 110px;
@@ -148,6 +171,11 @@ body {
     height: 22px;
     transform: scale(1);
     filter: grayscale(100%);
+}
+
+.div__emoji--hover:hover {
+    transform: scale(1.14);
+    filter: grayscale(0%);
 }
 
 .btn__overlay-select {
@@ -167,7 +195,6 @@ body {
 
 .li__server {
     display: flex;
-    justify-content: center;
     margin: 0.5em 0;
 }
 
@@ -202,8 +229,8 @@ body {
 
 .content__body {
     display: flex;
-    /*flex-direction: column;*/
     flex-grow: 1;
+    max-height: calc(100% - 3em);
 }
 
 .content__body__main {
@@ -214,6 +241,7 @@ body {
 
 .content__body__messages {
     flex-grow: 1;
+    overflow-x: hidden;
 }
 
 .content__body__members {
@@ -222,7 +250,7 @@ body {
     height: 100%;
 }
 
-.content__footer {
+.footer__content {
     background-color: var(--color-fifth);
     /*margin: 1em;*/
     border-radius: 0.5em;

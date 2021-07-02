@@ -3,6 +3,7 @@ import {Channel} from "../../types";
 import ChannelSVG from "../../svg/Channel.svg";
 import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
+import config from "../../config";
 
 type ComponentProps = {
   channel: Channel
@@ -14,8 +15,10 @@ function ChannelComponent({channel}: ComponentProps) {
   const Backend = useBackend();
 
   const selectChannel = useCallback(async () => {
-    const messages = await Backend.getMessages(channel.id, 0);
-    dispatch({type: Actions.MESSAGES_ADDED, payload: messages});
+    if (!config.offline) {
+      const messages = await Backend.getMessages(channel.id, 0);
+      dispatch({type: Actions.MESSAGES_ADDED, payload: messages});
+    }
     dispatch({type: Actions.CHANNEL_SELECTED, payload: {...channel}});
   }, [Backend, channel, dispatch]);
 

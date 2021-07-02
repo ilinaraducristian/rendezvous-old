@@ -32,14 +32,20 @@ export const mockChannels = new SortedMap<Channel>([[1, {
   name: "General"
 }]]);
 
-export const mockMessages = new SortedMap<Message>([[1, {
-  id: 1,
-  serverId: 1,
-  channelId: 1,
-  userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
-  timestamp: new Date(),
-  text: "a message",
-}]]);
+export const mockMessages = (() => {
+  const map = new SortedMap<Message>();
+  for (let i = 1; i <= 100; i++) {
+    map.set(i, {
+      id: i,
+      serverId: 1,
+      channelId: 1,
+      userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
+      timestamp: new Date(),
+      text: "a message " + i,
+    });
+  }
+  return map;
+})();
 
 export const mockMembers = new SortedMap<Member>([[1, {
   id: 1,

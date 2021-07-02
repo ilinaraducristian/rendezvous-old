@@ -6,7 +6,7 @@ type ComponentProps = {
 
 function MessageComponent({username, timestamp, text}: ComponentProps) {
   return (
-      <div id="message-container">
+      <div className="message-container">
         {username}
         {timestamp.getHours()} : {timestamp.getMinutes()}
         {text}

@@ -7,6 +7,8 @@ import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
 import SocketIoListeners from "../../SocketIoListeners";
 import Fuse from "../../util/fuse";
+import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
+import config from "../../config";
 
 const backendInitialized: Fuse = new Fuse();
 
@@ -18,40 +20,46 @@ function AppComponent() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(() => {
-    if (!initialized)
-      return;
-    if (!keycloak.authenticated) {
-      keycloak.login();
-      return;
+    if (!config.offline) {
+      if (!initialized)
+        return;
+      if (!keycloak.authenticated) {
+        keycloak.login();
+        return;
+      }
+      if (keycloak.token === undefined) return;
     }
-    if (keycloak.token === undefined) return;
 
     if (backendInitialized.state) return;
     backendInitialized.blow();
 
-    // dev only
-    // const apiServers = {
-    //   servers: mockServers,
-    //   channels: mockChannels,
-    //   groups: mockGroups,
-    //   members: mockMembers,
-    // };
-    // const apiUsers = mockUsers;
-
-    // PROD
-    Backend.getUserServersData()
-        .then(serversData => {
-          dispatch({
-            type: Actions.INITIAL_DATA_GATHERED,
-            payload: serversData
+    if (config.offline) {
+      // dev only
+      const processedServerData = {
+        servers: mockServers,
+        channels: mockChannels,
+        groups: mockGroups,
+        members: mockMembers,
+        users: mockUsers
+      };
+      dispatch({type: Actions.INITIAL_DATA_GATHERED, payload: processedServerData});
+      dispatch({type: Actions.MESSAGES_ADDED, payload: mockMessages});
+    } else {
+      // PROD
+      Backend.getUserServersData()
+          .then(serversData => {
+            dispatch({
+              type: Actions.INITIAL_DATA_GATHERED,
+              payload: serversData
+            });
           });
-        });
+    }
 
   }, [Backend, initialized, keycloak]);
 
   return (
       <GlobalStates.Provider value={{state, dispatch}}>{
-        (!initialized || !keycloak.authenticated) ||
+        ((!initialized || !keycloak.authenticated) && !config.offline) ||
         <>
             <SocketIoListeners/>
             <ServersPanelComponent/>

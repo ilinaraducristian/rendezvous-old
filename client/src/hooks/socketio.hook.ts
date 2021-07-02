@@ -16,6 +16,7 @@ function useSocketIo() {
   });
 
   useEffect(() => {
+    if (config.offline) return;
     if (keycloak.token === undefined) {
       socket.socket.disconnect();
     } else {

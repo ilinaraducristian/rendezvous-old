@@ -20,7 +20,8 @@ function ContentPanelComponent() {
                   <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
                 }
                 <span className="span__header-channel-name">{state.selectedChannel?.name}</span>
-                <button type="button" className="btn" onClick={() => setIsMembersSelected(!isMembersSelected)}>
+                <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
+                        onClick={() => setIsMembersSelected(!isMembersSelected)}>
                   <MembersSVG/>
                 </button>
               </div>

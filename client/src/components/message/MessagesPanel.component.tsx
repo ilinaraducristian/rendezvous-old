@@ -50,9 +50,9 @@ function MessagesPanelComponent() {
               </ol>
             </div>
             <footer
-                className="content__footer"
+                className="footer__content"
             >
-              <button type="button" className="btn">
+              <button type="button" className="btn btn--off btn--hover btn__icon">
                 <PlusSVG/>
               </button>
               <span className="span__input-message"
@@ -66,10 +66,12 @@ function MessagesPanelComponent() {
               {/*    placeholder={`Message #${state.selectedChannel.name}`}*/}
               {/*    onChange={onChange}*/}
               {/*/>*/}
-              <button type="button" className="btn">
+              <button type="button" className="btn btn--off btn--hover btn__icon">
                 <GIFSVG/>
               </button>
-              <button type="button" className="btn btn__emoji"/>
+              <button type="button" className="btn btn__icon">
+                <div className="div__emoji div__emoji--hover"/>
+              </button>
             </footer>
           </div>
       , [sendMessage, state.messages, state.selectedChannel?.id, state.users]);

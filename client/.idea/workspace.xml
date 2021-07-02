@@ -3,17 +3,16 @@
   <component name="ChangeListManager">
     <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="getting messages at startup">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SocketIoListeners.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SocketIoListeners.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/app/App.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/app/App.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/content/ContentPanel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/group/Group.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/global-state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/global-state.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/app.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.spec.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/controllers/channels/channels.controller.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/controllers/channels/channels.controller.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/tests.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/tests.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mock-data.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/mock-data.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -211,7 +210,8 @@
       <workItem from="1625033648325" duration="10451000" />
       <workItem from="1625052132304" duration="14882000" />
       <workItem from="1625077020260" duration="612000" />
-      <workItem from="1625079505894" duration="2533000" />
+      <workItem from="1625079505894" duration="2557000" />
+      <workItem from="1625111038868" duration="8465000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>
@@ -332,7 +332,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625074413664</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="getting messages at startup">
+      <created>1625083664029</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1625083664029</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

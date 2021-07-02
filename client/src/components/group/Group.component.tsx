@@ -13,7 +13,7 @@ function GroupComponent({id, name}: ComponentProps) {
 
   return (
       <li>
-        <button className="btn btn__group" type="button" onClick={() => setIsExpanded(!isCollapsed)}>
+        <button className="btn btn__group btn--gray" type="button" onClick={() => setIsExpanded(!isCollapsed)}>
           <ArrowSVG className={"svg__arrow" + (isCollapsed ? " svg__arrow--active" : "")}/>
           <span>{name}</span>
         </button>
