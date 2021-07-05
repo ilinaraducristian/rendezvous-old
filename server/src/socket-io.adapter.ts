@@ -5,7 +5,6 @@ import { DISCONNECT_EVENT } from "@nestjs/websockets/constants";
 import { fromEvent, Observable } from "rxjs";
 import { filter, first, map, mergeMap, share, takeUntil } from "rxjs/operators";
 import { Server } from "socket.io";
-import config from "./config";
 import fetch from "node-fetch";
 
 export class SocketIoAdapter extends AbstractWsAdapter {
@@ -52,9 +51,9 @@ export class SocketIoAdapter extends AbstractWsAdapter {
     }
 
     server.use(this.socketIOKeycloakAuth({
-      tokenIntrospectionEndpoint: config.keycloak.tokenIntrospectionEndpoint,
-      clientId: config.keycloak.clientId,
-      secret: config.keycloak.secret
+      tokenIntrospectionEndpoint: process.env.TOKEN_INTROSPECTION_ENDPOINT,
+      clientId: process.env.CLIENT_ID,
+      secret: process.env.SECRET
     }));
     return server;
   }
@@ -109,7 +108,7 @@ export class SocketIoAdapter extends AbstractWsAdapter {
     return async (socket, next) => {
       const token = socket.handshake.auth.token;
       try {
-        let response: any = await fetch(options.tokenIntrospectionEndpoint, {
+        let response: any = await fetch(process.env.TOKEN_INTROSPECTION_ENDPOINT, {
           method: "POST",
           headers: {
             "Content-Type": "application/x-www-form-urlencoded"
