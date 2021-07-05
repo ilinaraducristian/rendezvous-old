@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="reasonable chat UI">
-      <change afterPath="$PROJECT_DIR$/../server/.env" afterDir="false" />
+    <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="moved variables from config.ts to .env file with dotenv">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/CAPP.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/ormconfig.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../server/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/config.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/main.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/src/socket-io.adapter.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/socket-io.adapter.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -352,7 +345,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625209075980</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="moved variables from config.ts to .env file with dotenv">
+      <created>1625463388565</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1625463388565</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -389,7 +389,8 @@
     <MESSAGE value="getting messages at startup" />
     <MESSAGE value="fixed overflow" />
     <MESSAGE value="reasonable chat UI" />
-    <option name="LAST_COMMIT_MESSAGE" value="reasonable chat UI" />
+    <MESSAGE value="moved variables from config.ts to .env file with dotenv" />
+    <option name="LAST_COMMIT_MESSAGE" value="moved variables from config.ts to .env file with dotenv" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />

@@ -24,7 +24,8 @@ export class AppService {
   }
 
   async createServer(uid: string, name: string): Promise<UserServersData> {
-    const result = await this.connection.query("CALL create_server(?,?)", [uid, name]);
+    let result = await this.connection.query("CALL create_server(?,?)", [uid, name]);
+    result = this.appendUsersDataFromAuthService(result);
     return this.processQuery(result);
   }
 
@@ -45,22 +46,39 @@ export class AppService {
     return result[0][0];
   }
 
-  async getUserServersData(uid: string): Promise<UserServersData> {
-    const result = await this.connection.query("CALL get_user_servers_data(?)", [uid]);
+  async getUserServersData(userId: string): Promise<UserServersData> {
+    // get data from database
+    let result: UserServersDataQueryResult = await this.connection.query("CALL get_user_servers_data(?)", [userId]);
+    result = this.appendUsersDataFromAuthService(result);
     return this.processQuery(result);
   }
 
   async joinServer(uid: string, invitation: string): Promise<UserServersData> {
-    const result = await this.connection.query("CALL join_server(?,?)", [uid, invitation]);
+    let result = await this.connection.query("CALL join_server(?,?)", [uid, invitation]);
+    result = this.appendUsersDataFromAuthService(result);
     return this.processQuery(result);
   }
 
   async getMessages(userId: string, channelId: number, offset: number): Promise<[number, Message][]> {
     const result = await this.connection.query("CALL get_messages(?,?,?)", [userId, channelId, offset]);
-    return result[0].map(result => [result.id, result])
+    return result[0].map(result => [result.id, result]);
   }
 
-  processQuery(result: UserServersDataQueryResult): UserServersData {
+  private appendUsersDataFromAuthService(result: UserServersDataQueryResult) {
+    // TODO get users information from the auth service
+    const resultFromAuthService: any = {};
+    result[3] = result[3].map(value => ({
+      id: value.id,
+      serverId: value.serverId,
+      userId: value.userId,
+      username: resultFromAuthService.username,
+      firstName: resultFromAuthService.firstName,
+      lastName: resultFromAuthService.lastName
+    }));
+    return result;
+  }
+
+  private processQuery(result: UserServersDataQueryResult): UserServersData {
     const serversTable = result[0].map<[number, Server]>((server: Server) => [server.id, {
       id: server.id,
       name: server.name,

@@ -10,12 +10,11 @@ CREATE TABLE servers
     name           varchar(255) NOT NULL,
     user_id        char(36)     NOT NULL COMMENT 'owner',
     invitation     char(36),
-    invitation_exp datetime,
-    FOREIGN KEY (user_id) REFERENCES keycloak.USER_ENTITY (id),
-    CHECK (
-            (invitation IS NULL AND invitation_exp IS NULL) OR
-            (invitation IS NOT NULL AND invitation_exp IS NOT NULL)
-        )
+    invitation_exp datetime
+        CHECK (
+                (invitation IS NULL AND invitation_exp IS NULL) OR
+                (invitation IS NOT NULL AND invitation_exp IS NOT NULL)
+            )
 )$$
 
 CREATE TABLE `groups`
@@ -42,8 +41,7 @@ CREATE TABLE members
     id        int PRIMARY KEY AUTO_INCREMENT,
     server_id int      NOT NULL,
     user_id   char(36) NOT NULL,
-    FOREIGN KEY (server_id) REFERENCES servers (id),
-    FOREIGN KEY (user_id) REFERENCES keycloak.USER_ENTITY (id)
+    FOREIGN KEY (server_id) REFERENCES servers (id)
 )$$
 
 CREATE TABLE messages
@@ -55,8 +53,7 @@ CREATE TABLE messages
     timestamp  datetime     NOT NULL DEFAULT NOW(),
     text       varchar(255) NOT NULL,
     FOREIGN KEY (server_id) REFERENCES servers (id),
-    FOREIGN KEY (channel_id) REFERENCES channels (id),
-    FOREIGN KEY (user_id) REFERENCES keycloak.USER_ENTITY (id)
+    FOREIGN KEY (channel_id) REFERENCES channels (id)
 )$$
 
 CREATE UNIQUE INDEX unique_member
@@ -137,12 +134,8 @@ CREATE VIEW members_view
 AS
 SELECT m1.id,
        m1.server_id as serverId,
-       m1.user_id   as userId,
-       e.USERNAME   as username,
-       e.FIRST_NAME as firstName,
-       e.LAST_NAME  as lastName
-FROM members m1
-         JOIN keycloak.USER_ENTITY e ON m1.user_id = e.ID $$
+       m1.user_id   as userId
+FROM members m1 $$
 
 CREATE VIEW messages_view
 AS
@@ -171,7 +164,7 @@ BEGIN
              JOIN members m ON c.serverId = m.server_id
         AND m.user_id = userId;
 
-    SELECT m1.id, m1.serverId, m1.userId, m1.username, m1.firstName, m1.lastName
+    SELECT m1.id, m1.serverId, m1.userId
     FROM members_view m1
              JOIN members m2 ON m1.serverId = m2.server_id
     WHERE m2.user_id = userId;
@@ -235,7 +228,7 @@ BEGIN
     FROM channels_view c
     WHERE c.serverId = @serverId;
 
-    SELECT m1.id, m1.serverId, m1.userId, m1.username, m1.firstName, m1.lastName
+    SELECT m1.id, m1.serverId, m1.userId
     FROM members_view m1
              JOIN members m2 ON m1.serverId = @serverId
     WHERE m2.user_id = userId;
@@ -303,7 +296,7 @@ BEGIN
     FROM channels_view c
     WHERE c.serverId = @serverId;
 
-    SELECT m1.id, m1.serverId, m1.userId, m1.username, m1.firstName, m1.lastName
+    SELECT m1.id, m1.serverId, m1.userId
     FROM members_view m1
     WHERE m1.serverId = @serverId;
 
