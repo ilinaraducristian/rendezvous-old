@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b1433f17-91c1-4add-b871-d41aea422f2b" name="Default Changelist" comment="moved variables from config.ts to .env file with dotenv">
+      <change afterPath="$PROJECT_DIR$/../server/src/random-tests.spec.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../server/schema.sql" beforeDir="false" afterPath="$PROJECT_DIR$/../server/schema.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/.env" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.env" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../server/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/app.service.spec.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.spec.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../server/src/app.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/app.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../server/src/types.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../server/src/types.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -204,6 +208,9 @@
       <workItem from="1625077020260" duration="612000" />
       <workItem from="1625079505894" duration="2557000" />
       <workItem from="1625111038868" duration="16050000" />
+      <workItem from="1625559003709" duration="8000" />
+      <workItem from="1625559435695" duration="32000" />
+      <workItem from="1625559478537" duration="331000" />
     </task>
     <task id="LOCAL-00001" summary="update">
       <created>1623909125021</created>

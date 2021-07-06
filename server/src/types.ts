@@ -65,7 +65,7 @@ export type UserServersData = {
 }
 
 export type UserServersDataQueryResult = [
-    Server[], Group[], Channel[], (Member & User)[]
+  Server[], Group[], Channel[], Member[], User[]
 ]
 
 export type NewServer = {

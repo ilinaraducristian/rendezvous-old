@@ -2,6 +2,7 @@ import { Test, TestingModule } from "@nestjs/testing";
 import { AppService } from "./app.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ServerEntity } from "./entities/server.entity";
+import fetch from "node-fetch";
 
 describe("AppServiceTest", () => {
   let appService: AppService;
@@ -38,8 +39,30 @@ describe("AppServiceTest", () => {
 
   describe("basic functionality", () => {
     it("should create a new server", async () => {
-      // await appService.createServer(uid1, 'a new server')
-      console.log((await appService.getMessages(uid1, 1, 0))[0]);
+      let response: any = await fetch(`${process.env.AUTH0_ISSUER_URL}/oauth/token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          client_id: process.env.AUTH0_CLIENT_ID,
+          client_secret: process.env.AUTH0_CLIENT_SECRET,
+          audience: process.env.AUTH0_AUDIENCE,
+          grant_type: "client_credentials"
+        })
+      });
+
+      console.log(response);
+
+      response = await fetch(`${process.env.AUTH0_AUDIENCE}users?fields=user_id%2Cnickname%2Cgiven_name%2Cfamily_name&include_fields=true`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${response.access_token}`
+        }
+      });
+
+      console.log(response);
     });
   });
 

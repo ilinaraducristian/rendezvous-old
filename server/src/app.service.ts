@@ -13,6 +13,7 @@ import {
   UserServersData,
   UserServersDataQueryResult
 } from "./types";
+import fetch from "node-fetch";
 
 @Injectable()
 export class AppService {
@@ -23,10 +24,21 @@ export class AppService {
   ) {
   }
 
-  async createServer(uid: string, name: string): Promise<UserServersData> {
-    let result = await this.connection.query("CALL create_server(?,?)", [uid, name]);
-    result = this.appendUsersDataFromAuthService(result);
-    return this.processQuery(result);
+  private static processQuery(result: UserServersDataQueryResult): UserServersData {
+    const serversTable = result[0].map<[number, Server]>((server: Server) => [server.id, server]);
+    const groupsTable = result[1].map<[number, Group]>((group: Group) => [group.id, group]);
+    const channelsTable = result[2].map<[number, Channel]>((channel: Channel) => [channel.id, channel]);
+    const membersTable = result[3].map<[number, Member]>((member: Member) => [member.id, member]);
+    const usersTable = result[4].map<[string, User]>((user: User) => [user.id, user]);
+
+    return {
+      servers: serversTable,
+      channels: channelsTable,
+      groups: groupsTable,
+      members: membersTable,
+      users: usersTable
+    };
+
   }
 
   async createInvitation(userId: string, serverId: number): Promise<string> {
@@ -46,17 +58,17 @@ export class AppService {
     return result[0][0];
   }
 
+  async createServer(uid: string, name: string): Promise<UserServersData> {
+    let result = await this.connection.query("CALL create_server(?,?)", [uid, name]);
+    result = this.appendUsersDataFromAuthService(result);
+    return AppService.processQuery(result);
+  }
+
   async getUserServersData(userId: string): Promise<UserServersData> {
     // get data from database
     let result: UserServersDataQueryResult = await this.connection.query("CALL get_user_servers_data(?)", [userId]);
-    result = this.appendUsersDataFromAuthService(result);
-    return this.processQuery(result);
-  }
-
-  async joinServer(uid: string, invitation: string): Promise<UserServersData> {
-    let result = await this.connection.query("CALL join_server(?,?)", [uid, invitation]);
-    result = this.appendUsersDataFromAuthService(result);
-    return this.processQuery(result);
+    result = await this.appendUsersDataFromAuthService(result);
+    return AppService.processQuery(result);
   }
 
   async getMessages(userId: string, channelId: number, offset: number): Promise<[number, Message][]> {
@@ -64,66 +76,50 @@ export class AppService {
     return result[0].map(result => [result.id, result]);
   }
 
-  private appendUsersDataFromAuthService(result: UserServersDataQueryResult) {
-    // TODO get users information from the auth service
-    const resultFromAuthService: any = {};
-    result[3] = result[3].map(value => ({
-      id: value.id,
-      serverId: value.serverId,
-      userId: value.userId,
-      username: resultFromAuthService.username,
-      firstName: resultFromAuthService.firstName,
-      lastName: resultFromAuthService.lastName
-    }));
-    return result;
+  async joinServer(uid: string, invitation: string): Promise<UserServersData> {
+    let result: UserServersDataQueryResult = await this.connection.query("CALL join_server(?,?)", [uid, invitation]);
+    result = await this.appendUsersDataFromAuthService(result);
+    return AppService.processQuery(result);
   }
 
-  private processQuery(result: UserServersDataQueryResult): UserServersData {
-    const serversTable = result[0].map<[number, Server]>((server: Server) => [server.id, {
-      id: server.id,
-      name: server.name,
-      userId: server.userId,
-      invitation: server.invitation,
-      invitationExp: server.invitationExp
-    }]);
-    const groupsTable = result[1].map<[number, Group]>((group: Group) => [group.id, {
-      id: group.id,
-      serverId: group.serverId,
-      name: group.name
-    }]);
-    const channelsTable = result[2].map<[number, Channel]>((channel: Channel) => [channel.id, {
-      id: channel.id,
-      serverId: channel.serverId,
-      groupId: channel.groupId,
-      type: channel.type,
-      name: channel.name
-    }]);
-
-    const membersTable: [number, Member][] = [];
-    const usersTable: [string, User][] = [];
-
-    result[3].forEach((member: Member & User) => {
-      membersTable.push([member.id, {
-        id: member.id,
-        userId: member.userId,
-        serverId: member.serverId
-      }]);
-      usersTable.push([member.userId, {
-        id: member.userId,
-        username: member.username,
-        firstName: member.firstName,
-        lastName: member.lastName
-      }]);
-    });
-
-    return {
-      servers: serversTable,
-      channels: channelsTable,
-      groups: groupsTable,
-      members: membersTable,
-      users: usersTable
-    };
-
+  private async appendUsersDataFromAuthService(result: UserServersDataQueryResult) {
+    // get users information from the auth service
+    result[4] = [];
+    for (const member of result[3]) {
+      const response: any = await fetch(`${process.env.AUTH0_ISSUER_URL}oauth/token`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          client_id: process.env.AUTH0_CLIENT_ID,
+          client_secret: process.env.AUTH0_CLIENT_SECRET,
+          audience: process.env.AUTH0_AUDIENCE,
+          grant_type: "client_credentials"
+        })
+      })
+        .then(response => response.json())
+        .then(response => fetch(`${process.env.AUTH0_AUDIENCE}users?fields=user_id%2Cnickname%2Cgiven_name%2Cfamily_name&include_fields=true`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${response.access_token}`
+          }
+        }))
+        .then(response => response.json())
+        .then(response => response.map(response => {
+          response.username = response.nickname;
+          delete response.nickname;
+          return response;
+        }));
+      result[4].push({
+        id: response.userId,
+        username: response.username,
+        firstName: response.given_name,
+        lastName: response.family_name
+      });
+    }
+    return result;
   }
 
 }
