@@ -1,25 +1,11 @@
-import {useCallback, useContext, useMemo, useState} from "react";
-import {Server} from "../../types";
+import {useCallback, useContext, useMemo} from "react";
 import {Actions, GlobalStates} from "../../global-state";
-import useBackend from "../../hooks/backend.hook";
-import SortedMap from "../../util/SortedMap";
 import CreateServerOverlayComponent from "./CreateServerOverlayComponent";
 import JoinServerOverlayComponent from "./JoinServerOverlayComponent";
 
 function AddServerOverlayComponent() {
-  const Backend = useBackend();
 
-  const [serverName, setServerName] = useState<string>("");
-  const [invitation, setInvitation] = useState<string>("");
   const {dispatch} = useContext(GlobalStates);
-
-  const addServer = useCallback((server: Server) => {
-    // TODO check if this works
-    dispatch({
-      type: Actions.SERVERS_SET,
-      payload: (oldServers: SortedMap<Server>) => oldServers.set(server.id, server).clone()
-    });
-  }, [dispatch]);
 
   const createServer = useCallback(() => {
     dispatch({type: Actions.OVERLAY_SET, payload: <CreateServerOverlayComponent/>});

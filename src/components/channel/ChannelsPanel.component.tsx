@@ -6,6 +6,7 @@ import ArrowXSVG from "../../svg/ArrowX.svg";
 import ChannelsListComponent from "./ChannelsList.component";
 import useBackend from "../../hooks/backend.hook";
 import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
+import DropdownComponent from "../dropdown/Dropdown.component";
 
 function ChannelsPanelComponent() {
 
@@ -15,13 +16,13 @@ function ChannelsPanelComponent() {
 
   const toggleDropdown = useCallback(async () => {
     setIsDropdownShown(!isDropdownShown);
-    const selectedServer = state.selectedServer as Server;
-    const invitation = await Backend.createInvitation(selectedServer.id);
-    dispatch({
-      type: Actions.SERVERS_SET,
-      payload: state.servers.set(selectedServer.id, selectedServer).clone()
-    });
-    dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
+    // const selectedServer = state.selectedServer as Server;
+    // const invitation = await Backend.createInvitation(selectedServer.id);
+    // dispatch({
+    //   type: Actions.SERVERS_SET,
+    //   payload: state.servers.set(selectedServer.id, selectedServer).clone()
+    // });
+    // dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
   }, [Backend, dispatch, isDropdownShown, state.selectedServer, state.servers]);
 
   return useMemo(() => (
@@ -36,6 +37,7 @@ function ChannelsPanelComponent() {
             </>
           }
         </button>
+        {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
         <ol className="list list__panel list__channels-panel">
           {state.selectedServer === null ||
           <>

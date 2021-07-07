@@ -1,7 +1,7 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useCallback} from "react";
 import config from "../config";
-import {Message, ProcessedServersData, ServersData} from "../types";
+import {Channel, Group, Message, ProcessedServersData, ServersData} from "../types";
 import {responseToSortedMap} from "../util/functions";
 import useSocketIo from "./socketio.hook";
 import SortedMap from "../util/SortedMap";
@@ -73,12 +73,30 @@ function useBackend() {
     return response.invitation;
   }, [keycloak.token]);
 
+  const createChannel = useCallback(async (serverId: number, channelName: string) => {
+    return new Promise((resolve, reject) => {
+      socket.emit("create_channel", {serverId, channelName}, (channel: Channel) => {
+        resolve(channel);
+      });
+    });
+  }, [socket]);
+
+  const createGroup = useCallback(async (serverId: number, groupName: string) => {
+    return new Promise((resolve, reject) => {
+      socket.emit("create_group", {serverId, groupName}, (group: Group) => {
+        resolve(group);
+      });
+    });
+  }, [socket]);
+
   return {
     getUserServersData,
     createServer,
     createInvitation,
     joinServer,
-    getMessages
+    getMessages,
+    createChannel,
+    createGroup
   };
 
 }

@@ -36,6 +36,8 @@ enum Actions {
   USERS_SET = "USERS_SET",
   INITIAL_DATA_GATHERED = "INITIAL_DATA_GATHERED",
   SERVER_ADDED = "SERVER_ADDED",
+  CHANNEL_ADDED = "CHANNEL_ADDED",
+  GROUP_ADDED = "GROUP_ADDED",
   MESSAGES_ADDED = "MESSAGES_ADDED",
   SERVER_SELECTED = "SERVER_SELECTED",
   CHANNEL_SELECTED = "CHANNEL_SELECTED",
@@ -100,6 +102,12 @@ function reducer(state: GlobalStatesType, action: Action) {
       updateState(state, "members", state.members.concat(action.payload.members).clone());
       updateState(state, "users", new UsersMap(action.payload.users));
       break;
+    case Actions.CHANNEL_ADDED:
+      updateState(state, "channels", state.channels.set(action.payload.id, action.payload).clone())
+      break;
+    case Actions.GROUP_ADDED:
+      updateState(state, "groups", state.groups.set(action.payload.id, action.payload).clone())
+      break;
     case Actions.SERVER_SELECTED:
       updateState(state, "selectedServer", action.payload);
       break;
@@ -110,7 +118,6 @@ function reducer(state: GlobalStatesType, action: Action) {
       updateState(state, "overlay", action.payload);
       break;
     case Actions.MESSAGES_ADDED:
-      console.log(action.payload);
       updateState(state, "messages", state.messages.concat(action.payload));
       break;
     default:

@@ -12,6 +12,9 @@
     --color-seventh: #dcddde;
     --color-8th: #b9bbb3;
     --color-9th: #8e9297;
+    --color-10th: #18191c;
+    --color-11th: #b9bbbe;
+    --color-12th: hsl(235, 46.7%, 44.1%);
     --small-shadow-bar: 0 1px 0 rgba(4, 4, 5, 0.2), 0 2px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
     --members-panel-width: 15em;
 }
@@ -198,6 +201,29 @@ body {
 .div__emoji--hover:hover {
     transform: scale(1.14);
     filter: grayscale(0%);
+}
+
+.div__dropdown {
+    padding: 1em;
+}
+
+.list__dropdown {
+    background-color: var(--color-10th);
+    color: var(--color-11th);
+    border-radius: 0.5em;
+    border: solid var(--color-10th);
+    border-width: 0.5em;
+}
+
+.li__dropdown:hover {
+    background-color: var(--color-12th);
+    color: white;
+}
+
+.btn__dropdown-item {
+    color: currentColor;
+    width: 100%;
+    text-align: start;
 }
 
 .btn__overlay-select {

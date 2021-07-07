@@ -1,0 +1,53 @@
+import {useCallback, useContext} from "react";
+import useBackend from "../../hooks/backend.hook";
+import {Actions, GlobalStates} from "../../global-state";
+import {Server} from "../../types";
+import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
+import CreateGroupOverlayComponent from "../group/CreateGroupOverlay.component";
+
+function DropdownComponent({setIsDropdownShown}: any) {
+
+  const Backend = useBackend();
+  const {state, dispatch} = useContext(GlobalStates);
+
+  const createInvitation = useCallback(async () => {
+    // const selectedServer = state.selectedServer as Server;
+    // const invitation = await Backend.createInvitation(selectedServer.id);
+    // dispatch({
+    //   type: Actions.SERVERS_SET,
+    //   payload: state.servers.set(selectedServer.id, selectedServer).clone()
+    // });
+    // dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
+    setIsDropdownShown(false);
+  }, [setIsDropdownShown, Backend, dispatch, state.selectedServer, state.servers]);
+
+  const showCreateChannelOverlay = useCallback(async () => {
+    setIsDropdownShown(false);
+    dispatch({type: Actions.OVERLAY_SET, payload: <CreateChannelOverlayComponent/>})
+  }, [dispatch])
+
+  const showCreateGroupOverlay = useCallback(async () => {
+    setIsDropdownShown(false);
+    dispatch({type: Actions.OVERLAY_SET, payload: <CreateGroupOverlayComponent/>})
+  }, [dispatch])
+
+  return (
+      <div className="div__dropdown">
+        <ul className="list list__dropdown">
+          <li className="li__dropdown">
+            <button type="button" className="btn btn__dropdown-item" onClick={createInvitation}>Invite people</button>
+          </li>
+          <li className="li__dropdown">
+            <button type="button" className="btn btn__dropdown-item" onClick={showCreateChannelOverlay}>Create channel</button>
+          </li>
+          <li className="li__dropdown">
+            <button type="button" className="btn btn__dropdown-item" onClick={showCreateGroupOverlay}>Create group</button>
+          </li>
+        </ul>
+
+      </div>
+  );
+
+}
+
+export default DropdownComponent;

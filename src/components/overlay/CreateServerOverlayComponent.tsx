@@ -7,7 +7,6 @@ function CreateServerOverlayComponent() {
 
   const Backend = useBackend();
   const {dispatch} = useContext(GlobalStates);
-  const {keycloak} = useKeycloak();
   const ref = useRef<HTMLInputElement>(null);
 
   const createServer = useCallback(async () => {
