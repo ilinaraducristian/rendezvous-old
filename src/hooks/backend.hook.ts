@@ -75,16 +75,16 @@ function useBackend() {
 
   const createChannel = useCallback(async (serverId: number, channelName: string) => {
     return new Promise((resolve, reject) => {
-      socket.emit("create_channel", {serverId, channelName}, (channel: Channel) => {
-        resolve(channel);
+      socket.emit("create_channel", {serverId, channelName}, (channelId: number) => {
+        resolve(channelId);
       });
     });
   }, [socket]);
 
   const createGroup = useCallback(async (serverId: number, groupName: string) => {
     return new Promise((resolve, reject) => {
-      socket.emit("create_group", {serverId, groupName}, (group: Group) => {
-        resolve(group);
+      socket.emit("create_group", {serverId, groupName}, (groupId: number) => {
+        resolve(groupId);
       });
     });
   }, [socket]);

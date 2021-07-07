@@ -1,7 +1,7 @@
 import {useCallback, useContext, useRef} from "react";
 import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
-import {Server} from "../../types";
+import {ChannelType, Server} from "../../types";
 import config from "../../config";
 
 function CreateChannelOverlay() {
@@ -14,7 +14,14 @@ function CreateChannelOverlay() {
     if (!config.offline) {
       const channelName = ref.current?.value as string;
       const selectedServer = state.selectedServer as Server;
-      const channel = await Backend.createChannel(selectedServer.id, channelName);
+      const channelId = await Backend.createChannel(selectedServer.id, channelName);
+      const channel = {
+        id: channelId,
+        serverId: selectedServer.id,
+        groupId: null,
+        type: ChannelType.Text,
+        name: channelName
+      };
       dispatch({type: Actions.CHANNEL_ADDED, payload: channel});
       dispatch({type: Actions.CHANNEL_SELECTED, payload: channel});
     }

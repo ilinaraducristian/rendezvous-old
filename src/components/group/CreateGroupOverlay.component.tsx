@@ -14,8 +14,14 @@ function CreateGroupOverlayComponent() {
     if (!config.offline) {
       const groupName = ref.current?.value as string;
       const selectedServer = state.selectedServer as Server;
-      const group = await Backend.createGroup(selectedServer.id, groupName);
-      dispatch({type: Actions.GROUP_ADDED, payload: group});
+      const groupId = await Backend.createGroup(selectedServer.id, groupName);
+      dispatch({
+        type: Actions.GROUP_ADDED, payload: {
+          id: groupId,
+          serverId: selectedServer.id,
+          name: groupName
+        }
+      });
     }
     dispatch({type: Actions.OVERLAY_SET, payload: null});
   }, []);
