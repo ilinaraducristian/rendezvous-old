@@ -1,4 +1,4 @@
-import {ClipboardEvent, useCallback, useContext, useMemo} from "react";
+import {ClipboardEvent, useCallback, useContext, useEffect, useMemo, useRef} from "react";
 import {Actions, GlobalStates} from "../../global-state";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
@@ -11,6 +11,11 @@ function MessagesPanelComponent() {
 
   const {state, dispatch} = useContext(GlobalStates);
   const io = useSocketIo();
+  const messagesList = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    messagesList.current?.scroll(0, messagesList.current.scrollHeight)
+  }, [state.messages, state.selectedChannel])
 
   const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
     event.preventDefault();
@@ -43,7 +48,7 @@ function MessagesPanelComponent() {
 
   return useMemo(() =>
           <div className="content__body__main">
-            <div className="content__body__messages">
+            <div className="content__body__messages" ref={messagesList}>
               <ol className="list list__messages">
                 {
                   state.messages
