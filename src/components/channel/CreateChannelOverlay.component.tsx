@@ -4,7 +4,11 @@ import useBackend from "../../hooks/backend.hook";
 import {ChannelType, Server} from "../../types";
 import config from "../../config";
 
-function CreateChannelOverlay() {
+type ComponentProps = {
+  groupId?: number | null
+}
+
+function CreateChannelOverlay({groupId = null}: ComponentProps) {
 
   const Backend = useBackend();
   const {state, dispatch} = useContext(GlobalStates);
@@ -14,11 +18,11 @@ function CreateChannelOverlay() {
     if (!config.offline) {
       const channelName = ref.current?.value as string;
       const selectedServer = state.selectedServer as Server;
-      const channelId = await Backend.createChannel(selectedServer.id, channelName);
+      const channelId = await Backend.createChannel(selectedServer.id, groupId, channelName);
       const channel = {
         id: channelId,
         serverId: selectedServer.id,
-        groupId: null,
+        groupId,
         type: ChannelType.Text,
         name: channelName
       };
@@ -26,7 +30,7 @@ function CreateChannelOverlay() {
       dispatch({type: Actions.CHANNEL_SELECTED, payload: channel});
     }
     dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, [Backend, dispatch, state.selectedServer]);
+  }, [Backend, dispatch, state.selectedServer, groupId]);
 
   return (
       <div className="overlay">

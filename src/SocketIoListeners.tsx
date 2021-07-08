@@ -1,7 +1,7 @@
 import {useContext, useEffect} from "react";
 import {Actions, GlobalStates} from "./global-state";
 import useSocketIo from "./hooks/socketio.hook";
-import {Channel, Member, Message, User, UsersMap} from "./types";
+import {Channel, Group, Member, Message, User, UsersMap} from "./types";
 import {useSocketEvent} from "socket.io-react-hook";
 import SortedMap from "./util/SortedMap";
 
@@ -13,6 +13,7 @@ function SocketIoListeners() {
   const newMessageEvent = useSocketEvent<Message>(io.socket, "new_message");
   const newMemberEvent = useSocketEvent<{ member: Member, user: User }>(io.socket, "new_member");
   const newChannelEvent = useSocketEvent<Channel>(io.socket, "new_channel");
+  const newGroupEvent = useSocketEvent<Channel>(io.socket, "new_group");
   // const userInfoUpdateEvent = useSocketEvent<User>(io.socket, "user_info_update");
 
   // useEffect(() => {
@@ -49,9 +50,17 @@ function SocketIoListeners() {
     if (newChannelEvent.lastMessage === undefined) return;
     dispatch({
       type: Actions.CHANNELS_SET, payload: (channels: SortedMap<Channel>) =>
-          channels.set(newChannelEvent.lastMessage.id, newChannelEvent.lastMessage).clone()
+        channels.set(newChannelEvent.lastMessage.id, newChannelEvent.lastMessage).clone()
     });
   }, [dispatch, newChannelEvent.lastMessage]);
+
+  useEffect(() => {
+    if (newGroupEvent.lastMessage === undefined) return;
+    dispatch({
+      type: Actions.GROUPS_SET, payload: (groups: SortedMap<Group>) =>
+          groups.set(newGroupEvent.lastMessage.id, newGroupEvent.lastMessage).clone()
+    });
+  }, [dispatch, newGroupEvent.lastMessage]);
 
   return <></>;
 

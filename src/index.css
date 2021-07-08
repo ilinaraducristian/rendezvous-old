@@ -185,6 +185,7 @@ body {
 
 .btn__group {
     display: flex;
+    flex-grow: 1;
 }
 
 .div__emoji {
@@ -205,6 +206,16 @@ body {
 
 .div__dropdown {
     padding: 1em;
+}
+
+.div__group {
+    display: flex;
+    /*flex-direction: column;*/
+    align-items: center;
+}
+
+.btn__create-channel {
+    font-size: 1.5em;
 }
 
 .list__dropdown {

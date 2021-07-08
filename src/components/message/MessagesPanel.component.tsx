@@ -2,7 +2,7 @@ import {ClipboardEvent, useCallback, useContext, useEffect, useMemo, useRef} fro
 import {Actions, GlobalStates} from "../../global-state";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
-import MessageComponent from "./MessageComponent";
+import MessageComponent from "./Message.component";
 import {Message, User} from "../../types";
 import useSocketIo from "../../hooks/socketio.hook";
 import SortedMap from "../../util/SortedMap";

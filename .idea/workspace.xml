@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="create channel/group socket io hook update">
+    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="working channel and group creation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/SocketIoListeners.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SocketIoListeners.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/channel/CreateChannelOverlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/CreateChannelOverlay.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/dropdown/Dropdown.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dropdown/Dropdown.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/group/CreateGroupOverlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/CreateGroupOverlay.component.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/group/Group.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/Group.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/group/GroupComponent.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/message/MessageComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/Message.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/message/MessagesPanel.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
@@ -49,6 +48,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/group" />
     <property name="nodejs_package_manager_path" value="yarn" />
+    <property name="restartRequiresConfirmation" value="false" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -84,7 +84,8 @@
       <updated>1625647852034</updated>
       <workItem from="1625647853887" duration="2108000" />
       <workItem from="1625654441085" duration="8166000" />
-      <workItem from="1625676084095" duration="2624000" />
+      <workItem from="1625676084095" duration="2659000" />
+      <workItem from="1625718934976" duration="8291000" />
     </task>
     <task id="LOCAL-00001" summary="auto scroll to bottom on messages">
       <created>1625650926945</created>
@@ -107,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625664413943</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="working channel and group creation">
+      <created>1625716075805</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1625716075805</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -131,6 +139,7 @@
     <MESSAGE value="server dropdown menu" />
     <MESSAGE value="create channel/group update" />
     <MESSAGE value="create channel/group socket io hook update" />
-    <option name="LAST_COMMIT_MESSAGE" value="create channel/group socket io hook update" />
+    <MESSAGE value="working channel and group creation" />
+    <option name="LAST_COMMIT_MESSAGE" value="working channel and group creation" />
   </component>
 </project>

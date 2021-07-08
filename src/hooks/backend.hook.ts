@@ -73,9 +73,9 @@ function useBackend() {
     return response.invitation;
   }, [keycloak.token]);
 
-  const createChannel = useCallback(async (serverId: number, channelName: string) => {
+  const createChannel = useCallback(async (serverId: number, groupId: number | null, channelName: string) => {
     return new Promise((resolve, reject) => {
-      socket.emit("create_channel", {serverId, channelName}, (channelId: number) => {
+      socket.emit("create_channel", {serverId, groupId, channelName}, (channelId: number) => {
         resolve(channelId);
       });
     });
