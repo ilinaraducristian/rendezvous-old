@@ -4,6 +4,7 @@ import {Actions, GlobalStates} from "../../global-state";
 import {Server} from "../../types";
 import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "../group/CreateGroupOverlay.component";
+import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
@@ -11,25 +12,25 @@ function DropdownComponent({setIsDropdownShown}: any) {
   const {state, dispatch} = useContext(GlobalStates);
 
   const createInvitation = useCallback(async () => {
-    // const selectedServer = state.selectedServer as Server;
-    // const invitation = await Backend.createInvitation(selectedServer.id);
-    // dispatch({
-    //   type: Actions.SERVERS_SET,
-    //   payload: state.servers.set(selectedServer.id, selectedServer).clone()
-    // });
-    // dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
+    const selectedServer = state.selectedServer as Server;
+    const invitation = await Backend.createInvitation(selectedServer.id);
+    dispatch({
+      type: Actions.SERVERS_SET,
+      payload: state.servers.set(selectedServer.id, selectedServer).clone()
+    });
+    dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
     setIsDropdownShown(false);
   }, [setIsDropdownShown, Backend, dispatch, state.selectedServer, state.servers]);
 
   const showCreateChannelOverlay = useCallback(async () => {
     setIsDropdownShown(false);
     dispatch({type: Actions.OVERLAY_SET, payload: <CreateChannelOverlayComponent/>})
-  }, [dispatch])
+  }, [dispatch, setIsDropdownShown])
 
   const showCreateGroupOverlay = useCallback(async () => {
     setIsDropdownShown(false);
     dispatch({type: Actions.OVERLAY_SET, payload: <CreateGroupOverlayComponent/>})
-  }, [dispatch])
+  }, [dispatch, setIsDropdownShown])
 
   return (
       <div className="div__dropdown">

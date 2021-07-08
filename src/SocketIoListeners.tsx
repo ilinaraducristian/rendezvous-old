@@ -13,7 +13,7 @@ function SocketIoListeners() {
   const newMessageEvent = useSocketEvent<Message>(io.socket, "new_message");
   const newMemberEvent = useSocketEvent<{ member: Member, user: User }>(io.socket, "new_member");
   const newChannelEvent = useSocketEvent<Channel>(io.socket, "new_channel");
-  const userInfoUpdateEvent = useSocketEvent<User>(io.socket, "user_info_update");
+  // const userInfoUpdateEvent = useSocketEvent<User>(io.socket, "user_info_update");
 
   // useEffect(() => {
   //   console.log(io.connected);

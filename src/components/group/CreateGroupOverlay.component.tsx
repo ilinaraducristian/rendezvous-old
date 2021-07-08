@@ -24,7 +24,7 @@ function CreateGroupOverlayComponent() {
       });
     }
     dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, []);
+  }, [Backend, dispatch, state.selectedServer]);
 
   return (
       <div className="overlay">

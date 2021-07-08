@@ -1,7 +1,6 @@
 import {useCallback, useContext, useMemo, useRef} from "react";
 import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
-import {useKeycloak} from "@react-keycloak/web";
 
 function CreateServerOverlayComponent() {
 

@@ -26,7 +26,7 @@ function CreateChannelOverlay() {
       dispatch({type: Actions.CHANNEL_SELECTED, payload: channel});
     }
     dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, []);
+  }, [Backend, dispatch, state.selectedServer]);
 
   return (
       <div className="overlay">

@@ -305,7 +305,7 @@ body {
     max-height: 12.5em;
     margin: 0 1em 1.5em 1em;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
 
 }
 

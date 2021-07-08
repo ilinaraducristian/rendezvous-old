@@ -1,7 +1,7 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useCallback} from "react";
 import config from "../config";
-import {Channel, Group, Message, ProcessedServersData, ServersData} from "../types";
+import {Message, ProcessedServersData, ServersData} from "../types";
 import {responseToSortedMap} from "../util/functions";
 import useSocketIo from "./socketio.hook";
 import SortedMap from "../util/SortedMap";

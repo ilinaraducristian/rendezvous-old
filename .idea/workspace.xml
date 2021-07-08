@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="server dropdown menu">
+    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="create channel/group socket io hook update">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SocketIoListeners.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/SocketIoListeners.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/ChannelsPanel.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/channel/CreateChannelOverlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/CreateChannelOverlay.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/dropdown/Dropdown.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/dropdown/Dropdown.component.tsx" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/components/group/CreateGroupOverlay.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/group/CreateGroupOverlay.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/overlay/CreateServerOverlayComponent.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/index.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +83,8 @@
       <option name="presentableId" value="Default" />
       <updated>1625647852034</updated>
       <workItem from="1625647853887" duration="2108000" />
-      <workItem from="1625654441085" duration="7988000" />
+      <workItem from="1625654441085" duration="8166000" />
+      <workItem from="1625676084095" duration="2624000" />
     </task>
     <task id="LOCAL-00001" summary="auto scroll to bottom on messages">
       <created>1625650926945</created>
@@ -92,7 +100,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625661113892</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="create channel/group socket io hook update">
+      <created>1625664413943</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1625664413943</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +129,8 @@
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="auto scroll to bottom on messages" />
     <MESSAGE value="server dropdown menu" />
-    <option name="LAST_COMMIT_MESSAGE" value="server dropdown menu" />
+    <MESSAGE value="create channel/group update" />
+    <MESSAGE value="create channel/group socket io hook update" />
+    <option name="LAST_COMMIT_MESSAGE" value="create channel/group socket io hook update" />
   </component>
 </project>
