@@ -27,7 +27,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:prod": "react-scripts build && docker build -t randevous:0.1.0 ."
+    "build:prod": "env REACT_APP_ENVIRONMENT=\"production\" react-scripts build && docker build -t randevous:0.1.0 ."
   },
   "eslintConfig": {
     "extends": [

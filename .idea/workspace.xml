@@ -1,33 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="working channel creation in groups">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/asset-manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/favicon.ico" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/logo192.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/logo512.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/manifest.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/robots.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/css/main.9876eb76.chunk.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/css/main.9876eb76.chunk.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/2.292e8546.chunk.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/2.292e8546.chunk.js.LICENSE.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/2.292e8546.chunk.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/3.ded70855.chunk.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/3.ded70855.chunk.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/main.977e32ff.chunk.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/main.977e32ff.chunk.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/runtime-main.a6a830c3.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/js/runtime-main.a6a830c3.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build/static/media/emojis.41c6e488.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/nginx.conf" afterDir="false" />
+    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="prod env working with nginx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,14 +46,16 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/components/group" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src" />
     <property name="nodejs_package_manager_path" value="yarn" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
     <property name="ts.external.directory.path" value="$PROJECT_DIR$/node_modules/typescript/lib" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/components/group" />
     </key>
   </component>
@@ -113,7 +93,13 @@
       <workItem from="1625845724038" duration="2000" />
       <workItem from="1625847025295" duration="1878000" />
       <workItem from="1625886563921" duration="1281000" />
-      <workItem from="1625913893714" duration="627000" />
+      <workItem from="1625913893714" duration="691000" />
+      <workItem from="1625923871378" duration="2918000" />
+      <workItem from="1625927924751" duration="28000" />
+      <workItem from="1625927967334" duration="13000" />
+      <workItem from="1625927997295" duration="58000" />
+      <workItem from="1625929736787" duration="6283000" />
+      <workItem from="1626002034274" duration="3905000" />
     </task>
     <task id="LOCAL-00001" summary="auto scroll to bottom on messages">
       <created>1625650926945</created>
@@ -150,7 +136,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625750124086</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="prod env working with nginx">
+      <created>1625915878757</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1625915878757</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -176,6 +169,7 @@
     <MESSAGE value="create channel/group socket io hook update" />
     <MESSAGE value="working channel and group creation" />
     <MESSAGE value="working channel creation in groups" />
-    <option name="LAST_COMMIT_MESSAGE" value="working channel creation in groups" />
+    <MESSAGE value="prod env working with nginx" />
+    <option name="LAST_COMMIT_MESSAGE" value="prod env working with nginx" />
   </component>
 </project>

@@ -7,8 +7,8 @@ function useSocketIo() {
 
   const {keycloak} = useKeycloak();
 
-  const socket = useSocket(config.backend, {
-    autoConnect: false
+  const socket = useSocket(config.socketIoUrl, {
+    autoConnect: false,
   });
 
   socket.socket.on("disconnect", () => {
