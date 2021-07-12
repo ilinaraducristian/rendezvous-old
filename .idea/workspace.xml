@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="prod env working with nginx">
+    <list default="true" id="11989bbb-36db-472c-8fb0-a676dc42e797" name="Default Changelist" comment="everything should work with nginx">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/socketio.hook.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/components/channel/Channel.component.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/hooks/backend.hook.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/hooks/backend.hook.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +98,8 @@
       <workItem from="1625927967334" duration="13000" />
       <workItem from="1625927997295" duration="58000" />
       <workItem from="1625929736787" duration="6283000" />
-      <workItem from="1626002034274" duration="3905000" />
+      <workItem from="1626002034274" duration="6387000" />
+      <workItem from="1626052284321" duration="1288000" />
     </task>
     <task id="LOCAL-00001" summary="auto scroll to bottom on messages">
       <created>1625650926945</created>
@@ -143,7 +143,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625915878757</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="everything should work with nginx">
+      <created>1626012809419</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1626012809419</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,6 +169,8 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="CHECK_CODE_CLEANUP_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="CHECK_NEW_TODO" value="false" />
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="auto scroll to bottom on messages" />
     <MESSAGE value="server dropdown menu" />
@@ -170,6 +179,10 @@
     <MESSAGE value="working channel and group creation" />
     <MESSAGE value="working channel creation in groups" />
     <MESSAGE value="prod env working with nginx" />
-    <option name="LAST_COMMIT_MESSAGE" value="prod env working with nginx" />
+    <MESSAGE value="everything should work with nginx" />
+    <option name="LAST_COMMIT_MESSAGE" value="everything should work with nginx" />
+    <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
+    <option name="REARRANGE_BEFORE_PROJECT_COMMIT" value="true" />
   </component>
 </project>

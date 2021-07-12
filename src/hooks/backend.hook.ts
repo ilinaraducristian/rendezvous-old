@@ -33,9 +33,9 @@ function useBackend() {
     });
   }, [socket]);
 
-  const getMessages = useCallback(async (channelId: number, offset: number) => {
+  const getMessages = useCallback(async (serverId: number, channelId: number, offset: number) => {
     if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
-    let response: any = await fetch(`${config.backend}/channels/${channelId}/messages?offset=${offset}`, {
+    let response: any = await fetch(`${config.backend}/channels/${channelId}/messages?serverId=${serverId}&offset=${offset}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${keycloak.token}`,

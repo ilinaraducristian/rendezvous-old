@@ -16,7 +16,7 @@ function ChannelComponent({channel}: ComponentProps) {
 
   const selectChannel = useCallback(async () => {
     if (!config.offline) {
-      const messages = await Backend.getMessages(channel.id, 0);
+      const messages = await Backend.getMessages(channel.serverId, channel.id, 0);
       dispatch({type: Actions.MESSAGES_ADDED, payload: messages});
     }
     dispatch({type: Actions.CHANNEL_SELECTED, payload: {...channel}});
