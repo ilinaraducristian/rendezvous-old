@@ -42,6 +42,7 @@ enum Actions {
   SERVER_SELECTED = "SERVER_SELECTED",
   CHANNEL_SELECTED = "CHANNEL_SELECTED",
   OVERLAY_SET = "OVERLAY_SET",
+  CHANNEL_MOVED = "CHANNEL_MOVED"
 }
 
 function reducer(state: GlobalStatesType, action: Action) {

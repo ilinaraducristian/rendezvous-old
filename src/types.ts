@@ -24,7 +24,8 @@ export type Channel = {
   serverId: number,
   groupId: number,
   type: ChannelType,
-  name: string
+  name: string,
+  order: number
 }
 
 export type Message = {

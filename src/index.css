@@ -32,6 +32,15 @@ body {
     padding: 0;
 }
 
+.div__green-bar {
+    height: 0.5em;
+    background-color: transparent;
+}
+
+.div__green-bar--active {
+    background-color: green;
+}
+
 .list {
     list-style: none;
     padding: 0;

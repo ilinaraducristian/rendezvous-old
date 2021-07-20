@@ -23,13 +23,36 @@ export const mockChannels = new SortedMap<Channel>([[1, {
   serverId: 1,
   groupId: 1,
   type: ChannelType.Text,
-  name: "general"
+  name: "general",
+  order: 0
 }], [2, {
   id: 2,
   serverId: 1,
   groupId: 2,
   type: ChannelType.Voice,
-  name: "General"
+  name: "General",
+  order: 0
+}], [3, {
+  id: 3,
+  serverId: 1,
+  groupId: 1,
+  type: ChannelType.Text,
+  name: "ch1",
+  order: 1
+}], [4, {
+  id: 4,
+  serverId: 1,
+  groupId: 1,
+  type: ChannelType.Text,
+  name: "ch2",
+  order: 2
+}], [5, {
+  id: 5,
+  serverId: 1,
+  groupId: 1,
+  type: ChannelType.Text,
+  name: "ch3",
+  order: 3
 }]]);
 
 export const mockMessages = (() => {

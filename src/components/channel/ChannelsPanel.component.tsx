@@ -5,6 +5,8 @@ import {Group} from "../../types";
 import ArrowXSVG from "../../svg/ArrowX.svg";
 import ChannelsListComponent from "./ChannelsList.component";
 import DropdownComponent from "../dropdown/Dropdown.component";
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 
 function ChannelsPanelComponent() {
 
@@ -28,19 +30,21 @@ function ChannelsPanelComponent() {
           }
         </button>
         {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
-        <ol className="list list__panel list__channels-panel">
-          {state.selectedServer === null ||
-          <>
-              <ChannelsListComponent/>
-            {
-              state.groups.filter((group: Group) => group.serverId === state.selectedServer?.id)
-                  .map((group: Group) =>
-                      <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
-                  )
+        <DndProvider backend={HTML5Backend}>
+          <ol className="list list__panel list__channels-panel">
+            {state.selectedServer === null ||
+            <>
+                <ChannelsListComponent/>
+              {
+                state.groups.filter((group: Group) => group.serverId === state.selectedServer?.id)
+                    .map((group: Group) =>
+                        <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
+                    )
+              }
+            </>
             }
-          </>
-          }
-        </ol>
+          </ol>
+        </DndProvider>
       </div>
   ), [isDropdownShown, state.groups, state.selectedServer, toggleDropdown]);
 

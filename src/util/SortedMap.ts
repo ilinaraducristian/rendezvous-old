@@ -74,10 +74,10 @@ class SortedMap<V = any> extends Map<number, V> {
     return filteredMap;
   }
 
-  map<K = any>(callbackFn: (value: V, key: number, map: SortedMap) => K): SortedMap<K> {
+  map<K = any>(callbackFn: (value: V, key: number, map: SortedMap, index: number) => K): SortedMap<K> {
     const newSortedMap = new SortedMap<K>();
-    this.sortedKeys.forEach((key) => {
-      newSortedMap.set(key, callbackFn(this.get(key) as V, key, this));
+    this.sortedKeys.forEach((key, index) => {
+      newSortedMap.set(key, callbackFn(this.get(key) as V, key, this, index));
     });
     return newSortedMap;
   }
@@ -100,6 +100,14 @@ class SortedMap<V = any> extends Map<number, V> {
     this.sortedKeys.forEach((key: number) => {
       newSortedMap.set(key, this.get(key) as V);
     });
+    return newSortedMap;
+  }
+
+  sort(compareFn: (firstEl: V, secondEl: V) => number): Map<number, V> {
+    const newSortedKeys = Array.from(this.sortedKeys);
+    newSortedKeys.sort((i1, i2) => compareFn(this.get(i1) as V, this.get(i2) as V));
+    const newSortedMap = new SortedMap<V>();
+    newSortedKeys.forEach((key, index) => newSortedMap.set(index + 1, this.get(key) as V));
     return newSortedMap;
   }
 
