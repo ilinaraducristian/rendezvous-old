@@ -8,7 +8,7 @@ type ComponentProps = {
   groupId: number | null
 }
 
-function DropHandleComponent({index, groupId}: ComponentProps) {
+function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
   const [hidden, setHidden] = useState(true);
   const {state, dispatch} = useContext(GlobalStates);
@@ -31,8 +31,8 @@ function DropHandleComponent({index, groupId}: ComponentProps) {
       if (channel !== undefined) {
         channel.order = index - 1;
       }
-
-      dispatch({type: Actions.CHANNELS_SET, payload: newChannels.clone()});
+      state.channels.concat(newChannels);
+      dispatch({type: Actions.CHANNELS_SET, payload: state.channels.clone()});
     } else {
       let newChannels = state.channels.filter(channel => channel.groupId === groupId).map(channel => {
         if (channel.order > item.order)
@@ -46,15 +46,15 @@ function DropHandleComponent({index, groupId}: ComponentProps) {
       if (channel !== undefined) {
         channel.order = index;
       }
-
-      dispatch({type: Actions.CHANNELS_SET, payload: newChannels.clone()});
+      state.channels.concat(newChannels);
+      dispatch({type: Actions.CHANNELS_SET, payload: state.channels.clone()});
     }
 
   }, [dispatch, groupId, index, state.channels]);
 
   const handleHover = useCallback(() => {
     setHidden(false);
-  }, []);
+  }, [setHidden]);
 
   const handleCollect = useCallback((monitor) => {
     return {
@@ -77,4 +77,4 @@ function DropHandleComponent({index, groupId}: ComponentProps) {
 
 }
 
-export default DropHandleComponent;
+export default ChannelDropHandleComponent;

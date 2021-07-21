@@ -1,12 +1,11 @@
 import {GlobalStates} from "../../global-state";
 import {useCallback, useContext, useMemo, useState} from "react";
-import GroupComponent from "../group/Group.component";
-import {Group} from "../../types";
 import ArrowXSVG from "../../svg/ArrowX.svg";
 import ChannelsListComponent from "./ChannelsList.component";
 import DropdownComponent from "../dropdown/Dropdown.component";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
+import GroupsListComponent from "../group/GroupsList.component";
 
 function ChannelsPanelComponent() {
 
@@ -35,12 +34,7 @@ function ChannelsPanelComponent() {
             {state.selectedServer === null ||
             <>
                 <ChannelsListComponent/>
-              {
-                state.groups.filter((group: Group) => group.serverId === state.selectedServer?.id)
-                    .map((group: Group) =>
-                        <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
-                    )
-              }
+                <GroupsListComponent/>
             </>
             }
           </ol>

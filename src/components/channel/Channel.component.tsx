@@ -1,5 +1,5 @@
 import {useCallback, useContext, useMemo} from "react";
-import {Channel} from "../../types";
+import {Channel, ChannelType} from "../../types";
 import ChannelSVG from "../../svg/Channel.svg";
 import {Actions, GlobalStates} from "../../global-state";
 import useBackend from "../../hooks/backend.hook";
@@ -18,6 +18,7 @@ function ChannelComponent({channel}: ComponentProps) {
   const Backend = useBackend();
 
   const selectChannel = useCallback(async () => {
+    if (channel.type === ChannelType.Voice) return;
     if (!config.offline) {
       const messages = await Backend.getMessages(channel.serverId, channel.id, 0);
       dispatch({type: Actions.MESSAGES_ADDED, payload: messages});

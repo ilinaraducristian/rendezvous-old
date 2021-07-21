@@ -2,7 +2,7 @@ import {useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelComponent from "./Channel.component";
 import {GlobalStates} from "../../global-state";
-import DropHandleComponent from "./DropHandle.component";
+import ChannelDropHandleComponent from "./ChannelDropHandle.component";
 
 type ComponentProps = {
   groupId?: number | null
@@ -12,12 +12,12 @@ function channelMapper(groupId: number | null) {
 
   return (channel: any, index: number, array: [number, Channel][]) => {
     const channelComponents = [
-      <DropHandleComponent key={`drop-handle_${index}`} index={index} groupId={groupId}/>,
+      <ChannelDropHandleComponent key={`drop-handle_${index}`} index={index} groupId={groupId}/>,
       <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
     ];
     if (index === array.length - 1) {
       channelComponents.push(
-          <DropHandleComponent key={`drop-handle_${index + 1}`} index={index + 1} groupId={groupId}/>
+          <ChannelDropHandleComponent key={`drop-handle_${index + 1}`} index={index + 1} groupId={groupId}/>
       );
     }
 
