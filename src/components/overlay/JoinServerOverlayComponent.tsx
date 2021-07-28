@@ -1,6 +1,7 @@
 import {useCallback, useContext, useMemo, useRef} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import useBackend from "../../hooks/backend.hook";
+import Actions from "../../state-management/actions";
 
 function JoinServerOverlayComponent() {
   const Backend = useBackend();

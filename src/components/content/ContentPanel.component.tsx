@@ -1,8 +1,8 @@
-import {GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import {useContext, useMemo, useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
-import {ChannelType} from "../../types";
+import {Channel, ChannelType} from "../../types";
 import MembersPanelComponent from "../member/MembersComponent";
 import MessagesPanelComponent from "../message/MessagesPanel.component";
 
@@ -16,10 +16,13 @@ function ContentPanelComponent() {
             <header className="content__header">
               <div className="content__header__main">
                 {
-                  state.selectedChannel === null ||
-                  <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
+                  state.selectedChannel.id === null ||
+                  <>
+                      <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
+                      <span
+                          className="span__header-channel-name">{(state.channels.get(state.selectedChannel.id) as Channel).name}</span>
+                  </>
                 }
-                <span className="span__header-channel-name">{state.selectedChannel?.name}</span>
                 <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
                         onClick={() => setIsMembersSelected(!isMembersSelected)}>
                   <MembersSVG/>
@@ -37,7 +40,7 @@ function ContentPanelComponent() {
               }
             </div>
           </div>
-      , [isMembersSelected, state.selectedChannel]);
+      , [isMembersSelected, state.channels, state.selectedChannel]);
 
 }
 

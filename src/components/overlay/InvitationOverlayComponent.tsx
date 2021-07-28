@@ -1,5 +1,6 @@
 import {useCallback, useContext, useMemo, useState} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
+import Actions from "../../state-management/actions";
 
 type ComponentProps = {
   invitation: string

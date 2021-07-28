@@ -1,8 +1,9 @@
 import ServerComponent from "./Server.component";
 import {Server} from "../../types";
 import {useCallback, useContext, useMemo} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import AddServerOverlayComponent from "../overlay/AddServerOverlayComponent";
+import Actions from "../../state-management/actions";
 
 function ServersPanelComponent() {
 
@@ -10,7 +11,7 @@ function ServersPanelComponent() {
 
   const selectServer = useCallback((server: Server) => {
     dispatch({type: Actions.CHANNEL_SELECTED, payload: null});
-    dispatch({type: Actions.SERVER_SELECTED, payload: server});
+    dispatch({type: Actions.SERVER_SELECTED, payload: server.id});
   }, [dispatch]);
 
   const setOverlay = useCallback(() => {

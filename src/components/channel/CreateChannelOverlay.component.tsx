@@ -1,8 +1,9 @@
 import {useCallback, useContext, useRef} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import useBackend from "../../hooks/backend.hook";
 import {ChannelType, Server} from "../../types";
 import config from "../../config";
+import Actions from "../../state-management/actions";
 
 type ComponentProps = {
   groupId?: number | null
@@ -16,8 +17,9 @@ function CreateChannelOverlay({groupId = null}: ComponentProps) {
 
   const createChannel = useCallback(async () => {
     if (!config.offline) {
+      if (state.selectedServer.id === null) return;
       const channelName = ref.current?.value as string;
-      const selectedServer = state.selectedServer as Server;
+      const selectedServer = state.servers.get(state.selectedServer.id) as Server;
       const channelId = await Backend.createChannel(selectedServer.id, groupId, channelName);
       const channel = {
         id: channelId,
@@ -27,10 +29,10 @@ function CreateChannelOverlay({groupId = null}: ComponentProps) {
         name: channelName
       };
       dispatch({type: Actions.CHANNEL_ADDED, payload: channel});
-      dispatch({type: Actions.CHANNEL_SELECTED, payload: channel});
+      dispatch({type: Actions.CHANNEL_SELECTED, payload: channel.id});
     }
     dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, [Backend, dispatch, state.selectedServer, groupId]);
+  }, [Backend, dispatch, state.servers, state.selectedServer, groupId]);
 
   return (
       <div className="overlay">

@@ -1,7 +1,8 @@
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
 import {useCallback, useContext, useEffect, useState} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
+import Actions from "../../state-management/actions";
 
 type ComponentProps = {
   index: number,
@@ -13,7 +14,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
   const [hidden, setHidden] = useState(true);
   const {state, dispatch} = useContext(GlobalStates);
 
-  const handleDrop = useCallback((item, monitor) => {
+  const handleDrop = useCallback((item) => {
     if (item.order === index || item.order + 1 === index) return;
     if (groupId === null) return;
 
@@ -32,7 +33,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
         channel.order = index - 1;
       }
       state.channels.concat(newChannels);
-      dispatch({type: Actions.CHANNELS_SET, payload: state.channels.clone()});
+      dispatch({type: Actions.CHANNELS_SET, payload: state.channels});
     } else {
       let newChannels = state.channels.filter(channel => channel.groupId === groupId).map(channel => {
         if (channel.order > item.order)

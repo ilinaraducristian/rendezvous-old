@@ -1,34 +1,34 @@
-import {useKeycloak} from "@react-keycloak/web";
 import {useSocket} from "socket.io-react-hook";
 import config from "../config";
-import {useEffect} from "react";
+import {useCallback, useEffect} from "react";
+import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
 
 function useSocketIo() {
 
-  const {keycloak} = useKeycloak();
-
   const socket = useSocket(config.socketIoUrl, {
     autoConnect: false,
-  });
-
-  socket.socket.on("disconnect", () => {
-    window.location.reload();
+    transports: ["websocket"]
   });
 
   useEffect(() => {
-    if (config.offline) return;
-    if (keycloak.token === undefined) {
-      socket.socket.disconnect();
-    } else {
-      socket.socket.auth = {
-        token: keycloak.token
-      };
-      if (!socket.connected)
-        socket.socket.connect();
-    }
-  }, [keycloak.token, socket.connected, socket.socket]);
+    socket.socket.on("disconnect", () => {
+      window.location.reload();
+    });
+  }, [socket.socket]);
 
-  return socket;
+  const emitAck = useCallback(<ReturnValue = any, Ev extends EventNames<DefaultEventsMap> = string>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>) => {
+    return new Promise<ReturnValue>(resolve => {
+      if (args.length === 0)
+        return socket.socket.emit(ev, 0, resolve);
+      socket.socket.emit(ev, ...args, resolve);
+    });
+  }, [socket]);
+
+  return {
+    socket: Object.assign(socket.socket, {emitAck}),
+    connected: socket.connected,
+    error: socket.error
+  };
 
 }
 

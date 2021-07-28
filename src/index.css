@@ -65,6 +65,10 @@ body {
     word-break: break-all;
 }
 
+.list__voice-channel {
+    color: white;
+}
+
 .message-container {
     display: flex;
 }

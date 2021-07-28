@@ -1,8 +1,9 @@
 import {useCallback, useContext, useRef} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import useBackend from "../../hooks/backend.hook";
 import {Server} from "../../types";
 import config from "../../config";
+import Actions from "../../state-management/actions";
 
 function CreateGroupOverlayComponent() {
 
@@ -12,8 +13,9 @@ function CreateGroupOverlayComponent() {
 
   const createGroup = useCallback(async () => {
     if (!config.offline) {
+      if (state.selectedServer.id === null) return;
       const groupName = ref.current?.value as string;
-      const selectedServer = state.selectedServer as Server;
+      const selectedServer = state.servers.get(state.selectedServer.id) as Server;
       const groupId = await Backend.createGroup(selectedServer.id, groupName);
       dispatch({
         type: Actions.GROUP_ADDED, payload: {
@@ -24,7 +26,7 @@ function CreateGroupOverlayComponent() {
       });
     }
     dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, [Backend, dispatch, state.selectedServer]);
+  }, [Backend, dispatch, state.servers, state.selectedServer]);
 
   return (
       <div className="overlay">

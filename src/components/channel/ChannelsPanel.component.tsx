@@ -1,4 +1,4 @@
-import {GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import {useCallback, useContext, useMemo, useState} from "react";
 import ArrowXSVG from "../../svg/ArrowX.svg";
 import ChannelsListComponent from "./ChannelsList.component";
@@ -6,6 +6,7 @@ import DropdownComponent from "../dropdown/Dropdown.component";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import GroupsListComponent from "../group/GroupsList.component";
+import {Server} from "../../types";
 
 function ChannelsPanelComponent() {
 
@@ -21,9 +22,10 @@ function ChannelsPanelComponent() {
         <button className="btn btn__server-options" type="button"
                 onClick={toggleDropdown}>
           {
-            state.selectedServer === null ||
+            state.selectedServer.id === null ||
             <>
-                <span className="svg__server-options-name">{state.selectedServer.name}</span>
+                <span
+                    className="svg__server-options-name">{(state.servers.get(state.selectedServer.id) as Server).name}</span>
                 <ArrowXSVG className={"svg__arrow" + (isDropdownShown ? " svg__arrow--active" : "")}/>
             </>
           }
@@ -31,7 +33,7 @@ function ChannelsPanelComponent() {
         {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
         <DndProvider backend={HTML5Backend}>
           <ol className="list list__panel list__channels-panel">
-            {state.selectedServer === null ||
+            {state.selectedServer.id === null ||
             <>
                 <ChannelsListComponent/>
                 <GroupsListComponent/>
@@ -40,7 +42,7 @@ function ChannelsPanelComponent() {
           </ol>
         </DndProvider>
       </div>
-  ), [isDropdownShown, state.groups, state.selectedServer, toggleDropdown]);
+  ), [isDropdownShown, state.servers, state.selectedServer, toggleDropdown]);
 
 }
 

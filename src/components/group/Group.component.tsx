@@ -1,8 +1,9 @@
 import {useCallback, useContext, useState} from "react";
 import ChannelsListComponent from "../channel/ChannelsList.component";
 import ArrowSVG from "../../svg/Arrow.svg";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
+import Actions from "../../state-management/actions";
 
 type ComponentProps = {
   id: number,

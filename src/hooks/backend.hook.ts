@@ -1,7 +1,7 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useCallback} from "react";
 import config from "../config";
-import {Message, ProcessedServersData, ServersData} from "../types";
+import {Message} from "../types";
 import {responseToSortedMap} from "../util/functions";
 import useSocketIo from "./socketio.hook";
 import SortedMap from "../util/SortedMap";
@@ -11,27 +11,15 @@ function useBackend() {
   const {keycloak} = useKeycloak();
   const {socket} = useSocketIo();
 
-  const getUserServersData = useCallback(async (): Promise<ProcessedServersData> => {
-    if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
-    let response: any = await fetch(`${config.backend}/servers`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${keycloak.token}`,
-        "Content-Type": "application/json"
-      }
-    });
-    response = await response.json();
-    response = responseToSortedMap(response);
-    return response;
-  }, [keycloak.token]);
+  const getUserServersData = useCallback(() =>
+          socket.emitAck("get_user_servers_data")
+              .then(responseToSortedMap)
+      , [socket]);
 
-  const createServer = useCallback((name: string) => {
-    return new Promise((resolve, reject) => {
-      socket.emit("create_server", {name}, (serversData: ServersData) => {
-        resolve(responseToSortedMap(serversData));
-      });
-    });
-  }, [socket]);
+  const createServer = useCallback((name: string) =>
+          socket.emitAck("create_server", {name})
+              .then(responseToSortedMap)
+      , [socket]);
 
   const getMessages = useCallback(async (serverId: number, channelId: number, offset: number) => {
     if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
@@ -51,13 +39,10 @@ function useBackend() {
     return response;
   }, [keycloak.token]);
 
-  const joinServer = useCallback(async (invitation: string) => {
-    return new Promise((resolve, reject) => {
-      socket.emit("join_server", {invitation}, (serversData: ServersData) => {
-        resolve(responseToSortedMap(serversData));
-      });
-    });
-  }, [socket]);
+  const joinServer = useCallback((invitation: string) =>
+          socket.emitAck("join_server", {invitation})
+              .then(responseToSortedMap)
+      , [socket]);
 
   const createInvitation = useCallback(async (serverId: number) => {
     if (keycloak.token === undefined) return Promise.reject({error: "Keycloak token is undefined"});
@@ -73,21 +58,13 @@ function useBackend() {
     return response.invitation;
   }, [keycloak.token]);
 
-  const createChannel = useCallback(async (serverId: number, groupId: number | null, channelName: string) => {
-    return new Promise((resolve, reject) => {
-      socket.emit("create_channel", {serverId, groupId, channelName}, (channelId: number) => {
-        resolve(channelId);
-      });
-    });
-  }, [socket]);
+  const createChannel = useCallback((serverId: number, groupId: number | null, channelName: string) =>
+          socket.emitAck("create_channel", {serverId, groupId, channelName})
+      , [socket]);
 
-  const createGroup = useCallback(async (serverId: number, groupName: string) => {
-    return new Promise((resolve, reject) => {
-      socket.emit("create_group", {serverId, groupName}, (groupId: number) => {
-        resolve(groupId);
-      });
-    });
-  }, [socket]);
+  const createGroup = useCallback((serverId: number, groupName: string) =>
+          socket.emitAck("create_group", {serverId, groupName})
+      , [socket]);
 
   return {
     getUserServersData,

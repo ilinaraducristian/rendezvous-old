@@ -1,7 +1,8 @@
 import {useCallback, useContext, useMemo} from "react";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import CreateServerOverlayComponent from "./CreateServerOverlayComponent";
 import JoinServerOverlayComponent from "./JoinServerOverlayComponent";
+import Actions from "../../state-management/actions";
 
 function AddServerOverlayComponent() {
 

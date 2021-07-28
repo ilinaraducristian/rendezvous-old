@@ -1,7 +1,7 @@
 import {useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelComponent from "./Channel.component";
-import {GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import ChannelDropHandleComponent from "./ChannelDropHandle.component";
 
 type ComponentProps = {
@@ -32,7 +32,7 @@ function ChannelsListComponent({groupId = null}: ComponentProps) {
   return useMemo(() => <>{
         Array.from(state.channels
             .filter((channel: Channel) =>
-                channel.serverId === state.selectedServer?.id && channel.groupId === groupId
+                channel.serverId === state.selectedServer.id && channel.groupId === groupId
             ).sort((ch1, ch2) => ch1.order - ch2.order))
             .map(channelMapper(groupId)).flat(2)
       }</>

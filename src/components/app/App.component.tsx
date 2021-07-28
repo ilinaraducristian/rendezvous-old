@@ -1,14 +1,17 @@
 import {useKeycloak} from "@react-keycloak/web";
 import {useEffect, useReducer} from "react";
 import useBackend from "../../hooks/backend.hook";
-import {Actions, GlobalStates, initialState, reducer} from "../../global-state";
+import {GlobalStates, initialState} from "../../state-management/global-state";
 import ServersPanelComponent from "../server/ServersPanel.component";
 import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
-import SocketIoListeners from "../../SocketIoListeners";
+import SocketIoListeners from "../SocketIoListeners";
 import Fuse from "../../util/fuse";
 import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
 import config from "../../config";
+import useSocketIo from "../../hooks/socketio.hook";
+import Actions from "../../state-management/actions";
+import reducer from "../../state-management/reducer";
 
 const backendInitialized: Fuse = new Fuse();
 
@@ -16,8 +19,34 @@ function AppComponent() {
 
   const {keycloak, initialized} = useKeycloak();
   const Backend = useBackend();
+  const {socket} = useSocketIo();
 
   const [state, dispatch] = useReducer(reducer, initialState);
+
+
+  useEffect(() => {
+    if (state.device.loaded) return;
+    if (!socket.connected) return;
+    socket.emitAck(`get_router_capabilities`)
+        .then(({routerRtpCapabilities}) => state.device.load({routerRtpCapabilities}))
+        .then(() => dispatch({type: Actions.DEVICE_LOADED}));
+  }, [state.device.loaded, socket.connected]);
+
+  useEffect(() => {
+    keycloak.onAuthSuccess = () => {
+      if (socket.connected) return;
+      socket.auth = {
+        token: keycloak.token
+      };
+      socket.connect();
+    };
+
+    keycloak.onAuthRefreshSuccess = () => {
+      socket.auth = {
+        token: keycloak.token
+      };
+    };
+  }, [keycloak, socket]);
 
   useEffect(() => {
     if (!config.offline) {
@@ -61,7 +90,8 @@ function AppComponent() {
       <GlobalStates.Provider value={{state, dispatch}}>{
         ((!initialized || !keycloak.authenticated) && !config.offline) ||
         <>
-            <SocketIoListeners/>
+
+        <SocketIoListeners/>
             <ServersPanelComponent/>
             <ChannelsPanelComponent/>
             <ContentPanelComponent/>

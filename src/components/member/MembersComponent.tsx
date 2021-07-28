@@ -1,5 +1,5 @@
 import {useContext} from "react";
-import {GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import MemberComponent from "./MemberComponent";
 import {User} from "../../types";
 
@@ -12,7 +12,7 @@ function MembersComponent() {
         <ol className="list">
           {
             state.members
-                .filter(member => member.serverId === state.selectedServer?.id)
+                .filter(member => member.serverId === state.selectedServer.id)
                 .map(member => {
                   const user = state.users.get(member.userId) as User;
                   return <MemberComponent key={`member_${member.id}`} name={user.firstName || ""}/>;

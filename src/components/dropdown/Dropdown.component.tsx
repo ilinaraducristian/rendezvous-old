@@ -1,10 +1,11 @@
 import {useCallback, useContext} from "react";
 import useBackend from "../../hooks/backend.hook";
-import {Actions, GlobalStates} from "../../global-state";
+import {GlobalStates} from "../../state-management/global-state";
 import {Server} from "../../types";
 import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "../group/CreateGroupOverlay.component";
 import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
+import Actions from "../../state-management/actions";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
@@ -12,13 +13,14 @@ function DropdownComponent({setIsDropdownShown}: any) {
   const {state, dispatch} = useContext(GlobalStates);
 
   const createInvitation = useCallback(async () => {
-    const selectedServer = state.selectedServer as Server;
+    if (state.selectedServer.id === null) return;
+    const selectedServer = state.servers.get(state.selectedServer.id) as Server;
     const invitation = await Backend.createInvitation(selectedServer.id);
     dispatch({
       type: Actions.SERVERS_SET,
-      payload: state.servers.set(selectedServer.id, selectedServer).clone()
+      payload: state.servers.set(selectedServer.id, selectedServer)
     });
-    dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation} />})
+    dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation}/>});
     setIsDropdownShown(false);
   }, [setIsDropdownShown, Backend, dispatch, state.selectedServer, state.servers]);
 
