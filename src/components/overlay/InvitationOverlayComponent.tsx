@@ -1,6 +1,5 @@
-import {useCallback, useContext, useMemo, useState} from "react";
-import {GlobalStates} from "../../state-management/global-state";
-import Actions from "../../state-management/actions";
+import {useCallback, useState} from "react";
+import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
 
 type ComponentProps = {
   invitation: string
@@ -8,7 +7,6 @@ type ComponentProps = {
 
 function InvitationOverlayComponent({invitation}: ComponentProps) {
 
-  const {dispatch} = useContext(GlobalStates);
   const [status, setStatus] = useState("Copy");
 
   const copyToClipboard = useCallback(() => {
@@ -20,24 +18,24 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
     });
   }, [invitation]);
 
-  const close = useCallback(() => {
-    dispatch({type: Actions.OVERLAY_SET, payload: null})
-  }, [dispatch])
+  function close() {
+    serversDataSlice.actions.setOverlay(null);
+  }
 
-  return useMemo(() =>
-          <div className="overlay">
-            <div className="overlay__container">
-              <button type="button" onClick={close}>X</button>
-              <h1 className="h1">Share the invitation with a friend</h1>
-              <div className="overlay__body">
-                <span className="span">{invitation}</span>
-                <button type="button" className="btn btn__overlay-select" onClick={copyToClipboard}>
-                  {status}
-                </button>
-              </div>
-            </div>
+  return (
+      <div className="overlay">
+        <div className="overlay__container">
+          <button type="button" onClick={close}>X</button>
+          <h1 className="h1">Share the invitation with a friend</h1>
+          <div className="overlay__body">
+            <span className="span">{invitation}</span>
+            <button type="button" className="btn btn__overlay-select" onClick={copyToClipboard}>
+              {status}
+            </button>
           </div>
-      , [close, copyToClipboard, invitation, status]);
+        </div>
+      </div>
+  );
 
 }
 

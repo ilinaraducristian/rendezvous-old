@@ -1,37 +1,42 @@
-import ServerComponent from "./Server.component";
 import {Server} from "../../types";
-import {useCallback, useContext, useMemo} from "react";
-import {GlobalStates} from "../../state-management/global-state";
+import {useAppSelector} from "../../state-management/store";
+import {selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import styled from "styled-components";
+import ServerComponent from "./Server.component";
 import AddServerOverlayComponent from "../overlay/AddServerOverlayComponent";
-import Actions from "../../state-management/actions";
+
+const Ol = styled.ol`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--color-primary);
+  width: 4.5em;
+  overflow-y: auto;
+  flex-shrink: 0;
+`;
 
 function ServersPanelComponent() {
 
-  const {state, dispatch} = useContext(GlobalStates);
+  const servers = useAppSelector(selectServers);
 
-  const selectServer = useCallback((server: Server) => {
-    dispatch({type: Actions.CHANNEL_SELECTED, payload: null});
-    dispatch({type: Actions.SERVER_SELECTED, payload: server.id});
-  }, [dispatch]);
+  function selectServer(server: Server) {
+    serversDataSlice.actions.selectServer(server.id);
+  }
 
-  const setOverlay = useCallback(() => {
-    dispatch({type: Actions.OVERLAY_SET, payload: <AddServerOverlayComponent/>});
-  }, [dispatch]);
+  function setOverlay() {
+    serversDataSlice.actions.setOverlay(<AddServerOverlayComponent/>);
+  }
 
-  return useMemo(() =>
-          <ol className="list list__panel list__servers-panel">
-            {state.servers.map((server: Server) =>
-                <ServerComponent key={`server_${server.id}`} server={server}
-                                 onSelectServer={() => selectServer(server)}/>
-            )}
-            <li className="li li__server">
-              <button className="btn btn__server" type="button" onClick={setOverlay}>
-                +
-              </button>
-            </li>
-          </ol>
-      , [selectServer, setOverlay, state.servers]);
-
+  return (
+      <Ol className="list list__panel">
+        {servers.map((server: Server) =>
+            <ServerComponent key={`server_${server.id}`} name={server.name}
+                             onSelectServer={() => selectServer(server)}
+            />
+        )}
+        <ServerComponent name={"+"} onSelectServer={setOverlay}/>
+      </Ol>
+  );
 
 }
 

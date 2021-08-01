@@ -1,8 +1,8 @@
-import {useContext, useMemo} from "react";
 import {Channel} from "../../types";
 import ChannelComponent from "./Channel.component";
-import {GlobalStates} from "../../state-management/global-state";
 import ChannelDropHandleComponent from "./ChannelDropHandle.component";
+import {useAppSelector} from "../../state-management/store";
+import {selectChannels, selectSelectedServer} from "../../state-management/slices/serversDataSlice";
 
 type ComponentProps = {
   groupId?: number | null
@@ -27,16 +27,16 @@ function channelMapper(groupId: number | null) {
 
 function ChannelsListComponent({groupId = null}: ComponentProps) {
 
-  const {state} = useContext(GlobalStates);
+  const channels = useAppSelector(selectChannels);
+  const selectedServer = useAppSelector(selectSelectedServer);
 
-  return useMemo(() => <>{
-        Array.from(state.channels
-            .filter((channel: Channel) =>
-                channel.serverId === state.selectedServer.id && channel.groupId === groupId
-            ).sort((ch1, ch2) => ch1.order - ch2.order))
-            .map(channelMapper(groupId)).flat(2)
-      }</>
-      , [groupId, state.channels, state.selectedServer]);
+  return <>{
+    Array.from(channels
+        .filter((channel: Channel) =>
+            channel.serverId === selectedServer?.id && channel.groupId === groupId
+        ).sort((ch1, ch2) => ch1.order - ch2.order))
+        .map(channelMapper(groupId)).flat(2)
+  }</>;
 
 }
 

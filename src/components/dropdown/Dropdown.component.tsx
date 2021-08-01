@@ -1,38 +1,36 @@
-import {useCallback, useContext} from "react";
-import useBackend from "../../hooks/backend.hook";
-import {GlobalStates} from "../../state-management/global-state";
+import {useCallback} from "react";
 import {Server} from "../../types";
 import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "../group/CreateGroupOverlay.component";
+import {useAppSelector} from "../../state-management/store";
+import {selectSelectedServer, selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useCreateInvitationQuery} from "../../state-management/apis/http";
 import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
-import Actions from "../../state-management/actions";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
-  const Backend = useBackend();
-  const {state, dispatch} = useContext(GlobalStates);
+  const selectedServer = useAppSelector(selectSelectedServer);
+  const servers = useAppSelector(selectServers);
 
   const createInvitation = useCallback(async () => {
-    if (state.selectedServer.id === null) return;
-    const selectedServer = state.servers.get(state.selectedServer.id) as Server;
-    const invitation = await Backend.createInvitation(selectedServer.id);
-    dispatch({
-      type: Actions.SERVERS_SET,
-      payload: state.servers.set(selectedServer.id, selectedServer)
-    });
-    dispatch({type: Actions.OVERLAY_SET, payload: <InvitationOverlayComponent invitation={invitation}/>});
+    if (selectedServer === null) return;
+    const _selectedServer = servers.get(selectedServer.id) as Server;
+    const {data: invitation} = useCreateInvitationQuery(_selectedServer.id);
+    if (invitation === undefined) return;
+    serversDataSlice.actions.setServer(_selectedServer);
+    serversDataSlice.actions.setOverlay(<InvitationOverlayComponent invitation={invitation}/>);
     setIsDropdownShown(false);
-  }, [setIsDropdownShown, Backend, dispatch, state.selectedServer, state.servers]);
+  }, [setIsDropdownShown, selectedServer, servers]);
 
   const showCreateChannelOverlay = useCallback(async () => {
     setIsDropdownShown(false);
-    dispatch({type: Actions.OVERLAY_SET, payload: <CreateChannelOverlayComponent/>})
-  }, [dispatch, setIsDropdownShown])
+    serversDataSlice.actions.setOverlay(<CreateChannelOverlayComponent/>);
+  }, [setIsDropdownShown]);
 
   const showCreateGroupOverlay = useCallback(async () => {
     setIsDropdownShown(false);
-    dispatch({type: Actions.OVERLAY_SET, payload: <CreateGroupOverlayComponent/>})
-  }, [dispatch, setIsDropdownShown])
+    serversDataSlice.actions.setOverlay(<CreateGroupOverlayComponent/>);
+  }, [setIsDropdownShown]);
 
   return (
       <div className="div__dropdown">
@@ -41,10 +39,12 @@ function DropdownComponent({setIsDropdownShown}: any) {
             <button type="button" className="btn btn__dropdown-item" onClick={createInvitation}>Invite people</button>
           </li>
           <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={showCreateChannelOverlay}>Create channel</button>
+            <button type="button" className="btn btn__dropdown-item" onClick={showCreateChannelOverlay}>Create channel
+            </button>
           </li>
           <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={showCreateGroupOverlay}>Create group</button>
+            <button type="button" className="btn btn__dropdown-item" onClick={showCreateGroupOverlay}>Create group
+            </button>
           </li>
         </ul>
 

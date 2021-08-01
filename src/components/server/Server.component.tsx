@@ -1,20 +1,25 @@
-import {Server} from "../../types";
-import {useMemo} from "react";
+import styled from "styled-components";
+import {MouseEventHandler} from "react";
+
+export const Li = styled.li`
+  display: flex;
+  margin: 0.5em 0;
+`;
 
 type ComponentProps = {
-  server: Server,
-  onSelectServer: Function
+  name: string,
+  onSelectServer: MouseEventHandler<HTMLButtonElement>
 }
 
-function ServerComponent({server, onSelectServer: selectServer}: ComponentProps) {
+function ServerComponent({name, onSelectServer: selectServer}: ComponentProps) {
 
-  return useMemo(() =>
-          <li className="li li__server">
-            <button className="btn btn__server" type="button" onClick={() => selectServer(server)}>
-              {server.name[0]}
-            </button>
-          </li>
-      , [selectServer, server]);
+  return (
+      <Li className="li">
+        <button className="btn btn__server" type="button" onClick={selectServer}>
+          {name[0]}
+        </button>
+      </Li>
+  );
 
 }
 

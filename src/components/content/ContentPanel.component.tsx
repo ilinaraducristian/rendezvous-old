@@ -1,65 +1,50 @@
-import {GlobalStates} from "../../state-management/global-state";
-import {useContext, useMemo, useState} from "react";
+import {useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
 import {Channel, ChannelType} from "../../types";
-import MembersPanelComponent from "../member/MembersComponent";
+import {useAppSelector} from "../../state-management/store";
+import {selectChannels, selectSelectedChannel} from "../../state-management/slices/serversDataSlice";
 import MessagesPanelComponent from "../message/MessagesPanel.component";
+import MembersPanelComponent from "../member/MembersPanel.component";
 
 function ContentPanelComponent() {
 
   const [isMembersSelected, setIsMembersSelected] = useState(true);
-  const {state} = useContext(GlobalStates);
 
-  return useMemo(() =>
-          <div className="content">
-            <header className="content__header">
-              <div className="content__header__main">
-                {
-                  state.selectedChannel.id === null ||
-                  <>
-                      <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
-                      <span
-                          className="span__header-channel-name">{(state.channels.get(state.selectedChannel.id) as Channel).name}</span>
-                  </>
-                }
-                <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
-                        onClick={() => setIsMembersSelected(!isMembersSelected)}>
-                  <MembersSVG/>
-                </button>
-              </div>
-              <div className="content__header__members">
-                placeholder
-              </div>
-            </header>
-            <div className="content__body">
-              <MessagesPanelComponent/>
-              {
-                !isMembersSelected ||
-                <MembersPanelComponent/>
-              }
-            </div>
+  const selectedChannel = useAppSelector(selectSelectedChannel);
+  const channels = useAppSelector(selectChannels);
+
+  return (
+      <div className="content">
+        <header className="content__header">
+          <div className="content__header__main">
+            {
+              selectedChannel === null ||
+              <>
+                  <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
+                  <span
+                      className="span__header-channel-name">{(channels.get(selectedChannel.id) as Channel).name}</span>
+              </>
+            }
+            <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
+                    onClick={() => setIsMembersSelected(!isMembersSelected)}>
+              <MembersSVG/>
+            </button>
           </div>
-      , [isMembersSelected, state.channels, state.selectedChannel]);
+          <div className="content__header__members">
+            placeholder
+          </div>
+        </header>
+        <div className="content__body">
+          <MessagesPanelComponent/>
+          {
+            !isMembersSelected ||
+            <MembersPanelComponent/>
+          }
+        </div>
+      </div>
+  );
 
 }
-
-/*<ol className="members">*/
-
-/*  {*/
-
-/*    members.filter((member: Member) => member.server_id === selectedServer?.id)*/
-
-/*        .map((member: Member) => users.get(member.user_id) as User)*/
-
-/*        .map((user: User) =>*/
-
-/*            <MemberComponent name={user.firstName}/>*/
-
-/*        )*/
-
-/*  }*/
-
-/*</ol>*/
 
 export default ContentPanelComponent;

@@ -1,32 +1,29 @@
-import {useCallback, useContext, useRef} from "react";
-import {GlobalStates} from "../../state-management/global-state";
-import useBackend from "../../hooks/backend.hook";
+import {useRef} from "react";
 import {Server} from "../../types";
 import config from "../../config";
-import Actions from "../../state-management/actions";
+import {useAppSelector} from "../../state-management/store";
+import {selectSelectedServer, selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useCreateGroupQuery} from "../../state-management/apis/socketio";
 
 function CreateGroupOverlayComponent() {
 
-  const Backend = useBackend();
-  const {state, dispatch} = useContext(GlobalStates);
   const ref = useRef<HTMLInputElement>(null);
+  const selectedServer = useAppSelector(selectSelectedServer);
+  const servers = useAppSelector(selectServers);
 
-  const createGroup = useCallback(async () => {
-    if (!config.offline) {
-      if (state.selectedServer.id === null) return;
-      const groupName = ref.current?.value as string;
-      const selectedServer = state.servers.get(state.selectedServer.id) as Server;
-      const groupId = await Backend.createGroup(selectedServer.id, groupName);
-      dispatch({
-        type: Actions.GROUP_ADDED, payload: {
-          id: groupId,
-          serverId: selectedServer.id,
-          name: groupName
-        }
-      });
-    }
-    dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, [Backend, dispatch, state.servers, state.selectedServer]);
+  function createGroup() {
+    if (config.offline) return;
+    if (selectedServer === null) return;
+    const groupName = ref.current?.value as string;
+    const _selectedServer = servers.get(selectedServer.id) as Server;
+    const {data} = useCreateGroupQuery({serverId: _selectedServer.id, groupName});
+    if (data === undefined) return;
+    serversDataSlice.actions.setGroup({
+      id: data.groupId,
+      serverId: _selectedServer.id,
+      name: groupName
+    });
+  }
 
   return (
       <div className="overlay">

@@ -47,20 +47,6 @@ body {
     margin: 0;
 }
 
-.list__servers-panel {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
-    background-color: var(--color-primary);
-    width: 4.5em;
-    overflow-y: auto;
-    flex-shrink: 0;
-}
-
-.list__channels-panel {
-
-}
-
 .list__messages {
     word-break: break-all;
 }
@@ -263,11 +249,6 @@ body {
 
 .li {
 
-}
-
-.li__server {
-    display: flex;
-    margin: 0.5em 0;
 }
 
 .channels-panel {

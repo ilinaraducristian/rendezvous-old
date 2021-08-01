@@ -1,9 +1,9 @@
-import {useCallback, useContext, useRef} from "react";
-import {GlobalStates} from "../../state-management/global-state";
-import useBackend from "../../hooks/backend.hook";
-import {ChannelType, Server} from "../../types";
+import {useCallback, useRef} from "react";
 import config from "../../config";
-import Actions from "../../state-management/actions";
+import {selectSelectedServer, selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useAppSelector} from "../../state-management/store";
+import {useCreateChannelQuery} from "../../state-management/apis/socketio";
+import {ChannelType, Server} from "../../types";
 
 type ComponentProps = {
   groupId?: number | null
@@ -11,28 +11,29 @@ type ComponentProps = {
 
 function CreateChannelOverlay({groupId = null}: ComponentProps) {
 
-  const Backend = useBackend();
-  const {state, dispatch} = useContext(GlobalStates);
   const ref = useRef<HTMLInputElement>(null);
+  const selectedServer = useAppSelector(selectSelectedServer);
+  const servers = useAppSelector(selectServers);
+
 
   const createChannel = useCallback(async () => {
     if (!config.offline) {
-      if (state.selectedServer.id === null) return;
+      // TODO
+      if (selectedServer === null) return;
       const channelName = ref.current?.value as string;
-      const selectedServer = state.servers.get(state.selectedServer.id) as Server;
-      const channelId = await Backend.createChannel(selectedServer.id, groupId, channelName);
+      const _selectedServer = servers.get(selectedServer.id) as Server;
+      const {data} = useCreateChannelQuery({serverId: selectedServer.id, groupId, channelName});
       const channel = {
-        id: channelId,
-        serverId: selectedServer.id,
+        id: data?.channelId,
+        serverId: _selectedServer.id,
         groupId,
         type: ChannelType.Text,
         name: channelName
       };
-      dispatch({type: Actions.CHANNEL_ADDED, payload: channel});
-      dispatch({type: Actions.CHANNEL_SELECTED, payload: channel.id});
+      serversDataSlice.actions.addChannel(channel);
+      serversDataSlice.actions.selectChannel(channel);
     }
-    dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, [Backend, dispatch, state.servers, state.selectedServer, groupId]);
+  }, [groupId]);
 
   return (
       <div className="overlay">

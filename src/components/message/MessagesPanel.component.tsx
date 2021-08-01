@@ -1,21 +1,27 @@
-import {ClipboardEvent, useCallback, useContext, useEffect, useMemo, useRef} from "react";
-import {GlobalStates} from "../../state-management/global-state";
+import {ClipboardEvent, useCallback, useEffect, useMemo, useRef} from "react";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./Message.component";
 import {User} from "../../types";
-import useSocketIo from "../../hooks/socketio.hook";
-import Actions from "../../state-management/actions";
+import {useAppSelector} from "../../state-management/store";
+import {
+  selectMessages,
+  selectSelectedChannel,
+  selectUsers,
+  serversDataSlice
+} from "../../state-management/slices/serversDataSlice";
+import socket from "../../socketio";
 
 function MessagesPanelComponent() {
 
-  const {state, dispatch} = useContext(GlobalStates);
-  const {socket} = useSocketIo();
   const messagesList = useRef<HTMLDivElement>(null);
+  const messages = useAppSelector(selectMessages);
+  const selectedChannel = useAppSelector(selectSelectedChannel);
+  const users = useAppSelector(selectUsers);
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
-  }, [state.messages, state.selectedChannel]);
+  }, [messages]);
 
   const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
     event.preventDefault();
@@ -28,30 +34,27 @@ function MessagesPanelComponent() {
   const onKeyPress = useCallback(async event => {
     if (!event.code.includes("Enter")) return;
     event.preventDefault();
+    if (selectedChannel === null) return;
     let message = (event.target as any).innerText;
     (event.target as any).innerText = "";
     const payload = {
-      channelId: state.selectedChannel.id,
+      channelId: selectedChannel.id,
       message
     };
     message = await socket.emitAck("send_message", payload);
     message.timestamp = new Date(message.timestamp);
-    dispatch({
-      type: Actions.MESSAGES_SET, payload: state.messages.set(message.id, message)
-    });
-
-
-  }, [dispatch, socket, state.selectedChannel, state.messages]);
+    serversDataSlice.actions.setMessage(message);
+  }, []);
 
   return useMemo(() =>
           <div className="content__body__main">
             <div className="content__body__messages" ref={messagesList}>
               <ol className="list list__messages">
                 {
-                  state.messages
-                      .filter(message => message.channelId === state.selectedChannel.id)
+                  messages
+                      .filter(message => message.channelId === selectedChannel?.id)
                       .map(message => {
-                        const user = state.users.get(message.userId) as User;
+                        const user = users.get(message.userId) as User;
                         return <MessageComponent key={`message_${message.id}`} username={user.username}
                                                  text={message.text}
                                                  timestamp={message.timestamp}/>;
@@ -85,7 +88,7 @@ function MessagesPanelComponent() {
               </button>
             </footer>
           </div>
-      , [onCopy, onKeyPress, state.messages, state.selectedChannel, state.users]);
+      , [onCopy, onKeyPress]);
 
 }
 

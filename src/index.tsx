@@ -2,28 +2,18 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import {ReactKeycloakProvider} from "@react-keycloak/web";
-import config from "./config";
 import AppComponent from "./components/app/App.component";
-import {IoProvider} from "socket.io-react-hook";
-
-function onEvent(event: any) {
-
-}
+import {store} from "./state-management/store";
+import {Provider} from "react-redux";
 
 ReactDOM.render(
     <React.StrictMode>
-      <ReactKeycloakProvider
-          authClient={config.keycloakInstance}
-          // LoadingComponent={<Loading/>}
-          onEvent={onEvent}
-      >
-        <IoProvider>
-          <AppComponent/>
-        </IoProvider>
-      </ReactKeycloakProvider>
+      <Provider store={store}>
+        <AppComponent/>
+      </Provider>
     </React.StrictMode>,
     document.getElementById("root")
 );
+
 
 reportWebVitals();

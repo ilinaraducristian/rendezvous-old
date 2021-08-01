@@ -1,69 +1,39 @@
-import {useKeycloak} from "@react-keycloak/web";
-import {useEffect, useReducer} from "react";
-import useBackend from "../../hooks/backend.hook";
-import {GlobalStates, initialState} from "../../state-management/global-state";
+import {useEffect} from "react";
+import {useAppSelector} from "../../state-management/store";
+import {selectAuthenticated} from "../../state-management/slices/keycloakSlice";
+import keycloak from "../../keycloak";
+import {selectConnected} from "../../state-management/slices/socketioSlice";
+import config from "../../config";
+import {mockChannels, mockGroups, mockMembers, mockServers, mockUsers} from "../../mock-data";
+import {selectInitialized, selectOverlay, serversDataSlice} from "../../state-management/slices/serversDataSlice";
 import ServersPanelComponent from "../server/ServersPanel.component";
+import {useGetUserServersDataQuery} from "../../state-management/apis/socketio";
 import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
-import SocketIoListeners from "../SocketIoListeners";
-import Fuse from "../../util/fuse";
-import {mockChannels, mockGroups, mockMembers, mockMessages, mockServers, mockUsers} from "../../mock-data";
-import config from "../../config";
-import useSocketIo from "../../hooks/socketio.hook";
-import Actions from "../../state-management/actions";
-import reducer from "../../state-management/reducer";
-
-const backendInitialized: Fuse = new Fuse();
 
 function AppComponent() {
 
-  const {keycloak, initialized} = useKeycloak();
-  const Backend = useBackend();
-  const {socket} = useSocketIo();
-
-  const [state, dispatch] = useReducer(reducer, initialState);
-
+  const authenticated = useAppSelector(selectAuthenticated);
+  const connected = useAppSelector(selectConnected);
+  const initialized = useAppSelector(selectInitialized);
+  const overlay = useAppSelector(selectOverlay);
 
   useEffect(() => {
-    if (state.device.loaded) return;
-    if (!socket.connected) return;
-    socket.emitAck(`get_router_capabilities`)
-        .then(({routerRtpCapabilities}) => state.device.load({routerRtpCapabilities}))
-        .then(() => dispatch({type: Actions.DEVICE_LOADED}));
-  }, [state.device.loaded, socket.connected]);
+    if (config.offline) return;
+    if (authenticated) return;
+    keycloak.init({})
+        .then((authenticated: boolean) => {
+          if (!authenticated) {
+            return keycloak.login();
+          }
+          // keycloakSlice.actions.authenticate();
+        }).catch(() => {
+      alert("failed to initialize");
+    });
+  }, [authenticated]);
 
   useEffect(() => {
-    keycloak.onAuthSuccess = () => {
-      if (socket.connected) return;
-      socket.auth = {
-        token: keycloak.token
-      };
-      socket.connect();
-    };
-
-    keycloak.onAuthRefreshSuccess = () => {
-      socket.auth = {
-        token: keycloak.token
-      };
-    };
-  }, [keycloak, socket]);
-
-  useEffect(() => {
-    if (!config.offline) {
-      if (!initialized)
-        return;
-      if (!keycloak.authenticated) {
-        keycloak.login();
-        return;
-      }
-      if (keycloak.token === undefined) return;
-    }
-
-    if (backendInitialized.state) return;
-    backendInitialized.blow();
-
     if (config.offline) {
-      // dev only
       const processedServerData = {
         servers: mockServers,
         channels: mockChannels,
@@ -71,34 +41,38 @@ function AppComponent() {
         members: mockMembers,
         users: mockUsers
       };
-      dispatch({type: Actions.INITIAL_DATA_GATHERED, payload: processedServerData});
-      dispatch({type: Actions.MESSAGES_ADDED, payload: mockMessages});
-    } else {
-      // PROD
-      Backend.getUserServersData()
-          .then(serversData => {
-            dispatch({
-              type: Actions.INITIAL_DATA_GATHERED,
-              payload: serversData
-            });
-          });
+      serversDataSlice.actions.setState(processedServerData);
+      return;
     }
-
-  }, [Backend, initialized, keycloak]);
+    if (!connected) return;
+    if (initialized) return;
+    const {data} = useGetUserServersDataQuery();
+    if (data === undefined) return;
+    serversDataSlice.actions.initializeBackend(data);
+  }, [initialized, connected]);
+  //
+  // return (
+  //     <GlobalStates.Provider value={{state, dispatch}}>{
+  //       ((!initialized || !keycloak.authenticated) && !config.offline) ||
+  //       <>
+  //
+  //       <SocketIoListeners/>
+  //           <ServersPanelComponent/>
+  //           <ChannelsPanelComponent/>
+  //           <ContentPanelComponent/>
+  //         {state.overlay}
+  //       </>
+  //     }
+  //     </GlobalStates.Provider>
+  // );
 
   return (
-      <GlobalStates.Provider value={{state, dispatch}}>{
-        ((!initialized || !keycloak.authenticated) && !config.offline) ||
-        <>
-
-        <SocketIoListeners/>
-            <ServersPanelComponent/>
-            <ChannelsPanelComponent/>
-            <ContentPanelComponent/>
-          {state.overlay}
-        </>
-      }
-      </GlobalStates.Provider>
+      <>
+        {overlay}
+        <ServersPanelComponent/>
+        <ChannelsPanelComponent/>
+        <ContentPanelComponent/>
+      </>
   );
 
 }

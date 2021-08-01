@@ -1,20 +1,16 @@
-import {useCallback, useContext, useMemo, useRef} from "react";
-import {GlobalStates} from "../../state-management/global-state";
-import useBackend from "../../hooks/backend.hook";
-import Actions from "../../state-management/actions";
+import {useMemo, useRef} from "react";
+import {useCreateServerQuery} from "../../state-management/apis/socketio";
+import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
 
 function CreateServerOverlayComponent() {
 
-  const Backend = useBackend();
-  const {dispatch} = useContext(GlobalStates);
   const ref = useRef<HTMLInputElement>(null);
 
-  const createServer = useCallback(async () => {
-    const serverName = ref.current?.value as string;
-    const response = await Backend.createServer(serverName);
-    dispatch({type: Actions.SERVER_ADDED, payload: response});
-    dispatch({type: Actions.OVERLAY_SET, payload: null});
-  }, [Backend, dispatch]);
+  function createServer() {
+    const {data} = useCreateServerQuery(ref.current?.value as string);
+    if (data === undefined) return;
+    serversDataSlice.actions.addServer(data);
+  }
 
   return useMemo(() =>
           <div className="overlay">
@@ -25,11 +21,6 @@ function CreateServerOverlayComponent() {
                 <button type="button" className="btn btn__overlay-select" onClick={createServer}>Create
                 </button>
               </div>
-              {/*<input type="text" onChange={e => setInvitation(e.target.value)}/>*/}
-              {/*<button className="button" type="button" onClick={() => createServer(serverName, 0)}>*/}
-              {/*  Create*/}
-              {/*</button>*/}
-              {/*<button className="button" type="button" onClick={() => joinServer(invitation)}>Join</button>*/}
             </div>
           </div>
       , [createServer]);

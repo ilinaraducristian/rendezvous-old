@@ -1,14 +1,15 @@
 import {Group} from "../../types";
 import GroupComponent from "./Group.component";
-import {useContext} from "react";
-import {GlobalStates} from "../../state-management/global-state";
+import {useAppSelector} from "../../state-management/store";
+import {selectGroups, selectSelectedServer} from "../../state-management/slices/serversDataSlice";
 
 function GroupsListComponent() {
 
-  const {state} = useContext(GlobalStates);
+  const selectedServer = useAppSelector(selectSelectedServer);
+  const groups = useAppSelector(selectGroups);
 
   return <>{
-    state.groups.filter((group: Group) => group.serverId === state.selectedServer.id)
+    groups.filter((group: Group) => group.serverId === selectedServer?.id)
         .map((group: Group) =>
             <GroupComponent key={`group_${group.id}`} id={group.id} name={group.name}/>
         )
