@@ -1,29 +1,33 @@
-import {useRef} from "react";
-import {Server} from "../../types";
+import {useEffect, useRef} from "react";
 import config from "../../config";
+import {useLazyCreateGroupQuery} from "../../state-management/apis/socketio";
+import {selectSelectedServer, serversDataSlice} from "../../state-management/slices/serversDataSlice";
 import {useAppSelector} from "../../state-management/store";
-import {selectSelectedServer, selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import {useCreateGroupQuery} from "../../state-management/apis/socketio";
 
 function CreateGroupOverlayComponent() {
 
   const ref = useRef<HTMLInputElement>(null);
   const selectedServer = useAppSelector(selectSelectedServer);
-  const servers = useAppSelector(selectServers);
+  const [fetch, {data}] = useLazyCreateGroupQuery();
 
   function createGroup() {
     if (config.offline) return;
     if (selectedServer === null) return;
     const groupName = ref.current?.value as string;
-    const _selectedServer = servers.get(selectedServer.id) as Server;
-    const {data} = useCreateGroupQuery({serverId: _selectedServer.id, groupName});
+    fetch({serverId: selectedServer.id, groupName});
+  }
+
+  useEffect(() => {
     if (data === undefined) return;
+    if (selectedServer === null) return;
+    const groupName = ref.current?.value as string;
     serversDataSlice.actions.setGroup({
       id: data.groupId,
-      serverId: _selectedServer.id,
+      serverId: selectedServer.id,
       name: groupName
     });
-  }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
       <div className="overlay">

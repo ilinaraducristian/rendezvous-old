@@ -1,6 +1,6 @@
+import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import {useCallback, useEffect, useState} from "react";
 
 type ComponentProps = {
   index: number
@@ -11,7 +11,7 @@ function GroupDropHandleComponent({index}: ComponentProps) {
   const [hidden, setHidden] = useState(true);
 
   const handleDrop = useCallback(() => {
-  }, [index]);
+  }, []);
 
   const handleHover = useCallback(() => {
     setHidden(false);

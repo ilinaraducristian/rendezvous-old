@@ -13,6 +13,6 @@ export const mediasoupSlice = createSlice({
 });
 
 export const {load} = mediasoupSlice.actions;
-export const selectLoaded = (state: any): boolean => state.loaded;
+export const selectLoaded = (state: any): boolean => state.mediasoup.loaded;
 
 export default mediasoupSlice.reducer;

@@ -1,9 +1,9 @@
-import {useCallback, useRef} from "react";
+import {useEffect, useRef} from "react";
 import config from "../../config";
-import {selectSelectedServer, selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useLazyCreateChannelQuery} from "../../state-management/apis/socketio";
+import {selectSelectedServer, serversDataSlice} from "../../state-management/slices/serversDataSlice";
 import {useAppSelector} from "../../state-management/store";
-import {useCreateChannelQuery} from "../../state-management/apis/socketio";
-import {ChannelType, Server} from "../../types";
+import {ChannelType} from "../../types";
 
 type ComponentProps = {
   groupId?: number | null
@@ -13,27 +13,30 @@ function CreateChannelOverlay({groupId = null}: ComponentProps) {
 
   const ref = useRef<HTMLInputElement>(null);
   const selectedServer = useAppSelector(selectSelectedServer);
-  const servers = useAppSelector(selectServers);
+  const [fetch, {data}] = useLazyCreateChannelQuery();
 
+  function createChannel() {
+    if (config.offline) return;
+    if (selectedServer === null) return;
+    // TODO
+    const channelName = ref.current?.value as string;
+    fetch({serverId: selectedServer.id, groupId, channelName});
+  }
 
-  const createChannel = useCallback(async () => {
-    if (!config.offline) {
-      // TODO
-      if (selectedServer === null) return;
-      const channelName = ref.current?.value as string;
-      const _selectedServer = servers.get(selectedServer.id) as Server;
-      const {data} = useCreateChannelQuery({serverId: selectedServer.id, groupId, channelName});
-      const channel = {
-        id: data?.channelId,
-        serverId: _selectedServer.id,
-        groupId,
-        type: ChannelType.Text,
-        name: channelName
-      };
-      serversDataSlice.actions.addChannel(channel);
-      serversDataSlice.actions.selectChannel(channel);
-    }
-  }, [groupId]);
+  useEffect(() => {
+    if (selectedServer === null) return;
+    const channelName = ref.current?.value as string;
+    const channel = {
+      id: data?.channelId,
+      serverId: selectedServer.id,
+      groupId,
+      type: ChannelType.Text,
+      name: channelName
+    };
+    serversDataSlice.actions.addChannel(channel);
+    serversDataSlice.actions.selectChannel(channel);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data]);
 
   return (
       <div className="overlay">

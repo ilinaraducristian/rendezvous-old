@@ -18,6 +18,7 @@ export const serversDataSlice = createSlice({
   },
   reducers: {
     initializeBackend(state, action) {
+      console.log("ok?");
       state.servers = action.payload.servers;
       state.channels = action.payload.channels;
       state.groups = action.payload.groups;
@@ -86,16 +87,33 @@ export const serversDataSlice = createSlice({
   }
 });
 
-export const {setState, selectServer, setOverlay, addServer} = serversDataSlice.actions;
-export const selectServers = (state: any): SortedMap<Server> => state.servers;
-export const selectChannels = (state: any): SortedMap<Channel> => state.channels;
-export const selectGroups = (state: any): SortedMap<Group> => state.groups;
-export const selectMembers = (state: any): SortedMap<Member> => state.members;
-export const selectMessages = (state: any): SortedMap<Message> => state.messages;
-export const selectUsers = (state: any): UsersMap => state.users;
-export const selectSelectedServer = (state: any): Server | null => state.selectedServer.id === null ? null : state.servers.get(state.selectedServer.id) as Server;
-export const selectSelectedChannel = (state: any): Channel | null => state.selectedChannel.id === null ? null : state.channels.get(state.selectedChannel.id) as Channel;
-export const selectInitialized = (state: any): boolean => state.backendInitialized;
-export const selectOverlay = (state: any): any => state.overlay;
+export const {
+  initializeBackend,
+  setState,
+  setServer,
+  setChannel,
+  setGroup,
+  addChannelUser,
+  setMember,
+  selectServer,
+  selectChannel,
+  setOverlay,
+  addServer,
+  addChannel,
+  addGroup,
+  setChannels,
+  addMessages,
+  addChannels
+} = serversDataSlice.actions;
+export const selectServers = (state: any): SortedMap<Server> => state.serversData.servers;
+export const selectChannels = (state: any): SortedMap<Channel> => state.serversData.channels;
+export const selectGroups = (state: any): SortedMap<Group> => state.serversData.groups;
+export const selectMembers = (state: any): SortedMap<Member> => state.serversData.members;
+export const selectMessages = (state: any): SortedMap<Message> => state.serversData.messages;
+export const selectUsers = (state: any): UsersMap => state.serversData.users;
+export const selectSelectedServer = (state: any): Server | null => state.serversData.selectedServer.id === null ? null : state.serversData.servers.get(state.serversData.selectedServer.id) as Server;
+export const selectSelectedChannel = (state: any): Channel | null => state.serversData.selectedChannel.id === null ? null : state.serversData.channels.get(state.serversData.selectedChannel.id) as Channel;
+export const selectInitialized = (state: any): boolean => state.serversData.backendInitialized;
+export const selectOverlay = (state: any): any => state.serversData.overlay;
 
 export default serversDataSlice.reducer;

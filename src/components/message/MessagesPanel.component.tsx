@@ -1,4 +1,4 @@
-import {ClipboardEvent, useCallback, useEffect, useMemo, useRef} from "react";
+import {ClipboardEvent, useCallback, useEffect, useRef} from "react";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./Message.component";
@@ -44,51 +44,51 @@ function MessagesPanelComponent() {
     message = await socket.emitAck("send_message", payload);
     message.timestamp = new Date(message.timestamp);
     serversDataSlice.actions.setMessage(message);
-  }, []);
+  }, [selectedChannel]);
 
-  return useMemo(() =>
-          <div className="content__body__main">
-            <div className="content__body__messages" ref={messagesList}>
-              <ol className="list list__messages">
-                {
-                  messages
-                      .filter(message => message.channelId === selectedChannel?.id)
-                      .map(message => {
-                        const user = users.get(message.userId) as User;
-                        return <MessageComponent key={`message_${message.id}`} username={user.username}
-                                                 text={message.text}
-                                                 timestamp={message.timestamp}/>;
-                      })
-                }
-              </ol>
-            </div>
-            <footer
-                className="footer__content"
-            >
-              <button type="button" className="btn btn--off btn--hover btn__icon">
-                <PlusSVG/>
-              </button>
-              <span className="span__input-message"
-                    role="textbox"
-                    contentEditable
-                    onKeyPress={onKeyPress}
-                    onCopy={onCopy}
-              />
-              {/*<textarea*/}
-              {/*    style={{height: '100%'}}*/}
-              {/*    className="input__content-footer"*/}
-              {/*    placeholder={`Message #${state.selectedChannel.name}`}*/}
-              {/*    onChange={onChange}*/}
-              {/*/>*/}
-              <button type="button" className="btn btn--off btn--hover btn__icon">
-                <GIFSVG/>
-              </button>
-              <button type="button" className="btn btn__icon">
-                <div className="div__emoji div__emoji--hover"/>
-              </button>
-            </footer>
-          </div>
-      , [onCopy, onKeyPress]);
+  return (
+      <div className="content__body__main">
+        <div className="content__body__messages" ref={messagesList}>
+          <ol className="list list__messages">
+            {
+              messages
+                  .filter(message => message.channelId === selectedChannel?.id)
+                  .map(message => {
+                    const user = users.get(message.userId) as User;
+                    return <MessageComponent key={`message_${message.id}`} username={user.username}
+                                             text={message.text}
+                                             timestamp={message.timestamp}/>;
+                  })
+            }
+          </ol>
+        </div>
+        <footer
+            className="footer__content"
+        >
+          <button type="button" className="btn btn--off btn--hover btn__icon">
+            <PlusSVG/>
+          </button>
+          <span className="span__input-message"
+                role="textbox"
+                contentEditable
+                onKeyPress={onKeyPress}
+                onCopy={onCopy}
+          />
+          {/*<textarea*/}
+          {/*    style={{height: '100%'}}*/}
+          {/*    className="input__content-footer"*/}
+          {/*    placeholder={`Message #${state.selectedChannel.name}`}*/}
+          {/*    onChange={onChange}*/}
+          {/*/>*/}
+          <button type="button" className="btn btn--off btn--hover btn__icon">
+            <GIFSVG/>
+          </button>
+          <button type="button" className="btn btn__icon">
+            <div className="div__emoji div__emoji--hover"/>
+          </button>
+        </footer>
+      </div>
+  );
 
 }
 

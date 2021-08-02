@@ -1,15 +1,15 @@
-import {useCallback, useEffect, useMemo} from "react";
-import {Channel, ChannelType, User} from "../../types";
-import ChannelSVG from "../../svg/Channel.svg";
-import config from "../../config";
+import {useCallback, useEffect} from "react";
 import {useDrag} from "react-dnd";
+import config from "../../config";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
+import mediasoup, {createMediaStreamSource, remoteStream} from "../../mediasoup";
 import socket from "../../socketio";
-import {useAppSelector} from "../../state-management/store";
+import {useLazyGetMessagesQuery} from "../../state-management/apis/http";
 import {selectSubject} from "../../state-management/slices/keycloakSlice";
-import mediasoup, {remoteStream} from "../../mediasoup";
-import {selectChannels, selectUsers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import {useGetMessagesQuery} from "../../state-management/apis/http";
+import {selectUsers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useAppSelector} from "../../state-management/store";
+import ChannelSVG from "../../svg/Channel.svg";
+import {Channel, ChannelType, User} from "../../types";
 
 type ComponentProps = {
   channel: Channel
@@ -20,8 +20,8 @@ const consumers: any[] = [];
 function ChannelComponent({channel}: ComponentProps) {
 
   const subject = useAppSelector(selectSubject);
-  const channels = useAppSelector(selectChannels);
   const users = useAppSelector(selectUsers);
+  const [fetch, {data: messages}] = useLazyGetMessagesQuery();
 
   useEffect(() => {
     const users = channel.users?.filter(user => user.userId !== subject)
@@ -48,7 +48,7 @@ function ChannelComponent({channel}: ComponentProps) {
         console.log(consumers);
       }
     })();
-  }, [channel.users]);
+  }, [channel.users, subject]);
 
   const createProducer = useCallback(async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({audio: true});
@@ -75,6 +75,7 @@ function ChannelComponent({channel}: ComponentProps) {
   }, []);
 
   const joinVoiceChannel = useCallback(async () => {
+    createMediaStreamSource();
     await createProducer();
 
     const usersInVoiceChannel = await socket.emitAck("join_voice-channel", {
@@ -82,16 +83,25 @@ function ChannelComponent({channel}: ComponentProps) {
       channelId: channel.id
     });
     channel.users?.concat(usersInVoiceChannel);
-    serversDataSlice.actions.setChannels(channels.set(channel.id, channel));
-  }, [channel.id]);
+    serversDataSlice.actions.setChannel(channel);
+  }, [channel, createProducer]);
 
-  const selectTextChannel = useCallback(async () => {
+  const selectTextChannel = useCallback(() => {
     if (!config.offline) {
-      const messages = useGetMessagesQuery({serverId: channel.serverId, channelId: channel.id, offset: 0});
-      serversDataSlice.actions.addMessages(messages);
+      // TODO HERE
+      fetch({serverId: channel.serverId, channelId: channel.id, offset: 0});
+      return;
     }
     serversDataSlice.actions.selectChannel(channel.id);
-  }, [channel.serverId, channel.id]);
+
+  }, [channel.serverId, channel.id, fetch]);
+
+  useEffect(() => {
+    if (messages === undefined) return;
+    serversDataSlice.actions.addMessages(messages);
+    serversDataSlice.actions.selectChannel(channel.id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   const selectChannel = useCallback(async () => {
     if (channel.type === ChannelType.Voice) joinVoiceChannel();
@@ -103,7 +113,7 @@ function ChannelComponent({channel}: ComponentProps) {
     item: {id: channel.id, order: channel.order}
   }, [channel.order]);
 
-  return useMemo(() => (
+  return (
       <li ref={drag}>
         <button className="btn btn__channel" type="button" onClick={selectChannel}>
           <ChannelSVG type={channel.type} isPrivate={false} className="svg__text-channel svg__text-channel--private"/>
@@ -122,7 +132,7 @@ function ChannelComponent({channel}: ComponentProps) {
           </ul>
         }
       </li>
-  ), [channel.name, channel.type, channel.users, drag, selectChannel]);
+  );
 
 }
 

@@ -16,6 +16,6 @@ export const socketioSlice = createSlice({
 });
 
 export const {connect, disconnect} = socketioSlice.actions;
-export const selectConnected = (state: any): boolean => state.connected;
+export const selectConnected = (state: any): boolean => state.socketio.connected;
 
 export default socketioSlice.reducer;

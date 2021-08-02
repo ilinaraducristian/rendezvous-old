@@ -1,16 +1,20 @@
-import {useRef} from "react";
+import {useEffect, useRef} from "react";
 import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import {useJoinServerQuery} from "../../state-management/apis/socketio";
+import {useLazyJoinServerQuery} from "../../state-management/apis/socketio";
 
 function JoinServerOverlayComponent() {
 
   const ref = useRef<HTMLInputElement>(null);
+  const [fetch, {data}] = useLazyJoinServerQuery();
 
   function joinServer() {
-    const {data} = useJoinServerQuery(ref.current?.value as string);
+    fetch(ref.current?.value as string);
+  }
+
+  useEffect(() => {
     if (data === undefined) return;
     serversDataSlice.actions.addServer(data);
-  }
+  }, [data]);
 
   return (
       <div className="overlay">

@@ -1,8 +1,8 @@
+import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import {useCallback, useEffect, useState} from "react";
-import {useAppSelector} from "../../state-management/store";
 import {selectChannels, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useAppSelector} from "../../state-management/store";
 
 type ComponentProps = {
   index: number,
@@ -50,7 +50,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
       serversDataSlice.actions.addChannels(newChannels);
     }
 
-  }, [groupId, index]);
+  }, [channels, groupId, index]);
 
   const handleHover = useCallback(() => {
     setHidden(false);

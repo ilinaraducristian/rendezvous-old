@@ -42,4 +42,4 @@ export const httpApi = createApi({
   }),
 });
 
-export const {useGetMessagesQuery, useCreateInvitationQuery} = httpApi;
+export const {useLazyGetMessagesQuery, useLazyCreateInvitationQuery} = httpApi;

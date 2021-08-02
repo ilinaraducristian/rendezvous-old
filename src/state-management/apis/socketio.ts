@@ -39,9 +39,9 @@ export const socketioApi = createApi({
 });
 
 export const {
-  useGetUserServersDataQuery,
-  useJoinServerQuery,
-  useCreateServerQuery,
-  useCreateChannelQuery,
-  useCreateGroupQuery,
+  useLazyGetUserServersDataQuery,
+  useLazyJoinServerQuery,
+  useLazyCreateServerQuery,
+  useLazyCreateChannelQuery,
+  useLazyCreateGroupQuery,
 } = socketioApi;

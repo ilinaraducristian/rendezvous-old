@@ -1,9 +1,9 @@
 import {useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
-import {Channel, ChannelType} from "../../types";
+import {ChannelType} from "../../types";
 import {useAppSelector} from "../../state-management/store";
-import {selectChannels, selectSelectedChannel} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedChannel} from "../../state-management/slices/serversDataSlice";
 import MessagesPanelComponent from "../message/MessagesPanel.component";
 import MembersPanelComponent from "../member/MembersPanel.component";
 
@@ -12,7 +12,6 @@ function ContentPanelComponent() {
   const [isMembersSelected, setIsMembersSelected] = useState(true);
 
   const selectedChannel = useAppSelector(selectSelectedChannel);
-  const channels = useAppSelector(selectChannels);
 
   return (
       <div className="content">
@@ -23,7 +22,7 @@ function ContentPanelComponent() {
               <>
                   <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
                   <span
-                      className="span__header-channel-name">{(channels.get(selectedChannel.id) as Channel).name}</span>
+                      className="span__header-channel-name">{selectedChannel.name}</span>
               </>
             }
             <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}

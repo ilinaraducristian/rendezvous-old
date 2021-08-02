@@ -29,7 +29,7 @@ function ServersPanelComponent() {
 
   return (
       <Ol className="list list__panel">
-        {servers.map((server: Server) =>
+        {servers?.map((server: Server) =>
             <ServerComponent key={`server_${server.id}`} name={server.name}
                              onSelectServer={() => selectServer(server)}
             />

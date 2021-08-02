@@ -25,7 +25,7 @@ export const keycloakSlice = createSlice({
 });
 
 export const {authenticate, deauthenticate, updateToken} = keycloakSlice.actions;
-export const selectAuthenticated = (state: any): boolean => state.authenticated;
-export const selectSubject = (state: any): string => state.subject;
+export const selectAuthenticated = (state: any): boolean => state.keycloak.authenticated;
+export const selectSubject = (state: any): string => state.keycloak.subject;
 
 export default keycloakSlice.reducer;

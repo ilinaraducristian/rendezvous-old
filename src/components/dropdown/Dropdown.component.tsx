@@ -1,26 +1,28 @@
-import {useCallback} from "react";
-import {Server} from "../../types";
+import {useCallback, useEffect} from "react";
+import {useLazyCreateInvitationQuery} from "../../state-management/apis/http";
+import {selectSelectedServer, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useAppSelector} from "../../state-management/store";
 import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "../group/CreateGroupOverlay.component";
-import {useAppSelector} from "../../state-management/store";
-import {selectSelectedServer, selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import {useCreateInvitationQuery} from "../../state-management/apis/http";
 import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
   const selectedServer = useAppSelector(selectSelectedServer);
-  const servers = useAppSelector(selectServers);
+  const [fetch, {data: invitation}] = useLazyCreateInvitationQuery();
 
   const createInvitation = useCallback(async () => {
     if (selectedServer === null) return;
-    const _selectedServer = servers.get(selectedServer.id) as Server;
-    const {data: invitation} = useCreateInvitationQuery(_selectedServer.id);
+    fetch(selectedServer.id);
+  }, [fetch, selectedServer]);
+
+  useEffect(() => {
     if (invitation === undefined) return;
-    serversDataSlice.actions.setServer(_selectedServer);
+    serversDataSlice.actions.setServer(selectedServer);
     serversDataSlice.actions.setOverlay(<InvitationOverlayComponent invitation={invitation}/>);
     setIsDropdownShown(false);
-  }, [setIsDropdownShown, selectedServer, servers]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [invitation]);
 
   const showCreateChannelOverlay = useCallback(async () => {
     setIsDropdownShown(false);
