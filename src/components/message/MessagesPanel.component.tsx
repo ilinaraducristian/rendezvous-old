@@ -2,13 +2,12 @@ import {ClipboardEvent, useCallback, useEffect, useRef} from "react";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./Message.component";
-import {User} from "../../types";
-import {useAppSelector} from "../../state-management/store";
+import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {
+  addMessages,
   selectMessages,
   selectSelectedChannel,
   selectUsers,
-  serversDataSlice
 } from "../../state-management/slices/serversDataSlice";
 import socket from "../../socketio";
 
@@ -18,6 +17,7 @@ function MessagesPanelComponent() {
   const messages = useAppSelector(selectMessages);
   const selectedChannel = useAppSelector(selectSelectedChannel);
   const users = useAppSelector(selectUsers);
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
@@ -34,7 +34,7 @@ function MessagesPanelComponent() {
   const onKeyPress = useCallback(async event => {
     if (!event.code.includes("Enter")) return;
     event.preventDefault();
-    if (selectedChannel === null) return;
+    if (selectedChannel === undefined) return;
     let message = (event.target as any).innerText;
     (event.target as any).innerText = "";
     const payload = {
@@ -42,8 +42,8 @@ function MessagesPanelComponent() {
       message
     };
     message = await socket.emitAck("send_message", payload);
-    message.timestamp = new Date(message.timestamp);
-    serversDataSlice.actions.setMessage(message);
+    dispatch(addMessages([message]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedChannel]);
 
   return (
@@ -51,14 +51,13 @@ function MessagesPanelComponent() {
         <div className="content__body__messages" ref={messagesList}>
           <ol className="list list__messages">
             {
-              messages
-                  .filter(message => message.channelId === selectedChannel?.id)
-                  .map(message => {
-                    const user = users.get(message.userId) as User;
-                    return <MessageComponent key={`message_${message.id}`} username={user.username}
-                                             text={message.text}
-                                             timestamp={message.timestamp}/>;
-                  })
+              messages?.map(message =>
+                  <MessageComponent key={`message_${message.id}`}
+                                    username={users.find(user => user.id === message.userId)?.username || ""}
+                                    text={message.text}
+                                    timestamp={message.timestamp}
+                  />
+              )
             }
           </ol>
         </div>

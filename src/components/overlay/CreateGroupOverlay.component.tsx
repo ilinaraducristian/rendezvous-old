@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
 import config from "../../config";
 import {useLazyCreateGroupQuery} from "../../state-management/apis/socketio";
-import {selectSelectedServer, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedServer} from "../../state-management/slices/serversDataSlice";
 import {useAppSelector} from "../../state-management/store";
 
 function CreateGroupOverlayComponent() {
@@ -12,20 +12,20 @@ function CreateGroupOverlayComponent() {
 
   function createGroup() {
     if (config.offline) return;
-    if (selectedServer === null) return;
+    if (selectedServer === undefined) return;
     const groupName = ref.current?.value as string;
     fetch({serverId: selectedServer.id, groupName});
   }
 
   useEffect(() => {
     if (data === undefined) return;
-    if (selectedServer === null) return;
-    const groupName = ref.current?.value as string;
-    serversDataSlice.actions.setGroup({
-      id: data.groupId,
-      serverId: selectedServer.id,
-      name: groupName
-    });
+    if (selectedServer === undefined) return;
+    // const groupName = ref.current?.value as string;
+    // dispatch(setGroup({
+    //   id: data.groupId,
+    //   serverId: selectedServer.id,
+    //   name: groupName
+    // }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 

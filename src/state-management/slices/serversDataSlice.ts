@@ -1,119 +1,166 @@
 import {createSlice} from "@reduxjs/toolkit";
-import SortedMap from "../../util/SortedMap";
-import {Channel, Group, Member, Message, Server, UsersMap} from "../../types";
+import {Channel, ChannelType, Group, Member, Message, Server, TextChannel, User} from "../../types";
+import {SliceCaseReducers} from "@reduxjs/toolkit/src/createSlice";
 
-export const serversDataSlice = createSlice({
+type State = {
+  backendInitialized: boolean,
+  servers: Server[],
+  users: User[],
+  selectedServer: number | null,
+  selectedChannel: number | null,
+  overlay: { type: string, payload: any } | null,
+}
+
+export const serversDataSlice = createSlice<State, SliceCaseReducers<State>, string>({
   name: "serversData",
   initialState: {
     backendInitialized: false,
-    servers: new SortedMap<Server>(),
-    channels: new SortedMap<Channel>(),
-    groups: new SortedMap<Group>(),
-    messages: new SortedMap<Message>(),
-    members: new SortedMap<Member>(),
-    users: new UsersMap(),
-    selectedServer: {id: null},
-    selectedChannel: {id: null},
+    servers: [],
+    users: [],
+    selectedServer: null,
+    selectedChannel: null,
     overlay: null,
   },
   reducers: {
-    initializeBackend(state, action) {
-      console.log("ok?");
-      state.servers = action.payload.servers;
-      state.channels = action.payload.channels;
-      state.groups = action.payload.groups;
-      state.members = action.payload.members;
-      state.users = action.payload.users;
+    initializeBackend(state, {payload: {servers, users}}: { payload: { servers: Server[], users: User[] } }) {
+      state.servers = servers;
+      state.users = users;
       state.backendInitialized = true;
     },
-    setState(state, action) {
-      state = action.payload.state;
+    setInvitation(state, action) {
+      const server = state.servers.find(server => server.id === state.selectedServer);
+      if (server === undefined) return;
+      server.invitation = action.payload;
     },
-    setServer(state, action) {
-      state.servers.set(action.payload.id, action.payload);
-    },
-    setChannel(state, action) {
-      state.channels.set(action.payload.id, action.payload);
-    },
-    setGroup(state, action) {
-      state.groups.set(action.payload.id, action.payload);
+    closeOverlay(state) {
+      state.overlay = null;
     },
     addChannelUser(state, {payload}) {
-      (state.channels.get(payload.channelId) as Channel).users?.push({
-        socketId: payload.socketId,
-        userId: payload.userId
-      });
+      // (state.channels.get(payload.channelId) as Channel).users?.push({
+      //   socketId: payload.socketId,
+      //   userId: payload.userId
+      // });
       // TODO if not working, add the channel again to channels
     },
-    setMessage(state, action) {
-      state.messages.set(action.payload.id, action.payload);
+    selectServer(state, {payload: serverId}: { payload: number }) {
+      state.selectedChannel = null;
+      state.selectedServer = serverId;
     },
-    setMember(state, action) {
-      state.members.set(action.payload.member.id, action.payload.member);
-      state.users.set(action.payload.user.id, action.payload.user);
+    selectChannel(state, {payload: channelId}: { payload: number }) {
+      state.selectedChannel = channelId;
     },
-    selectServer(state, action) {
-      state.selectedChannel = {id: null};
-      state.selectedServer = {id: action.payload};
+    setOverlay(state, {payload: overlay}: { payload: any }) {
+      state.overlay = overlay;
     },
-    selectChannel(state, action) {
-      state.selectedChannel = {id: action.payload};
-      state.selectedServer = {id: action.payload};
+    addServer(state, {payload: server}: { payload: Server }) {
+      const s1Index = state.servers.findIndex(s1 => s1.id === server.id);
+      if (s1Index === -1)
+        state.servers.push(server);
+      else
+        state.servers[s1Index] = server;
     },
-    setOverlay(state, action) {
-      state.overlay = action.payload;
+    addMessages(state, {payload: messages}: { payload: Message[] }) {
+      messages.forEach(message => {
+        const server = state.servers.find(server => server.id === message.serverId);
+        if (server === undefined) return;
+        const channel = server.channels.concat(server.groups.map(group => group.channels).flat())
+            .find(channel => channel.id === message.channelId && channel.type === ChannelType.Text) as TextChannel | undefined;
+        if (channel === undefined) return;
+        const messageId = channel.messages.findIndex(m1 => m1.id === message.id);
+        if (messageId === -1)
+          channel.messages.push(message);
+        else
+          channel.messages[messageId] = message;
+      });
     },
-    addServer(state, action) {
-      state.servers.set(action.payload.id, action.payload);
-      state.overlay = null;
+    addUser(state, {payload: user}: { payload: User }) {
+      const existingUserIndex = state.users.findIndex(u1 => u1.id === user.id);
+      if (existingUserIndex === -1)
+        state.users.push(user);
+      else
+        state.users[existingUserIndex] = user;
+
     },
-    addChannel(state, action) {
-      state.channels.set(action.payload.id, action.payload);
-      state.overlay = null;
+    addMember(state, {payload: member}: { payload: Member }) {
+      const server = state.servers.find(server => server.id === member.serverId);
+      if (server === undefined) return;
+      const memberIndex = server.members.findIndex(m1 => m1.id === member.id);
+      if (memberIndex === -1)
+        server.members.push(member);
+      else
+        server.members[memberIndex] = member;
     },
-    addGroup(state, action) {
-      state.groups.set(action.payload.id, action.payload);
-      state.overlay = null;
+    addChannel(state, {payload: channel}: { payload: Channel }) {
+      const server = state.servers.find(server => server.id === channel.serverId);
+      if (server === undefined) return;
+      if (channel.groupId === null) {
+        const channelIndex = server.channels.findIndex(c1 => c1.id === channel.id);
+        if (channelIndex === -1)
+          server.channels.push(channel);
+        else
+          server.channels[channelIndex] = channel;
+      } else {
+        const group = server.groups.find(group => group.id === channel.groupId);
+        if (group === undefined) return;
+        const channelIndex = group.channels.findIndex(c1 => c1.id === channel.id);
+        if (channelIndex === -1)
+          group.channels.push(channel);
+        else
+          group.channels[channelIndex] = channel;
+      }
     },
-    setChannels(state, action) {
-      state.channels = action.payload.channels;
-    },
-    addMessages(state, action) {
-      (state.messages as SortedMap<Message>).concat(action.payload);
-    },
-    addChannels(state, action) {
-      (state.channels as SortedMap<Channel>).concat(action.payload);
+    addGroup(state, {payload: group}: { payload: Group }) {
+      const server = state.servers.find(server => server.id === group.serverId);
+      if (server === undefined) return;
+      const groupIndex = server.groups.findIndex(g1 => g1.id === group.id);
+      if (groupIndex === -1)
+        server.groups.push(group);
+      else
+        server.groups[groupIndex] = group;
     },
   }
 });
 
 export const {
   initializeBackend,
-  setState,
-  setServer,
-  setChannel,
-  setGroup,
+  setInvitation,
+  closeOverlay,
   addChannelUser,
-  setMember,
   selectServer,
   selectChannel,
   setOverlay,
   addServer,
+  addMessages,
+  addMember,
   addChannel,
   addGroup,
-  setChannels,
-  addMessages,
-  addChannels
+  addUser
 } = serversDataSlice.actions;
-export const selectServers = (state: any): SortedMap<Server> => state.serversData.servers;
-export const selectChannels = (state: any): SortedMap<Channel> => state.serversData.channels;
-export const selectGroups = (state: any): SortedMap<Group> => state.serversData.groups;
-export const selectMembers = (state: any): SortedMap<Member> => state.serversData.members;
-export const selectMessages = (state: any): SortedMap<Message> => state.serversData.messages;
-export const selectUsers = (state: any): UsersMap => state.serversData.users;
-export const selectSelectedServer = (state: any): Server | null => state.serversData.selectedServer.id === null ? null : state.serversData.servers.get(state.serversData.selectedServer.id) as Server;
-export const selectSelectedChannel = (state: any): Channel | null => state.serversData.selectedChannel.id === null ? null : state.serversData.channels.get(state.serversData.selectedChannel.id) as Channel;
-export const selectInitialized = (state: any): boolean => state.serversData.backendInitialized;
-export const selectOverlay = (state: any): any => state.serversData.overlay;
+
+export const selectServers = ({serversData}: { serversData: State }): Server[] => serversData.servers;
+export const selectChannels = (groupId: number | null) => ({serversData}: { serversData: State }): Channel[] | undefined => {
+  if (serversData.selectedServer === undefined) return;
+  const server = serversData.servers.find(server => server.id === serversData.selectedServer);
+  if (groupId === null)
+    return server?.channels;
+  return server?.groups.find(group => group.id === groupId)?.channels;
+};
+export const selectGroups = ({serversData}: { serversData: State }): Group[] | undefined => serversData.servers.find(server => server.id === serversData.selectedServer)?.groups;
+export const selectMembers = ({serversData}: { serversData: State }): Member[] | undefined => serversData.servers.find(server => server.id === serversData.selectedServer)?.members;
+export const selectMessages = ({serversData}: { serversData: State }): Message[] | undefined => {
+  const server = serversData.servers.find(server => server.id === serversData.selectedServer);
+  const channel = server?.channels.concat(server?.groups.map(group => group.channels).flat())
+      .find(channel => channel.id === serversData.selectedChannel && channel.type === ChannelType.Text);
+  return (channel as TextChannel | undefined)?.messages;
+};
+export const selectUsers = ({serversData}: { serversData: State }): User[] => serversData.users;
+export const selectSelectedServer = ({serversData}: { serversData: State }): Server | undefined => serversData.selectedServer === null ? undefined : serversData.servers.find(server => server.id === serversData.selectedServer);
+export const selectSelectedChannel = ({serversData}: { serversData: State }): Channel | undefined => {
+  const server = serversData.servers.find(server => server.id === serversData.selectedServer);
+  return server?.channels.concat(server?.groups.map(group => group.channels).flat())
+      .find(channel => channel.id === serversData.selectedChannel && channel.type === ChannelType.Text);
+};
+export const selectInitialized = ({serversData}: { serversData: State }): boolean => serversData.backendInitialized;
+export const selectOverlay = ({serversData}: { serversData: State }): { type: string, payload: any } | null => serversData.overlay;
 
 export default serversDataSlice.reducer;

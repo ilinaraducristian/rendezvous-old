@@ -1,8 +1,9 @@
-import {Channel} from "../../types";
-import ChannelComponent from "./Channel.component";
+import {Channel, ChannelType, TextChannel, VoiceChannel} from "../../types";
 import ChannelDropHandleComponent from "./ChannelDropHandle.component";
 import {useAppSelector} from "../../state-management/store";
-import {selectChannels, selectSelectedServer} from "../../state-management/slices/serversDataSlice";
+import {selectChannels} from "../../state-management/slices/serversDataSlice";
+import VoiceChannelComponent from "./VoiceChannel.component";
+import TextChannelComponent from "./TextChannel.component";
 
 type ComponentProps = {
   groupId?: number | null
@@ -10,10 +11,13 @@ type ComponentProps = {
 
 function channelMapper(groupId: number | null) {
 
-  return (channel: any, index: number, array: [number, Channel][]) => {
+  return (channel: Channel, index: number, array: Channel[]) => {
     const channelComponents = [
       <ChannelDropHandleComponent key={`drop-handle_${index}`} index={index} groupId={groupId}/>,
-      <ChannelComponent key={`channel_${channel.id}`} channel={channel}/>
+      channel.type === ChannelType.Text ?
+          <TextChannelComponent key={`channel_${channel.id}`} channel={channel as TextChannel}/>
+          :
+          <VoiceChannelComponent key={`channel_${channel.id}`} channel={channel as VoiceChannel}/>
     ];
     if (index === array.length - 1) {
       channelComponents.push(
@@ -27,14 +31,12 @@ function channelMapper(groupId: number | null) {
 
 function ChannelsListComponent({groupId = null}: ComponentProps) {
 
-  const channels = useAppSelector(selectChannels);
-  const selectedServer = useAppSelector(selectSelectedServer);
+  const channels = useAppSelector(selectChannels(groupId));
 
   return <>{
-    Array.from(channels
-        .filter((channel: Channel) =>
-            channel.serverId === selectedServer?.id && channel.groupId === groupId
-        ).sort((ch1, ch2) => ch1.order - ch2.order))
+    channels === undefined ||
+    Array.from(channels)
+        .sort((ch1, ch2) => ch1.order - ch2.order)
         .map(channelMapper(groupId)).flat(2)
   }</>;
 

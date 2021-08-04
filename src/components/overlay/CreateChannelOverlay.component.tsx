@@ -1,30 +1,38 @@
 import {useEffect, useRef} from "react";
 import config from "../../config";
 import {useLazyCreateChannelQuery} from "../../state-management/apis/socketio";
-import {selectSelectedServer, serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import {useAppSelector} from "../../state-management/store";
+import {
+  addChannel,
+  selectChannel,
+  selectSelectedServer,
+  setOverlay
+} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {ChannelType} from "../../types";
 
 type ComponentProps = {
   groupId?: number | null
 }
 
-function CreateChannelOverlay({groupId = null}: ComponentProps) {
+function CreateChannelOverlayComponent({groupId = null}: ComponentProps) {
 
   const ref = useRef<HTMLInputElement>(null);
   const selectedServer = useAppSelector(selectSelectedServer);
-  const [fetch, {data}] = useLazyCreateChannelQuery();
+  const [fetch, {data, isSuccess}] = useLazyCreateChannelQuery();
+  const dispatch = useAppDispatch();
 
   function createChannel() {
     if (config.offline) return;
-    if (selectedServer === null) return;
+    if (selectedServer === undefined) return;
     // TODO
     const channelName = ref.current?.value as string;
     fetch({serverId: selectedServer.id, groupId, channelName});
   }
 
   useEffect(() => {
-    if (selectedServer === null) return;
+    if (selectedServer === undefined) return;
+    if (!isSuccess) return;
+    if (data === undefined) return;
     const channelName = ref.current?.value as string;
     const channel = {
       id: data?.channelId,
@@ -33,10 +41,11 @@ function CreateChannelOverlay({groupId = null}: ComponentProps) {
       type: ChannelType.Text,
       name: channelName
     };
-    serversDataSlice.actions.addChannel(channel);
-    serversDataSlice.actions.selectChannel(channel);
+    dispatch(addChannel(channel));
+    dispatch(selectChannel(channel.id));
+    dispatch(setOverlay(null));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [isSuccess]);
 
   return (
       <div className="overlay">
@@ -50,4 +59,4 @@ function CreateChannelOverlay({groupId = null}: ComponentProps) {
   );
 }
 
-export default CreateChannelOverlay;
+export default CreateChannelOverlayComponent;

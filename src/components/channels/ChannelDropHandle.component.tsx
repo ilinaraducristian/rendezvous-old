@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import {selectChannels, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {selectGroups} from "../../state-management/slices/serversDataSlice";
 import {useAppSelector} from "../../state-management/store";
 
 type ComponentProps = {
@@ -11,15 +11,18 @@ type ComponentProps = {
 
 function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
-  const channels = useAppSelector(selectChannels);
+  const groups = useAppSelector(selectGroups);
   const [hidden, setHidden] = useState(true);
+  // const dispatch = useAppDispatch();
 
   const handleDrop = useCallback((item) => {
     if (item.order === index || item.order + 1 === index) return;
     if (groupId === null) return;
+    if (groups === undefined) return;
 
     if (item.order < index) {
-      let newChannels = channels.filter(channel => channel.groupId === groupId).map(channel => {
+
+      let newChannels = groups.find(group => group.id === groupId)?.channels.map(channel => {
 
         if (channel.order > item.order)
           channel.order--;
@@ -28,14 +31,14 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
         return channel;
       });
 
-      const channel = newChannels.get(item.id);
+      const channel = newChannels?.find(channel => channel.id === item.id);
       if (channel !== undefined) {
         channel.order = index - 1;
       }
 
-      serversDataSlice.actions.addChannels(newChannels);
+      // dispatch(addChannels(newChannels));
     } else {
-      let newChannels = channels.filter(channel => channel.groupId === groupId).map(channel => {
+      let newChannels = groups.find(group => group.id === groupId)?.channels.map(channel => {
         if (channel.order > item.order)
           channel.order--;
         if (channel.order >= index)
@@ -43,14 +46,14 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
         return channel;
       });
 
-      const channel = newChannels.get(item.id);
+      const channel = newChannels?.find(channel => channel.id === item.id);
       if (channel !== undefined) {
         channel.order = index;
       }
-      serversDataSlice.actions.addChannels(newChannels);
+      // dispatch(addChannels(newChannels));
     }
 
-  }, [channels, groupId, index]);
+  }, [groupId, index, groups]);
 
   const handleHover = useCallback(() => {
     setHidden(false);

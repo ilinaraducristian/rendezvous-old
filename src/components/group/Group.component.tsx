@@ -1,8 +1,8 @@
 import {useState} from "react";
-import ChannelsListComponent from "../channel/ChannelsList.component";
+import ChannelsListComponent from "../channels/ChannelsList.component";
 import ArrowSVG from "../../svg/Arrow.svg";
-import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
-import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {setOverlay} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch} from "../../state-management/store";
 
 type ComponentProps = {
   id: number,
@@ -12,9 +12,11 @@ type ComponentProps = {
 function GroupComponent({id, name}: ComponentProps) {
 
   const [isCollapsed, setIsExpanded] = useState(true);
+  const dispatch = useAppDispatch();
+
 
   function createChannel() {
-    serversDataSlice.actions.setOverlay(<CreateChannelOverlayComponent groupId={id}/>);
+    dispatch(setOverlay({type: "CreateChannelOverlayComponent", payload: {groupId: id}}));
   }
 
   return (

@@ -51,6 +51,7 @@
     ]
   },
   "devDependencies": {
-    "@types/styled-components": "^5.1.11"
+    "@types/styled-components": "^5.1.11",
+    "lorem-ipsum": "^2.0.3"
   }
 }

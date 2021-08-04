@@ -1,5 +1,3 @@
-import SortedMap from "./util/SortedMap";
-
 export type User = {
   id: string,
   username: string,
@@ -10,12 +8,21 @@ export type User = {
 export type Group = {
   id: number,
   serverId: number,
-  name: string
+  name: string,
+  channels: Channel[]
 }
 
 export enum ChannelType {
   Text = "text",
   Voice = "voice"
+}
+
+export type VoiceChannel = Channel & {
+  users: any[]
+}
+
+export type TextChannel = Channel & {
+  messages: Message[]
 }
 
 export type Channel = {
@@ -25,7 +32,6 @@ export type Channel = {
   type: ChannelType,
   name: string,
   order: number,
-  users?: any[]
 }
 
 export type Message = {
@@ -33,7 +39,7 @@ export type Message = {
   serverId: number,
   channelId: number,
   userId: string,
-  timestamp: Date,
+  timestamp: string,
   text: string,
 }
 
@@ -48,7 +54,10 @@ export type Server = {
   name: string,
   userId: string,
   invitation: string | null,
-  invitationExp: Date | null
+  invitationExp: Date | null,
+  channels: Channel[], // channels without a group
+  groups: Group[],
+  members: Member[],
 }
 
 export class UsersMap extends Map<string, User> {
@@ -76,17 +85,11 @@ export class UsersMap extends Map<string, User> {
 }
 
 export type ServersData = {
-  servers: [number, Server][],
-  channels: [number, Channel][],
-  groups: [number, Group][],
-  members: [number, Member][],
-  users: [string, User][]
+  servers: Server[],
+  users: User[]
 }
 
 export type ProcessedServersData = {
-  servers: SortedMap<Server>,
-  channels: SortedMap<Channel>,
-  groups: SortedMap<Group>,
-  members: SortedMap<Member>,
-  users: UsersMap
+  servers: Server[],
+  users: User[]
 }

@@ -4,18 +4,18 @@ import {selectAuthenticated} from "../../state-management/slices/keycloakSlice";
 import keycloak from "../../keycloak";
 import {selectConnected} from "../../state-management/slices/socketioSlice";
 import config from "../../config";
-import {mockChannels, mockGroups, mockMembers, mockServers, mockUsers} from "../../mock-data";
-import {
-  initializeBackend,
-  selectInitialized,
-  selectOverlay,
-  selectServers,
-  serversDataSlice
-} from "../../state-management/slices/serversDataSlice";
+import {mockServers, mockUsers} from "../../mock-data";
+import {initializeBackend, selectInitialized, selectOverlay} from "../../state-management/slices/serversDataSlice";
 import ServersPanelComponent from "../server/ServersPanel.component";
 import {useLazyGetUserServersDataQuery} from "../../state-management/apis/socketio";
-import ChannelsPanelComponent from "../channel/ChannelsPanel.component";
+import ChannelsPanelComponent from "../channels/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
+import AddServerOverlayComponent from "../overlay/AddServerOverlay.component";
+import CreateChannelOverlayComponent from "../overlay/CreateChannelOverlay.component";
+import CreateGroupOverlayComponent from "../overlay/CreateGroupOverlay.component";
+import CreateServerOverlayComponent from "../overlay/CreateServerOverlay.component";
+import InvitationOverlayComponent from "../overlay/InvitationOverlay.component";
+import JoinServerOverlayComponent from "../overlay/JoinServerOverlay.component";
 
 function AppComponent() {
 
@@ -23,14 +23,16 @@ function AppComponent() {
   const connected = useAppSelector(selectConnected);
   const initialized = useAppSelector(selectInitialized);
   const overlay = useAppSelector(selectOverlay);
-  const [fetch, {data}] = useLazyGetUserServersDataQuery();
-  const servers = useAppSelector(selectServers);
+  const [fetch, {data, isSuccess, status}] = useLazyGetUserServersDataQuery();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     if (config.offline) return;
     if (authenticated) return;
-    keycloak.init({})
+    keycloak.init({
+      onLoad: "check-sso",
+      silentCheckSsoRedirectUri: window.location.origin + "/silent-check-sso.html"
+    })
         .then((authenticated: boolean) => {
           if (!authenticated) {
             return keycloak.login();
@@ -45,50 +47,54 @@ function AppComponent() {
     if (config.offline) {
       const processedServerData = {
         servers: mockServers,
-        channels: mockChannels,
-        groups: mockGroups,
-        members: mockMembers,
         users: mockUsers
       };
       dispatch(initializeBackend(processedServerData));
-      console.log("here");
       return;
     }
     if (!connected) return;
     if (initialized) return;
     fetch();
-  }, [fetch, initialized, connected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialized, connected]);
 
   useEffect(() => {
+    if (!isSuccess) return;
     if (data === undefined) return;
-    serversDataSlice.actions.initializeBackend(data);
-  }, [data]);
-
-  //
-  // return (
-  //     <GlobalStates.Provider value={{state, dispatch}}>{
-  //       ((!initialized || !keycloak.authenticated) && !config.offline) ||
-  //       <>
-  //
-  //       <SocketIoListeners/>
-  //           <ServersPanelComponent/>
-  //           <ChannelsPanelComponent/>
-  //           <ContentPanelComponent/>
-  //         {state.overlay}
-  //       </>
-  //     }
-  //     </GlobalStates.Provider>
-  // );
+    dispatch(initializeBackend(data));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
 
   return (
       <>
-        {overlay}
+        {/*((!initialized || !keycloak.authenticated) && !config.offline) ||*/}
+        {
+          overlay === null ||
+          overlayToComponent(overlay)
+        }
         <ServersPanelComponent/>
         <ChannelsPanelComponent/>
         <ContentPanelComponent/>
       </>
   );
 
+}
+
+function overlayToComponent({type, payload}: { type: string, payload: any }) {
+  switch (type) {
+    case "AddServerOverlayComponent":
+      return <AddServerOverlayComponent/>;
+    case "CreateChannelOverlayComponent":
+      return <CreateChannelOverlayComponent groupId={payload.groupId}/>;
+    case "CreateGroupOverlayComponent":
+      return <CreateGroupOverlayComponent/>;
+    case "CreateServerOverlayComponent":
+      return <CreateServerOverlayComponent/>;
+    case "InvitationOverlayComponent":
+      return <InvitationOverlayComponent invitation={payload.invitation}/>;
+    case "JoinServerOverlayComponent":
+      return <JoinServerOverlayComponent/>;
+  }
 }
 
 export default AppComponent;

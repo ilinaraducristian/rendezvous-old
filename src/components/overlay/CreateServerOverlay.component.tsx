@@ -1,20 +1,25 @@
 import {useEffect, useRef} from "react";
 import {useLazyCreateServerQuery} from "../../state-management/apis/socketio";
-import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {addServer, addUser, setOverlay} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch} from "../../state-management/store";
 
 function CreateServerOverlayComponent() {
-
+  const dispatch = useAppDispatch();
   const ref = useRef<HTMLInputElement>(null);
-  const [fetch, {data}] = useLazyCreateServerQuery();
+  const [fetch, {data, isSuccess}] = useLazyCreateServerQuery();
 
   function createServer() {
     fetch(ref.current?.value as string);
   }
 
   useEffect(() => {
+    if (!isSuccess) return;
     if (data === undefined) return;
-    serversDataSlice.actions.addServer(data);
-  }, [data]);
+    dispatch(setOverlay(null));
+    dispatch(addServer(data.servers[0]));
+    dispatch(addUser(data.users[0]));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccess]);
 
   return (
       <div className="overlay">

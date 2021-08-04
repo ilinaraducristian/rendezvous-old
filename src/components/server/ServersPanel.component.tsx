@@ -1,9 +1,12 @@
 import {Server} from "../../types";
-import {useAppSelector} from "../../state-management/store";
-import {selectServers, serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch, useAppSelector} from "../../state-management/store";
+import {
+  selectServer as selectServerAction,
+  selectServers,
+  setOverlay as setOverlayAction
+} from "../../state-management/slices/serversDataSlice";
 import styled from "styled-components";
 import ServerComponent from "./Server.component";
-import AddServerOverlayComponent from "../overlay/AddServerOverlayComponent";
 
 const Ol = styled.ol`
   display: flex;
@@ -16,20 +19,20 @@ const Ol = styled.ol`
 `;
 
 function ServersPanelComponent() {
-
+  const dispatch = useAppDispatch();
   const servers = useAppSelector(selectServers);
 
   function selectServer(server: Server) {
-    serversDataSlice.actions.selectServer(server.id);
+    dispatch(selectServerAction(server.id));
   }
 
   function setOverlay() {
-    serversDataSlice.actions.setOverlay(<AddServerOverlayComponent/>);
+    dispatch(setOverlayAction({type: "AddServerOverlayComponent"}));
   }
 
   return (
       <Ol className="list list__panel">
-        {servers?.map((server: Server) =>
+        {servers.map((server: Server) =>
             <ServerComponent key={`server_${server.id}`} name={server.name}
                              onSelectServer={() => selectServer(server)}
             />

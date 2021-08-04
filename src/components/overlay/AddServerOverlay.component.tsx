@@ -1,15 +1,15 @@
-import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import CreateServerOverlayComponent from "./CreateServerOverlayComponent";
-import JoinServerOverlayComponent from "./JoinServerOverlayComponent";
+import {setOverlay} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch} from "../../state-management/store";
 
 function AddServerOverlayComponent() {
+  const dispatch = useAppDispatch();
 
   function createServer() {
-    serversDataSlice.actions.setOverlay(<CreateServerOverlayComponent/>);
+    dispatch(setOverlay({type: "CreateServerOverlayComponent"}));
   }
 
   function joinServer() {
-    serversDataSlice.actions.setOverlay(<JoinServerOverlayComponent/>);
+    dispatch(setOverlay({type: "JoinServerOverlayComponent"}));
   }
 
   return (

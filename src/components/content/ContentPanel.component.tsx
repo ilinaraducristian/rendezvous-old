@@ -18,7 +18,7 @@ function ContentPanelComponent() {
         <header className="content__header">
           <div className="content__header__main">
             {
-              selectedChannel === null ||
+              selectedChannel === undefined ||
               <>
                   <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
                   <span

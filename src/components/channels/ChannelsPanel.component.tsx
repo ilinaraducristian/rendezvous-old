@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useState} from "react";
 import ChannelsListComponent from "./ChannelsList.component";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
@@ -13,16 +13,16 @@ function ChannelsPanelComponent() {
   const [isDropdownShown, setIsDropdownShown] = useState(false);
   const selectedServer = useAppSelector(selectSelectedServer);
 
-  const toggleDropdown = useCallback(async () => {
+  function toggleDropdown() {
     setIsDropdownShown(!isDropdownShown);
-  }, [isDropdownShown, setIsDropdownShown]);
+  }
 
   return (
       <div className="channels-panel">
         <button className="btn btn__server-options" type="button"
                 onClick={toggleDropdown}>
           {
-            selectedServer === null ||
+            selectedServer === undefined ||
             <>
             <span
                 className="svg__server-options-name">{selectedServer.name}</span>
@@ -33,7 +33,7 @@ function ChannelsPanelComponent() {
         {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
         <DndProvider backend={HTML5Backend}>
           <ol className="list list__panel list__channels-panel">
-            {selectedServer === null ||
+            {selectedServer === undefined ||
             <>
                 <ChannelsListComponent/>
                 <GroupsListComponent/>

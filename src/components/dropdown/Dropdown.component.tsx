@@ -1,51 +1,53 @@
 import {useCallback, useEffect} from "react";
-import {useLazyCreateInvitationQuery} from "../../state-management/apis/http";
-import {selectSelectedServer, serversDataSlice} from "../../state-management/slices/serversDataSlice";
-import {useAppSelector} from "../../state-management/store";
-import CreateChannelOverlayComponent from "../channel/CreateChannelOverlay.component";
-import CreateGroupOverlayComponent from "../group/CreateGroupOverlay.component";
-import InvitationOverlayComponent from "../overlay/InvitationOverlayComponent";
+import {useLazyCreateInvitationQuery} from "../../state-management/apis/socketio";
+import {selectSelectedServer, setInvitation, setOverlay} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch, useAppSelector} from "../../state-management/store";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
   const selectedServer = useAppSelector(selectSelectedServer);
   const [fetch, {data: invitation}] = useLazyCreateInvitationQuery();
+  const dispatch = useAppDispatch();
 
   const createInvitation = useCallback(async () => {
-    if (selectedServer === null) return;
+    if (selectedServer === undefined) return;
     fetch(selectedServer.id);
   }, [fetch, selectedServer]);
 
   useEffect(() => {
     if (invitation === undefined) return;
-    serversDataSlice.actions.setServer(selectedServer);
-    serversDataSlice.actions.setOverlay(<InvitationOverlayComponent invitation={invitation}/>);
+    dispatch(setInvitation(invitation));
+    dispatch(setOverlay({type: "InvitationOverlayComponent", payload: {invitation}}));
     setIsDropdownShown(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitation]);
 
   const showCreateChannelOverlay = useCallback(async () => {
     setIsDropdownShown(false);
-    serversDataSlice.actions.setOverlay(<CreateChannelOverlayComponent/>);
-  }, [setIsDropdownShown]);
+    dispatch(setOverlay({type: "CreateChannelOverlayComponent", payload: {groupId: null}}));
+  }, [setIsDropdownShown, dispatch]);
 
   const showCreateGroupOverlay = useCallback(async () => {
     setIsDropdownShown(false);
-    serversDataSlice.actions.setOverlay(<CreateGroupOverlayComponent/>);
-  }, [setIsDropdownShown]);
+    dispatch(setOverlay({type: "CreateGroupOverlayComponent"}));
+  }, [setIsDropdownShown, dispatch]);
 
   return (
       <div className="div__dropdown">
         <ul className="list list__dropdown">
           <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={createInvitation}>Invite people</button>
-          </li>
-          <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={showCreateChannelOverlay}>Create channel
+            <button type="button" className="btn btn__dropdown-item" onClick={createInvitation}>
+              Invite people
             </button>
           </li>
           <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={showCreateGroupOverlay}>Create group
+            <button type="button" className="btn btn__dropdown-item" onClick={showCreateChannelOverlay}>
+              Create channel
+            </button>
+          </li>
+          <li className="li__dropdown">
+            <button type="button" className="btn btn__dropdown-item" onClick={showCreateGroupOverlay}>
+              Create group
             </button>
           </li>
         </ul>

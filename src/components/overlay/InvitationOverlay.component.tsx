@@ -1,5 +1,6 @@
 import {useCallback, useState} from "react";
-import {serversDataSlice} from "../../state-management/slices/serversDataSlice";
+import {setOverlay} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch} from "../../state-management/store";
 
 type ComponentProps = {
   invitation: string
@@ -8,18 +9,20 @@ type ComponentProps = {
 function InvitationOverlayComponent({invitation}: ComponentProps) {
 
   const [status, setStatus] = useState("Copy");
+  const dispatch = useAppDispatch();
 
-  const copyToClipboard = useCallback(() => {
-    navigator.clipboard.writeText(invitation).then(() => {
+  const copyToClipboard = useCallback(async () => {
+    try {
+      await navigator.clipboard.writeText(invitation);
       setStatus("Copied");
-    }).catch(e => {
-      console.log(e);
+    } catch (e) {
+      console.error(e);
       setStatus("Error");
-    });
+    }
   }, [invitation]);
 
   function close() {
-    serversDataSlice.actions.setOverlay(null);
+    dispatch(setOverlay(null));
   }
 
   return (
