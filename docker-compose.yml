@@ -1,0 +1,8 @@
+version: "3.9"
+services:
+  react:
+    image: ilinaraducristian/node-react:16.6.1-alpine3.14
+    volumes:
+      - ".:/app"
+    ports:
+      - "80:3000"
