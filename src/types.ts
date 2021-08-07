@@ -18,7 +18,7 @@ export enum ChannelType {
 }
 
 export type VoiceChannel = Channel & {
-  users: any[]
+  users: { socketId: string, userId: string }[]
 }
 
 export type TextChannel = Channel & {
@@ -28,7 +28,7 @@ export type TextChannel = Channel & {
 export type Channel = {
   id: number,
   serverId: number,
-  groupId: number,
+  groupId: number | null,
   type: ChannelType,
   name: string,
   order: number,

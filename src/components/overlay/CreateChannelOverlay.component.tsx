@@ -8,7 +8,7 @@ import {
   setOverlay
 } from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {ChannelType} from "../../types";
+import {ChannelType, TextChannel} from "../../types";
 
 type ComponentProps = {
   groupId?: number | null
@@ -34,12 +34,14 @@ function CreateChannelOverlayComponent({groupId = null}: ComponentProps) {
     if (!isSuccess) return;
     if (data === undefined) return;
     const channelName = ref.current?.value as string;
-    const channel = {
+    const channel: TextChannel = {
       id: data?.channelId,
       serverId: selectedServer.id,
       groupId,
       type: ChannelType.Text,
-      name: channelName
+      name: channelName,
+      messages: [],
+      order: 0
     };
     dispatch(addChannel(channel));
     dispatch(selectChannel(channel.id));

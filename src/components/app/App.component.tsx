@@ -37,7 +37,6 @@ function AppComponent() {
           if (!authenticated) {
             return keycloak.login();
           }
-          // keycloakSlice.actions.authenticate(keycloak.token);
         }).catch(() => {
       alert("failed to initialize");
     });

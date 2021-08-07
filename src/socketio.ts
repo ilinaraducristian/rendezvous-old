@@ -2,7 +2,13 @@ import config from "./config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
 import mediasoup from "./mediasoup";
-import {addChannel, addChannelUser, addGroup, addMember, addMessages} from "./state-management/slices/serversDataSlice";
+import {
+  addChannel,
+  addChannelUsers,
+  addGroup,
+  addMember,
+  addMessages
+} from "./state-management/slices/serversDataSlice";
 import {store} from "./state-management/store";
 import {connect} from "./state-management/slices/socketioSlice";
 
@@ -22,7 +28,7 @@ class Socket extends socketio_Socket {
 
 }
 
-const socket: Socket = socketio_io(config.socketIoUrl, {autoConnect: false}) as Socket;
+const socket: Socket = socketio_io(config.socketIoUrl, {autoConnect: false, transports: ["websocket"]}) as Socket;
 
 Object.assign(socket, {emitAck});
 
@@ -56,7 +62,7 @@ socket.on("new_group", (payload) => {
 });
 
 socket.on("user_joined_voice-channel", (payload) => {
-  store.dispatch(addChannelUser({socketId: payload.socketId, userId: payload.userId}));
+  store.dispatch(addChannelUsers([payload]));
 });
 
 export default socket;

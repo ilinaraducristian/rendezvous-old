@@ -8,6 +8,7 @@ let created = false;
 
 function createMediaStreamSource() {
   if (created) return;
+  if (remoteStream.getAudioTracks().length === 0) return;
   created = true;
   audioContext.createMediaStreamSource(remoteStream).connect(audioContext.destination);
 }

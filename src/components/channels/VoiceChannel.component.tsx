@@ -1,11 +1,11 @@
-import {useCallback, useEffect} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {useDrag} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
 import mediasoup, {createMediaStreamSource, remoteStream} from "../../mediasoup";
 import socket from "../../socketio";
 import {selectSubject} from "../../state-management/slices/keycloakSlice";
-import {selectUsers} from "../../state-management/slices/serversDataSlice";
-import {useAppSelector} from "../../state-management/store";
+import {addChannelUsers, selectUsers} from "../../state-management/slices/serversDataSlice";
+import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import ChannelSVG from "../../svg/Channel.svg";
 import {VoiceChannel} from "../../types";
 import config from "../../config";
@@ -20,13 +20,15 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
   const subject = useAppSelector(selectSubject);
   const users = useAppSelector(selectUsers);
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
+  const [joined, setJoined] = useState(false);
 
   useEffect(() => {
     const users = channel.users?.filter(user => user.userId !== subject)
         .filter(user => !consumers.find(consumer => user.socketId === consumer.socketId));
     // create consumers
     if (users === undefined) return;
+    createMediaStreamSource();
     (async () => {
       for (const user of users) {
         const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
@@ -74,16 +76,18 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
   const selectChannel = useCallback(async () => {
     if (config.offline) return;
-    createMediaStreamSource();
+    if (joined) return;
+    setJoined(true);
+
     await createProducer();
 
     const usersInVoiceChannel = await socket.emitAck("join_voice-channel", {
       serverId: channel.serverId,
       channelId: channel.id
     });
-    channel.users?.concat(usersInVoiceChannel);
-    // dispatch(setChannel(channel));
-  }, [channel, createProducer]);
+    dispatch(addChannelUsers(usersInVoiceChannel));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [joined, channel, createProducer]);
 
   const [, drag] = useDrag<ChannelDragObject, any, any>({
     type: ItemTypes.CHANNEL,
@@ -97,11 +101,11 @@ function VoiceChannelComponent({channel}: ComponentProps) {
           <span className="span">{channel.name}</span>
         </button>
         {
-          channel.users === undefined ||
           <ul className="list list__voice-channel">
             {
               channel.users
                   .map(_user => users.find(user => user.id === _user.userId))
+                  .filter(user => user !== undefined)
                   .map((user, i) =>
                       <li className="li" key={`channel_${channel.id}_user${i}`}>{user?.username}</li>
                   )

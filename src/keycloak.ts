@@ -9,7 +9,6 @@ const keycloak: Keycloak.KeycloakInstance = new Keycloak(config.keycloak);
 
 keycloak.onAuthRefreshSuccess = function () {
   socket.auth.token = keycloak.token;
-
   store.dispatch(updateToken(keycloak.token));
 };
 
