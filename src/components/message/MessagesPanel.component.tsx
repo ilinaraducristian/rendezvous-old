@@ -1,4 +1,4 @@
-import {ClipboardEvent, useCallback, useEffect, useRef} from "react";
+import {ClipboardEvent, useCallback, useEffect, useRef, useState} from "react";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./Message.component";
@@ -10,6 +10,7 @@ import {
   selectUsers,
 } from "../../state-management/slices/serversDataSlice";
 import socket from "../../socketio";
+import EmojiContainerComponent from "./EmojiContainer.component";
 
 function MessagesPanelComponent() {
 
@@ -18,6 +19,7 @@ function MessagesPanelComponent() {
   const selectedChannel = useAppSelector(selectSelectedChannel);
   const users = useAppSelector(selectUsers);
   const dispatch = useAppDispatch();
+  const [shortcut, setShortcut] = useState<string | null>(null);
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
@@ -25,13 +27,30 @@ function MessagesPanelComponent() {
 
   const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
     event.preventDefault();
-    const selection = document.getSelection();
+    const selection = getSelection();
     const clipboard = event.clipboardData;
     if (selection === null || clipboard === null) return;
     clipboard.setData("text/plain", selection.toString());
   }, []);
 
+  function emojiCheck(event: any) {
+    const selection = getSelection();
+    if (selection === null) return setShortcut(null);
+    const caret = selection.anchorOffset;
+    let message = event.target.innerText as string | undefined;
+    if (message === undefined)
+      return setShortcut(null);
+    const lastIndexColon = message.lastIndexOf(":", caret);
+    if (lastIndexColon === -1 || caret <= lastIndexColon) return setShortcut(null);
+    message = message.substring(lastIndexColon, caret);
+    if (message.indexOf(" ") !== -1) return setShortcut(null);
+    const msg = message.substr(1);
+    if (msg.length === 0) return setShortcut(null);
+    setShortcut(msg);
+  }
+
   const onKeyPress = useCallback(async event => {
+    emojiCheck(event);
     if (!event.code.includes("Enter")) return;
     event.preventDefault();
     if (selectedChannel === undefined) return;
@@ -61,6 +80,7 @@ function MessagesPanelComponent() {
             }
           </ol>
         </div>
+        <EmojiContainerComponent shortcut={shortcut}/>
         <footer
             className="footer__content"
         >
@@ -70,15 +90,10 @@ function MessagesPanelComponent() {
           <span className="span__input-message"
                 role="textbox"
                 contentEditable
-                onKeyPress={onKeyPress}
+                onKeyUp={onKeyPress}
                 onCopy={onCopy}
+                onClick={emojiCheck}
           />
-          {/*<textarea*/}
-          {/*    style={{height: '100%'}}*/}
-          {/*    className="input__content-footer"*/}
-          {/*    placeholder={`Message #${state.selectedChannel.name}`}*/}
-          {/*    onChange={onChange}*/}
-          {/*/>*/}
           <button type="button" className="btn btn--off btn--hover btn__icon">
             <GIFSVG/>
           </button>
