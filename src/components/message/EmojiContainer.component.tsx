@@ -1,13 +1,16 @@
 import styled from "styled-components";
+import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 
 const Div = styled.div`
-  background-color: red;
   display: flex;
   align-content: space-between;
+
+  background-color: ${(props: any) => props.highlighted ? "blue" : "red"};
 `;
 
 type ComponentProps = {
-  shortcut: string | null
+  shortcut: string | null,
+  setChangeFcn: Function
 }
 
 const emojis = [
@@ -31,20 +34,54 @@ function compare(message: string) {
   return emojis.filter(emoji => emoji.shortcut.indexOf(message) === 0);
 }
 
-function EmojiContainerComponent({shortcut}: ComponentProps) {
-  let result: any;
-  if (shortcut !== null)
-    result = compare(shortcut);
-  if (result?.length === 0)
-    result = undefined;
+const EmojiContainerComponent = forwardRef(({shortcut, setChangeFcn}: ComponentProps, ref) => {
+
+
+  const [curIndex, setCurIndex] = useState(0);
+  const [result, setResult] = useState<any>();
+
+  useEffect(() => {
+    if (shortcut === null) {
+      setResult(undefined);
+      setCurIndex(0);
+    } else {
+      const temp = compare(shortcut);
+      if (temp.length === 0) {
+        setResult(undefined);
+        setCurIndex(0);
+      } else {
+        setResult(temp);
+      }
+    }
+  }, [shortcut]);
+
+  useImperativeHandle(ref, () => ({
+    move: (event: any) => {
+      if (event.code === "ArrowDown") {
+        if (curIndex + 1 === result.length) {
+          setCurIndex(0);
+        } else {
+          setCurIndex(curIndex + 1);
+        }
+      } else if (event.code === "ArrowUp") {
+        if (curIndex - 1 === -1) {
+          setCurIndex(result.length - 1);
+        } else {
+          setCurIndex(curIndex - 1);
+        }
+      }
+    }
+  }));
+
   return (<>{
-    result?.map((result: any) => (
-        <Div key={result.shortcut}>
+    result?.map((result: any, index: number) => (
+        // @ts-ignore
+        <Div key={result.shortcut} highlighted={index === curIndex}>
           <div>{result.emoji}</div>
           <div>{result.shortcut}</div>
         </Div>
     ))
   }</>);
-}
+});
 
 export default EmojiContainerComponent;

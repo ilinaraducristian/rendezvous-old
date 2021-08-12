@@ -20,6 +20,8 @@ function MessagesPanelComponent() {
   const users = useAppSelector(selectUsers);
   const dispatch = useAppDispatch();
   const [shortcut, setShortcut] = useState<string | null>(null);
+  const [changeFcn, setChangeFcn] = useState<Function>();
+  const emojiRef = useRef<any>(null);
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
@@ -33,24 +35,44 @@ function MessagesPanelComponent() {
     clipboard.setData("text/plain", selection.toString());
   }, []);
 
-  function emojiCheck(event: any) {
+  function emojiCheck(event: any): boolean {
     const selection = getSelection();
-    if (selection === null) return setShortcut(null);
+    if (selection === null) {
+      setShortcut(null);
+      return false;
+    }
     const caret = selection.anchorOffset;
     let message = event.target.innerText as string | undefined;
-    if (message === undefined)
-      return setShortcut(null);
+    if (message === undefined) {
+      setShortcut(null);
+      return false;
+    }
     const lastIndexColon = message.lastIndexOf(":", caret);
-    if (lastIndexColon === -1 || caret <= lastIndexColon) return setShortcut(null);
+    if (lastIndexColon === -1 || caret <= lastIndexColon) {
+      setShortcut(null);
+      return false;
+    }
     message = message.substring(lastIndexColon, caret);
-    if (message.indexOf(" ") !== -1) return setShortcut(null);
+    if (message.indexOf(" ") !== -1) {
+      setShortcut(null);
+      return false;
+    }
     const msg = message.substr(1);
-    if (msg.length === 0) return setShortcut(null);
+    if (msg.length === 0) {
+      setShortcut(null);
+      return false;
+    }
     setShortcut(msg);
+    return true;
   }
 
   const onKeyPress = useCallback(async event => {
-    emojiCheck(event);
+    if (emojiCheck(event) && (event.code === "ArrowDown" || event.code === "ArrowUp")) {
+      emojiRef.current?.move(event);
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
     if (!event.code.includes("Enter")) return;
     event.preventDefault();
     if (selectedChannel === undefined) return;
@@ -63,7 +85,7 @@ function MessagesPanelComponent() {
     message = await socket.emitAck("send_message", payload);
     dispatch(addMessages([message]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChannel]);
+  }, [selectedChannel, changeFcn]);
 
   return (
       <div className="content__body__main">
@@ -80,7 +102,7 @@ function MessagesPanelComponent() {
             }
           </ol>
         </div>
-        <EmojiContainerComponent shortcut={shortcut}/>
+        <EmojiContainerComponent ref={emojiRef} shortcut={shortcut} setChangeFcn={setChangeFcn}/>
         <footer
             className="footer__content"
         >
@@ -90,7 +112,7 @@ function MessagesPanelComponent() {
           <span className="span__input-message"
                 role="textbox"
                 contentEditable
-                onKeyUp={onKeyPress}
+                onKeyDown={onKeyPress}
                 onCopy={onCopy}
                 onClick={emojiCheck}
           />
