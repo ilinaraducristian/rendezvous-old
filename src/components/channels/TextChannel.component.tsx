@@ -37,7 +37,7 @@ function TextChannelComponent({channel}: ComponentProps) {
 
   const [, drag] = useDrag<ChannelDragObject, any, any>({
     type: ItemTypes.CHANNEL,
-    item: {id: channel.id, order: channel.order}
+    item: {id: channel.id, order: channel.order, groupId: channel.groupId}
   }, [channel.order]);
 
   return (

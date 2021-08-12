@@ -123,10 +123,28 @@ export const serversDataSlice = createSlice<State, SliceCaseReducers<State>, str
       else
         server.groups[groupIndex] = group;
     },
-  }
+    setChannelsOrder(state, {payload}: { payload: { id: number, order: number, groupId: number | null }[] }) {
+      const server = selectSelectedServer({serversData: state});
+      if (server === undefined) return;
+      payload.forEach(newChannel => {
+        if (newChannel.groupId === null) {
+          const channel = server.channels.find(channel => channel.id === newChannel.id);
+          if (channel === undefined) return;
+          channel.order = newChannel.order;
+        } else {
+          const group = server.groups.find(group => group.id === newChannel.groupId);
+          if (group === undefined) return;
+          const channel = group.channels.find(channel => channel.id === newChannel.id);
+          if (channel === undefined) return;
+          channel.order = newChannel.order;
+        }
+      });
+    }
+  },
 });
 
 export const {
+  setChannelsOrder,
   initializeBackend,
   setInvitation,
   closeOverlay,

@@ -5,7 +5,8 @@ const ItemTypes = {
 
 export type ChannelDragObject = {
   id: number,
-  order: number
+  order: number,
+  groupId: number | null
 };
 
 export {ItemTypes};
