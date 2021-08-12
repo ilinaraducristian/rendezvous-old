@@ -70,6 +70,10 @@ const EmojiContainerComponent = forwardRef(({shortcut, setChangeFcn}: ComponentP
           setCurIndex(curIndex - 1);
         }
       }
+    },
+    getEmoji: () => {
+      if (result === undefined) return;
+      return result[curIndex].emoji;
     }
   }));
 

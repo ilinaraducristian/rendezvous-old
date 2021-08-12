@@ -35,7 +35,7 @@ function MessagesPanelComponent() {
     clipboard.setData("text/plain", selection.toString());
   }, []);
 
-  function emojiCheck(event: any): boolean {
+  function shouldShowEmojiComponent(event: any): boolean {
     const selection = getSelection();
     if (selection === null) {
       setShortcut(null);
@@ -66,9 +66,13 @@ function MessagesPanelComponent() {
     return true;
   }
 
-  const onKeyPress = useCallback(async event => {
-    if (emojiCheck(event) && (event.code === "ArrowDown" || event.code === "ArrowUp")) {
-      emojiRef.current?.move(event);
+  const onKeyDown = useCallback(async event => {
+    if (shouldShowEmojiComponent(event) && ["ArrowDown", "ArrowUp", "Enter"].includes(event.code)) {
+      if (event.code === "Enter") {
+        console.log(emojiRef.current?.getEmoji());
+      } else {
+        emojiRef.current?.move(event);
+      }
       event.preventDefault();
       event.stopPropagation();
       return;
@@ -112,9 +116,9 @@ function MessagesPanelComponent() {
           <span className="span__input-message"
                 role="textbox"
                 contentEditable
-                onKeyDown={onKeyPress}
+                onKeyDown={onKeyDown}
                 onCopy={onCopy}
-                onClick={emojiCheck}
+                onClick={shouldShowEmojiComponent}
           />
           <button type="button" className="btn btn--off btn--hover btn__icon">
             <GIFSVG/>
