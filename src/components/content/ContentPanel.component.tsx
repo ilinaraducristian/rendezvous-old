@@ -2,7 +2,7 @@ import {useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
 import {useAppSelector} from "../../state-management/store";
-import {selectSelectedChannel} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedChannel} from "../../state-management/slices/serversSlice";
 import MessagesPanelComponent from "../message/MessagesPanel.component";
 import MembersPanelComponent from "../member/MembersPanel.component";
 import {ChannelType} from "../../types/Channel";

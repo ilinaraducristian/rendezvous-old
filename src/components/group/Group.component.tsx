@@ -1,7 +1,7 @@
 import {useState} from "react";
 import ChannelsListComponent from "../channels/ChannelsList.component";
 import {ArrowSVG} from "../../svg/Arrow.svg";
-import {setOverlay} from "../../state-management/slices/serversDataSlice";
+import {setOverlay} from "../../state-management/slices/serversSlice";
 import {useAppDispatch} from "../../state-management/store";
 import styled from "styled-components";
 

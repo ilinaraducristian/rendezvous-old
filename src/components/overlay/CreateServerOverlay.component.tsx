@@ -1,6 +1,6 @@
 import {useEffect, useRef} from "react";
 import {useLazyCreateServerQuery} from "../../state-management/apis/socketio";
-import {addServer, addUser, setOverlay} from "../../state-management/slices/serversDataSlice";
+import {addServer, addUser, setOverlay} from "../../state-management/slices/serversSlice";
 import {useAppDispatch} from "../../state-management/store";
 
 function CreateServerOverlayComponent() {

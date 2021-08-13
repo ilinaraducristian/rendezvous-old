@@ -1,12 +1,7 @@
 import {useEffect, useRef} from "react";
 import config from "../../config";
 import {useLazyCreateChannelQuery} from "../../state-management/apis/socketio";
-import {
-  addChannel,
-  selectChannel,
-  selectSelectedServer,
-  setOverlay
-} from "../../state-management/slices/serversDataSlice";
+import {addChannel, selectChannel, selectSelectedServer, setOverlay} from "../../state-management/slices/serversSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {ChannelType, TextChannel} from "../../types/Channel";
 

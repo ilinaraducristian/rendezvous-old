@@ -2,13 +2,7 @@ import config from "./config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
 import mediasoup from "./mediasoup";
-import {
-  addChannel,
-  addChannelUsers,
-  addGroup,
-  addMember,
-  addMessages
-} from "./state-management/slices/serversDataSlice";
+import {addChannel, addChannelUsers, addGroup, addMember, addMessages} from "./state-management/slices/serversSlice";
 import {store} from "./state-management/store";
 import {connect} from "./state-management/slices/socketioSlice";
 

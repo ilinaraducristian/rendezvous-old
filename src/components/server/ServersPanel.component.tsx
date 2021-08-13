@@ -3,7 +3,7 @@ import {
   selectServer as selectServerAction,
   selectServers,
   setOverlay as setOverlayAction
-} from "../../state-management/slices/serversDataSlice";
+} from "../../state-management/slices/serversSlice";
 import styled from "styled-components";
 import ServerComponent from "./Server.component";
 import Server from "../../types/Server";

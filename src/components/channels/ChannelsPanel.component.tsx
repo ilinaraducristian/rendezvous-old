@@ -2,7 +2,7 @@ import {useState} from "react";
 import ChannelsListComponent from "./ChannelsList.component";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
-import {selectSelectedServer} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedServer} from "../../state-management/slices/serversSlice";
 import {useAppSelector} from "../../state-management/store";
 import DropdownComponent from "../dropdown/Dropdown.component";
 import GroupsListComponent from "../group/GroupsList.component";

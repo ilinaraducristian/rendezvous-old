@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
 import config from "../../config";
 import {useLazyCreateGroupQuery} from "../../state-management/apis/socketio";
-import {selectSelectedServer} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedServer} from "../../state-management/slices/serversSlice";
 import {useAppSelector} from "../../state-management/store";
 
 function CreateGroupOverlayComponent() {

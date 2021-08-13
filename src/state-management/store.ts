@@ -3,7 +3,7 @@ import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
 import keycloakReducer from "./slices/keycloakSlice";
 import socketioReducer from "./slices/socketioSlice";
 import mediasoupReducer from "./slices/mediasoupSlice";
-import serversDataReducer from "./slices/serversDataSlice";
+import serversReducer from "./slices/serversSlice";
 import {socketioApi} from "./apis/socketio";
 
 export const store = configureStore({
@@ -11,7 +11,7 @@ export const store = configureStore({
     keycloak: keycloakReducer,
     socketio: socketioReducer,
     mediasoup: mediasoupReducer,
-    serversData: serversDataReducer,
+    servers: serversReducer,
     [socketioApi.reducerPath]: socketioApi.reducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware()

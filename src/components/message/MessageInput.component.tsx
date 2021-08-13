@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import {ClipboardEvent, Dispatch, MutableRefObject, SetStateAction, useCallback} from "react";
 import socket from "../../socketio";
-import {addMessages, selectSelectedChannel} from "../../state-management/slices/serversDataSlice";
+import {addMessages, selectSelectedChannel} from "../../state-management/slices/serversSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 
 type ComponentProps = {

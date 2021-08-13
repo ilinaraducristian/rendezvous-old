@@ -1,6 +1,6 @@
 import {useCallback, useEffect} from "react";
 import {useLazyCreateInvitationQuery} from "../../state-management/apis/socketio";
-import {selectSelectedServer, setInvitation, setOverlay} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedServer, setInvitation, setOverlay} from "../../state-management/slices/serversSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import styled from "styled-components";
 

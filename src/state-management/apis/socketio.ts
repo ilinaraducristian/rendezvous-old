@@ -1,6 +1,6 @@
 import {BaseQueryFn, createApi} from "@reduxjs/toolkit/dist/query/react";
 import socket from "../../socketio";
-import {ProcessedServersData} from "../../types/Server";
+import {Processedservers} from "../../types/Server";
 import Message from "../../types/Message";
 
 const socketioBaseQuery = (): BaseQueryFn<{
@@ -12,14 +12,14 @@ export const socketioApi = createApi({
   reducerPath: "socketioApi",
   baseQuery: socketioBaseQuery(),
   endpoints: (builder) => ({
-    getUserServersData: builder.query<ProcessedServersData, void>({
+    getUserservers: builder.query<Processedservers, void>({
       query: () => ({ev: "get_user_servers_data"})
     }),
-    joinServer: builder.query<ProcessedServersData, string>({
+    joinServer: builder.query<Processedservers, string>({
       query: (invitation) => ({ev: "join_server", data: {invitation}})
     }),
     // TODO
-    createServer: builder.query<ProcessedServersData, string>({
+    createServer: builder.query<Processedservers, string>({
       query: (name) => ({ev: "create_server", data: {name}}),
     }),
     // TODO
@@ -41,7 +41,7 @@ export const socketioApi = createApi({
 });
 
 export const {
-  useLazyGetUserServersDataQuery,
+  useLazyGetUserserversQuery,
   useLazyJoinServerQuery,
   useLazyCreateServerQuery,
   useLazyCreateChannelQuery,

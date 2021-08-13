@@ -4,7 +4,7 @@ import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
 import mediasoup, {createMediaStreamSource, remoteStream} from "../../mediasoup";
 import socket from "../../socketio";
 import {selectSubject} from "../../state-management/slices/keycloakSlice";
-import {addChannelUsers, selectUsers} from "../../state-management/slices/serversDataSlice";
+import {addChannelUsers, selectUsers} from "../../state-management/slices/serversSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import ChannelSVG from "../../svg/Channel.svg";
 import config from "../../config";

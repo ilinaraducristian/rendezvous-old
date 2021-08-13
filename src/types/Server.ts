@@ -14,12 +14,12 @@ type Server = {
   members: Member[],
 }
 
-export type ServersData = {
+export type servers = {
   servers: Server[],
   users: User[]
 }
 
-export type ProcessedServersData = {
+export type Processedservers = {
   servers: Server[],
   users: User[]
 }

@@ -3,7 +3,7 @@ import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./Message.component";
 import {useAppSelector} from "../../state-management/store";
-import {selectMessages, selectUsers,} from "../../state-management/slices/serversDataSlice";
+import {selectMessages, selectUsers,} from "../../state-management/slices/serversSlice";
 import EmojiContainerComponent from "./EmojiContainer.component";
 import styled from "styled-components";
 import MessageInputComponent from "./MessageInput.component";
