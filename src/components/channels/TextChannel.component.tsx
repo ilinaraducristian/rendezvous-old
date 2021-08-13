@@ -6,7 +6,8 @@ import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio";
 import {addMessages, selectChannel as selectChannelAction} from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch} from "../../state-management/store";
 import ChannelSVG from "../../svg/Channel.svg";
-import {TextChannel} from "../../types";
+import {TextChannel} from "../../types/Channel";
+import ChannelButtonComponent from "./ChannelButton.component";
 
 type ComponentProps = {
   channel: TextChannel
@@ -27,7 +28,6 @@ function TextChannelComponent({channel}: ComponentProps) {
 
   const selectChannel = useCallback(() => {
     if (!config.offline) {
-      // TODO HERE
       fetch({serverId: channel.serverId, channelId: channel.id, offset: 0});
       return;
     }
@@ -42,10 +42,10 @@ function TextChannelComponent({channel}: ComponentProps) {
 
   return (
       <li ref={drag}>
-        <button className="btn btn__channel" type="button" onClick={selectChannel}>
-          <ChannelSVG type={channel.type} isPrivate={false} className="svg__text-channel svg__text-channel--private"/>
+        <ChannelButtonComponent className="btn" type="button" onClick={selectChannel}>
+          <ChannelSVG type={channel.type} isPrivate={false}/>
           <span className="span">{channel.name}</span>
-        </button>
+        </ChannelButtonComponent>
       </li>
   );
 

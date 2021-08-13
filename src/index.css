@@ -32,92 +32,14 @@ body {
     padding: 0;
 }
 
-.div__green-bar {
-    height: 0.5em;
-    background-color: transparent;
-}
-
-.div__green-bar--active {
-    background-color: green;
-}
-
 .list {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.list__messages {
-    word-break: break-all;
-}
-
-.list__voice-channel {
-    color: white;
-}
-
-.message-container {
-    display: flex;
-}
-
-.channels-panel {
-    flex-shrink: 0;
-}
-
-.svg__arrow-x {
-    color: white;
-    transition: transform .2s ease-out, stroke-dasharray .2s ease-out, -webkit-transform .2s ease-out;
-    opacity: 0.8;
-}
-
-.svg__arrow-x--active {
-    transform: translate3d(0, -3px, 0) rotate(-90deg);
-}
-
-.svg__arrow {
-    transition: transform .2s ease-out, -webkit-transform .2s ease-out;
-}
-
-.svg__arrow--active {
-    transform: rotate(-90deg);
-}
-
-.svg__server-options-name {
-    flex-grow: 1;
-}
-
-.svg__text-channel {
-    color: white
-}
-
 .span {
     color: white;
-}
-
-.span__header-channel-name {
-    flex-grow: 1;
-}
-
-.span__input-message {
-    background: none;
-    border: none;
-    flex-grow: 1;
-    word-wrap: anywhere;
-    max-height: inherit;
-    overflow-y: auto;
-    align-self: center;
-}
-
-.span__input-message:focus {
-    outline: none;
-}
-
-.span__username {
-    font-weight: 1000;
-    flex-shrink: 0;
-}
-
-.span__message {
-    margin: 0 1em;
 }
 
 .btn {
@@ -137,10 +59,6 @@ body {
     color: var(--color-sixth);
 }
 
-.btn--gray {
-    color: var(--color-9th)
-}
-
 .btn--hover:hover {
     color: var(--color-seventh);
 }
@@ -150,168 +68,10 @@ body {
     margin: 0.3em;
 }
 
-.btn__server {
-    background-color: var(--color-secondary);
-    border: thin solid var(--color-secondary);
-    color: white;
-    font-size: 1.5rem;
-    border-radius: 50%;
-    width: 2em;
-    height: 2em;
-}
-
-.btn__server-options {
-    background: none;
-    color: white;
-    font-size: 1.5em;
-    text-align: left;
-    width: 100%;
-
-    border-style: none;
-    box-shadow: var(--small-shadow-bar);
-    display: flex;
-    align-items: center;
-    height: 2em;
-}
-
-.btn__server-options--active {
-
-}
-
-.btn__channel {
-    display: flex;
-}
-
-.btn__group {
-    display: flex;
-    flex-grow: 1;
-}
-
-.div__emoji {
-    background-image: url("assets/emojis.png");
-    background-position: 0 0;
-    background-size: 242px 110px;
-    background-repeat: no-repeat;
-    width: 22px;
-    height: 22px;
-    transform: scale(1);
-    filter: grayscale(100%);
-}
-
-.div__emoji--hover:hover {
-    transform: scale(1.14);
-    filter: grayscale(0%);
-}
-
-.div__dropdown {
-    padding: 1em;
-}
-
-.div__group {
-    display: flex;
-    /*flex-direction: column;*/
-    align-items: center;
-}
-
-.btn__create-channel {
-    font-size: 1.5em;
-}
-
-.list__dropdown {
-    background-color: var(--color-10th);
-    color: var(--color-11th);
-    border-radius: 0.5em;
-    border: solid var(--color-10th);
-    border-width: 0.5em;
-}
-
-.li__dropdown:hover {
-    background-color: var(--color-12th);
-    color: white;
-}
-
-.btn__dropdown-item {
-    color: currentColor;
-    width: 100%;
-    text-align: start;
-}
-
 .btn__overlay-select {
     font-size: 1.2rem;
     border-style: solid;
     border-width: 0.1em;
-}
-
-.channels-panel-header {
-    margin: 0.2em 0 0.2em 0.5em;
-    border-style: none none solid none;
-}
-
-.li {
-
-}
-
-.channels-panel {
-    background-color: var(--color-third);
-    width: 15em;
-}
-
-.content {
-    flex-grow: 1;
-    background-color: var(--color-secondary);
-    color: white;
-    display: flex;
-    flex-direction: column;
-}
-
-.content__header {
-    display: flex;
-    align-items: center;
-    height: 3em;
-    box-shadow: var(--small-shadow-bar);
-}
-
-.content__header__main {
-    flex-grow: 1;
-    display: flex;
-}
-
-.content__header__members {
-    width: var(--members-panel-width);
-}
-
-.content__body {
-    display: flex;
-    flex-grow: 1;
-    max-height: calc(100% - 3em);
-}
-
-.content__body__main {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-}
-
-.content__body__messages {
-    flex-grow: 1;
-    overflow-x: hidden;
-}
-
-.content__body__members {
-    width: var(--members-panel-width);
-    background-color: var(--color-third);
-    height: 100%;
-    flex-shrink: 0;
-}
-
-.footer__content {
-    background-color: var(--color-fifth);
-    border-radius: 0.5em;
-    max-height: 12.5em;
-    margin: 0 1em 1.5em 1em;
-    display: flex;
-    align-items: flex-start;
-
 }
 
 .overlay {
@@ -347,10 +107,5 @@ body {
     text-align: center;
     color: white;
     margin: 0;
-}
-
-.time {
-    margin: 0 1em;
-    flex-shrink: 0;
 }
 

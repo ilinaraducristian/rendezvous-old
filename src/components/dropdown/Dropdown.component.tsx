@@ -2,6 +2,7 @@ import {useCallback, useEffect} from "react";
 import {useLazyCreateInvitationQuery} from "../../state-management/apis/socketio";
 import {selectSelectedServer, setInvitation, setOverlay} from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
+import styled from "styled-components";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
@@ -33,28 +34,57 @@ function DropdownComponent({setIsDropdownShown}: any) {
   }, [setIsDropdownShown, dispatch]);
 
   return (
-      <div className="div__dropdown">
-        <ul className="list list__dropdown">
-          <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={createInvitation}>
+      <Div>
+        <Ul className="list">
+          <Li>
+            <Button type="button" className="btn" onClick={createInvitation}>
               Invite people
-            </button>
-          </li>
-          <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={showCreateChannelOverlay}>
+            </Button>
+          </Li>
+          <Li>
+            <Button type="button" className="btn" onClick={showCreateChannelOverlay}>
               Create channel
-            </button>
-          </li>
-          <li className="li__dropdown">
-            <button type="button" className="btn btn__dropdown-item" onClick={showCreateGroupOverlay}>
+            </Button>
+          </Li>
+          <Li>
+            <Button type="button" className="btn" onClick={showCreateGroupOverlay}>
               Create group
-            </button>
-          </li>
-        </ul>
+            </Button>
+          </Li>
+        </Ul>
 
-      </div>
+      </Div>
   );
 
 }
+
+/* CSS */
+
+const Div = styled.div`
+  padding: 1em;
+`;
+
+const Ul = styled.ul`
+  background-color: var(--color-10th);
+  color: var(--color-11th);
+  border-radius: 0.5em;
+  border: solid var(--color-10th);
+  border-width: 0.5em;
+`;
+
+const Li = styled.li`
+  &:hover {
+    background-color: var(--color-12th);
+    color: white;
+  }
+`;
+
+const Button = styled.button`
+  color: currentColor;
+  width: 100%;
+  text-align: start;
+`;
+
+/* CSS */
 
 export default DropdownComponent;

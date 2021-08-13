@@ -1,16 +1,8 @@
 import styled from "styled-components";
 import {forwardRef, useEffect, useImperativeHandle, useState} from "react";
 
-const Div = styled.div`
-  display: flex;
-  align-content: space-between;
-
-  background-color: ${(props: any) => props.highlighted ? "blue" : "red"};
-`;
-
 type ComponentProps = {
-  shortcut: string | null,
-  setChangeFcn: Function
+  shortcut: string | null
 }
 
 const emojis = [
@@ -34,7 +26,7 @@ function compare(message: string) {
   return emojis.filter(emoji => emoji.shortcut.indexOf(message) === 0);
 }
 
-const EmojiContainerComponent = forwardRef(({shortcut, setChangeFcn}: ComponentProps, ref) => {
+const EmojiContainerComponent = forwardRef(({shortcut}: ComponentProps, ref) => {
 
 
   const [curIndex, setCurIndex] = useState(0);
@@ -87,5 +79,16 @@ const EmojiContainerComponent = forwardRef(({shortcut, setChangeFcn}: ComponentP
     ))
   }</>);
 });
+
+/* CSS */
+
+const Div = styled.div`
+  display: flex;
+  align-content: space-between;
+
+  background-color: ${(props: any) => props.highlighted ? "blue" : "red"};
+`;
+
+/* CSS */
 
 export default EmojiContainerComponent;

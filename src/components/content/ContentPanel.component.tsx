@@ -1,11 +1,12 @@
 import {useState} from "react";
 import ChannelSVG from "../../svg/Channel.svg";
 import MembersSVG from "../../svg/Members.svg";
-import {ChannelType} from "../../types";
 import {useAppSelector} from "../../state-management/store";
 import {selectSelectedChannel} from "../../state-management/slices/serversDataSlice";
 import MessagesPanelComponent from "../message/MessagesPanel.component";
 import MembersPanelComponent from "../member/MembersPanel.component";
+import {ChannelType} from "../../types/Channel";
+import styled from "styled-components";
 
 function ContentPanelComponent() {
 
@@ -14,36 +15,73 @@ function ContentPanelComponent() {
   const selectedChannel = useAppSelector(selectSelectedChannel);
 
   return (
-      <div className="content">
-        <header className="content__header">
-          <div className="content__header__main">
+      <DivContainer>
+        <Header>
+          <DivHeader>
             {
               selectedChannel === undefined ||
               <>
                   <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
-                  <span
-                      className="span__header-channel-name">{selectedChannel.name}</span>
+                  <Span>{selectedChannel.name}</Span>
               </>
             }
             <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
                     onClick={() => setIsMembersSelected(!isMembersSelected)}>
               <MembersSVG/>
             </button>
-          </div>
-          <div className="content__header__members">
+          </DivHeader>
+          <DivMembers>
             placeholder
-          </div>
-        </header>
-        <div className="content__body">
+          </DivMembers>
+        </Header>
+        <DivContentBody>
           <MessagesPanelComponent/>
           {
             !isMembersSelected ||
             <MembersPanelComponent/>
           }
-        </div>
-      </div>
+        </DivContentBody>
+      </DivContainer>
   );
 
 }
+
+/* CSS */
+
+const Span = styled.span`
+  flex-grow: 1;
+`;
+
+const DivContainer = styled.div`
+  flex-grow: 1;
+  background-color: var(--color-secondary);
+  color: white;
+  display: flex;
+  flex-direction: column;
+`;
+
+const DivMembers = styled.div`
+  width: var(--members-panel-width);
+`;
+
+const DivContentBody = styled.div`
+  display: flex;
+  flex-grow: 1;
+  max-height: calc(100% - 3em);
+`;
+
+const Header = styled.header`
+  display: flex;
+  align-items: center;
+  height: 3em;
+  box-shadow: var(--small-shadow-bar);
+`;
+
+const DivHeader = styled.div`
+  flex-grow: 1;
+  display: flex;
+`;
+
+/* CSS */
 
 export default ContentPanelComponent;

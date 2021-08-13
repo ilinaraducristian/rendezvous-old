@@ -1,8 +1,9 @@
 import {useState} from "react";
 import ChannelsListComponent from "../channels/ChannelsList.component";
-import ArrowSVG from "../../svg/Arrow.svg";
+import {ArrowSVG} from "../../svg/Arrow.svg";
 import {setOverlay} from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch} from "../../state-management/store";
+import styled from "styled-components";
 
 type ComponentProps = {
   id: number,
@@ -21,13 +22,13 @@ function GroupComponent({id, name}: ComponentProps) {
 
   return (
       <li>
-        <div className="div__group">
-          <button className="btn btn__group btn--gray" type="button" onClick={() => setIsExpanded(!isCollapsed)}>
-            <ArrowSVG className={"svg__arrow" + (isCollapsed ? " svg__arrow--active" : "")}/>
+        <Div>
+          <Button className="btn" type="button" onClick={() => setIsExpanded(!isCollapsed)}>
+            <ArrowSVG isCollapsed={isCollapsed}/>
             <span>{name}</span>
-          </button>
-          <button type="button" className="btn btn__create-channel" onClick={createChannel}>+</button>
-        </div>
+          </Button>
+          <ButtonCreateChannel type="button" className="btn" onClick={createChannel}>+</ButtonCreateChannel>
+        </Div>
         {
           isCollapsed ||
           <ol className="list">
@@ -38,6 +39,25 @@ function GroupComponent({id, name}: ComponentProps) {
   );
 
 }
+
+/* CSS */
+
+const Button = styled.button`
+  display: flex;
+  flex-grow: 1;
+  color: var(--color-9th)
+`;
+
+const Div = styled.div`
+  display: flex;
+  /*flex-direction: column;*/
+  align-items: center;
+`;
+const ButtonCreateChannel = styled.button`
+  font-size: 1.5em;
+`;
+
+/* CSS */
 
 export default GroupComponent;
 

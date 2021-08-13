@@ -4,9 +4,10 @@ import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {selectSelectedServer} from "../../state-management/slices/serversDataSlice";
 import {useAppSelector} from "../../state-management/store";
-import ArrowXSVG from "../../svg/ArrowX.svg";
 import DropdownComponent from "../dropdown/Dropdown.component";
 import GroupsListComponent from "../group/GroupsList.component";
+import styled from "styled-components";
+import {ArrowXSVG} from "../../svg/Arrow.svg";
 
 function ChannelsPanelComponent() {
 
@@ -18,21 +19,20 @@ function ChannelsPanelComponent() {
   }
 
   return (
-      <div className="channels-panel">
-        <button className="btn btn__server-options" type="button"
+      <Div>
+        <Button className="btn" type="button"
                 onClick={toggleDropdown}>
           {
             selectedServer === undefined ||
             <>
-            <span
-                className="svg__server-options-name">{selectedServer.name}</span>
-                <ArrowXSVG collapsed={!isDropdownShown}/>
+                <Span>{selectedServer.name}</Span>
+                <ArrowXSVG isCollapsed={!isDropdownShown}/>
             </>
           }
-        </button>
+        </Button>
         {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
         <DndProvider backend={HTML5Backend}>
-          <ol className="list list__panel list__channels-panel">
+          <ol className="list">
             {selectedServer === undefined ||
             <>
                 <ChannelsListComponent/>
@@ -41,9 +41,37 @@ function ChannelsPanelComponent() {
             }
           </ol>
         </DndProvider>
-      </div>
+      </Div>
   );
 
 }
+
+/* CSS */
+
+const Div = styled.div`
+  flex-shrink: 0;
+  background-color: var(--color-third);
+  width: 15em;
+`;
+
+const Span = styled.span`
+  flex-grow: 1;
+`;
+
+const Button = styled.button`
+  background: none;
+  font-size: 1.5em;
+  text-align: left;
+  width: 100%;
+
+  border-style: none;
+  box-shadow: var(--small-shadow-bar);
+  display: flex;
+  align-items: center;
+  height: 2em;
+  color: var(--color-9th)
+`;
+
+/* CSS */
 
 export default ChannelsPanelComponent;

@@ -1,6 +1,7 @@
 import {BaseQueryFn, createApi} from "@reduxjs/toolkit/dist/query/react";
 import socket from "../../socketio";
-import {Message, ProcessedServersData} from "../../types";
+import {ProcessedServersData} from "../../types/Server";
+import Message from "../../types/Message";
 
 const socketioBaseQuery = (): BaseQueryFn<{
   ev: string
@@ -20,7 +21,6 @@ export const socketioApi = createApi({
     // TODO
     createServer: builder.query<ProcessedServersData, string>({
       query: (name) => ({ev: "create_server", data: {name}}),
-      // transformResponse: responseToSortedMap
     }),
     // TODO
     createChannel: builder.query<any, { serverId: number, groupId: number | null, channelName: string }>({

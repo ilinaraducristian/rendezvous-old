@@ -8,7 +8,7 @@ import {
   setOverlay
 } from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {ChannelType, TextChannel} from "../../types";
+import {ChannelType, TextChannel} from "../../types/Channel";
 
 type ComponentProps = {
   groupId?: number | null

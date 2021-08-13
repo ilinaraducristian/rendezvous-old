@@ -1,6 +1,11 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {Channel, ChannelType, Group, Member, Message, Server, TextChannel, User, VoiceChannel} from "../../types";
 import {SliceCaseReducers} from "@reduxjs/toolkit/src/createSlice";
+import Server from "../../types/Server";
+import User from "../../types/User";
+import Channel, {ChannelType, TextChannel, VoiceChannel} from "../../types/Channel";
+import Message from "../../types/Message";
+import Member from "../../types/Member";
+import Group from "../../types/Group";
 
 type State = {
   backendInitialized: boolean,

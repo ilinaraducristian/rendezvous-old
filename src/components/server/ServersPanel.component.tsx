@@ -1,4 +1,3 @@
-import {Server} from "../../types";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {
   selectServer as selectServerAction,
@@ -7,16 +6,7 @@ import {
 } from "../../state-management/slices/serversDataSlice";
 import styled from "styled-components";
 import ServerComponent from "./Server.component";
-
-const Ol = styled.ol`
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  background-color: var(--color-primary);
-  width: 4.5em;
-  overflow-y: auto;
-  flex-shrink: 0;
-`;
+import Server from "../../types/Server";
 
 function ServersPanelComponent() {
   const dispatch = useAppDispatch();
@@ -42,5 +32,19 @@ function ServersPanelComponent() {
   );
 
 }
+
+/* CSS */
+
+const Ol = styled.ol`
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background-color: var(--color-primary);
+  width: 4.5em;
+  overflow-y: auto;
+  flex-shrink: 0;
+`;
+
+/* CSS */
 
 export default ServersPanelComponent;

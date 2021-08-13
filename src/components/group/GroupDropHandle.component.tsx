@@ -1,6 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
+import DropHandleComponent from "../DropHandle.component";
 
 type ComponentProps = {
   index: number
@@ -34,7 +35,7 @@ function GroupDropHandleComponent({index}: ComponentProps) {
     setHidden(!props.isOver);
   }, [props]);
 
-  return <div className={"div__green-bar " + (hidden || "div__green-bar--active")} ref={drop}/>;
+  return <DropHandleComponent Hidden={hidden} ref={drop}/>;
 
 }
 

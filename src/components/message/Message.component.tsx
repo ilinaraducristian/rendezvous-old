@@ -1,3 +1,5 @@
+import styled from "styled-components";
+
 type ComponentProps = {
   username: string,
   timestamp: string,
@@ -9,14 +11,37 @@ function MessageComponent({username, timestamp, text}: ComponentProps) {
   const time = new Date(timestamp);
 
   return (
-      <div className="message-container">
-        <time className="time"
-              dateTime={time.toISOString()}>{time.getHours()} : {time.getMinutes()}</time>
-        <span className="span__username">{username}</span>
-        <span className="span__message">{text}</span>
-      </div>
+      <Div>
+        <Time dateTime={time.toISOString()}>
+          {time.getHours()} : {time.getMinutes()}
+        </Time>
+        <SpanUsername>{username}</SpanUsername>
+        <SpanMessage>{text}</SpanMessage>
+      </Div>
   );
 
 }
+
+/* CSS */
+
+const Div = styled.div`
+  display: flex;
+`;
+
+const Time = styled.time`
+  margin: 0 1em;
+  flex-shrink: 0;
+`;
+
+const SpanUsername = styled.span`
+  font-weight: 1000;
+  flex-shrink: 0;
+`;
+
+const SpanMessage = styled.span`
+  margin: 0 1em;
+`;
+
+/* CSS */
 
 export default MessageComponent;

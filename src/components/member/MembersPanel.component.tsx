@@ -1,6 +1,7 @@
 import MemberComponent from "./Member.component";
 import {useAppSelector} from "../../state-management/store";
 import {selectMembers, selectUsers} from "../../state-management/slices/serversDataSlice";
+import styled from "styled-components";
 
 function MembersPanelComponent() {
 
@@ -8,7 +9,7 @@ function MembersPanelComponent() {
   const selectedMembers = useAppSelector(selectMembers);
 
   return (
-      <div className="content__body__members">
+      <Div>
         <ol className="list">
           {
             selectedMembers?.map(member =>
@@ -17,9 +18,20 @@ function MembersPanelComponent() {
             )
           }
         </ol>
-      </div>
+      </Div>
   );
 
 }
+
+/* CSS */
+
+const Div = styled.div`
+  width: var(--members-panel-width);
+  background-color: var(--color-third);
+  height: 100%;
+  flex-shrink: 0;
+`;
+
+/* CSS */
 
 export default MembersPanelComponent;

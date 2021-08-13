@@ -1,100 +1,29 @@
-import {ClipboardEvent, useCallback, useEffect, useRef, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import PlusSVG from "../../svg/Plus.svg";
 import GIFSVG from "../../svg/GIF.svg";
 import MessageComponent from "./Message.component";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {
-  addMessages,
-  selectMessages,
-  selectSelectedChannel,
-  selectUsers,
-} from "../../state-management/slices/serversDataSlice";
-import socket from "../../socketio";
+import {useAppSelector} from "../../state-management/store";
+import {selectMessages, selectUsers,} from "../../state-management/slices/serversDataSlice";
 import EmojiContainerComponent from "./EmojiContainer.component";
+import styled from "styled-components";
+import MessageInputComponent from "./MessageInput.component";
 
 function MessagesPanelComponent() {
 
   const messagesList = useRef<HTMLDivElement>(null);
   const messages = useAppSelector(selectMessages);
-  const selectedChannel = useAppSelector(selectSelectedChannel);
   const users = useAppSelector(selectUsers);
-  const dispatch = useAppDispatch();
   const [shortcut, setShortcut] = useState<string | null>(null);
-  const [changeFcn, setChangeFcn] = useState<Function>();
   const emojiRef = useRef<any>(null);
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
   }, [messages]);
 
-  const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
-    event.preventDefault();
-    const selection = getSelection();
-    const clipboard = event.clipboardData;
-    if (selection === null || clipboard === null) return;
-    clipboard.setData("text/plain", selection.toString());
-  }, []);
-
-  function shouldShowEmojiComponent(event: any): boolean {
-    const selection = getSelection();
-    if (selection === null) {
-      setShortcut(null);
-      return false;
-    }
-    const caret = selection.anchorOffset;
-    let message = event.target.innerText as string | undefined;
-    if (message === undefined) {
-      setShortcut(null);
-      return false;
-    }
-    const lastIndexColon = message.lastIndexOf(":", caret);
-    if (lastIndexColon === -1 || caret <= lastIndexColon) {
-      setShortcut(null);
-      return false;
-    }
-    message = message.substring(lastIndexColon, caret);
-    if (message.indexOf(" ") !== -1) {
-      setShortcut(null);
-      return false;
-    }
-    const msg = message.substr(1);
-    if (msg.length === 0) {
-      setShortcut(null);
-      return false;
-    }
-    setShortcut(msg);
-    return true;
-  }
-
-  const onKeyDown = useCallback(async event => {
-    if (shouldShowEmojiComponent(event) && ["ArrowDown", "ArrowUp", "Enter"].includes(event.code)) {
-      if (event.code === "Enter") {
-        console.log(emojiRef.current?.getEmoji());
-      } else {
-        emojiRef.current?.move(event);
-      }
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
-    if (!event.code.includes("Enter")) return;
-    event.preventDefault();
-    if (selectedChannel === undefined) return;
-    let message = (event.target as any).innerText;
-    (event.target as any).innerText = "";
-    const payload = {
-      channelId: selectedChannel.id,
-      message
-    };
-    message = await socket.emitAck("send_message", payload);
-    dispatch(addMessages([message]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChannel, changeFcn]);
-
   return (
-      <div className="content__body__main">
-        <div className="content__body__messages" ref={messagesList}>
-          <ol className="list list__messages">
+      <DivBodyMain>
+        <DivBodyMessages ref={messagesList}>
+          <Ol className="list">
             {
               messages?.map(message =>
                   <MessageComponent key={`message_${message.id}`}
@@ -104,32 +33,68 @@ function MessagesPanelComponent() {
                   />
               )
             }
-          </ol>
-        </div>
-        <EmojiContainerComponent ref={emojiRef} shortcut={shortcut} setChangeFcn={setChangeFcn}/>
-        <footer
-            className="footer__content"
-        >
+          </Ol>
+        </DivBodyMessages>
+        <EmojiContainerComponent ref={emojiRef} shortcut={shortcut}/>
+        <Footer>
           <button type="button" className="btn btn--off btn--hover btn__icon">
             <PlusSVG/>
           </button>
-          <span className="span__input-message"
-                role="textbox"
-                contentEditable
-                onKeyDown={onKeyDown}
-                onCopy={onCopy}
-                onClick={shouldShowEmojiComponent}
-          />
+          <MessageInputComponent emojiRef={emojiRef} setShortcut={setShortcut}/>
           <button type="button" className="btn btn--off btn--hover btn__icon">
             <GIFSVG/>
           </button>
           <button type="button" className="btn btn__icon">
-            <div className="div__emoji div__emoji--hover"/>
+            <Div/>
           </button>
-        </footer>
-      </div>
+        </Footer>
+      </DivBodyMain>
   );
 
 }
+
+/* CSS */
+
+const Ol = styled.ol`
+  word-break: break-all;
+`;
+
+const Div = styled.div`
+  background-image: url("assets/emojis.png");
+  background-position: 0 0;
+  background-size: 242px 110px;
+  background-repeat: no-repeat;
+  width: 22px;
+  height: 22px;
+  transform: scale(1);
+  filter: grayscale(100%);
+
+  &:hover {
+    transform: scale(1.14);
+    filter: grayscale(0%);
+  }
+`;
+
+const DivBodyMain = styled.div`
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+`;
+
+const DivBodyMessages = styled.div`
+  flex-grow: 1;
+  overflow-x: hidden;
+`;
+
+const Footer = styled.footer`
+  background-color: var(--color-fifth);
+  border-radius: 0.5em;
+  max-height: 12.5em;
+  margin: 0 1em 1.5em 1em;
+  display: flex;
+  align-items: flex-start;
+`;
+
+/* CSS */
 
 export default MessagesPanelComponent;

@@ -1,8 +1,9 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import {selectGroups, selectSelectedServer, setChannelsOrder} from "../../state-management/slices/serversDataSlice";
+import {selectSelectedServer, setChannelsOrder} from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
+import DropHandleComponent from "../DropHandle.component";
 
 type ComponentProps = {
   index: number,
@@ -11,7 +12,6 @@ type ComponentProps = {
 
 function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
-  const groups = useAppSelector(selectGroups);
   const server = useAppSelector(selectSelectedServer);
   const [hidden, setHidden] = useState(true);
   const dispatch = useAppDispatch();
@@ -76,7 +76,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
     }
 
 
-  }, [groupId, index, groups]);
+  }, [groupId, index, dispatch, server]);
 
   const handleHover = useCallback(() => {
     setHidden(false);
@@ -99,7 +99,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
     setHidden(!props.isOver);
   }, [props]);
 
-  return <div className={"div__green-bar " + (hidden || "div__green-bar--active")} ref={drop}/>;
+  return <DropHandleComponent Hidden={hidden} ref={drop}/>;
 
 }
 

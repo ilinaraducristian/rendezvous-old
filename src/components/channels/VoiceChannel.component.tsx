@@ -7,8 +7,10 @@ import {selectSubject} from "../../state-management/slices/keycloakSlice";
 import {addChannelUsers, selectUsers} from "../../state-management/slices/serversDataSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import ChannelSVG from "../../svg/Channel.svg";
-import {VoiceChannel} from "../../types";
 import config from "../../config";
+import {VoiceChannel} from "../../types/Channel";
+import styled from "styled-components";
+import ChannelButtonComponent from "./ChannelButton.component";
 
 type ComponentProps = {
   channel: VoiceChannel
@@ -96,12 +98,12 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
   return (
       <li ref={drag}>
-        <button className="btn btn__channel" type="button" onClick={selectChannel}>
-          <ChannelSVG type={channel.type} isPrivate={false} className="svg__text-channel svg__text-channel--private"/>
+        <ChannelButtonComponent className="btn" type="button" onClick={selectChannel}>
+          <ChannelSVG type={channel.type} isPrivate={false}/>
           <span className="span">{channel.name}</span>
-        </button>
+        </ChannelButtonComponent>
         {
-          <ul className="list list__voice-channel">
+          <Ul className="list">
             {
               channel.users
                   .map(_user => users.find(user => user.id === _user.userId))
@@ -110,11 +112,19 @@ function VoiceChannelComponent({channel}: ComponentProps) {
                       <li className="li" key={`channel_${channel.id}_user${i}`}>{user?.username}</li>
                   )
             }
-          </ul>
+          </Ul>
         }
       </li>
   );
 
 }
+
+/* CSS */
+
+const Ul = styled.ul`
+  color: white;
+`;
+
+/* CSS */
 
 export default VoiceChannelComponent;

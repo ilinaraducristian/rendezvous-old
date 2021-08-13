@@ -1,5 +1,5 @@
-import {ChannelType} from "./types";
 import {LoremIpsum} from "lorem-ipsum";
+import {ChannelType} from "./types/Channel";
 
 const lorem = new LoremIpsum({
   sentencesPerParagraph: {
