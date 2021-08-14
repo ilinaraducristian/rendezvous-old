@@ -8,8 +8,8 @@ import {
   addGroup,
   addMember,
   addMessages,
-  changeMessage,
-  deleteMessage
+  deleteMessage,
+  editMessage
 } from "./state-management/slices/serversSlice";
 import {store} from "./state-management/store";
 import {connect} from "./state-management/slices/socketioSlice";
@@ -72,7 +72,7 @@ socket.on("user_joined_voice-channel", (payload) => {
 });
 
 socket.on("message_edited", (payload) => {
-  store.dispatch(changeMessage(payload));
+  store.dispatch(editMessage(payload));
 });
 
 socket.on("message_deleted", (payload) => {

@@ -7,7 +7,7 @@ import config from "../../config";
 import {mockServers, mockUsers} from "../../mock-data";
 import {initializeBackend, selectInitialized, selectOverlay} from "../../state-management/slices/serversSlice";
 import ServersPanelComponent from "../server/ServersPanel.component";
-import {useLazyGetUserserversQuery} from "../../state-management/apis/socketio";
+import {useLazyGetUserServersQuery} from "../../state-management/apis/socketio";
 import ChannelsPanelComponent from "../channels/ChannelsPanel.component";
 import ContentPanelComponent from "../content/ContentPanel.component";
 import AddServerOverlayComponent from "../overlay/AddServerOverlay.component";
@@ -23,7 +23,7 @@ function AppComponent() {
   const connected = useAppSelector(selectConnected);
   const initialized = useAppSelector(selectInitialized);
   const overlay = useAppSelector(selectOverlay);
-  const [fetch, {data, isSuccess, status}] = useLazyGetUserserversQuery();
+  const [fetch, {data, isSuccess, status}] = useLazyGetUserServersQuery();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
