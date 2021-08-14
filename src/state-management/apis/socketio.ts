@@ -31,7 +31,7 @@ export const socketioApi = createApi({
       query: (data) => ({ev: "create_group", data})
     }),
     getMessages: builder.query<Message[], { [key: string]: number }>({
-      query: (data) => ({ev: "get_messages", data})
+      query: (data) => ({ev: "get_messages", data}),
     }),
     createInvitation: builder.query<string, number>({
       query: (serverId) => ({ev: "create_invitation", data: {serverId}}),

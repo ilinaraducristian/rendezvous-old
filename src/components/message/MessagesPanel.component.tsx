@@ -29,6 +29,8 @@ function MessagesPanelComponent() {
   // const [offset, setOffset] = useState(2040);
   const [offset, setOffset] = useState(0);
   const [beginning, setBeginning] = useState(false);
+  const [isReplying, setIsReplying] = useState(false);
+  const [replyId, setReplyId] = useState<number>();
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
@@ -37,7 +39,7 @@ function MessagesPanelComponent() {
   useEffect(() => {
     if (!isSuccess || status !== "fulfilled") return;
     if (channel === undefined || data === undefined) return;
-    console.log(data);
+
     if (data.length === 0) {
       setBeginning(true);
       return;
@@ -47,18 +49,27 @@ function MessagesPanelComponent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  const onScroll = useCallback((event) => {
+  const onScroll = useCallback(() => {
     if (channel === undefined) return;
     if (messagesList.current?.scrollTop === 0) {
       if (beginning) return;
       if (!config.offline) {
-        console.log(offset);
         fetch({serverId: channel.serverId, channelId: channel.id, offset: offset});
         setOffset(offset + 30);
         return;
       }
     }
   }, [channel, fetch, offset, beginning]);
+
+  function reply(messageId: number) {
+    setReplyId(messageId);
+    setIsReplying(true);
+  }
+
+  function messageSent() {
+    setReplyId(undefined);
+    setIsReplying(false);
+  }
 
   return (
       <DivBodyMain>
@@ -73,22 +84,35 @@ function MessagesPanelComponent() {
                                     username={users.find(user => user.id === message.userId)?.username || ""}
                                     text={message.text}
                                     timestamp={message.timestamp}
+                                    isReply={message.isReply}
+                                    replyId={message.replyId}
+                                    reply={reply}
                   />
-              )
+              ).sort((a, b) => Date.parse(a.props.timestamp) - Date.parse(b.props.timestamp))
             }
           </Ol>
         </DivBodyMessages>
         <EmojiContainerComponent ref={emojiRef} shortcut={shortcut}/>
+        {
+          !isReplying ||
+          <div>replying</div>
+        }
         <Footer>
           <button type="button" className="btn btn--off btn--hover btn__icon">
             <PlusSVG/>
           </button>
-          <MessageInputComponent emojiRef={emojiRef} setShortcut={setShortcut}/>
+          <MessageInputComponent
+              emojiRef={emojiRef}
+              setShortcut={setShortcut}
+              isReplying={isReplying}
+              replyId={replyId}
+              messageSent={messageSent}
+          />
           <button type="button" className="btn btn--off btn--hover btn__icon">
             <GIFSVG/>
           </button>
           <button type="button" className="btn btn__icon">
-            <Div/>
+            <DivEmoji/>
           </button>
         </Footer>
       </DivBodyMain>
@@ -102,8 +126,8 @@ const Ol = styled.ol`
   word-break: break-all;
 `;
 
-const Div = styled.div`
-  background-image: url("assets/emojis.png");
+const DivEmoji = styled.div`
+  background-image: url("../../assets/emojis.png");
   background-position: 0 0;
   background-size: 242px 110px;
   background-repeat: no-repeat;

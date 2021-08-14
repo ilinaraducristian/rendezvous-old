@@ -67,7 +67,6 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
             if (channel.order >= index) channel.order++;
           });
         }
-        console.log(index);
         channels.push({id: item.id, order: index, groupId});
         dispatch(setChannelsOrder(channels));
       }

@@ -6,10 +6,13 @@ import {useAppDispatch, useAppSelector} from "../../state-management/store";
 
 type ComponentProps = {
   emojiRef: MutableRefObject<any>,
-  setShortcut: Dispatch<SetStateAction<string | null>>
+  setShortcut: Dispatch<SetStateAction<string | null>>,
+  isReplying: boolean,
+  replyId?: number,
+  messageSent: any
 }
 
-function MessageInputComponent({emojiRef, setShortcut}: ComponentProps) {
+function MessageInputComponent({emojiRef, setShortcut, isReplying, replyId, messageSent}: ComponentProps) {
 
   const selectedChannel = useAppSelector(selectSelectedChannel);
   const dispatch = useAppDispatch();
@@ -56,7 +59,6 @@ function MessageInputComponent({emojiRef, setShortcut}: ComponentProps) {
   const onKeyDown = useCallback(async event => {
     if (shouldShowEmojiComponent(event) && ["ArrowDown", "ArrowUp", "Enter"].includes(event.code)) {
       if (event.code === "Enter") {
-        console.log(emojiRef.current?.getEmoji());
       } else {
         emojiRef.current?.move(event);
       }
@@ -69,14 +71,27 @@ function MessageInputComponent({emojiRef, setShortcut}: ComponentProps) {
     if (selectedChannel === undefined) return;
     let message = (event.target as any).innerText;
     (event.target as any).innerText = "";
-    const payload = {
+    let payload: {
+      channelId: number,
+      message: string,
+      isReply: boolean,
+      replyId: number | null,
+    } = {
       channelId: selectedChannel.id,
-      message
+      message,
+      isReply: false,
+      replyId: null
     };
+    if (isReplying) {
+      if (replyId === undefined) return;
+      payload.isReply = true;
+      payload.replyId = replyId;
+    }
     message = await socket.emitAck("send_message", payload);
+    messageSent();
     dispatch(addMessages([message]));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChannel]);
+  }, [selectedChannel, isReplying]);
 
   return (
       <Span

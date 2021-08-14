@@ -14,10 +14,23 @@ type ComponentProps = {
   messageId: number,
   username: string,
   timestamp: string,
-  text: string
+  text: string,
+  isReply: boolean,
+  replyId: number | null
+  reply: any
 }
 
-function MessageComponent({serverId, channelId, messageId, username, timestamp, text}: ComponentProps) {
+function MessageComponent({
+                            serverId,
+                            channelId,
+                            messageId,
+                            username,
+                            timestamp,
+                            text,
+                            isReply,
+                            replyId,
+                            reply
+                          }: ComponentProps) {
 
   const time = new Date(timestamp);
   const [actions, setActions] = useState(false);
@@ -86,8 +99,18 @@ function MessageComponent({serverId, channelId, messageId, username, timestamp, 
         {!actions ||
         <DivActions>
             <button type="button" onClick={editMode}>E</button>
+            <button type="button" onClick={() => reply(messageId)}>R</button>
             <button type="button" onClick={deleteMessage}>D</button>
         </DivActions>
+        }
+        {
+          !isReply ||
+          <div>{
+            replyId === null ?
+                "message has been deleted"
+                :
+                `replied to ${replyId}`
+          }</div>
         }
         <Div>
           <Time dateTime={time.toISOString()}>

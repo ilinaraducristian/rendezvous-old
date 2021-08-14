@@ -5,6 +5,8 @@ type Message = {
   userId: string,
   timestamp: string,
   text: string,
+  isReply: boolean,
+  replyId: number | null
 }
 
 export default Message;

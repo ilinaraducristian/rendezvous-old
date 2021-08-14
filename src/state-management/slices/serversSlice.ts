@@ -156,6 +156,11 @@ export const serversSlice = createSlice<State, SliceCaseReducers<State>, string>
       if (channel === undefined) return;
       const messageIndex = channel.messages.findIndex(message => message.id === payload.messageId);
       if (messageIndex === -1) return;
+      channel.messages
+          .filter(message => message.replyId === payload.messageId)
+          .forEach(message =>
+              (message.replyId = null)
+          );
       channel.messages.splice(messageIndex, 1);
     },
     setChannelsOrder(state, {payload}: { payload: { id: number, order: number, groupId: number | null }[] }) {

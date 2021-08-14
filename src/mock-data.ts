@@ -36,6 +36,8 @@ const mockChannels = [
       userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
       timestamp: new Date().toString(),
       text: lorem.generateParagraphs(1),
+      isReply: false,
+      replyId: null
     }))
   },
   {
@@ -52,6 +54,8 @@ const mockChannels = [
       userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
       timestamp: new Date().toString(),
       text: lorem.generateParagraphs(1),
+      isReply: false,
+      replyId: null
     }))
   },
   {
@@ -68,6 +72,8 @@ const mockChannels = [
       userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
       timestamp: new Date().toString(),
       text: lorem.generateParagraphs(1),
+      isReply: false,
+      replyId: null
     }))
   }
 ];
@@ -98,6 +104,8 @@ const mockGroups = [
           userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
           timestamp: new Date().toString(),
           text: lorem.generateParagraphs(1),
+          isReply: false,
+          replyId: null
         }))
       },
       {
@@ -114,6 +122,8 @@ const mockGroups = [
           userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
           timestamp: new Date().toString(),
           text: lorem.generateParagraphs(1),
+          isReply: false,
+          replyId: null
         }))
       },
       {
@@ -130,6 +140,8 @@ const mockGroups = [
           userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
           timestamp: new Date().toString(),
           text: lorem.generateParagraphs(1),
+          isReply: false,
+          replyId: null
         }))
       }
     ]
