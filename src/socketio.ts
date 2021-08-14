@@ -1,8 +1,16 @@
 import config from "./config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
-import mediasoup from "./mediasoup";
-import {addChannel, addChannelUsers, addGroup, addMember, addMessages} from "./state-management/slices/serversSlice";
+import mediasoup, {notificationSound} from "./mediasoup";
+import {
+  addChannel,
+  addChannelUsers,
+  addGroup,
+  addMember,
+  addMessages,
+  changeMessage,
+  deleteMessage
+} from "./state-management/slices/serversSlice";
 import {store} from "./state-management/store";
 import {connect} from "./state-management/slices/socketioSlice";
 
@@ -41,6 +49,10 @@ socket.on("disconnect", () => {
 
 socket.on("new_message", (payload) => {
   store.dispatch(addMessages([payload]));
+  if (document.hidden) {
+    notificationSound.currentTime = 0;
+    notificationSound.play();
+  }
 });
 
 socket.on("new_member", (payload) => {
@@ -57,6 +69,14 @@ socket.on("new_group", (payload) => {
 
 socket.on("user_joined_voice-channel", (payload) => {
   store.dispatch(addChannelUsers([payload]));
+});
+
+socket.on("message_edited", (payload) => {
+  store.dispatch(changeMessage(payload));
+});
+
+socket.on("message_deleted", (payload) => {
+  store.dispatch(deleteMessage(payload));
 });
 
 export default socket;

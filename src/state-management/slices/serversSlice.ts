@@ -128,6 +128,26 @@ export const serversSlice = createSlice<State, SliceCaseReducers<State>, string>
       else
         server.groups[groupIndex] = group;
     },
+    changeMessage(state, {payload}: { payload: { serverId: number, channelId: number, messageId: number, text: string } }) {
+      const server = state.servers.find(server => server.id === payload.serverId);
+      if (server === undefined) return;
+      const channels = server.channels.concat(server.groups.map(group => group.channels).flat()).filter(channel => channel.type === ChannelType.Text);
+      const channel = channels.find(channel => channel.id === payload.channelId) as TextChannel | undefined;
+      if (channel === undefined) return;
+      const message = channel.messages.find(message => message.id === payload.messageId);
+      if (message === undefined) return;
+      message.text = payload.text;
+    },
+    deleteMessage(state, {payload}: { payload: { serverId: number, channelId: number, messageId: number } }) {
+      const server = state.servers.find(server => server.id === payload.serverId);
+      if (server === undefined) return;
+      const channels = server.channels.concat(server.groups.map(group => group.channels).flat()).filter(channel => channel.type === ChannelType.Text);
+      const channel = channels.find(channel => channel.id === payload.channelId) as TextChannel | undefined;
+      if (channel === undefined) return;
+      const messageIndex = channel.messages.findIndex(message => message.id === payload.messageId);
+      if (messageIndex === -1) return;
+      channel.messages.splice(messageIndex, 1);
+    },
     setChannelsOrder(state, {payload}: { payload: { id: number, order: number, groupId: number | null }[] }) {
       const server = selectSelectedServer({servers: state});
       if (server === undefined) return;
@@ -161,6 +181,8 @@ export const {
   addMessages,
   addMember,
   addChannel,
+  changeMessage,
+  deleteMessage,
   addGroup,
   addUser
 } = serversSlice.actions;

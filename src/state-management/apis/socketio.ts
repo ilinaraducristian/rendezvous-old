@@ -37,6 +37,10 @@ export const socketioApi = createApi({
       query: (serverId) => ({ev: "create_invitation", data: {serverId}}),
       transformResponse: (response: { invitation: string }) => response.invitation
     }),
+    deleteMessage: builder.query<string, { serverId: number, channelId: number, messageId: number }>({
+      query: (data) => ({ev: "delete_message", data}),
+      transformResponse: (response: { invitation: string }) => response.invitation
+    }),
   }),
 });
 
@@ -48,4 +52,5 @@ export const {
   useLazyCreateGroupQuery,
   useLazyGetMessagesQuery,
   useLazyCreateInvitationQuery,
+  useLazyDeleteMessageQuery
 } = socketioApi;

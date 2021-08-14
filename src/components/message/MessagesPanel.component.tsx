@@ -26,14 +26,13 @@ function MessagesPanelComponent() {
   const emojiRef = useRef<any>(null);
   const [fetch, {data, isSuccess, status}] = useLazyGetMessagesQuery();
   const dispatch = useAppDispatch();
-  const [once, setOnce] = useState(false);
   // const [offset, setOffset] = useState(2040);
   const [offset, setOffset] = useState(0);
   const [beginning, setBeginning] = useState(false);
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
-  }, [messages, once]);
+  }, [messages]);
 
   useEffect(() => {
     if (!isSuccess || status !== "fulfilled") return;
@@ -68,6 +67,9 @@ function MessagesPanelComponent() {
             {//.sort((m1, m2) => Date.parse(m1.timestamp) - Date.parse(m2.timestamp))
               messages?.map(message =>
                   <MessageComponent key={`message_${message.id}`}
+                                    serverId={message.serverId}
+                                    channelId={message.channelId}
+                                    messageId={message.id}
                                     username={users.find(user => user.id === message.userId)?.username || ""}
                                     text={message.text}
                                     timestamp={message.timestamp}
