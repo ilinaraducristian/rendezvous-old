@@ -1,8 +1,11 @@
 import styled from "styled-components";
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {useAppDispatch} from "../../state-management/store";
-import {deleteMessage as deleteMessageAction} from "../../state-management/slices/serversSlice";
-import {useLazyDeleteMessageQuery} from "../../state-management/apis/socketio";
+import {
+  deleteMessage as deleteMessageAction,
+  editMessage as editMessageAction
+} from "../../state-management/slices/serversSlice";
+import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "../../state-management/apis/socketio";
 import config from "../../config";
 
 type ComponentProps = {
@@ -19,7 +22,17 @@ function MessageComponent({serverId, channelId, messageId, username, timestamp, 
   const time = new Date(timestamp);
   const [actions, setActions] = useState(false);
   const dispatch = useAppDispatch();
-  const [fetch, {isFetching, isSuccess}] = useLazyDeleteMessageQuery();
+  const [fetchEditMessage, {
+    isFetching: isFetchingEditMessage,
+    isSuccess: isSuccessEditMessage
+  }] = useLazyEditMessageQuery();
+  const [fetchDeleteMessage, {
+    isFetching: isFetchingDeleteMessage,
+    isSuccess: isSuccessDeleteMessage
+  }] = useLazyDeleteMessageQuery();
+  const [isEditing, setIsEditing] = useState(false);
+  const textRef = useRef<HTMLSpanElement>(null);
+  const [oldMessage, setOldMessage] = useState("");
 
   function onMouseEnter() {
     setActions(true);
@@ -29,30 +42,50 @@ function MessageComponent({serverId, channelId, messageId, username, timestamp, 
     setActions(false);
   }
 
-  function editMessage() {
+  function editMode() {
+    if (isEditing) {
+      if (textRef.current === null) return;
+      textRef.current.innerText = oldMessage;
+      setIsEditing(false);
+    } else {
+      if (textRef.current === null) return;
+      setOldMessage(textRef.current.innerText);
+      setIsEditing(true);
+    }
+  }
 
+  function editMessage() {
+    if (!config.offline) {
+      fetchEditMessage({serverId, channelId, messageId, text: textRef.current?.innerText || ""});
+    }
   }
 
   function deleteMessage() {
     if (!config.offline) {
-      fetch({serverId, channelId, messageId});
+      fetchDeleteMessage({serverId, channelId, messageId});
     } else {
       dispatch(deleteMessageAction({serverId, channelId, messageId}));
     }
   }
 
   useEffect(() => {
-    console.log({isSuccess, isFetching});
-    if (!isSuccess || isFetching) return;
+    if (!isSuccessEditMessage || isFetchingEditMessage) return;
+    dispatch(editMessageAction({serverId, channelId, messageId, text: textRef.current?.innerText}));
+    setIsEditing(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessEditMessage, isFetchingEditMessage]);
+
+  useEffect(() => {
+    if (!isFetchingDeleteMessage || isSuccessDeleteMessage) return;
     dispatch(deleteMessageAction({serverId, channelId, messageId}));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess, isFetching]);
+  }, [isFetchingDeleteMessage, isSuccessDeleteMessage]);
 
   return (
       <DivContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         {!actions ||
         <DivActions>
-            <button type="button" onClick={editMessage}>E</button>
+            <button type="button" onClick={editMode}>E</button>
             <button type="button" onClick={deleteMessage}>D</button>
         </DivActions>
         }
@@ -61,7 +94,13 @@ function MessageComponent({serverId, channelId, messageId, username, timestamp, 
             {time.getHours()} : {time.getMinutes()}
           </Time>
           <SpanUsername>{username}</SpanUsername>
-          <SpanMessage>{text}</SpanMessage>
+          <DivMessageContainer>
+            <SpanMessage suppressContentEditableWarning contentEditable={isEditing} ref={textRef}>{text}</SpanMessage>
+            {
+              !isEditing ||
+              <button type="button" onClick={editMessage}>Save</button>
+            }
+          </DivMessageContainer>
         </Div>
       </DivContainer>
   );
@@ -69,6 +108,11 @@ function MessageComponent({serverId, channelId, messageId, username, timestamp, 
 }
 
 /* CSS */
+
+const DivMessageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
 
 const DivContainer = styled.div`
   position: relative;

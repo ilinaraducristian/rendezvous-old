@@ -10,7 +10,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
     }
     :
     {
-      offline: true,
+      offline: false,
       backend: "http://localhost:3100",
       socketIoUrl: "http://localhost:3100",
       keycloak: {
