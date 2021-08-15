@@ -12,8 +12,8 @@ export const socketioApi = createApi({
   reducerPath: "socketioApi",
   baseQuery: socketioBaseQuery(),
   endpoints: (builder) => ({
-    getUserServers: builder.query<Processedservers, void>({
-      query: () => ({ev: "get_user_servers_data"})
+    getUserData: builder.query<Processedservers, void>({
+      query: () => ({ev: "get_user_data"})
     }),
     joinServer: builder.query<Processedservers, string>({
       query: (invitation) => ({ev: "join_server", data: {invitation}})
@@ -47,7 +47,7 @@ export const socketioApi = createApi({
 });
 
 export const {
-  useLazyGetUserServersQuery,
+  useLazyGetUserDataQuery,
   useLazyJoinServerQuery,
   useLazyCreateServerQuery,
   useLazyCreateChannelQuery,
