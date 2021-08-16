@@ -1,9 +1,9 @@
 import ChannelDropHandleComponent from "./ChannelDropHandle.component";
 import {useAppSelector} from "../../state-management/store";
-import {selectChannels} from "../../state-management/slices/serversSlice";
 import VoiceChannelComponent from "./VoiceChannel.component";
 import TextChannelComponent from "./TextChannel.component";
 import Channel, {ChannelType, TextChannel, VoiceChannel} from "../../types/Channel";
+import {selectSelectedServerChannels} from "../../state-management/selectors";
 
 type ComponentProps = {
   groupId?: number | null
@@ -25,7 +25,7 @@ function channelMapper(groupId: number | null) {
 
 function ChannelsListComponent({groupId = null}: ComponentProps) {
 
-  const channels = useAppSelector(selectChannels(groupId));
+  const channels = useAppSelector(selectSelectedServerChannels(groupId));
 
   return <>
     <ChannelDropHandleComponent key={`drop-handle_0`} index={0} groupId={groupId}/>
