@@ -13,6 +13,7 @@ type State = {
   users: User[],
   selectedServer: number | null,
   selectedChannel: number | null,
+  joinedVoiceChannel: { serverId: number, groupId: number | null, channelId: number } | null,
   overlay: { type: string, payload: any } | null,
 }
 
@@ -164,6 +165,12 @@ const reducers = {
         channel.order = newChannel.order;
       }
     });
+  },
+  joinVoiceChannel(state: State, {payload}: { payload: { serverId: number, groupId: number | null, channelId: number } }) {
+    state.joinedVoiceChannel = payload;
+  },
+  leaveVoiceChannel(state: State) {
+    state.joinedVoiceChannel = null;
   }
 };
 
@@ -175,6 +182,7 @@ export const serversSlice = createSlice<State, SliceCaseReducers<State>, string>
     users: [],
     selectedServer: null,
     selectedChannel: null,
+    joinedVoiceChannel: null,
     overlay: null,
   },
   reducers
@@ -186,6 +194,8 @@ export const {
   setInvitation,
   closeOverlay,
   addChannelUsers,
+  joinVoiceChannel,
+  leaveVoiceChannel,
   selectServer,
   selectChannel,
   setOverlay,
@@ -230,5 +240,7 @@ export const selectSelectedChannel = ({servers}: { servers: State }): Channel | 
 };
 export const selectInitialized = ({servers}: { servers: State }): boolean => servers.backendInitialized;
 export const selectOverlay = ({servers}: { servers: State }): { type: string, payload: any } | null => servers.overlay;
+
+export const selectJoinedChannel = ({servers}: { servers: State }): { serverId: number, groupId: number | null, channelId: number } | null => servers.joinedVoiceChannel;
 
 export default serversSlice.reducer;

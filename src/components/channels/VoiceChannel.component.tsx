@@ -1,10 +1,9 @@
-import {useCallback, useEffect, useState} from "react";
+import {useCallback, useRef} from "react";
 import {useDrag} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import mediasoup, {createMediaStreamSource, remoteStream} from "../../mediasoup";
+import mediasoup from "../../mediasoup";
 import socket from "../../socketio";
-import {selectSubject} from "../../state-management/slices/keycloakSlice";
-import {addChannelUsers, selectUsers} from "../../state-management/slices/serversSlice";
+import {joinVoiceChannel, selectUsers} from "../../state-management/slices/serversSlice";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import ChannelSVG from "../../svg/Channel.svg";
 import config from "../../config";
@@ -16,40 +15,11 @@ type ComponentProps = {
   channel: VoiceChannel
 }
 
-const consumers: any[] = [];
-
 function VoiceChannelComponent({channel}: ComponentProps) {
 
-  const subject = useAppSelector(selectSubject);
   const users = useAppSelector(selectUsers);
   const dispatch = useAppDispatch();
-  const [joined, setJoined] = useState(false);
-
-  useEffect(() => {
-    const users = channel.users?.filter(user => user.userId !== subject)
-        .filter(user => !consumers.find(consumer => user.socketId === consumer.socketId));
-    // create consumers
-    if (users === undefined) return;
-    createMediaStreamSource();
-    (async () => {
-      for (const user of users) {
-        const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
-        const recvTransport = mediasoup.createRecvTransport(transportParameters);
-        recvTransport.on("connect", ({dtlsParameters}, cb) => {
-          socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
-        });
-        const {consumerParameters} = await socket.emitAck("create_consumer", {
-          transportId: recvTransport.id,
-          socketId: user.socketId,
-          rtpCapabilities: mediasoup.rtpCapabilities
-        });
-        const consumer = await recvTransport.consume(consumerParameters);
-        remoteStream.addTrack(consumer.track);
-        socket.emit("resume_consumer", {id: consumer.id});
-        consumers.push({socketId: user.socketId, consumer});
-      }
-    })();
-  }, [channel.users, subject]);
+  const joined = useRef(false);
 
   const createProducer = useCallback(async () => {
     const localStream = await navigator.mediaDevices.getUserMedia({audio: true});
@@ -76,20 +46,20 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
   }, []);
 
-  const selectChannel = useCallback(async () => {
+  const selectChannel = useCallback(() => {
     if (config.offline) return;
-    if (joined) return;
-    setJoined(true);
+    if (joined.current) return;
+    joined.current = true;
+    dispatch(joinVoiceChannel(channel.id));
+    // await createProducer();
 
-    await createProducer();
-
-    const usersInVoiceChannel = await socket.emitAck("join_voice-channel", {
-      serverId: channel.serverId,
-      channelId: channel.id
-    });
-    dispatch(addChannelUsers(usersInVoiceChannel));
+    // const usersInVoiceChannel = await socket.emitAck("join_voice-channel", {
+    //   serverId: channel.serverId,
+    //   channelId: channel.id
+    // });
+    // dispatch(addChannelUsers(usersInVoiceChannel));
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [joined, channel, createProducer]);
+  }, [joined.current, channel, createProducer]);
 
   const [, drag] = useDrag<ChannelDragObject, any, any>({
     type: ItemTypes.CHANNEL,

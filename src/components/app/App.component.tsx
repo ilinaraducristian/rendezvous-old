@@ -5,7 +5,13 @@ import keycloak from "../../keycloak";
 import {selectConnected} from "../../state-management/slices/socketioSlice";
 import config from "../../config";
 import {mockServers, mockUsers} from "../../mock-data";
-import {initializeBackend, selectInitialized, selectOverlay} from "../../state-management/slices/serversSlice";
+import {
+  initializeBackend,
+  selectInitialized,
+  selectJoinedChannel,
+  selectOverlay,
+  selectSelectedServer
+} from "../../state-management/slices/serversSlice";
 import ServersPanelComponent from "../server/ServersPanel.component";
 import {useLazyGetUserDataQuery} from "../../state-management/apis/socketio";
 import ChannelsPanelComponent from "../channels/ChannelsPanel.component";
@@ -22,9 +28,48 @@ function AppComponent() {
   const authenticated = useAppSelector(selectAuthenticated);
   const connected = useAppSelector(selectConnected);
   const initialized = useAppSelector(selectInitialized);
+  const selectedServer = useAppSelector(selectSelectedServer);
   const overlay = useAppSelector(selectOverlay);
+  const joinedChannel = useAppSelector(selectJoinedChannel);
   const [fetch, {data, isSuccess, status}] = useLazyGetUserDataQuery();
   const dispatch = useAppDispatch();
+//   const users = channel.users?.filter(user => user.userId !== subject)
+//       .filter(user => !consumers.find(consumer => user.socketId === consumer.socketId));
+//   // create consumers
+//   if (users === undefined) return;
+//   createMediaStreamSource();
+//   (async () => {
+//     for (const user of users) {
+//       const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
+//       const recvTransport = mediasoup.createRecvTransport(transportParameters);
+//       recvTransport.on("connect", ({dtlsParameters}, cb) => {
+//         socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
+//       });
+//       const {consumerParameters} = await socket.emitAck("create_consumer", {
+//         transportId: recvTransport.id,
+//         socketId: user.socketId,
+//         rtpCapabilities: mediasoup.rtpCapabilities
+//       });
+//       const consumer = await recvTransport.consume(consumerParameters);
+//       remoteStream.addTrack(consumer.track);
+//       socket.emit("resume_consumer", {id: consumer.id});
+//       consumers.push({socketId: user.socketId, consumer});
+//     }
+//   })();
+  useEffect(() => {
+    if (joinedChannel === null) {
+      //disconnect
+      return;
+    }
+    if (selectedServer === undefined) return;
+    if (joinedChannel.groupId === null) {
+      const channel = selectedServer.channels.find(channel => channel.id === joinedChannel.channelId);
+      if (channel === undefined) return;
+    } else {
+      const channel = selectedServer.groups.find(group => group.id === joinedChannel.groupId)?.channels.find(channel => channel.id === joinedChannel.channelId);
+      if (channel === undefined) return;
+    }
+  }, [joinedChannel]);
 
   useEffect(() => {
     if (config.offline) return;
