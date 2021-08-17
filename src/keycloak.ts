@@ -1,8 +1,8 @@
 import Keycloak from "keycloak-js";
-import {authenticate, updateToken} from "./state-management/slices/keycloakSlice";
-import socket from "./socketio";
-import config from "./config";
-import {store} from "./state-management/store";
+import {authenticate, updateToken} from "state-management/slices/keycloakSlice";
+import socket from "socketio";
+import config from "config";
+import {store} from "state-management/store";
 
 // @ts-ignore
 const keycloak: Keycloak.KeycloakInstance = new Keycloak(config.keycloak);

@@ -1,4 +1,4 @@
-import Message from "./Message";
+import Message from "types/Message";
 
 export enum ChannelType {
   Text = "text",

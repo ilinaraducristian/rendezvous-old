@@ -1,10 +1,10 @@
-import Server from "../types/Server";
-import Channel, {ChannelType, TextChannel} from "../types/Channel";
-import Group from "../types/Group";
-import Member from "../types/Member";
-import Message from "../types/Message";
-import User from "../types/User";
-import {State} from "./slices/serversSlice";
+import Server from "types/Server";
+import Channel, {ChannelType, TextChannel} from "types/Channel";
+import Group from "types/Group";
+import Member from "types/Member";
+import Message from "types/Message";
+import User from "types/User";
+import {State} from "state-management/slices/serversSlice";
 
 export const selectServers = ({servers}: { servers: State }): Server[] => servers.servers;
 export const selectChannels = (channels: { serverId: number, groupId: number | null, channelId: number }[]) =>

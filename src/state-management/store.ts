@@ -1,10 +1,10 @@
 import {Action, configureStore, ThunkAction} from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import keycloakReducer from "./slices/keycloakSlice";
-import socketioReducer from "./slices/socketioSlice";
-import mediasoupReducer from "./slices/mediasoupSlice";
-import serversReducer from "./slices/serversSlice";
-import {socketioApi} from "./apis/socketio";
+import keycloakReducer from "state-management/slices/keycloakSlice";
+import socketioReducer from "state-management/slices/socketioSlice";
+import mediasoupReducer from "state-management/slices/mediasoupSlice";
+import serversReducer from "state-management/slices/serversSlice";
+import {socketioApi} from "state-management/apis/socketio";
 
 export const store = configureStore({
   reducer: {

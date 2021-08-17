@@ -1,4 +1,4 @@
-import {ChannelType} from "../types/Channel";
+import {ChannelType} from "types/Channel";
 
 type ComponentProps = {
   type: ChannelType,

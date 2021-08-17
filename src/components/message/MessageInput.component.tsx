@@ -1,8 +1,9 @@
 import styled from "styled-components";
-import {ClipboardEvent, Dispatch, MutableRefObject, SetStateAction, useCallback} from "react";
-import socket from "../../socketio";
-import {addMessages, selectSelectedChannel} from "../../state-management/slices/serversSlice";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
+import {ClipboardEvent, Dispatch, MutableRefObject, SetStateAction, useCallback, useRef} from "react";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectSelectedChannel} from "state-management/selectors";
+import socket from "socketio";
+import {addMessages} from "state-management/slices/serversSlice";
 
 type ComponentProps = {
   emojiRef: MutableRefObject<any>,
@@ -16,6 +17,7 @@ function MessageInputComponent({emojiRef, setShortcut, isReplying, replyId, mess
 
   const selectedChannel = useAppSelector(selectSelectedChannel);
   const dispatch = useAppDispatch();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
     event.preventDefault();

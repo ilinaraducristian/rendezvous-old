@@ -1,7 +1,7 @@
 import {useEffect, useRef} from "react";
-import {useLazyJoinServerQuery} from "../../state-management/apis/socketio";
-import {addServer, addUser, setOverlay} from "../../state-management/slices/serversSlice";
-import {useAppDispatch} from "../../state-management/store";
+import {useLazyJoinServerQuery} from "state-management/apis/socketio";
+import {addServer, addUser, setOverlay} from "state-management/slices/serversSlice";
+import {useAppDispatch} from "state-management/store";
 
 function JoinServerOverlayComponent() {
 

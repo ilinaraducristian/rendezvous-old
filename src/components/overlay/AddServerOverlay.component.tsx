@@ -1,5 +1,5 @@
-import {setOverlay} from "../../state-management/slices/serversSlice";
-import {useAppDispatch} from "../../state-management/store";
+import {setOverlay} from "state-management/slices/serversSlice";
+import {useAppDispatch} from "state-management/store";
 
 function AddServerOverlayComponent() {
   const dispatch = useAppDispatch();

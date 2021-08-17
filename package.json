@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@algolia/autocomplete-js": "^1.2.2",
     "@reduxjs/toolkit": "^1.5.1",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.0.0",
@@ -30,7 +31,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:prod": "env REACT_APP_ENVIRONMENT=\"production\" react-scripts build && docker build -t randevous:0.1.0 ."
+    "build:prod": "env REACT_APP_ENVIRONMENT=\"production\" react-scripts build"
   },
   "eslintConfig": {
     "extends": [

@@ -1,7 +1,7 @@
 import {BaseQueryFn, createApi} from "@reduxjs/toolkit/dist/query/react";
-import socket from "../../socketio";
-import {Processedservers} from "../../types/Server";
-import Message from "../../types/Message";
+import socket from "socketio";
+import {Processedservers} from "types/Server";
+import Message from "types/Message";
 
 const socketioBaseQuery = (): BaseQueryFn<{
   ev: string

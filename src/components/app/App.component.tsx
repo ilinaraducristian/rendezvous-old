@@ -1,27 +1,22 @@
 import {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {selectAuthenticated} from "../../state-management/slices/keycloakSlice";
-import keycloak from "../../keycloak";
-import {selectConnected} from "../../state-management/slices/socketioSlice";
-import config from "../../config";
-import {mockServers, mockUsers} from "../../mock-data";
-import {
-  initializeBackend,
-  selectInitialized,
-  selectJoinedChannel,
-  selectOverlay,
-  selectSelectedServer
-} from "../../state-management/slices/serversSlice";
-import ServersPanelComponent from "../server/ServersPanel.component";
-import {useLazyGetUserDataQuery} from "../../state-management/apis/socketio";
-import ChannelsPanelComponent from "../channels/ChannelsPanel.component";
-import ContentPanelComponent from "../content/ContentPanel.component";
-import AddServerOverlayComponent from "../overlay/AddServerOverlay.component";
-import CreateChannelOverlayComponent from "../overlay/CreateChannelOverlay.component";
-import CreateGroupOverlayComponent from "../overlay/CreateGroupOverlay.component";
-import CreateServerOverlayComponent from "../overlay/CreateServerOverlay.component";
-import InvitationOverlayComponent from "../overlay/InvitationOverlay.component";
-import JoinServerOverlayComponent from "../overlay/JoinServerOverlay.component";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectAuthenticated} from "state-management/slices/keycloakSlice";
+import keycloak from "keycloak";
+import {selectConnected} from "state-management/slices/socketioSlice";
+import config from "config";
+import {mockServers, mockUsers} from "mock-data";
+import {initializeBackend,} from "state-management/slices/serversSlice";
+import ServersPanelComponent from "components/server/ServersPanel.component";
+import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
+import ChannelsPanelComponent from "components/channels/ChannelsPanel.component";
+import ContentPanelComponent from "components/content/ContentPanel.component";
+import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";
+import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay.component";
+import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay.component";
+import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay.component";
+import InvitationOverlayComponent from "components/overlay/InvitationOverlay.component";
+import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay.component";
+import {selectInitialized, selectJoinedChannel, selectOverlay, selectSelectedServer} from "state-management/selectors";
 
 function AppComponent() {
 
@@ -33,29 +28,29 @@ function AppComponent() {
   const joinedChannel = useAppSelector(selectJoinedChannel);
   const [fetch, {data, isSuccess, status}] = useLazyGetUserDataQuery();
   const dispatch = useAppDispatch();
-//   const users = channel.users?.filter(user => user.userId !== subject)
-//       .filter(user => !consumers.find(consumer => user.socketId === consumer.socketId));
-//   // create consumers
-//   if (users === undefined) return;
-//   createMediaStreamSource();
-//   (async () => {
-//     for (const user of users) {
-//       const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
-//       const recvTransport = mediasoup.createRecvTransport(transportParameters);
-//       recvTransport.on("connect", ({dtlsParameters}, cb) => {
-//         socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
-//       });
-//       const {consumerParameters} = await socket.emitAck("create_consumer", {
-//         transportId: recvTransport.id,
-//         socketId: user.socketId,
-//         rtpCapabilities: mediasoup.rtpCapabilities
-//       });
-//       const consumer = await recvTransport.consume(consumerParameters);
-//       remoteStream.addTrack(consumer.track);
-//       socket.emit("resume_consumer", {id: consumer.id});
-//       consumers.push({socketId: user.socketId, consumer});
-//     }
-//   })();
+  // const users = channel.users?.filter(user => user.userId !== subject)
+  //     .filter(user => !consumers.find(consumer => user.socketId === consumer.socketId));
+  // // create consumers
+  // if (users === undefined) return;
+  // createMediaStreamSource();
+  // (async () => {
+  //   for (const user of users) {
+  //     const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
+  //     const recvTransport = mediasoup.createRecvTransport(transportParameters);
+  //     recvTransport.on("connect", ({dtlsParameters}, cb) => {
+  //       socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
+  //     });
+  //     const {consumerParameters} = await socket.emitAck("create_consumer", {
+  //       transportId: recvTransport.id,
+  //       socketId: user.socketId,
+  //       rtpCapabilities: mediasoup.rtpCapabilities
+  //     });
+  //     const consumer = await recvTransport.consume(consumerParameters);
+  //     remoteStream.addTrack(consumer.track);
+  //     socket.emit("resume_consumer", {id: consumer.id});
+  //     consumers.push({socketId: user.socketId, consumer});
+  //   }
+  // })();
   useEffect(() => {
     if (joinedChannel === null) {
       //disconnect

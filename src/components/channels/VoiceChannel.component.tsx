@@ -1,15 +1,16 @@
 import {useCallback, useRef} from "react";
 import {useDrag} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import mediasoup from "../../mediasoup";
-import socket from "../../socketio";
-import {joinVoiceChannel, selectUsers} from "../../state-management/slices/serversSlice";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import ChannelSVG from "../../svg/Channel.svg";
-import config from "../../config";
-import {VoiceChannel} from "../../types/Channel";
+import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
+import mediasoup from "mediasoup";
+import socket from "socketio";
+import {joinVoiceChannel} from "state-management/slices/serversSlice";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import ChannelSVG from "svg/Channel.svg";
+import config from "config";
+import {VoiceChannel} from "types/Channel";
 import styled from "styled-components";
-import ChannelButtonComponent from "./ChannelButton.component";
+import ChannelButtonComponent from "components/channels/ChannelButton.component";
+import {selectUsers} from "state-management/selectors";
 
 type ComponentProps = {
   channel: VoiceChannel

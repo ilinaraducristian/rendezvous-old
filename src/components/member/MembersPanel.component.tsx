@@ -1,7 +1,7 @@
 import MemberComponent from "./Member.component";
-import {useAppSelector} from "../../state-management/store";
-import {selectMembers, selectUsers} from "../../state-management/slices/serversSlice";
+import {useAppSelector} from "state-management/store";
 import styled from "styled-components";
+import {selectMembers, selectUsers} from "state-management/selectors";
 
 function MembersPanelComponent() {
 

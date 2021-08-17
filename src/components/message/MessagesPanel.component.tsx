@@ -1,20 +1,15 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import PlusSVG from "../../svg/Plus.svg";
-import GIFSVG from "../../svg/GIF.svg";
-import MessageComponent from "./Message.component";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {
-  addMessages,
-  selectChannel as selectChannelAction,
-  selectMessages,
-  selectSelectedChannel,
-  selectUsers,
-} from "../../state-management/slices/serversSlice";
-import EmojiContainerComponent from "./EmojiContainer.component";
+import PlusSVG from "svg/Plus.svg";
+import GIFSVG from "svg/GIF.svg";
+import MessageComponent from "components/message/Message.component";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {addMessages, selectChannel as selectChannelAction,} from "state-management/slices/serversSlice";
+import EmojiContainerComponent from "components/message/EmojiContainer.component";
 import styled from "styled-components";
-import MessageInputComponent from "./MessageInput.component";
-import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio";
-import config from "../../config";
+import MessageInputComponent from "components/message/MessageInput.component";
+import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
+import config from "config";
+import {selectMessages, selectSelectedChannel, selectUsers} from "state-management/selectors";
 
 function MessagesPanelComponent() {
 
@@ -127,7 +122,7 @@ const Ol = styled.ol`
 `;
 
 const DivEmoji = styled.div`
-  background-image: url("../../assets/emojis.png");
+  background-image: url("assets/emojis.png");
   background-position: 0 0;
   background-size: 242px 110px;
   background-repeat: no-repeat;

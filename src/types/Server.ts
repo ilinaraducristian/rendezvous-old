@@ -1,7 +1,7 @@
-import Channel from "./Channel";
-import Group from "./Group";
-import Member from "./Member";
-import User from "./User";
+import Channel from "types/Channel";
+import Group from "types/Group";
+import Member from "types/Member";
+import User from "types/User";
 
 type Server = {
   id: number,

@@ -1,13 +1,13 @@
 import {useCallback, useEffect} from "react";
 import {useDrag} from "react-dnd";
-import config from "../../config";
-import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio";
-import {addMessages, selectChannel as selectChannelAction} from "../../state-management/slices/serversSlice";
-import {useAppDispatch} from "../../state-management/store";
-import ChannelSVG from "../../svg/Channel.svg";
-import {TextChannel} from "../../types/Channel";
-import ChannelButtonComponent from "./ChannelButton.component";
+import config from "config";
+import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
+import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
+import {addMessages, selectChannel as selectChannelAction} from "state-management/slices/serversSlice";
+import {useAppDispatch} from "state-management/store";
+import ChannelSVG from "svg/Channel.svg";
+import {TextChannel} from "types/Channel";
+import ChannelButtonComponent from "components/channels/ChannelButton.component";
 
 type ComponentProps = {
   channel: TextChannel

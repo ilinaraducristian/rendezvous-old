@@ -1,9 +1,10 @@
 import {useEffect, useRef} from "react";
-import config from "../../config";
-import {useLazyCreateChannelQuery} from "../../state-management/apis/socketio";
-import {addChannel, selectChannel, selectSelectedServer, setOverlay} from "../../state-management/slices/serversSlice";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {ChannelType, TextChannel} from "../../types/Channel";
+import config from "config";
+import {useLazyCreateChannelQuery} from "state-management/apis/socketio";
+import {addChannel, selectChannel, setOverlay} from "state-management/slices/serversSlice";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {ChannelType, TextChannel} from "types/Channel";
+import {selectSelectedServer} from "state-management/selectors";
 
 type ComponentProps = {
   groupId?: number | null

@@ -1,8 +1,9 @@
 import {useCallback, useEffect} from "react";
-import {useLazyCreateInvitationQuery} from "../../state-management/apis/socketio";
-import {selectSelectedServer, setInvitation, setOverlay} from "../../state-management/slices/serversSlice";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
+import {useLazyCreateInvitationQuery} from "state-management/apis/socketio";
+import {setInvitation, setOverlay} from "state-management/slices/serversSlice";
+import {useAppDispatch, useAppSelector} from "state-management/store";
 import styled from "styled-components";
+import {selectSelectedServer} from "state-management/selectors";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 

@@ -1,6 +1,6 @@
 import {useCallback, useState} from "react";
-import {setOverlay} from "../../state-management/slices/serversSlice";
-import {useAppDispatch} from "../../state-management/store";
+import {setOverlay} from "state-management/slices/serversSlice";
+import {useAppDispatch} from "state-management/store";
 
 type ComponentProps = {
   invitation: string

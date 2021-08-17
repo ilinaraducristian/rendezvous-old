@@ -1,7 +1,7 @@
-import config from "./config";
+import config from "config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
-import mediasoup, {notificationSound} from "./mediasoup";
+import mediasoup, {notificationSound} from "mediasoup";
 import {
   addChannel,
   addChannelUsers,
@@ -10,9 +10,9 @@ import {
   addMessages,
   deleteMessage,
   editMessage
-} from "./state-management/slices/serversSlice";
-import {store} from "./state-management/store";
-import {connect} from "./state-management/slices/socketioSlice";
+} from "state-management/slices/serversSlice";
+import {store} from "state-management/store";
+import {connect} from "state-management/slices/socketioSlice";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
   return new Promise(resolve => {

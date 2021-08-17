@@ -1,9 +1,10 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import {selectSelectedServer, setChannelsOrder} from "../../state-management/slices/serversSlice";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import DropHandleComponent from "../DropHandle.component";
+import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
+import {setChannelsOrder} from "state-management/slices/serversSlice";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectSelectedServer} from "state-management/selectors";
+import DropHandleComponent from "components/DropHandle.component";
 
 type ComponentProps = {
   index: number,

@@ -1,7 +1,7 @@
-import GroupComponent from "./Group.component";
-import {useAppSelector} from "../../state-management/store";
-import {selectGroups} from "../../state-management/slices/serversSlice";
-import Group from "../../types/Group";
+import GroupComponent from "components/group/Group.component";
+import {useAppSelector} from "state-management/store";
+import Group from "types/Group";
+import {selectGroups} from "state-management/selectors";
 
 function GroupsListComponent() {
 

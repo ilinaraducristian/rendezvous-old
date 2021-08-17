@@ -1,9 +1,9 @@
 const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
       offline: false,
-      backend: "http://randevous.go.ro:8180/api",
-      socketIoUrl: "http://randevous.go.ro:8180",
+      backend: "http://rendezvous-api.zapto.org",
+      socketIoUrl: "http://rendezvous-api.zapto.org",
       keycloak: {
-        url: "http://randevous.go.ro:8180/auth",
+        url: "http://rendezvous-api.zapto.org/auth",
         realm: "capp",
         clientId: "auth-code",
       },

@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import {useEffect, useRef, useState} from "react";
-import {useAppDispatch} from "../../state-management/store";
+import {useAppDispatch} from "state-management/store";
 import {
   deleteMessage as deleteMessageAction,
   editMessage as editMessageAction
-} from "../../state-management/slices/serversSlice";
-import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "../../state-management/apis/socketio";
-import config from "../../config";
+} from "state-management/slices/serversSlice";
+import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio";
+import config from "config";
 
 type ComponentProps = {
   serverId: number,

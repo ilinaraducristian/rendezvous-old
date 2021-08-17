@@ -1,12 +1,9 @@
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {
-  selectServer as selectServerAction,
-  selectServers,
-  setOverlay as setOverlayAction
-} from "../../state-management/slices/serversSlice";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectServer as selectServerAction, setOverlay as setOverlayAction} from "state-management/slices/serversSlice";
 import styled from "styled-components";
-import ServerComponent from "./Server.component";
-import Server from "../../types/Server";
+import ServerComponent from "components/server/Server.component";
+import Server from "types/Server";
+import {selectServers} from "state-management/selectors";
 
 function ServersPanelComponent() {
   const dispatch = useAppDispatch();

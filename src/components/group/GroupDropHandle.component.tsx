@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "../../DnDItemTypes";
-import DropHandleComponent from "../DropHandle.component";
+import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
+import DropHandleComponent from "components/DropHandle.component";
 
 type ComponentProps = {
   index: number
