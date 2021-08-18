@@ -1,15 +1,12 @@
 import {useCallback, useEffect, useRef, useState} from "react";
-import PlusSVG from "svg/Plus.svg";
-import GIFSVG from "svg/GIF.svg";
 import MessageComponent from "components/message/Message.component";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {addMessages, selectChannel as selectChannelAction,} from "state-management/slices/serversSlice";
-import EmojiContainerComponent from "components/message/EmojiContainer.component";
 import styled from "styled-components";
-import MessageInputComponent from "components/message/MessageInput.component";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
 import config from "config";
 import {selectMessages, selectSelectedChannel, selectUsers} from "state-management/selectors";
+import MessageInputContainerComponent from "components/message/MessageInputContainer.component";
 
 function MessagesPanelComponent() {
 
@@ -17,15 +14,13 @@ function MessagesPanelComponent() {
   const messages = useAppSelector(selectMessages);
   const users = useAppSelector(selectUsers);
   const channel = useAppSelector(selectSelectedChannel);
-  const [shortcut, setShortcut] = useState<string | null>(null);
-  const emojiRef = useRef<any>(null);
   const [fetch, {data, isSuccess, status}] = useLazyGetMessagesQuery();
   const dispatch = useAppDispatch();
   // const [offset, setOffset] = useState(2040);
   const [offset, setOffset] = useState(0);
   const [beginning, setBeginning] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
-  const [replyId, setReplyId] = useState<number>();
+  const [replyId, setReplyId] = useState<number | undefined>();
 
   useEffect(() => {
     messagesList.current?.scroll(0, messagesList.current.scrollHeight);
@@ -87,29 +82,11 @@ function MessagesPanelComponent() {
             }
           </Ol>
         </DivBodyMessages>
-        <EmojiContainerComponent ref={emojiRef} shortcut={shortcut}/>
         {
           !isReplying ||
           <div>replying</div>
         }
-        <Footer>
-          <button type="button" className="btn btn--off btn--hover btn__icon">
-            <PlusSVG/>
-          </button>
-          <MessageInputComponent
-              emojiRef={emojiRef}
-              setShortcut={setShortcut}
-              isReplying={isReplying}
-              replyId={replyId}
-              messageSent={messageSent}
-          />
-          <button type="button" className="btn btn--off btn--hover btn__icon">
-            <GIFSVG/>
-          </button>
-          <button type="button" className="btn btn__icon">
-            <DivEmoji/>
-          </button>
-        </Footer>
+        <MessageInputContainerComponent isReplying={isReplying} replyId={replyId} messageSent={messageSent}/>
       </DivBodyMain>
   );
 
@@ -121,22 +98,6 @@ const Ol = styled.ol`
   word-break: break-all;
 `;
 
-const DivEmoji = styled.div`
-  background-image: url("assets/emojis.png");
-  background-position: 0 0;
-  background-size: 242px 110px;
-  background-repeat: no-repeat;
-  width: 22px;
-  height: 22px;
-  transform: scale(1);
-  filter: grayscale(100%);
-
-  &:hover {
-    transform: scale(1.14);
-    filter: grayscale(0%);
-  }
-`;
-
 const DivBodyMain = styled.div`
   flex-grow: 1;
   display: flex;
@@ -146,15 +107,6 @@ const DivBodyMain = styled.div`
 const DivBodyMessages = styled.div`
   flex-grow: 1;
   overflow-x: hidden;
-`;
-
-const Footer = styled.footer`
-  background-color: var(--color-fifth);
-  border-radius: 0.5em;
-  max-height: 12.5em;
-  margin: 0 1em 1.5em 1em;
-  display: flex;
-  align-items: flex-start;
 `;
 
 /* CSS */
