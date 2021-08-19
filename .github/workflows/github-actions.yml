@@ -17,4 +17,5 @@ jobs:
         with:
           branch: master
           folder: build
+          ssh-key: ${{ secrets.DEPLOY_KEY }}
           repository-name: ilinaraducristian/ilinaraducristian.github.io
