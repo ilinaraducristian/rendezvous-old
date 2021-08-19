@@ -24,7 +24,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
   const selectedChannel = useAppSelector(selectSelectedChannel);
   const dispatch = useAppDispatch();
 
-  async function sendInputFieldContent(event: any) {
+  const sendInputFieldContent = useCallback(async (event: any) => {
     event.preventDefault();
     if (selectedChannel === undefined) return;
     let message = (event.target as any).innerText;
@@ -48,7 +48,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     message = await socket.emitAck("send_message", payload);
     messageSent();
     dispatch(addMessages([message]));
-  }
+  }, [dispatch, isReplying, messageSent, replyId, selectedChannel])
 
   function findLastIndexOfColon(event: any) {
     const selection = getSelection();
@@ -67,7 +67,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     };
   }
 
-  function shouldDisplayEmojiPanel(event: any) {
+  const shouldDisplayEmojiPanel = useCallback((event: any) => {
     const lastIndexObject = findLastIndexOfColon(event);
     if (lastIndexObject === undefined) return;
     let {cursorPosition, message, lastIndexOfColon} = lastIndexObject;
@@ -80,7 +80,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const emojis = trie.search(message);
     if (emojis.length === 0) return;
     return emojis;
-  }
+  }, []);
 
   const onKeyDown = useCallback((event) => {
     if (emojiRef.current === null) return;
@@ -102,7 +102,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     setIsEmojiShown(false);
     return;
 
-  }, [isEmojiShown]);
+  }, [isEmojiShown, sendInputFieldContent]);
 
   const shouldDisplayEmojiPanelEventHandler = useCallback((event) => {
     const emojis = shouldDisplayEmojiPanel(event);
@@ -113,7 +113,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     }
     setIsEmojiShown(false);
     setFoundEmojis([]);
-  }, [selectedChannel, isReplying]);
+  }, [shouldDisplayEmojiPanel]);
 
   return <>
     {

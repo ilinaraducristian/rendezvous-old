@@ -11,7 +11,7 @@ export const selectChannels = (channels: { serverId: number, groupId: number | n
     ({servers}: { servers: State }): Channel[] => {
       return channels.map(channel => {
         const server = servers.servers.find(server => server.id === channel.serverId);
-        if (server === undefined) return;
+        if (server === undefined) return undefined;
         if (channel.groupId === null) {
           return server.channels.find(ch => ch.id === channel.channelId);
         } else {

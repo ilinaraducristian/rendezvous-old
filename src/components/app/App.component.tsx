@@ -64,7 +64,7 @@ function AppComponent() {
       const channel = selectedServer.groups.find(group => group.id === joinedChannel.groupId)?.channels.find(channel => channel.id === joinedChannel.channelId);
       if (channel === undefined) return;
     }
-  }, [joinedChannel]);
+  }, [joinedChannel, selectedServer]);
 
   useEffect(() => {
     if (config.offline) return;
