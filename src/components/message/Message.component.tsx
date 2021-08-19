@@ -4,7 +4,7 @@ import {useAppDispatch} from "state-management/store";
 import {
   deleteMessage as deleteMessageAction,
   editMessage as editMessageAction
-} from "state-management/slices/serversSlice";
+} from "state-management/slices/data/data.slice";
 import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio";
 import config from "config";
 

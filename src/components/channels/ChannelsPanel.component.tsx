@@ -7,7 +7,7 @@ import DropdownComponent from "components/dropdown/Dropdown.component";
 import GroupsListComponent from "components/group/GroupsList.component";
 import styled from "styled-components";
 import {ArrowXSVG} from "svg/Arrow.svg";
-import {selectSelectedServer} from "state-management/selectors";
+import {selectSelectedServer} from "state-management/selectors/data.selector";
 
 function ChannelsPanelComponent() {
 

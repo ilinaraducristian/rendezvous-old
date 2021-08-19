@@ -3,14 +3,14 @@ import {useDrag} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
 import mediasoup from "mediasoup";
 import socket from "socketio";
-import {joinVoiceChannel} from "state-management/slices/serversSlice";
+import {joinVoiceChannel} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
 import config from "config";
 import {VoiceChannel} from "types/Channel";
 import styled from "styled-components";
 import ChannelButtonComponent from "components/channels/ChannelButton.component";
-import {selectUsers} from "state-management/selectors";
+import {selectUsers} from "state-management/selectors/data.selector";
 
 type ComponentProps = {
   channel: VoiceChannel

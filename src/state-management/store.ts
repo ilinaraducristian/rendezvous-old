@@ -1,9 +1,9 @@
 import {Action, configureStore, ThunkAction} from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import keycloakReducer from "state-management/slices/keycloakSlice";
-import socketioReducer from "state-management/slices/socketioSlice";
-import mediasoupReducer from "state-management/slices/mediasoupSlice";
-import serversReducer from "state-management/slices/serversSlice";
+import keycloakReducer from "state-management/slices/keycloak.slice";
+import socketioReducer from "state-management/slices/socketio.slice";
+import mediasoupReducer from "state-management/slices/mediasoup.slice";
+import dataReducer from "state-management/slices/data/data.slice";
 import {socketioApi} from "state-management/apis/socketio";
 
 export const store = configureStore({
@@ -11,7 +11,7 @@ export const store = configureStore({
     keycloak: keycloakReducer,
     socketio: socketioReducer,
     mediasoup: mediasoupReducer,
-    servers: serversReducer,
+    data: dataReducer,
     [socketioApi.reducerPath]: socketioApi.reducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware()

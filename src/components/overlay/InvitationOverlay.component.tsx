@@ -1,5 +1,5 @@
 import {useCallback, useState} from "react";
-import {setOverlay} from "state-management/slices/serversSlice";
+import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 
 type ComponentProps = {

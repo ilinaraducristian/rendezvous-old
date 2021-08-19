@@ -6,7 +6,7 @@ import MessagesPanelComponent from "components/message/MessagesPanel.component";
 import MembersPanelComponent from "components/member/MembersPanel.component";
 import {ChannelType} from "types/Channel";
 import styled from "styled-components";
-import {selectSelectedChannel} from "state-management/selectors";
+import {selectSelectedChannel} from "state-management/selectors/data.selector";
 
 function ContentPanelComponent() {
 

@@ -3,7 +3,7 @@ import {useDrag} from "react-dnd";
 import config from "config";
 import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
-import {addMessages, selectChannel as selectChannelAction} from "state-management/slices/serversSlice";
+import {addMessages, selectChannel as selectChannelAction} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
 import {TextChannel} from "types/Channel";

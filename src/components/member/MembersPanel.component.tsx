@@ -1,20 +1,22 @@
 import MemberComponent from "./Member.component";
 import {useAppSelector} from "state-management/store";
 import styled from "styled-components";
-import {selectMembers, selectUsers} from "state-management/selectors";
+import {selectUsers} from "state-management/selectors/data.selector";
+import {selectSelectedServerMembers} from "state-management/selectors/server.selector";
 
 function MembersPanelComponent() {
 
   const users = useAppSelector(selectUsers);
-  const selectedMembers = useAppSelector(selectMembers);
+  const selectedMembers = useAppSelector(selectSelectedServerMembers);
 
   return (
       <Div>
         <ol className="list">
           {
-            selectedMembers?.map(member =>
+            selectedMembers.map(member =>
                 <MemberComponent key={`member_${member.id}`}
-                                 name={users.find(user => user.id === member.userId)?.firstName || ""}/>
+                                 name={users.find(user => user.id === member.userId)?.firstName || ""}
+                />
             )
           }
         </ol>

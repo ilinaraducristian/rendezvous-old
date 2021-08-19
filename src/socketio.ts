@@ -10,9 +10,9 @@ import {
   addMessages,
   deleteMessage,
   editMessage
-} from "state-management/slices/serversSlice";
+} from "state-management/slices/data/data.slice";
 import {store} from "state-management/store";
-import {connect} from "state-management/slices/socketioSlice";
+import {connect} from "state-management/slices/socketio.slice";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
   return new Promise(resolve => {

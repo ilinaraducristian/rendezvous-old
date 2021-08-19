@@ -1,11 +1,11 @@
 import {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectAuthenticated} from "state-management/slices/keycloakSlice";
+import {selectAuthenticated} from "state-management/slices/keycloak.slice";
 import keycloak from "keycloak";
-import {selectConnected} from "state-management/slices/socketioSlice";
+import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
 import {mockServers, mockUsers} from "mock-data";
-import {initializeBackend,} from "state-management/slices/serversSlice";
+import {initializeBackend,} from "state-management/slices/data/data.slice";
 import ServersPanelComponent from "components/server/ServersPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
 import ChannelsPanelComponent from "components/channels/ChannelsPanel.component";
@@ -16,13 +16,18 @@ import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay.c
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay.component";
 import InvitationOverlayComponent from "components/overlay/InvitationOverlay.component";
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay.component";
-import {selectInitialized, selectJoinedChannel, selectOverlay, selectSelectedServer} from "state-management/selectors";
+import {
+  selectIsBackendInitialized,
+  selectJoinedChannel,
+  selectOverlay,
+  selectSelectedServer
+} from "state-management/selectors/data.selector";
 
 function AppComponent() {
 
   const authenticated = useAppSelector(selectAuthenticated);
   const connected = useAppSelector(selectConnected);
-  const initialized = useAppSelector(selectInitialized);
+  const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
   const selectedServer = useAppSelector(selectSelectedServer);
   const overlay = useAppSelector(selectOverlay);
   const joinedChannel = useAppSelector(selectJoinedChannel);
@@ -56,14 +61,7 @@ function AppComponent() {
       //disconnect
       return;
     }
-    if (selectedServer === undefined) return;
-    if (joinedChannel.groupId === null) {
-      const channel = selectedServer.channels.find(channel => channel.id === joinedChannel.channelId);
-      if (channel === undefined) return;
-    } else {
-      const channel = selectedServer.groups.find(group => group.id === joinedChannel.groupId)?.channels.find(channel => channel.id === joinedChannel.channelId);
-      if (channel === undefined) return;
-    }
+
   }, [joinedChannel, selectedServer]);
 
   useEffect(() => {
@@ -92,10 +90,10 @@ function AppComponent() {
       return;
     }
     if (!connected) return;
-    if (initialized) return;
+    if (isBackendInitialized) return;
     fetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialized, connected]);
+  }, [isBackendInitialized, connected]);
 
   useEffect(() => {
     if (!isSuccess) return;

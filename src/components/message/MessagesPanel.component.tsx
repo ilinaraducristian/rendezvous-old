@@ -1,17 +1,18 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import MessageComponent from "components/message/Message.component";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {addMessages, selectChannel as selectChannelAction,} from "state-management/slices/serversSlice";
+import {addMessages, selectChannel as selectChannelAction,} from "state-management/slices/data/data.slice";
 import styled from "styled-components";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
 import config from "config";
-import {selectMessages, selectSelectedChannel, selectUsers} from "state-management/selectors";
 import MessageInputContainerComponent from "components/message/MessageInputContainer.component";
+import {selectSelectedChannel, selectUsers} from "state-management/selectors/data.selector";
+import {selectSelectedChannelMessages} from "state-management/selectors/channel.selector";
 
 function MessagesPanelComponent() {
 
   const messagesList = useRef<HTMLDivElement>(null);
-  const messages = useAppSelector(selectMessages);
+  const messages = useAppSelector(selectSelectedChannelMessages);
   const users = useAppSelector(selectUsers);
   const channel = useAppSelector(selectSelectedChannel);
   const [fetch, {data, isSuccess, status}] = useLazyGetMessagesQuery();
@@ -66,7 +67,7 @@ function MessagesPanelComponent() {
         <DivBodyMessages ref={messagesList} onScroll={onScroll}>
           <Ol className="list">
             {//.sort((m1, m2) => Date.parse(m1.timestamp) - Date.parse(m2.timestamp))
-              messages?.map(message =>
+              messages.map(message =>
                   <MessageComponent key={`message_${message.id}`}
                                     serverId={message.serverId}
                                     channelId={message.channelId}

@@ -5,10 +5,10 @@ import styled from "styled-components";
 import {useCallback, useRef, useState} from "react";
 import EmojiContainerComponent from "components/message/EmojiContainer.component";
 import trie from "trie";
-import {addMessages} from "state-management/slices/serversSlice";
+import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectSelectedChannel} from "state-management/selectors";
 import socket from "socketio";
+import {selectSelectedChannel} from "state-management/selectors/data.selector";
 
 type ComponentProps = {
   isReplying: boolean,

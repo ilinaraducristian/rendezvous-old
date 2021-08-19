@@ -1,20 +1,26 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, SliceCaseReducers} from "@reduxjs/toolkit";
 
-export const keycloakSlice = createSlice({
+type KeycloakSliceState = {
+  isAuthenticated: boolean,
+  token: string,
+  subject: string
+}
+
+export const keycloakSlice = createSlice<KeycloakSliceState, SliceCaseReducers<KeycloakSliceState>, string>({
   name: "keycloak",
   initialState: {
-    authenticated: false,
+    isAuthenticated: false,
     token: "",
     subject: ""
   },
   reducers: {
     authenticate(state, action) {
-      state.authenticated = true;
+      state.isAuthenticated = true;
       state.token = action.payload.token;
       state.subject = action.payload.subject;
     },
     deauthenticate(state) {
-      state.authenticated = false;
+      state.isAuthenticated = false;
       state.token = "";
       state.subject = "";
     },
