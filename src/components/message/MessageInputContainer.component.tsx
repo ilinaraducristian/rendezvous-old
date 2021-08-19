@@ -24,40 +24,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
   const selectedChannel = useAppSelector(selectSelectedChannel);
   const dispatch = useAppDispatch();
 
-  const onKeyDown = useCallback((event) => {
-    if (emojiRef.current === null) return;
-    if (!isEmojiShown) return;
-    if (event.code.includes("Enter")) {
-      event.preventDefault();
-      const selection = getSelection();
-      if (selection === null) return;
-      const cursorPosition = selection.anchorOffset;
-      let message = event.target.innerText as string | undefined;
-      if (message === undefined) return;
-      // find last ":" until cursor position
-      const lastIndexOfColon = message.lastIndexOf(":", cursorPosition);
-      if (lastIndexOfColon === -1) return;
-      // from ":" to cursor position
-      event.target.innerText = `${message.substring(0, lastIndexOfColon)}${emojiRef.current.getEmoji()}${message.substring(cursorPosition + 1)}`;
-      selection.setPosition(selection.focusNode, 1);
-      setFoundEmojis([]);
-      setIsEmojiShown(false);
-      return;
-    }
-    if (!["ArrowDown", "ArrowUp"].includes(event.code)) return;
-    event.preventDefault();
-    emojiRef.current.move(event.code === "ArrowUp");
-  }, [isEmojiShown]);
-
-  const onKeyUp = useCallback(async (event) => {
-    const emojis = shouldDisplayEmojiPanel(event);
-    if (emojis !== undefined) {
-      setIsEmojiShown(true);
-      setFoundEmojis(emojis);
-      return;
-    }
-    setIsEmojiShown(false);
-    setFoundEmojis([]);
+  async function sendInputFieldContent(event: any) {
     event.preventDefault();
     if (selectedChannel === undefined) return;
     let message = (event.target as any).innerText;
@@ -81,10 +48,9 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     message = await socket.emitAck("send_message", payload);
     messageSent();
     dispatch(addMessages([message]));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedChannel, isReplying]);
+  }
 
-  function shouldDisplayEmojiPanel(event: any) {
+  function findLastIndexOfColon(event: any) {
     const selection = getSelection();
     if (selection === null) return;
     const cursorPosition = selection.anchorOffset;
@@ -93,6 +59,18 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     // find last ":" until cursor position
     const lastIndexOfColon = message.lastIndexOf(":", cursorPosition);
     if (lastIndexOfColon === -1) return;
+    return {
+      selection,
+      cursorPosition,
+      message,
+      lastIndexOfColon,
+    };
+  }
+
+  function shouldDisplayEmojiPanel(event: any) {
+    const lastIndexObject = findLastIndexOfColon(event);
+    if (lastIndexObject === undefined) return;
+    let {cursorPosition, message, lastIndexOfColon} = lastIndexObject;
     // from ":" to cursor position
     message = message.substring(lastIndexOfColon, cursorPosition);
     const indexOfSpace = message.indexOf(" ");
@@ -104,16 +82,38 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     return emojis;
   }
 
-  const onClick = useCallback((event) => {
+  const onKeyDown = useCallback((event) => {
+    if (emojiRef.current === null) return;
+    if (["ArrowDown", "ArrowUp"].includes(event.code)) {
+      event.preventDefault();
+      emojiRef.current.move(event.code === "ArrowUp");
+      return;
+    }
+    if (!event.code.includes("Enter")) return;
+    if (!isEmojiShown)
+      return sendInputFieldContent(event);
+    event.preventDefault();
+    const lastIndexObject = findLastIndexOfColon(event);
+    if (lastIndexObject === undefined) return;
+    let {selection, cursorPosition, message, lastIndexOfColon} = lastIndexObject;
+    event.target.innerText = `${message.substring(0, lastIndexOfColon)}${emojiRef.current.getEmoji()}${message.substring(cursorPosition + 1)}`;
+    selection.setPosition(selection.focusNode, 1);
+    setFoundEmojis([]);
+    setIsEmojiShown(false);
+    return;
+
+  }, [isEmojiShown]);
+
+  const shouldDisplayEmojiPanelEventHandler = useCallback((event) => {
     const emojis = shouldDisplayEmojiPanel(event);
-    if (emojis === undefined) {
-      setIsEmojiShown(false);
-      setFoundEmojis([]);
-    } else {
+    if (emojis !== undefined) {
       setIsEmojiShown(true);
       setFoundEmojis(emojis);
+      return;
     }
-  }, []);
+    setIsEmojiShown(false);
+    setFoundEmojis([]);
+  }, [selectedChannel, isReplying]);
 
   return <>
     {
@@ -126,8 +126,8 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
       </button>
       <MessageInputComponent
           onKeyDown={onKeyDown}
-          onKeyUp={onKeyUp}
-          onClick={onClick}
+          onKeyUp={shouldDisplayEmojiPanelEventHandler}
+          onClick={shouldDisplayEmojiPanelEventHandler}
       />
       <button type="button" className="btn btn--off btn--hover btn__icon">
         <GIFSVG/>
