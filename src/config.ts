@@ -1,13 +1,13 @@
 const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
       offline: false,
-      backend: "http://rendezvous-api.zapto.org/",
-      socketIoUrl: "http://rendezvous-api.zapto.org/",
+      backend: "https://rendezvous-api-radu.herokuapp.com/",
+      socketIoUrl: "https://rendezvous-api-radu.herokuapp.com/",
       auth0: {
         domain: "rendezvous-iam.eu.auth0.com",
         client_id: "l1ZnZCOMXFKzMO0plbn0dl4o6Ijyg0se"
       },
       keycloak: {
-        url: "http://rendezvous-iam.zapto.org/auth",
+        url: "http://rendezvous.myddns.me:30001/auth",
         realm: "capp",
         clientId: "auth-code",
       },
