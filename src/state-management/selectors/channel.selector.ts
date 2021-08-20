@@ -1,8 +1,8 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
-import Channel, {ChannelType, TextChannel} from "types/Channel";
+import Channel, {ChannelType, TextChannel, VoiceChannelUser} from "types/Channel";
 import Server from "types/Server";
 import Message from "types/Message";
-import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {selectJoinedChannel, selectSelectedServer} from "state-management/selectors/data.selector";
 
 export const selectChannels = (payload: { serverId: number, groupId: number | null, channelId: number }[]) =>
     ({data}: { data: DataSliceState }): Channel[] => {
@@ -50,6 +50,12 @@ export const selectSelectedServerChannelsByGroupId = (groupId: number | null) =>
         return foundGroup.channels;
       }
     };
+
+export const selectJoinedChannelUsers = ({data}: { data: DataSliceState }): VoiceChannelUser[] => {
+  const joinedChannel = selectJoinedChannel({data});
+  if (joinedChannel === null) return [];
+  return joinedChannel.users;
+};
 
 function addChannel(requestedChannel: { groupId: number | null, channelId: number }, server: Server, foundChannels: Channel[]) {
   if (requestedChannel.groupId === null) {

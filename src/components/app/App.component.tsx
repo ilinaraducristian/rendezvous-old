@@ -1,7 +1,5 @@
 import {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectAuthenticated} from "state-management/slices/keycloak.slice";
-import keycloak from "keycloak";
 import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
 import {mockServers, mockUsers} from "mock-data";
@@ -22,63 +20,74 @@ import {
   selectOverlay,
   selectSelectedServer
 } from "state-management/selectors/data.selector";
+import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
+import mediasoup, {createMediaStreamSource, remoteStream} from "mediasoup";
+import socket from "socketio";
+import authClient from "keycloak";
+
+const consumers: any[] = [];
 
 function AppComponent() {
 
-  const authenticated = useAppSelector(selectAuthenticated);
+  // const authenticated = useAppSelector(selectAuthenticated);
   const connected = useAppSelector(selectConnected);
   const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
   const selectedServer = useAppSelector(selectSelectedServer);
   const overlay = useAppSelector(selectOverlay);
   const joinedChannel = useAppSelector(selectJoinedChannel);
+  const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
+  // const subject = useAppSelector(selectSubject);
   const [fetch, {data, isSuccess, status}] = useLazyGetUserDataQuery();
   const dispatch = useAppDispatch();
-  // const users = channel.users?.filter(user => user.userId !== subject)
-  //     .filter(user => !consumers.find(consumer => user.socketId === consumer.socketId));
-  // // create consumers
-  // if (users === undefined) return;
-  // createMediaStreamSource();
-  // (async () => {
-  //   for (const user of users) {
-  //     const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
-  //     const recvTransport = mediasoup.createRecvTransport(transportParameters);
-  //     recvTransport.on("connect", ({dtlsParameters}, cb) => {
-  //       socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
-  //     });
-  //     const {consumerParameters} = await socket.emitAck("create_consumer", {
-  //       transportId: recvTransport.id,
-  //       socketId: user.socketId,
-  //       rtpCapabilities: mediasoup.rtpCapabilities
-  //     });
-  //     const consumer = await recvTransport.consume(consumerParameters);
-  //     remoteStream.addTrack(consumer.track);
-  //     socket.emit("resume_consumer", {id: consumer.id});
-  //     consumers.push({socketId: user.socketId, consumer});
-  //   }
-  // })();
+
   useEffect(() => {
     if (joinedChannel === null) {
       //disconnect
       return;
     }
-
-  }, [joinedChannel, selectedServer]);
+    (async () => {
+      const subject = await authClient.getSubject();
+      const users = joinedChannelUsers.filter(user => user.userId !== subject &&
+          !consumers.find(consumer => user.socketId === consumer.socketId));
+      createMediaStreamSource();
+      const promises: Promise<void>[] = [];
+      users.forEach(user => {
+        promises.push(
+            new Promise<void>(async (resolve) => {
+              const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
+              const recvTransport = mediasoup.createRecvTransport(transportParameters);
+              recvTransport.on("connect", ({dtlsParameters}, cb) => {
+                socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
+              });
+              const {consumerParameters} = await socket.emitAck("create_consumer", {
+                transportId: recvTransport.id,
+                socketId: user.socketId,
+                rtpCapabilities: mediasoup.rtpCapabilities
+              });
+              const consumer = await recvTransport.consume(consumerParameters);
+              remoteStream.addTrack(consumer.track);
+              socket.emit("resume_consumer", {id: consumer.id});
+              consumers.push({socketId: user.socketId, consumer});
+              resolve();
+            })
+        );
+      });
+      await Promise.all(promises);
+    })();
+  }, [joinedChannelUsers, joinedChannel, selectedServer]);
 
   useEffect(() => {
     if (config.offline) return;
-    if (authenticated) return;
-    keycloak.init({
-      onLoad: "check-sso",
-      silentCheckSsoRedirectUri: window.location.origin + "/silent-check-sso.html"
-    })
-        .then((authenticated: boolean) => {
-          if (!authenticated) {
-            return keycloak.login();
-          }
-        }).catch(() => {
-      alert("failed to initialize");
-    });
-  }, [authenticated]);
+    (async () => {
+      const authenticated = await authClient.isAuthenticated();
+      if (authenticated) return;
+      const isAuthenticated = await authClient.init();
+      if (isAuthenticated) {
+        socket.auth.token = authClient.getToken();
+        if (!socket.connected) socket.connect();
+      }
+    })();
+  }, []);
 
   useEffect(() => {
     if (config.offline) {
