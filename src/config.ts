@@ -7,7 +7,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
         client_id: "l1ZnZCOMXFKzMO0plbn0dl4o6Ijyg0se"
       },
       keycloak: {
-        url: "http://rendezvous.myddns.me:30001/auth",
+        url: "http://rendezvous.myddns.me:30000/auth",
         realm: "capp",
         clientId: "auth-code",
       },
