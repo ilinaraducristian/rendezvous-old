@@ -174,6 +174,7 @@ const SpanMessage = styled.span`
 
 const Img = styled.img`
   max-height: 13.188rem;
+  max-width: 40rem;
 `;
 
 /* CSS */
