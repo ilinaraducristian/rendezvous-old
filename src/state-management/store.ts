@@ -5,6 +5,7 @@ import socketioReducer from "state-management/slices/socketio.slice";
 import mediasoupReducer from "state-management/slices/mediasoup.slice";
 import dataReducer from "state-management/slices/data/data.slice";
 import {socketioApi} from "state-management/apis/socketio";
+import {httpApi} from "state-management/apis/http";
 
 export const store = configureStore({
   reducer: {
@@ -13,9 +14,10 @@ export const store = configureStore({
     mediasoup: mediasoupReducer,
     data: dataReducer,
     [socketioApi.reducerPath]: socketioApi.reducer,
+    [httpApi.reducerPath]: httpApi.reducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware()
-      .concat(socketioApi.middleware),
+      .concat([socketioApi.middleware, httpApi.middleware]),
 });
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

@@ -14,7 +14,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
     }
     :
     {
-      offline: true,
+      offline: false,
       backend: "http://localhost:3100",
       socketIoUrl: "http://localhost:3100",
       auth0: {
@@ -22,7 +22,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
         client_id: ""
       },
       keycloak: {
-        url: "http://localhost:8180/auth",
+        url: "http://localhost:8080/auth",
         realm: "capp",
         clientId: "auth-code",
       }

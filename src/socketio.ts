@@ -44,7 +44,7 @@ socket.on("connect", async () => {
 });
 
 socket.on("disconnect", () => {
-  window.location.reload();
+  // window.location.reload();
 });
 
 socket.on("new_message", (payload) => {

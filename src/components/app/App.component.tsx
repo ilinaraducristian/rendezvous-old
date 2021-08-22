@@ -25,6 +25,7 @@ import mediasoup, {createMediaStreamSource, remoteStream} from "mediasoup";
 import socket from "socketio";
 import authClient from "keycloak";
 import ImageInputOverlayComponent from "components/message/ImageInputOverlay.component";
+import {useLazyLoginQuery} from "state-management/apis/http";
 
 const consumers: any[] = [];
 
@@ -44,6 +45,7 @@ function AppComponent() {
   const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
   // const subject = useAppSelector(selectSubject);
   const [fetch, {data, isSuccess, status}] = useLazyGetUserDataQuery();
+  const [fetchLogin, {data: loginData, isSuccess: loginSuccess}] = useLazyLoginQuery();
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -89,8 +91,9 @@ function AppComponent() {
       if (authenticated) return;
       const isAuthenticated = await authClient.init();
       if (isAuthenticated) {
-        socket.auth.token = authClient.getToken();
-        if (!socket.connected) socket.connect();
+        fetchLogin();
+        // socket.auth.token = authClient.getToken();
+        // if (!socket.connected) socket.connect();
       }
     })();
   }, []);
@@ -111,17 +114,18 @@ function AppComponent() {
   }, [isBackendInitialized, connected]);
 
   useEffect(() => {
+    if (!loginSuccess) return;
+    if (loginData === undefined) return;
+    socket.auth.token = loginData;
+    if (!socket.connected) socket.connect();
+  }, [loginSuccess]);
+
+  useEffect(() => {
     if (!isSuccess) return;
     if (data === undefined) return;
     dispatch(initializeBackend(data));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
-
-  // const onKeyUp = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
-  //   console.log('ok');
-  //   if(event.code !== 'Escape') return false;
-  //   dispatch(setOverlay(null));
-  // }, []);
 
   return (
       <>
