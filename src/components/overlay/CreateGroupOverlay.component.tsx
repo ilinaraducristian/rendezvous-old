@@ -3,6 +3,7 @@ import config from "config";
 import {useLazyCreateGroupQuery} from "state-management/apis/socketio";
 import {useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import OverlayComponent from "components/overlay/Overlay.component";
 
 function CreateGroupOverlayComponent() {
 
@@ -30,14 +31,12 @@ function CreateGroupOverlayComponent() {
   }, [data]);
 
   return (
-      <div className="overlay">
-        <div className="overlay__container">
-          <h1 className="h1">Group name</h1>
-          <input type="text" ref={ref}/>
-          <button type="button" className="btn btn__overlay-select" onClick={createGroup}>Create
-          </button>
-        </div>
-      </div>
+      <OverlayComponent>
+        <h1 className="h1">Group name</h1>
+        <input type="text" ref={ref}/>
+        <button type="button" className="btn btn__overlay-select" onClick={createGroup}>Create
+        </button>
+      </OverlayComponent>
   );
 }
 

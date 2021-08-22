@@ -2,6 +2,7 @@ import {useEffect, useRef} from "react";
 import {useLazyJoinServerQuery} from "state-management/apis/socketio";
 import {addServer, addUser, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
+import OverlayComponent from "components/overlay/Overlay.component";
 
 function JoinServerOverlayComponent() {
 
@@ -23,16 +24,14 @@ function JoinServerOverlayComponent() {
   }, [isSuccess]);
 
   return (
-      <div className="overlay">
-        <div className="overlay__container">
-          <h1 className="h1">Join a server</h1>
-          <div className="overlay__body">
-            <input type="text" ref={ref}/>
-            <button type="button" className="btn btn__overlay-select" onClick={joinServer}>Join
-            </button>
-          </div>
+      <OverlayComponent>
+        <h1 className="h1">Join a server</h1>
+        <div className="overlay__body">
+          <input type="text" ref={ref}/>
+          <button type="button" className="btn btn__overlay-select" onClick={joinServer}>Join
+          </button>
         </div>
-      </div>
+      </OverlayComponent>
   );
 
 }

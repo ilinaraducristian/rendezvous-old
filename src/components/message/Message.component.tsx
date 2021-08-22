@@ -17,20 +17,23 @@ type ComponentProps = {
   text: string,
   isReply: boolean,
   replyId: number | null
-  reply: any
+  reply: any,
+  image: string | null
 }
 
-function MessageComponent({
-                            serverId,
-                            channelId,
-                            messageId,
-                            username,
-                            timestamp,
-                            text,
-                            isReply,
-                            replyId,
-                            reply
-                          }: ComponentProps) {
+function MessageComponent(
+    {
+      serverId,
+      channelId,
+      messageId,
+      username,
+      timestamp,
+      text,
+      isReply,
+      replyId,
+      reply,
+      image
+    }: ComponentProps) {
 
   const time = new Date(timestamp);
   const [actions, setActions] = useState(false);
@@ -123,6 +126,10 @@ function MessageComponent({
               !isEditing ||
               <button type="button" onClick={editMessage}>Save</button>
             }
+            {
+              image === null ||
+              <Img src={image} alt="user uploaded image"/>
+            }
           </DivMessageContainer>
         </Div>
       </DivContainer>
@@ -163,6 +170,10 @@ const SpanUsername = styled.span`
 
 const SpanMessage = styled.span`
   margin: 0 1em;
+`;
+
+const Img = styled.img`
+  max-height: 13.188rem;
 `;
 
 /* CSS */

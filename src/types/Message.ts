@@ -6,7 +6,8 @@ type Message = {
   timestamp: string,
   text: string,
   isReply: boolean,
-  replyId: number | null
+  replyId: number | null,
+  image: string
 }
 
 export default Message;

@@ -66,7 +66,7 @@ function MessagesPanelComponent() {
       <DivBodyMain>
         <DivBodyMessages ref={messagesList} onScroll={onScroll}>
           <Ol className="list">
-            {//.sort((m1, m2) => Date.parse(m1.timestamp) - Date.parse(m2.timestamp))
+            {
               messages.map(message =>
                   <MessageComponent key={`message_${message.id}`}
                                     serverId={message.serverId}
@@ -78,6 +78,7 @@ function MessagesPanelComponent() {
                                     isReply={message.isReply}
                                     replyId={message.replyId}
                                     reply={reply}
+                                    image={message.image}
                   />
               ).sort((a, b) => Date.parse(a.props.timestamp) - Date.parse(b.props.timestamp))
             }

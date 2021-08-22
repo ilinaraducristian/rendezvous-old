@@ -34,11 +34,13 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
       message: string,
       isReply: boolean,
       replyId: number | null,
+      image: string | null
     } = {
       channelId: selectedChannel.id,
       message,
       isReply: false,
-      replyId: null
+      replyId: null,
+      image: null
     };
     if (isReplying) {
       if (replyId === undefined) return;
@@ -152,7 +154,7 @@ const Footer = styled.footer`
 `;
 
 const DivEmoji = styled.div`
-  background-image: url("assets/emojis.png");
+  background-image: url("../../assets/emojis.png");
   background-position: 0 0;
   background-size: 242px 110px;
   background-repeat: no-repeat;

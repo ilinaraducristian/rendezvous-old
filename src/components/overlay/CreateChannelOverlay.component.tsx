@@ -5,6 +5,7 @@ import {addChannel, selectChannel, setOverlay} from "state-management/slices/dat
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {ChannelType, TextChannel} from "types/Channel";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import OverlayComponent from "components/overlay/Overlay.component";
 
 type ComponentProps = {
   groupId?: number | null
@@ -46,14 +47,12 @@ function CreateChannelOverlayComponent({groupId = null}: ComponentProps) {
   }, [isSuccess]);
 
   return (
-      <div className="overlay">
-        <div className="overlay__container">
-          <h1 className="h1">Channel name</h1>
-          <input type="text" ref={ref}/>
-          <button type="button" className="btn btn__overlay-select" onClick={createChannel}>Create
-          </button>
-        </div>
-      </div>
+      <OverlayComponent>
+        <h1 className="h1">Channel name</h1>
+        <input type="text" ref={ref}/>
+        <button type="button" className="btn btn__overlay-select" onClick={createChannel}>Create
+        </button>
+      </OverlayComponent>
   );
 }
 

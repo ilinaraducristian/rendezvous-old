@@ -1,9 +1,9 @@
 import {useEffect} from "react";
-import {useAppDispatch, useAppSelector} from "state-management/store";
+import {store, useAppDispatch, useAppSelector} from "state-management/store";
 import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
 import {mockServers, mockUsers} from "mock-data";
-import {initializeBackend,} from "state-management/slices/data/data.slice";
+import {initializeBackend, setOverlay,} from "state-management/slices/data/data.slice";
 import ServersPanelComponent from "components/server/ServersPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
 import ChannelsPanelComponent from "components/channels/ChannelsPanel.component";
@@ -24,8 +24,14 @@ import {selectJoinedChannelUsers} from "state-management/selectors/channel.selec
 import mediasoup, {createMediaStreamSource, remoteStream} from "mediasoup";
 import socket from "socketio";
 import authClient from "keycloak";
+import ImageInputOverlayComponent from "components/message/ImageInputOverlay.component";
 
 const consumers: any[] = [];
+
+document.onkeyup = (event: any) => {
+  if (event.code !== "Escape") return false;
+  store.dispatch(setOverlay(null));
+};
 
 function AppComponent() {
 
@@ -111,16 +117,22 @@ function AppComponent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
+  // const onKeyUp = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
+  //   console.log('ok');
+  //   if(event.code !== 'Escape') return false;
+  //   dispatch(setOverlay(null));
+  // }, []);
+
   return (
       <>
         {/*((!initialized || !keycloak.authenticated) && !config.offline) ||*/}
+        <ServersPanelComponent/>
+        <ChannelsPanelComponent/>
+        <ContentPanelComponent/>
         {
           overlay === null ||
           overlayToComponent(overlay)
         }
-        <ServersPanelComponent/>
-        <ChannelsPanelComponent/>
-        <ContentPanelComponent/>
       </>
   );
 
@@ -140,6 +152,8 @@ function overlayToComponent({type, payload}: { type: string, payload: any }) {
       return <InvitationOverlayComponent invitation={payload.invitation}/>;
     case "JoinServerOverlayComponent":
       return <JoinServerOverlayComponent/>;
+    case "ImageInputOverlayComponent":
+      return <ImageInputOverlayComponent image={payload.image}/>;
   }
 }
 

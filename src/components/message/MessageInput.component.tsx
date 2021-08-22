@@ -1,21 +1,53 @@
 import styled from "styled-components";
-import {ClipboardEvent, useCallback} from "react";
+import {ClipboardEvent, EventHandler, KeyboardEvent, MouseEvent, useCallback} from "react";
+import {useAppDispatch} from "state-management/store";
+import {setOverlay} from "state-management/slices/data/data.slice";
 
 type ComponentProps = {
-  onKeyDown: any,
-  onKeyUp: any,
-  onClick: any
+  onKeyDown: EventHandler<KeyboardEvent<HTMLSpanElement>>,
+  onKeyUp: EventHandler<KeyboardEvent<HTMLSpanElement>>,
+  onClick: EventHandler<MouseEvent<HTMLSpanElement>>;
 }
 
 function MessageInputComponent({onKeyDown, onKeyUp, onClick}: ComponentProps) {
 
+  const dispatch = useAppDispatch();
+
   const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
     event.preventDefault();
+    console.log(event);
     const selection = getSelection();
     const clipboard = event.clipboardData;
     if (selection === null || clipboard === null) return;
     clipboard.setData("text/plain", selection.toString());
   }, []);
+
+  const onPaste = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
+    event.preventDefault();
+    if (!event.clipboardData.types.includes("Files")) {
+      document.execCommand("insertText", false, event.clipboardData.getData("text/plain"));
+      return false;
+    }
+    let file;
+    for (const item of event.clipboardData.items) {
+      if (item.kind === "file") {
+        file = event.clipboardData.items[0].getAsFile();
+        break;
+      }
+    }
+    if (file === undefined) return false;
+
+    if (file === null) {
+      return false;
+    }
+    const fr = new FileReader();
+    fr.onloadend = () => {
+      if (typeof fr.result !== "string") return;
+      dispatch(setOverlay({type: "ImageInputOverlayComponent", payload: {image: fr.result}}));
+    };
+    fr.readAsDataURL(file);
+
+  }, [dispatch]);
 
   return (
       <Span
@@ -25,6 +57,7 @@ function MessageInputComponent({onKeyDown, onKeyUp, onClick}: ComponentProps) {
           onKeyUp={onKeyUp}
           onCopy={onCopy}
           onClick={onClick}
+          onPaste={onPaste}
       />
   );
 }
