@@ -1,10 +1,11 @@
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
 import keycloak from "keycloak";
+import config from "config";
 
 export const httpApi = createApi({
   reducerPath: "httpApi",
   baseQuery: fetchBaseQuery({
-    baseUrl: "http://localhost:3100/", prepareHeaders: async (headers) => {
+    baseUrl: config.backend, prepareHeaders: async (headers) => {
       headers.set("authorization", `Bearer ${await keycloak.getToken()}`);
       return headers;
     },
