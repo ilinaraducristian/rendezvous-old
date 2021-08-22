@@ -13,10 +13,7 @@ export const httpApi = createApi({
   endpoints: (builder) => ({
     login: builder.query<string, void>({
       query: () => "login",
-      transformResponse(response: any) {
-        console.log(response);
-        return response.token;
-      }
+      transformResponse: ({token}) => token
     }),
   }),
 });

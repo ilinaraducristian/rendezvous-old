@@ -85,10 +85,9 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
   }, []);
 
   const onKeyDown = useCallback((event) => {
-    if (emojiRef.current === null) return;
-    if (["ArrowDown", "ArrowUp"].includes(event.code)) {
+    if (["ArrowDown", "ArrowUp"].includes(event.code) && isEmojiShown) {
       event.preventDefault();
-      emojiRef.current.move(event.code === "ArrowUp");
+      emojiRef.current?.move(event.code === "ArrowUp");
       return;
     }
     if (!event.code.includes("Enter")) return;
@@ -98,13 +97,14 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const lastIndexObject = findLastIndexOfColon(event);
     if (lastIndexObject === undefined) return;
     let {selection, cursorPosition, message, lastIndexOfColon} = lastIndexObject;
+    if (emojiRef.current === null) return;
     event.target.innerText = `${message.substring(0, lastIndexOfColon)}${emojiRef.current.getEmoji()}${message.substring(cursorPosition + 1)}`;
     selection.setPosition(selection.focusNode, 1);
     setFoundEmojis([]);
     setIsEmojiShown(false);
     return;
 
-  }, [isEmojiShown, sendInputFieldContent]);
+  }, [isEmojiShown, sendInputFieldContent, emojiRef.current]);
 
   const shouldDisplayEmojiPanelEventHandler = useCallback((event) => {
     const emojis = shouldDisplayEmojiPanel(event);

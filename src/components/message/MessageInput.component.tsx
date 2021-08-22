@@ -15,7 +15,6 @@ function MessageInputComponent({onKeyDown, onKeyUp, onClick}: ComponentProps) {
 
   const onCopy = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
     event.preventDefault();
-    console.log(event);
     const selection = getSelection();
     const clipboard = event.clipboardData;
     if (selection === null || clipboard === null) return;
