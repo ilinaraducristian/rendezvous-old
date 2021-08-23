@@ -15,6 +15,8 @@ export const selectSelectedServer = ({data}: { data: DataSliceState }): Server |
     data.servers.find(server => server.id === data.selectedServer)
 ;
 
+export const selectFriends = ({data}: { data: DataSliceState }): string[] => data.friends;
+
 export const selectOverlay = ({data}: { data: DataSliceState }): { type: string; payload: any; } | null => data.overlay;
 
 export const selectUsers = ({data}: { data: DataSliceState }): User[] => data.users;

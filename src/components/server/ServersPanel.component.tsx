@@ -16,18 +16,23 @@ function ServersPanelComponent() {
     dispatch(selectServerAction(server.id));
   }
 
-  function setOverlay() {
+  function showAddServerOverlay() {
     dispatch(setOverlayAction({type: "AddServerOverlayComponent"}));
+  }
+
+  function goHome() {
+    dispatch(selectServerAction(null));
   }
 
   return (
       <Ol className="list list__panel">
+        <ServerComponent name={"Home"} onSelectServer={goHome}/>
         {servers.map((server: Server) =>
             <ServerComponent key={`server_${server.id}`} name={server.name}
                              onSelectServer={() => selectServer(server)}
             />
         )}
-        <ServerComponent name={"+"} onSelectServer={setOverlay}/>
+        <ServerComponent name={"+"} onSelectServer={showAddServerOverlay}/>
       </Ol>
   );
 

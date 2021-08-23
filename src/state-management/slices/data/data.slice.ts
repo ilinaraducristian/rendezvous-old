@@ -8,6 +8,7 @@ import serverReducers from "state-management/slices/data/server.reducers";
 export type DataSliceState = {
   isBackendInitialized: boolean,
   servers: Server[],
+  friends: string[],
   users: User[],
   selectedServer: number | null,
   selectedChannel: number | null,
@@ -19,10 +20,12 @@ const reducers = {
   initializeBackend(state: DataSliceState, {
     payload: {
       servers,
-      users
+      friends,
+      users,
     }
-  }: { payload: { servers: Server[], users: User[] } }) {
+  }: { payload: { servers: Server[], users: User[], friends: string[] } }) {
     state.servers = servers;
+    state.friends = friends;
     state.users = users;
     state.isBackendInitialized = true;
   },
@@ -48,6 +51,7 @@ export const dataSlice = createSlice<DataSliceState, SliceCaseReducers<DataSlice
   initialState: {
     isBackendInitialized: false,
     servers: [],
+    friends: [],
     users: [],
     selectedServer: null,
     selectedChannel: null,

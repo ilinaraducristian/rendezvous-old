@@ -2,7 +2,7 @@ import {useEffect} from "react";
 import {store, useAppDispatch, useAppSelector} from "state-management/store";
 import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
-import {mockServers, mockUsers} from "mock-data";
+import {processedServerData} from "mock-data";
 import {initializeBackend, setOverlay,} from "state-management/slices/data/data.slice";
 import ServersPanelComponent from "components/server/ServersPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
@@ -100,10 +100,6 @@ function AppComponent() {
 
   useEffect(() => {
     if (config.offline) {
-      const processedServerData = {
-        servers: mockServers,
-        users: mockUsers
-      };
       dispatch(initializeBackend(processedServerData));
       return;
     }

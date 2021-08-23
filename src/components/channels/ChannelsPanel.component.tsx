@@ -8,6 +8,7 @@ import GroupsListComponent from "components/group/GroupsList.component";
 import styled from "styled-components";
 import {ArrowXSVG} from "svg/Arrow.svg";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import FriendsListComponent from "components/friend/FriendsList.component";
 
 function ChannelsPanelComponent() {
 
@@ -15,6 +16,7 @@ function ChannelsPanelComponent() {
   const selectedServer = useAppSelector(selectSelectedServer);
 
   function toggleDropdown() {
+    if (selectedServer === undefined) return;
     setIsDropdownShown(!isDropdownShown);
   }
 
@@ -23,21 +25,25 @@ function ChannelsPanelComponent() {
         <Button className="btn" type="button"
                 onClick={toggleDropdown}>
           {
-            selectedServer === undefined ||
-            <>
-                <Span>{selectedServer.name}</Span>
-                <ArrowXSVG isCollapsed={!isDropdownShown}/>
-            </>
+            selectedServer === undefined ?
+                <FriendsSpan>Friends</FriendsSpan>
+                :
+                <>
+                  <Span>{selectedServer.name}</Span>
+                  <ArrowXSVG isCollapsed={!isDropdownShown}/>
+                </>
           }
         </Button>
         {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
         <DndProvider backend={HTML5Backend}>
           <ol className="list">
-            {selectedServer === undefined ||
-            <>
-                <ChannelsListComponent/>
-                <GroupsListComponent/>
-            </>
+            {selectedServer === undefined ?
+                <FriendsListComponent/>
+                :
+                <>
+                  <ChannelsListComponent/>
+                  <GroupsListComponent/>
+                </>
             }
           </ol>
         </DndProvider>
@@ -47,6 +53,10 @@ function ChannelsPanelComponent() {
 }
 
 /* CSS */
+
+const FriendsSpan = styled.span`
+  color: white;
+`;
 
 const Div = styled.div`
   flex-shrink: 0;
