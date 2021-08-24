@@ -19,16 +19,19 @@ function ContentPanelComponent() {
         <Header>
           <DivHeader>
             {
-              selectedChannel === undefined ||
-              <>
-                  <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
-                  <Span>{selectedChannel.name}</Span>
-              </>
+                selectedChannel === undefined ?
+                    <span>Friends</span>
+                    :
+                    <>
+                        <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
+                        <Span>{selectedChannel.name}</Span>
+                        <button type="button"
+                                className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
+                                onClick={() => setIsMembersSelected(!isMembersSelected)}>
+                            <MembersSVG/>
+                        </button>
+                    </>
             }
-            <button type="button" className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}
-                    onClick={() => setIsMembersSelected(!isMembersSelected)}>
-              <MembersSVG/>
-            </button>
           </DivHeader>
           <DivMembers>
             placeholder

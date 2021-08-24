@@ -6,7 +6,7 @@ import {processedServerData} from "mock-data";
 import {initializeBackend, setOverlay,} from "state-management/slices/data/data.slice";
 import ServersPanelComponent from "components/server/ServersPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
-import ChannelsPanelComponent from "components/channels/ChannelsPanel.component";
+import ChannelsPanelComponent from "components/channel/ChannelsPanel.component";
 import ContentPanelComponent from "components/content/ContentPanel.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";
 import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay.component";

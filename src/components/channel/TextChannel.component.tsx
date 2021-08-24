@@ -7,7 +7,7 @@ import {addMessages, selectChannel as selectChannelAction} from "state-managemen
 import {useAppDispatch} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
 import {TextChannel} from "types/Channel";
-import ChannelButtonComponent from "components/channels/ChannelButton.component";
+import ChannelButtonComponent from "components/channel/ChannelButton.component";
 
 type ComponentProps = {
   channel: TextChannel

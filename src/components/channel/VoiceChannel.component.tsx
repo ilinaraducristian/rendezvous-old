@@ -9,7 +9,7 @@ import ChannelSVG from "svg/Channel.svg";
 import config from "config";
 import {VoiceChannel} from "types/Channel";
 import styled from "styled-components";
-import ChannelButtonComponent from "components/channels/ChannelButton.component";
+import ChannelButtonComponent from "components/channel/ChannelButton.component";
 import {selectUsers} from "state-management/selectors/data.selector";
 
 type ComponentProps = {

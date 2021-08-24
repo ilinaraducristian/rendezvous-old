@@ -1,5 +1,5 @@
 import {useState} from "react";
-import ChannelsListComponent from "components/channels/ChannelsList.component";
+import ChannelsListComponent from "components/channel/ChannelsList.component";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {useAppSelector} from "state-management/store";

@@ -9,7 +9,7 @@ type Server = {
   userId: string,
   invitation: string | null,
   invitationExp: Date | null,
-  channels: Channel[], // channels without a group
+  channels: Channel[], // channel without a group
   groups: Group[],
   members: Member[],
 }

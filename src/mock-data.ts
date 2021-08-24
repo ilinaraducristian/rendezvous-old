@@ -19,7 +19,7 @@ export const mockUsers = [
     id: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
     username: "user1",
     firstName: "User1",
-    lastName: "Name1"
+    lastName: "Name1",
   },
   {
     id: "c7c2415b-8916-47cb-96fb-cf5f0acbea18",

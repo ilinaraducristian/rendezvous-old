@@ -1,5 +1,5 @@
 import {useState} from "react";
-import ChannelsListComponent from "components/channels/ChannelsList.component";
+import ChannelsListComponent from "components/channel/ChannelsList.component";
 import {ArrowSVG} from "svg/Arrow.svg";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
