@@ -2,142 +2,171 @@ import styled from "styled-components";
 import {useEffect, useRef, useState} from "react";
 import {useAppDispatch} from "state-management/store";
 import {
-  deleteMessage as deleteMessageAction,
-  editMessage as editMessageAction
+    deleteMessage as deleteMessageAction,
+    editMessage as editMessageAction
 } from "state-management/slices/data/data.slice";
 import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio";
 import config from "config";
 
 type ComponentProps = {
-  serverId: number,
-  channelId: number,
-  messageId: number,
-  username: string,
-  timestamp: string,
-  text: string,
-  isReply: boolean,
-  replyId: number | null
-  reply: any,
-  image: string | null
+    serverId: number,
+    channelId: number,
+    messageId: number,
+    username: string,
+    timestamp: string,
+    text: string,
+    isReply: boolean,
+    replyId: number | null
+    reply: any,
+    image: string | null
 }
 
 function MessageComponent(
     {
-      serverId,
-      channelId,
-      messageId,
-      username,
-      timestamp,
-      text,
-      isReply,
-      replyId,
-      reply,
-      image
+        serverId,
+        channelId,
+        messageId,
+        username,
+        timestamp,
+        text,
+        isReply,
+        replyId,
+        reply,
+        image
     }: ComponentProps) {
 
-  const time = new Date(timestamp);
-  const [actions, setActions] = useState(false);
-  const dispatch = useAppDispatch();
-  const [fetchEditMessage, {
-    isFetching: isFetchingEditMessage,
-    isSuccess: isSuccessEditMessage
-  }] = useLazyEditMessageQuery();
-  const [fetchDeleteMessage, {
-    isFetching: isFetchingDeleteMessage,
-    isSuccess: isSuccessDeleteMessage
-  }] = useLazyDeleteMessageQuery();
-  const [isEditing, setIsEditing] = useState(false);
-  const textRef = useRef<HTMLSpanElement>(null);
-  const [oldMessage, setOldMessage] = useState("");
+    const time = new Date(timestamp);
+    const [actions, setActions] = useState(false);
+    const dispatch = useAppDispatch();
+    const [fetchEditMessage, {
+        isFetching: isFetchingEditMessage,
+        isSuccess: isSuccessEditMessage
+    }] = useLazyEditMessageQuery();
+    const [fetchDeleteMessage, {
+        isFetching: isFetchingDeleteMessage,
+        isSuccess: isSuccessDeleteMessage
+    }] = useLazyDeleteMessageQuery();
+    const [isEditing, setIsEditing] = useState(false);
+    const textRef = useRef<HTMLSpanElement>(null);
+    const [oldMessage, setOldMessage] = useState("");
+    const [gifs, setGifs] = useState<string[]>([]);
 
-  function onMouseEnter() {
-    setActions(true);
-  }
+    useEffect(() => {
+        const found = text.match(/https:\/\/media.tenor.com\/videos\/[0-9a-zA-Z]{32}\/mp4/g)
+        if (found === null) return;
+        setGifs(found)
+    }, [text])
 
-  function onMouseLeave() {
-    setActions(false);
-  }
-
-  function editMode() {
-    if (isEditing) {
-      if (textRef.current === null) return;
-      textRef.current.innerText = oldMessage;
-      setIsEditing(false);
-    } else {
-      if (textRef.current === null) return;
-      setOldMessage(textRef.current.innerText);
-      setIsEditing(true);
+    function onMouseEnter() {
+        setActions(true);
     }
-  }
 
-  function editMessage() {
-    if (!config.offline) {
-      fetchEditMessage({serverId, channelId, messageId, text: textRef.current?.innerText || ""});
+    function onMouseLeave() {
+        setActions(false);
     }
-  }
 
-  function deleteMessage() {
-    if (!config.offline) {
-      fetchDeleteMessage({serverId, channelId, messageId});
-    } else {
-      dispatch(deleteMessageAction({serverId, channelId, messageId}));
-    }
-  }
-
-  useEffect(() => {
-    if (!isSuccessEditMessage || isFetchingEditMessage) return;
-    dispatch(editMessageAction({serverId, channelId, messageId, text: textRef.current?.innerText}));
-    setIsEditing(false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessEditMessage, isFetchingEditMessage]);
-
-  useEffect(() => {
-    if (!isFetchingDeleteMessage || isSuccessDeleteMessage) return;
-    dispatch(deleteMessageAction({serverId, channelId, messageId}));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isFetchingDeleteMessage, isSuccessDeleteMessage]);
-
-  return (
-      <DivContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-        {!actions ||
-        <DivActions>
-            <button type="button" onClick={editMode}>E</button>
-            <button type="button" onClick={() => reply(messageId)}>R</button>
-            <button type="button" onClick={deleteMessage}>D</button>
-        </DivActions>
+    function editMode() {
+        if (isEditing) {
+            if (textRef.current === null) return;
+            textRef.current.innerText = oldMessage;
+            setIsEditing(false);
+        } else {
+            if (textRef.current === null) return;
+            setOldMessage(textRef.current.innerText);
+            setIsEditing(true);
         }
-        {
-          !isReply ||
-          <div>{
-            replyId === null ?
-                "message has been deleted"
-                :
-                `replied to ${replyId}`
-          }</div>
+    }
+
+    function editMessage() {
+        if (!config.offline) {
+            fetchEditMessage({serverId, channelId, messageId, text: textRef.current?.innerText || ""});
         }
-        <Div>
-          <Time dateTime={time.toISOString()}>
-            {time.getHours()} : {time.getMinutes()}
-          </Time>
-          <SpanUsername>{username}</SpanUsername>
-          <DivMessageContainer>
-            <SpanMessage suppressContentEditableWarning contentEditable={isEditing} ref={textRef}>{text}</SpanMessage>
-            {
-              !isEditing ||
-              <button type="button" onClick={editMessage}>Save</button>
+    }
+
+    function deleteMessage() {
+        if (!config.offline) {
+            fetchDeleteMessage({serverId, channelId, messageId});
+        } else {
+            dispatch(deleteMessageAction({serverId, channelId, messageId}));
+        }
+    }
+
+    useEffect(() => {
+        if (!isSuccessEditMessage || isFetchingEditMessage) return;
+        dispatch(editMessageAction({serverId, channelId, messageId, text: textRef.current?.innerText}));
+        setIsEditing(false);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccessEditMessage, isFetchingEditMessage]);
+
+    useEffect(() => {
+        if (!isFetchingDeleteMessage || isSuccessDeleteMessage) return;
+        dispatch(deleteMessageAction({serverId, channelId, messageId}));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isFetchingDeleteMessage, isSuccessDeleteMessage]);
+
+    return (
+        <DivContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+            {!actions ||
+            <DivActions>
+                <button type="button" onClick={editMode}>E</button>
+                <button type="button" onClick={() => reply(messageId)}>R</button>
+                <button type="button" onClick={deleteMessage}>D</button>
+            </DivActions>
             }
             {
-              image === null ||
-              <Img src={image} alt="user uploaded image"/>
+                !isReply ||
+                <div>{
+                    replyId === null ?
+                        "message has been deleted"
+                        :
+                        `replied to ${replyId}`
+                }</div>
             }
-          </DivMessageContainer>
-        </Div>
-      </DivContainer>
-  );
+            <Div>
+                <Time dateTime={time.toISOString()}>
+                    {time.getHours()} : {time.getMinutes()}
+                </Time>
+                <SpanUsername>{username}</SpanUsername>
+                <DivMessageContainer>
+                    <SpanMessage suppressContentEditableWarning contentEditable={isEditing}
+                                 ref={textRef}>{text}</SpanMessage>
+                    {
+                        !isEditing ||
+                        <button type="button" onClick={editMessage}>Save</button>
+                    }
+                    {
+                        image === null ||
+                        <Img src={image} alt="user uploaded image"/>
+                    }
+                    {
+                        gifs.map((url, i) =>
+                            <Video
+                                key={`video_${i}`}
+                                src={url}
+                                loop={true}
+                                onMouseEnter={event => {
+                                    (event.target as HTMLVideoElement).currentTime = 0;
+                                    (event.target as HTMLVideoElement).play();
+                                }}
+                                onMouseLeave={event => {
+                                    (event.target as HTMLVideoElement).pause();
+                                }}
+                            />
+                        )
+                    }
+                </DivMessageContainer>
+            </Div>
+        </DivContainer>
+    );
 
 }
 
 /* CSS */
+
+const Video = styled.video`
+  max-width: 20rem;
+  max-height: 30rem;
+`
 
 const DivMessageContainer = styled.div`
   display: flex;

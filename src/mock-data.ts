@@ -61,7 +61,7 @@ const mockChannels = [
     type: ChannelType.Text,
     name: "channel 1",
     order: 0,
-    messages: new Array(99).fill(0).map((_, index) => ({
+    messages: new Array(98).fill(0).map((_, index) => ({
       id: index + 1,
       serverId: 1,
       channelId: 1,
@@ -72,7 +72,7 @@ const mockChannels = [
       replyId: null,
       image: null
     })).concat([{
-      id: 100,
+      id: 99,
       serverId: 1,
       channelId: 1,
       userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
@@ -82,6 +82,16 @@ const mockChannels = [
       replyId: null,
 // @ts-ignore
       image: mockImage
+    }, {
+      id: 100,
+      serverId: 1,
+      channelId: 1,
+      userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
+      timestamp: new Date().toString(),
+      text: 'https://media.tenor.com/videos/44572f60c36c08eb3812c311a386041e/mp4',
+      isReply: false,
+      replyId: null,
+      image: null
     }])
   },
   {

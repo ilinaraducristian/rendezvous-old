@@ -14,7 +14,6 @@ function FriendsListComponent() {
     if (found === undefined) return;
     friendUsers.push(found);
   });
-  console.log(friendUsers);
 
   return <Ul>
     {friendUsers
