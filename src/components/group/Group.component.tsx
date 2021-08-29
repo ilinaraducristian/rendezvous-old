@@ -4,6 +4,7 @@ import {ArrowSVG} from "svg/Arrow.svg";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import styled from "styled-components";
+import {OverlayTypes} from "../../types/UISelectionModes";
 
 type ComponentProps = {
   id: number,
@@ -17,7 +18,7 @@ function GroupComponent({id, name}: ComponentProps) {
 
 
   function createChannel() {
-    dispatch(setOverlay({type: "CreateChannelOverlayComponent", payload: {groupId: id}}));
+    dispatch(setOverlay({type: OverlayTypes.CreateChannelOverlayComponent, payload: {groupId: id}}));
   }
 
   return (

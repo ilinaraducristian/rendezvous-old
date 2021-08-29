@@ -33,7 +33,7 @@ function ImageInputOverlayComponent({image}: ComponentProps) {
     let message = await socket.emitAck("send_message", payload);
     dispatch(addMessages([message]));
     dispatch(setOverlay(null));
-  }, []);
+  }, [dispatch, image, selectedChannel]);
 
   return (
       <OverlayComponent>

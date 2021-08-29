@@ -2,6 +2,7 @@ import {DataSliceState} from "state-management/slices/data/data.slice";
 import User from "types/User";
 import Channel, {ChannelType, VoiceChannel} from "types/Channel";
 import Server from "types/Server";
+import FreindRequest from "../../types/FreindRequest";
 
 export const selectIsBackendInitialized = ({data}: { data: DataSliceState }): boolean => data.isBackendInitialized;
 
@@ -15,9 +16,9 @@ export const selectSelectedServer = ({data}: { data: DataSliceState }): Server |
     data.servers.find(server => server.id === data.selectedServer)
 ;
 
-export const selectFriends = ({data}: { data: DataSliceState }): string[] => data.friends;
+export const selectFriends = ({data}: { data: DataSliceState }): any[] => data.friends;
 
-export const selectOverlay = ({data}: { data: DataSliceState }): { type: string; payload: any; } | null => data.overlay;
+export const selectOverlay = ({data}: { data: DataSliceState }): { type: number; payload: any; } | null => data.overlay;
 
 export const selectUsers = ({data}: { data: DataSliceState }): User[] => data.users;
 
@@ -40,3 +41,11 @@ export const selectJoinedChannel = ({data}: { data: DataSliceState }): VoiceChan
 };
 
 export const selectServers = ({data}: { data: DataSliceState }): Server[] => data.servers;
+
+export const selectFriendRequests = ({data}: { data: DataSliceState }): FreindRequest[] => data.friendRequests;
+
+export const selectSecondPanelHeader = ({data}: { data: DataSliceState }): number => data.secondPanelHeader;
+export const selectSecondPanelBody = ({data}: { data: DataSliceState }): number => data.secondPanelBody;
+export const selectSecondPanelFooter = ({data}: { data: DataSliceState }): number => data.secondPanelFooter;
+export const selectHeader = ({data}: { data: DataSliceState }): number => data.header;
+export const selectThirdPanel = ({data}: { data: DataSliceState }): number => data.thirdPanel;

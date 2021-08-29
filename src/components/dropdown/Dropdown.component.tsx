@@ -4,6 +4,7 @@ import {setInvitation, setOverlay} from "state-management/slices/data/data.slice
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import styled from "styled-components";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {OverlayTypes} from "../../types/UISelectionModes";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
@@ -19,19 +20,19 @@ function DropdownComponent({setIsDropdownShown}: any) {
   useEffect(() => {
     if (invitation === undefined) return;
     dispatch(setInvitation(invitation));
-    dispatch(setOverlay({type: "InvitationOverlayComponent", payload: {invitation}}));
+    dispatch(setOverlay({type: OverlayTypes.InvitationOverlayComponent, payload: {invitation}}));
     setIsDropdownShown(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [invitation]);
 
   const showCreateChannelOverlay = useCallback(async () => {
     setIsDropdownShown(false);
-    dispatch(setOverlay({type: "CreateChannelOverlayComponent", payload: {groupId: null}}));
+    dispatch(setOverlay({type: OverlayTypes.CreateChannelOverlayComponent, payload: {groupId: null}}));
   }, [setIsDropdownShown, dispatch]);
 
   const showCreateGroupOverlay = useCallback(async () => {
     setIsDropdownShown(false);
-    dispatch(setOverlay({type: "CreateGroupOverlayComponent"}));
+    dispatch(setOverlay({type: OverlayTypes.CreateGroupOverlayComponent}));
   }, [setIsDropdownShown, dispatch]);
 
   return (

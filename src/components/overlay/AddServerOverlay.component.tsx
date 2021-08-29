@@ -1,16 +1,17 @@
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay.component";
+import {OverlayTypes} from "../../types/UISelectionModes";
 
 function AddServerOverlayComponent() {
   const dispatch = useAppDispatch();
 
   function createServer() {
-    dispatch(setOverlay({type: "CreateServerOverlayComponent"}));
+      dispatch(setOverlay({type: OverlayTypes.CreateServerOverlayComponent}));
   }
 
   function joinServer() {
-    dispatch(setOverlay({type: "JoinServerOverlayComponent"}));
+      dispatch(setOverlay({type: OverlayTypes.JoinServerOverlayComponent}));
   }
 
   return (

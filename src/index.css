@@ -20,7 +20,11 @@
 }
 
 #root {
-    display: flex;
+    display: grid;
+    grid-template-areas: "first-panel second-panel header      header"
+                         "first-panel second-panel third-panel forth-panel";
+    grid-template-columns: 4.5em 15em auto 15em;
+    grid-template-rows: 3em 1fr;
     position: absolute;
     width: 100%;
     height: 100%;

@@ -145,7 +145,6 @@ function MessageComponent(
                                 src={url}
                                 loop={true}
                                 onMouseEnter={event => {
-                                    (event.target as HTMLVideoElement).currentTime = 0;
                                     (event.target as HTMLVideoElement).play();
                                 }}
                                 onMouseLeave={event => {

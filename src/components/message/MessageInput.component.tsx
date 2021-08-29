@@ -2,6 +2,7 @@ import styled from "styled-components";
 import {ClipboardEvent, EventHandler, KeyboardEvent, MouseEvent, useCallback} from "react";
 import {useAppDispatch} from "state-management/store";
 import {setOverlay} from "state-management/slices/data/data.slice";
+import {OverlayTypes} from "../../types/UISelectionModes";
 
 type ComponentProps = {
   onKeyDown: EventHandler<KeyboardEvent<HTMLSpanElement>>,
@@ -42,7 +43,7 @@ function MessageInputComponent({onKeyDown, onKeyUp, onClick}: ComponentProps) {
     const fr = new FileReader();
     fr.onloadend = () => {
       if (typeof fr.result !== "string") return;
-      dispatch(setOverlay({type: "ImageInputOverlayComponent", payload: {image: fr.result}}));
+      dispatch(setOverlay({type: OverlayTypes.ImageInputOverlayComponent, payload: {image: fr.result}}));
     };
     fr.readAsDataURL(file);
 

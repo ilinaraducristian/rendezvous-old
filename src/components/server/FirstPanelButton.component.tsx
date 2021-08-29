@@ -3,18 +3,18 @@ import {MouseEventHandler} from "react";
 
 type ComponentProps = {
   name: string,
-  onSelectServer: MouseEventHandler<HTMLButtonElement>
+  onClick: MouseEventHandler<HTMLButtonElement>
 }
 
-function ServerComponent({name, onSelectServer: selectServer}: ComponentProps) {
+function FirstPanelButtonComponent({name, onClick}: ComponentProps) {
 
-  return (
-      <Li className="li">
-        <Button className="btn" type="button" onClick={selectServer}>
-          {name[0]}
-        </Button>
-      </Li>
-  );
+    return (
+        <Li className="li">
+            <Button className="btn" type="button" onClick={onClick}>
+                {name[0]}
+            </Button>
+        </Li>
+    );
 
 }
 
@@ -37,4 +37,4 @@ const Button = styled.button`
 
 /* CSS */
 
-export default ServerComponent;
+export default FirstPanelButtonComponent;
