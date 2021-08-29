@@ -41,10 +41,7 @@ export const socketioApi = createApi({
             query: (data) => ({ev: "delete_message", data})
         }),
         sendFriendRequest: builder.query<{ id: number, userId: string }, { username: string }>({
-            query: (data) => {
-                console.log(data)
-                return {ev: "send_friend_request", data}
-            }
+            query: (data) => ({ev: "send_friend_request", data})
         }),
         acceptFriendRequest: builder.query<string, any>({
             query: (data) => ({ev: "accept_friend_request", data})

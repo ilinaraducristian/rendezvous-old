@@ -32,7 +32,6 @@ const reducers = {
             users,
         }
     }: { payload: { servers: Server[], users: User[], friends: any[], friendRequests: FreindRequest[] } }) {
-        console.log(users)
         state.servers = servers;
         state.friends = friends;
         state.friendRequests = friendRequests;

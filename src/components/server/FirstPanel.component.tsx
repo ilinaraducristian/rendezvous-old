@@ -1,6 +1,7 @@
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {
     selectServer as selectServerAction,
+    setHeader,
     setOverlay as setOverlayAction,
     setSecondPanelBody,
     setSecondPanelHeader
@@ -9,15 +10,15 @@ import styled from "styled-components";
 import FirstPanelButtonComponent from "components/server/FirstPanelButton.component";
 import Server from "types/Server";
 import {selectServers} from "state-management/selectors/data.selector";
-import {OverlayTypes} from "../../types/UISelectionModes";
+import {HeaderTypes, OverlayTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../../types/UISelectionModes";
 
 function FirstPanelComponent() {
     const dispatch = useAppDispatch();
     const servers = useAppSelector(selectServers);
 
     function selectServer(server: Server) {
-        dispatch(setSecondPanelHeader('channel'));
-        dispatch(setSecondPanelBody('channels'));
+        dispatch(setSecondPanelHeader(SecondPanelHeaderTypes.channel));
+        dispatch(setSecondPanelBody(SecondPanelBodyTypes.channels));
         dispatch(selectServerAction(server.id));
     }
 
@@ -26,8 +27,9 @@ function FirstPanelComponent() {
     }
 
     function selectFriends() {
-        dispatch(setSecondPanelHeader('friends'));
-        dispatch(setSecondPanelBody('friends'));
+        dispatch(setSecondPanelHeader(SecondPanelHeaderTypes.friends));
+        dispatch(setSecondPanelBody(SecondPanelBodyTypes.friends));
+        dispatch(setHeader(HeaderTypes.friends));
         dispatch(selectServerAction(null));
     }
 

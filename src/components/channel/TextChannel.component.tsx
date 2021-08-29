@@ -3,11 +3,17 @@ import {useDrag} from "react-dnd";
 import config from "config";
 import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
-import {addMessages, selectChannel as selectChannelAction} from "state-management/slices/data/data.slice";
+import {
+  addMessages,
+  selectChannel as selectChannelAction,
+  setHeader,
+  setThirdPanel
+} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
 import {TextChannel} from "types/Channel";
 import ChannelButtonComponent from "components/channel/ChannelButton.component";
+import {HeaderTypes, ThirdPanelTypes} from "../../types/UISelectionModes";
 
 type ComponentProps = {
   channel: TextChannel
@@ -23,6 +29,8 @@ function TextChannelComponent({channel}: ComponentProps) {
     if (messages === undefined) return;
     dispatch(addMessages(messages));
     dispatch(selectChannelAction(channel.id));
+    dispatch(setThirdPanel(ThirdPanelTypes.channelMessages));
+    dispatch(setHeader(HeaderTypes.channel))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 

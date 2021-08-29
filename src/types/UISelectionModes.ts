@@ -25,7 +25,7 @@ enum SecondPanelFooterTypes {
 
 enum HeaderTypes {
     friends,
-    channel, e
+    channel
 }
 
 enum ThirdPanelTypes {

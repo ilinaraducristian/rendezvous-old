@@ -79,12 +79,10 @@ socket.on("message_deleted", (payload) => {
     store.dispatch(deleteMessage(payload));
 });
 
-socket.on('new_friend_request', (payload) => {
-    console.log(payload)
+socket.on('new_friend_request', () => {
 })
 
-socket.on('friend_request_accepted', (payload) => {
-    console.log(payload);
+socket.on('friend_request_accepted', () => {
 })
 
 export default socket;

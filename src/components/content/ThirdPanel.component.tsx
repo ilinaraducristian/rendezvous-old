@@ -22,7 +22,6 @@ function ThirdPanelComponent() {
     const [fetch] = useLazyAcceptFriendRequestQuery();
 
     function acceptFriendRequest(userId: string, friendRequestId: number) {
-        console.log({userId, friendRequestId})
         fetch({friendRequestId})
     }
 

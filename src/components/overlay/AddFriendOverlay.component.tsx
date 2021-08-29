@@ -11,7 +11,6 @@ function AddFriendOverlayComponent() {
 
     function sendFriendRequest() {
         if (ref.current === null) return;
-        console.log({username: ref.current.value})
         fetch({username: ref.current.value});
         // dispatch(setOverlay({type: OverlayTypes.CreateServerOverlayComponent}));
     }

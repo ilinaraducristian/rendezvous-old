@@ -104,7 +104,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     setIsEmojiShown(false);
     return;
 
-  }, [isEmojiShown, sendInputFieldContent, emojiRef.current]);
+  }, [isEmojiShown, sendInputFieldContent]);
 
   const shouldDisplayEmojiPanelEventHandler = useCallback((event) => {
     const emojis = shouldDisplayEmojiPanel(event);
