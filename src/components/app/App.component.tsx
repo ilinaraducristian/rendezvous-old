@@ -21,7 +21,7 @@ import {
     selectSelectedServer
 } from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
-import mediasoup, {createMediaStreamSource, remoteStream} from "mediasoup";
+import {consumers, createConsumer, createMediaStreamSource} from "mediasoup";
 import socket from "socketio";
 import authClient from "keycloak";
 import ImageInputOverlayComponent from "components/message/ImageInputOverlay.component";
@@ -31,8 +31,6 @@ import HeaderComponent from "../content/Header.component";
 import {OverlayTypes} from "../../types/UISelectionModes";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
 
-const consumers: any[] = [];
-
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
     store.dispatch(setOverlay(null));
@@ -40,51 +38,28 @@ document.onkeyup = (event: any) => {
 
 function AppComponent() {
 
-    // const authenticated = useAppSelector(selectAuthenticated);
     const connected = useAppSelector(selectConnected);
     const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
     const selectedServer = useAppSelector(selectSelectedServer);
     const overlay = useAppSelector(selectOverlay);
     const joinedChannel = useAppSelector(selectJoinedChannel);
     const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
-    // const subject = useAppSelector(selectSubject);
-    const [fetch, {data: backendData, isSuccess}] = useLazyGetUserDataQuery();
+    const [fetchUserData, {data: backendData, isSuccess: isUserDataSuccess}] = useLazyGetUserDataQuery();
     const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
     const dispatch = useAppDispatch();
 
     useEffect(() => {
         if (joinedChannel === null) {
-            //disconnect
+            // TODO disconnect
             return;
         }
+
         (async () => {
             const subject = await authClient.getSubject();
             const users = joinedChannelUsers.filter(user => user.userId !== subject &&
                 !consumers.find(consumer => user.socketId === consumer.socketId));
             createMediaStreamSource();
-            const promises: Promise<void>[] = [];
-            users.forEach(user => {
-                promises.push(
-                    new Promise<void>(async (resolve) => {
-                        const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
-                        const recvTransport = mediasoup.createRecvTransport(transportParameters);
-                        recvTransport.on("connect", ({dtlsParameters}, cb) => {
-                            socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
-                        });
-                        const {consumerParameters} = await socket.emitAck("create_consumer", {
-                            transportId: recvTransport.id,
-                            socketId: user.socketId,
-                            rtpCapabilities: mediasoup.rtpCapabilities
-                        });
-                        const consumer = await recvTransport.consume(consumerParameters);
-                        remoteStream.addTrack(consumer.track);
-                        socket.emit("resume_consumer", {id: consumer.id});
-                        consumers.push({socketId: user.socketId, consumer});
-                        resolve();
-                    })
-                );
-            });
-            await Promise.all(promises);
+            await Promise.all(users.map(user => createConsumer(user.socketId)));
         })();
     }, [joinedChannelUsers, joinedChannel, selectedServer]);
 
@@ -96,8 +71,6 @@ function AppComponent() {
             const isAuthenticated = await authClient.init();
             if (isAuthenticated) {
                 fetchLogin();
-                // socket.auth.token = authClient.getToken();
-                // if (!socket.connected) socket.connect();
             }
         })();
     }, [fetchLogin]);
@@ -108,7 +81,7 @@ function AppComponent() {
             return;
         }
         if (!connected || isBackendInitialized) return;
-        fetch();
+        fetchUserData();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isBackendInitialized, connected]);
 
@@ -119,10 +92,10 @@ function AppComponent() {
     }, [isLoginSuccess, loginData]);
 
     useEffect(() => {
-        if (!isSuccess || backendData === undefined) return;
+        if (!isUserDataSuccess || backendData === undefined) return;
         dispatch(initializeBackend(backendData));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
+    }, [isUserDataSuccess]);
 
     return (
         <>

@@ -96,6 +96,7 @@ export const {
     initializeBackend,
     setInvitation,
     addChannelUsers,
+    setJoinedVoiceChannel,
     joinVoiceChannel,
     leaveVoiceChannel,
     selectServer,

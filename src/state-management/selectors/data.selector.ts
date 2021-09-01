@@ -34,7 +34,7 @@ export const selectJoinedChannel = ({data}: { data: DataSliceState }): VoiceChan
   } else {
     const foundGroup = server.groups.find(group => group.id === joinedVoiceChannel.groupId);
     if (foundGroup === undefined) return null;
-    const foundChannel = server.channels.find(channel => channel.id === joinedVoiceChannel.channelId && channel.type === ChannelType.Voice);
+    const foundChannel = foundGroup.channels.find(channel => channel.id === joinedVoiceChannel.channelId && channel.type === ChannelType.Voice);
     if (foundChannel === undefined) return null;
     return foundChannel as VoiceChannel;
   }

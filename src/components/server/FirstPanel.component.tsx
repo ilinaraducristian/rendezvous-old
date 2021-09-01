@@ -34,7 +34,7 @@ function FirstPanelComponent() {
     }
 
     return (
-        <Ol className="list list__panel">
+        <Ol className="list">
             <FirstPanelButtonComponent name={"Home"} onClick={selectFriends}/>
             {servers.map((server: Server) =>
                 <FirstPanelButtonComponent key={`server_${server.id}`} name={server.name}

@@ -46,6 +46,9 @@ export const socketioApi = createApi({
         acceptFriendRequest: builder.query<string, any>({
             query: (data) => ({ev: "accept_friend_request", data})
         }),
+        joinVoiceChannel: builder.query<{ channelId: number, socketId: string, userId: string }[], any>({
+            query: (data) => ({ev: "join_voice-channel", data})
+        }),
     }),
 });
 
@@ -61,4 +64,5 @@ export const {
     useLazyDeleteMessageQuery,
     useLazySendFriendRequestQuery,
     useLazyAcceptFriendRequestQuery,
+    useLazyJoinVoiceChannelQuery
 } = socketioApi;

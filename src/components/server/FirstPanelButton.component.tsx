@@ -2,8 +2,8 @@ import styled from "styled-components";
 import {MouseEventHandler} from "react";
 
 type ComponentProps = {
-  name: string,
-  onClick: MouseEventHandler<HTMLButtonElement>
+    name: string,
+    onClick: MouseEventHandler<HTMLButtonElement>
 }
 
 function FirstPanelButtonComponent({name, onClick}: ComponentProps) {
