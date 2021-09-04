@@ -45,7 +45,7 @@ function MessagesPanelComponent() {
     if (messagesList.current?.scrollTop === 0) {
       if (beginning) return;
       if (!config.offline) {
-        fetch({serverId: channel.serverId, channelId: channel.id, offset: offset});
+        fetch({friendshipId: null, serverId: channel.serverId, channelId: channel.id, offset: offset});
         setOffset(offset + 30);
         return;
       }
@@ -69,16 +69,9 @@ function MessagesPanelComponent() {
             {
               messages.map(message =>
                   <MessageComponent key={`message_${message.id}`}
-                                    serverId={message.serverId}
-                                    channelId={message.channelId}
-                                    messageId={message.id}
+                                    message={message}
                                     username={users.find(user => user.id === message.userId)?.username || ""}
-                                    text={message.text}
-                                    timestamp={message.timestamp}
-                                    isReply={message.isReply}
-                                    replyId={message.replyId}
                                     reply={reply}
-                                    image={message.image}
                   />
               ).sort((a, b) => Date.parse(a.props.timestamp) - Date.parse(b.props.timestamp))
             }

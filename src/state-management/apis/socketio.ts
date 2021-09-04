@@ -1,53 +1,85 @@
 import {BaseQueryFn, createApi} from "@reduxjs/toolkit/dist/query/react";
 import socket from "socketio";
-import {Processedservers} from "types/Server";
 import Message from "types/Message";
+import {
+    JoinVoiceChannelRequest,
+    JoinVoiceChannelResponse,
+    MoveChannelRequest,
+    NewChannelRequest,
+    NewChannelResponse
+} from "../../dtos/channel.dto";
+import {NewGroupRequest, NewGroupResponse} from "../../dtos/group.dto";
+import {
+    DeleteMessagesRequest,
+    EditMessagesRequest,
+    GetMessagesRequest,
+    NewMessageRequest,
+    NewMessageResponse
+} from "../../dtos/message.dto";
+import {
+    JoinServerRequest,
+    JoinServerResponse,
+    NewInvitationRequest,
+    NewServerRequest,
+    NewServerResponse
+} from "../../dtos/server.dto";
+import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "../../dtos/user.dto";
 
 const socketioBaseQuery = (): BaseQueryFn<{
     ev: string
-    data?: any
-}, any, unknown> => ({ev, data}) => socket.emitAck(ev, data).then(data => ({data}));
+    data?: {
+        [key: string]: any
+    }
+}, {
+    [key: string]: any
+}, Error> => ({ev, data}) => socket.emitAck(ev, data).then(data => ({data}));
 
 export const socketioApi = createApi({
     reducerPath: "socketioApi",
     baseQuery: socketioBaseQuery(),
     endpoints: (builder) => ({
-        getUserData: builder.query<Processedservers, void>({
-            query: () => ({ev: "get_user_data"})
+        joinVoiceChannel: builder.query<JoinVoiceChannelResponse, JoinVoiceChannelRequest>({
+            query: (data) => ({ev: "join_voice_channel", data})
         }),
-        joinServer: builder.query<Processedservers, string>({
-            query: (invitation) => ({ev: "join_server", data: {invitation}})
-        }),
-        createServer: builder.query<Processedservers, string>({
-            query: (name) => ({ev: "create_server", data: {name}}),
-        }),
-        createChannel: builder.query<any, { serverId: number, groupId: number | null, channelName: string }>({
+        createChannel: builder.query<NewChannelResponse, NewChannelRequest>({
             query: (data) => ({ev: "create_channel", data})
         }),
-        createGroup: builder.query<any, { serverId: number, groupName: string }>({
+        moveChannel: builder.query<void, MoveChannelRequest>({
+            query: (data) => ({ev: "move_channel", data})
+        }),
+        createGroup: builder.query<NewGroupResponse, NewGroupRequest>({
             query: (data) => ({ev: "create_group", data})
         }),
-        getMessages: builder.query<Message[], { [key: string]: number }>({
+        sendMessage: builder.query<NewMessageResponse, NewMessageRequest>({
+            query: (data) => ({ev: "send_message", data})
+        }),
+        getMessages: builder.query<Message[], GetMessagesRequest>({
             query: (data) => ({ev: "get_messages", data}),
         }),
-        createInvitation: builder.query<string, number>({
-            query: (serverId) => ({ev: "create_invitation", data: {serverId}}),
-            transformResponse: (response: { invitation: string }) => response.invitation
-        }),
-        editMessage: builder.query<string, { serverId: number, channelId: number, messageId: number, text: string }>({
+        editMessage: builder.query<string, EditMessagesRequest>({
             query: (data) => ({ev: "edit_message", data})
         }),
-        deleteMessage: builder.query<string, { serverId: number, channelId: number, messageId: number }>({
+        deleteMessage: builder.query<string, DeleteMessagesRequest>({
             query: (data) => ({ev: "delete_message", data})
         }),
-        sendFriendRequest: builder.query<{ id: number, userId: string }, { username: string }>({
+        createServer: builder.query<NewServerResponse, NewServerRequest>({
+            query: (data) => ({ev: "create_server", data}),
+        }),
+        createInvitation: builder.query<string, NewInvitationRequest>({
+            query: (data) => ({ev: "create_invitation", data}),
+            transformResponse: (response: { invitation: string }) => response.invitation
+        }),
+        joinServer: builder.query<JoinServerResponse, JoinServerRequest>({
+            query: (data) => ({ev: "join_server", data})
+        }),
+        sendFriendRequest: builder.query<SendFriendRequestResponse, SendFriendRequest>({
             query: (data) => ({ev: "send_friend_request", data})
         }),
-        acceptFriendRequest: builder.query<string, any>({
-            query: (data) => ({ev: "accept_friend_request", data})
+        getUserData: builder.query<UserDataResponse, void>({
+            query: () => ({ev: "get_user_data"})
         }),
-        joinVoiceChannel: builder.query<{ channelId: number, socketId: string, userId: string }[], any>({
-            query: (data) => ({ev: "join_voice-channel", data})
+        acceptFriendRequest: builder.query<any, AcceptFriendRequest>({
+            query: (data) => ({ev: "accept_friend_request", data})
         }),
     }),
 });

@@ -14,7 +14,7 @@ function DropdownComponent({setIsDropdownShown}: any) {
 
   const createInvitation = useCallback(async () => {
     if (selectedServer === undefined) return;
-    fetch(selectedServer.id);
+    fetch({serverId: selectedServer.id});
   }, [fetch, selectedServer]);
 
   useEffect(() => {

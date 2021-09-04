@@ -4,10 +4,10 @@ import config from "config";
 import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
 import {
-  addMessages,
-  selectChannel as selectChannelAction,
-  setHeader,
-  setThirdPanel
+    addMessages,
+    selectChannel as selectChannelAction,
+    setHeader,
+    setThirdPanel
 } from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
@@ -36,7 +36,7 @@ function TextChannelComponent({channel}: ComponentProps) {
 
   const selectChannel = useCallback(() => {
     if (!config.offline) {
-      fetch({serverId: channel.serverId, channelId: channel.id, offset: 0});
+        fetch({friendshipId: null, serverId: channel.serverId, channelId: channel.id, offset: 0});
       return;
     }
     dispatch(selectChannelAction(channel.id));

@@ -7,32 +7,28 @@ import {
 } from "state-management/slices/data/data.slice";
 import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio";
 import config from "config";
+import Message from "../../types/Message";
 
 type ComponentProps = {
-    serverId: number,
-    channelId: number,
-    messageId: number,
+    message: Message,
     username: string,
-    timestamp: string,
-    text: string,
-    isReply: boolean,
-    replyId: number | null
     reply: any,
-    image: string | null
 }
 
 function MessageComponent(
     {
-        serverId,
-        channelId,
-        messageId,
+        message: {
+            serverId,
+            channelId,
+            id: messageId,
+            timestamp,
+            text,
+            isReply,
+            replyId,
+            image
+        },
         username,
-        timestamp,
-        text,
-        isReply,
-        replyId,
         reply,
-        image
     }: ComponentProps) {
 
     const time = new Date(timestamp);
@@ -79,13 +75,18 @@ function MessageComponent(
 
     function editMessage() {
         if (!config.offline) {
-            fetchEditMessage({serverId, channelId, messageId, text: textRef.current?.innerText || ""});
+            fetchEditMessage({
+                serverId: serverId || 0,
+                channelId: channelId || 0,
+                messageId,
+                text: textRef.current?.innerText || ""
+            });
         }
     }
 
     function deleteMessage() {
         if (!config.offline) {
-            fetchDeleteMessage({serverId, channelId, messageId});
+            fetchDeleteMessage({serverId: serverId || 0, channelId: channelId || 0, messageId});
         } else {
             dispatch(deleteMessageAction({serverId, channelId, messageId}));
         }

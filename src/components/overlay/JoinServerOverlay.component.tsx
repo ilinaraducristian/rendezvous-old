@@ -11,7 +11,8 @@ function JoinServerOverlayComponent() {
     const dispatch = useAppDispatch();
 
     function joinServer() {
-        fetch(ref.current?.value as string);
+        if (ref.current === null) return;
+        fetch({invitation: ref.current.value});
     }
 
     useEffect(() => {

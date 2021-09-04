@@ -10,7 +10,8 @@ function CreateServerOverlayComponent() {
     const [fetch, {data, isSuccess}] = useLazyCreateServerQuery();
 
     function createServer() {
-        fetch(ref.current?.value as string);
+        if (ref.current === null) return;
+        fetch({name: ref.current.value});
     }
 
     useEffect(() => {

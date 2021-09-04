@@ -30,14 +30,16 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     let message = (event.target as any).innerText;
     (event.target as any).innerText = "";
     let payload: {
+      friendshipId: number | null,
       channelId: number,
-      message: string,
+      text: string,
       isReply: boolean,
       replyId: number | null,
       image: string | null
     } = {
+      friendshipId: null,
       channelId: selectedChannel.id,
-      message,
+      text: message,
       isReply: false,
       replyId: null,
       image: null
