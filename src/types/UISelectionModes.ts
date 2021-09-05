@@ -32,7 +32,7 @@ enum ThirdPanelTypes {
     allFriends,
     pendingFriendRequests,
     friendMessages,
-    channelMessages
+    messages
 }
 
 export {

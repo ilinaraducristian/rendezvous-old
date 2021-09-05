@@ -90,6 +90,7 @@ export const {
     useLazyCreateServerQuery,
     useLazyCreateChannelQuery,
     useLazyCreateGroupQuery,
+    useLazySendMessageQuery,
     useLazyGetMessagesQuery,
     useLazyCreateInvitationQuery,
     useLazyEditMessageQuery,

@@ -2,7 +2,7 @@ import {useAppSelector} from "state-management/store";
 import styled from "styled-components";
 import {
     selectFriendRequests,
-    selectFriends,
+    selectFriendships,
     selectThirdPanel,
     selectUsers
 } from "state-management/selectors/data.selector";
@@ -16,7 +16,7 @@ function ThirdPanelComponent() {
 
     // const selectedChannel = useAppSelector(selectSelectedChannel);
     const thirdPanel = useAppSelector(selectThirdPanel)
-    const friends = useAppSelector(selectFriends)
+    const friends = useAppSelector(selectFriendships)
     const users = useAppSelector(selectUsers)
     const friendRequests = useAppSelector(selectFriendRequests)
     const [fetch] = useLazyAcceptFriendRequestQuery();
@@ -29,14 +29,14 @@ function ThirdPanelComponent() {
         <DivContainer>
             <DivContentBody>
                 {
-                    thirdPanel !== ThirdPanelTypes.channelMessages ||
+                    thirdPanel !== ThirdPanelTypes.messages ||
                     <MessagesPanelComponent/>
                 }
                 {
                     thirdPanel !== ThirdPanelTypes.allFriends ||
                     <ul className="list">
                         {
-                            friends.map(friend => users.find(user => user.id === friend.userId))
+                            friends.map(friend => users.find(user => user.id === friend.user1Id || user.id === friend.user2Id))
                                 .map((friend, i) => <li key={`friend_${i}`}><span>{friend?.username}</span></li>)
                         }
                     </ul>

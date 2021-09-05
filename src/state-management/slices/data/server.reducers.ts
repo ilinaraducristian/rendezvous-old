@@ -1,6 +1,5 @@
 import Server from "types/Server";
-import Message from "types/Message";
-import Channel, {ChannelType, TextChannel} from "types/Channel";
+import Channel from "types/Channel";
 import User from "types/User";
 import Member from "types/Member";
 import Group from "types/Group";
@@ -19,23 +18,6 @@ const serverReducers = {
       state.servers.push(server);
     else
       state.servers[s1Index] = server;
-  },
-  addMessages(state: DataSliceState, {payload: messages}: { payload: Message[] }) {
-    const channels = state.servers
-        .map(server => server.channels
-            .concat(server.groups.map(group => group.channels).flat())
-            .filter(channel => channel.type === ChannelType.Text))
-        .flat();
-    if (channels.length === 0) return;
-    messages.forEach(message => {
-      const channel = channels.find(channel => channel.id === message.channelId) as TextChannel | undefined;
-      if (channel === undefined) return;
-      const messageId = channel.messages.findIndex(m1 => m1.id === message.id);
-      if (messageId === -1)
-        channel.messages.push(message);
-      else
-        channel.messages[messageId] = message;
-    });
   },
   addUser(state: DataSliceState, {payload: user}: { payload: User }) {
     const existingUserIndex = state.users.findIndex(u1 => u1.id === user.id);

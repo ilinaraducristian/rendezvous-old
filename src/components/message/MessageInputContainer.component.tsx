@@ -2,13 +2,13 @@ import PlusSVG from "svg/Plus.svg";
 import MessageInputComponent from "components/message/MessageInput.component";
 import GIFSVG from "svg/GIF.svg";
 import styled from "styled-components";
-import {useCallback, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import EmojiContainerComponent from "components/message/EmojiContainer.component";
 import trie from "trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import socket from "socketio";
-import {selectSelectedChannel} from "state-management/selectors/data.selector";
+import {selectSelectedChannel, selectSelectedFriendship} from "state-management/selectors/data.selector";
+import {useLazySendMessageQuery} from "../../state-management/apis/socketio";
 
 type ComponentProps = {
   isReplying: boolean,
@@ -22,23 +22,25 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
   const [isEmojiShown, setIsEmojiShown] = useState(false);
   const [foundEmojis, setFoundEmojis] = useState<any[]>([]);
   const selectedChannel = useAppSelector(selectSelectedChannel);
+  const selectedFriendship = useAppSelector(selectSelectedFriendship);
+  const [fetch, {data: message, isSuccess}] = useLazySendMessageQuery()
   const dispatch = useAppDispatch();
 
   const sendInputFieldContent = useCallback(async (event: any) => {
     event.preventDefault();
-    if (selectedChannel === undefined) return;
+    if (selectedChannel === undefined && selectedFriendship === undefined) return;
     let message = (event.target as any).innerText;
     (event.target as any).innerText = "";
     let payload: {
       friendshipId: number | null,
-      channelId: number,
+      channelId: number | null,
       text: string,
       isReply: boolean,
       replyId: number | null,
       image: string | null
     } = {
-      friendshipId: null,
-      channelId: selectedChannel.id,
+      friendshipId: selectedFriendship?.id || null,
+      channelId: selectedChannel?.id || null,
       text: message,
       isReply: false,
       replyId: null,
@@ -49,10 +51,14 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
       payload.isReply = true;
       payload.replyId = replyId;
     }
-    message = await socket.emitAck("send_message", payload);
+    fetch(payload);
+  }, [isReplying, replyId, selectedChannel, fetch, selectedFriendship])
+
+  useEffect(() => {
+    if (!isSuccess || message === undefined) return;
     messageSent();
     dispatch(addMessages([message]));
-  }, [dispatch, isReplying, messageSent, replyId, selectedChannel])
+  }, [isSuccess, message, messageSent, dispatch])
 
   function findLastIndexOfColon(event: any) {
     const selection = getSelection();

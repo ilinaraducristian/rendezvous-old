@@ -1,10 +1,11 @@
 import OverlayComponent from "components/overlay/Overlay.component";
 import styled from "styled-components";
-import {useCallback} from "react";
-import socket from "socketio";
+import {useCallback, useEffect} from "react";
 import {addMessages, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel} from "state-management/selectors/data.selector";
+import {NewMessageRequest} from "../../dtos/message.dto";
+import {useLazySendMessageQuery} from "../../state-management/apis/socketio";
 
 type ComponentProps = {
   image: string
@@ -13,27 +14,27 @@ type ComponentProps = {
 function ImageInputOverlayComponent({image}: ComponentProps) {
 
   const selectedChannel = useAppSelector(selectSelectedChannel);
+  const [fetch, {data: message, isSuccess}] = useLazySendMessageQuery()
   const dispatch = useAppDispatch();
 
   const onClick = useCallback(async () => {
     if (selectedChannel === undefined) return;
-    let payload: {
-      channelId: number,
-      message: string,
-      isReply: boolean,
-      replyId: number | null,
-      image: string | null
-    } = {
+    let payload: NewMessageRequest = {
+      friendshipId: null,
       channelId: selectedChannel.id,
-      message: "",
+      text: "",
       isReply: false,
       replyId: null,
       image
     };
-    let message = await socket.emitAck("send_message", payload);
+    fetch(payload);
+  }, [image, selectedChannel, fetch]);
+
+  useEffect(() => {
+    if (!isSuccess || message === undefined) return;
     dispatch(addMessages([message]));
     dispatch(setOverlay(null));
-  }, [dispatch, image, selectedChannel]);
+  }, [isSuccess, message, dispatch])
 
   return (
       <OverlayComponent>

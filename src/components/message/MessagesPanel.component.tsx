@@ -1,89 +1,108 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import MessageComponent from "components/message/Message.component";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {addMessages, selectChannel as selectChannelAction,} from "state-management/slices/data/data.slice";
+import {
+    addMessages,
+    selectChannel as selectChannelAction,
+    selectFriendship,
+} from "state-management/slices/data/data.slice";
 import styled from "styled-components";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
 import config from "config";
 import MessageInputContainerComponent from "components/message/MessageInputContainer.component";
-import {selectSelectedChannel, selectUsers} from "state-management/selectors/data.selector";
+import {
+    selectSelectedChannel,
+    selectSelectedFriendship,
+    selectSelectedFriendshipMessages,
+    selectUsers
+} from "state-management/selectors/data.selector";
 import {selectSelectedChannelMessages} from "state-management/selectors/channel.selector";
 
 function MessagesPanelComponent() {
 
-  const messagesList = useRef<HTMLDivElement>(null);
-  const messages = useAppSelector(selectSelectedChannelMessages);
-  const users = useAppSelector(selectUsers);
-  const channel = useAppSelector(selectSelectedChannel);
-  const [fetch, {data, isSuccess, status}] = useLazyGetMessagesQuery();
-  const dispatch = useAppDispatch();
-  // const [offset, setOffset] = useState(2040);
-  const [offset, setOffset] = useState(0);
-  const [beginning, setBeginning] = useState(false);
-  const [isReplying, setIsReplying] = useState(false);
-  const [replyId, setReplyId] = useState<number | undefined>();
+    const messagesList = useRef<HTMLDivElement>(null);
+    const channelMessages = useAppSelector(selectSelectedChannelMessages);
+    const friendshipMessages = useAppSelector(selectSelectedFriendshipMessages);
+    const users = useAppSelector(selectUsers);
+    const channel = useAppSelector(selectSelectedChannel);
+    const [fetch, {data, isSuccess}] = useLazyGetMessagesQuery();
+    const dispatch = useAppDispatch();
+    // const [offset, setOffset] = useState(2040);
+    const [offset, setOffset] = useState(0);
+    const [beginning, setBeginning] = useState(false);
+    const [isReplying, setIsReplying] = useState(false);
+    const [replyId, setReplyId] = useState<number | undefined>();
+    const friendship = useAppSelector(selectSelectedFriendship)
+    const messages = friendship === undefined ? channelMessages : friendshipMessages;
 
-  useEffect(() => {
-    messagesList.current?.scroll(0, messagesList.current.scrollHeight);
-  }, [messages]);
+    useEffect(() => {
+        messagesList.current?.scroll(0, messagesList.current.scrollHeight);
+    }, [messages]);
 
-  useEffect(() => {
-    if (!isSuccess || status !== "fulfilled") return;
-    if (channel === undefined || data === undefined) return;
+    useEffect(() => {
+        if (!isSuccess || data === undefined || (channel === undefined && friendship === undefined)) return;
 
-    if (data.length === 0) {
-      setBeginning(true);
-      return;
-    }
-    dispatch(addMessages(data));
-    dispatch(selectChannelAction(channel.id));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status]);
-
-  const onScroll = useCallback(() => {
-    if (channel === undefined) return;
-    if (messagesList.current?.scrollTop === 0) {
-      if (beginning) return;
-      if (!config.offline) {
-        fetch({friendshipId: null, serverId: channel.serverId, channelId: channel.id, offset: offset});
-        setOffset(offset + 30);
-        return;
-      }
-    }
-  }, [channel, fetch, offset, beginning]);
-
-  function reply(messageId: number) {
-    setReplyId(messageId);
-    setIsReplying(true);
-  }
-
-  function messageSent() {
-    setReplyId(undefined);
-    setIsReplying(false);
-  }
-
-  return (
-      <DivBodyMain>
-        <DivBodyMessages ref={messagesList} onScroll={onScroll}>
-          <Ol className="list">
-            {
-              messages.map(message =>
-                  <MessageComponent key={`message_${message.id}`}
-                                    message={message}
-                                    username={users.find(user => user.id === message.userId)?.username || ""}
-                                    reply={reply}
-                  />
-              ).sort((a, b) => Date.parse(a.props.timestamp) - Date.parse(b.props.timestamp))
-            }
-          </Ol>
-        </DivBodyMessages>
-        {
-          !isReplying ||
-          <div>replying</div>
+        if (data.length === 0) {
+            setBeginning(true);
+            return;
         }
-        <MessageInputContainerComponent isReplying={isReplying} replyId={replyId} messageSent={messageSent}/>
-      </DivBodyMain>
-  );
+        dispatch(addMessages(data));
+        if (friendship !== undefined)
+            dispatch(selectFriendship(friendship.id));
+        if (channel !== undefined)
+            dispatch(selectChannelAction(channel.id));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isSuccess]);
+
+    const onScroll = useCallback(() => {
+        if (channel === undefined && friendship === undefined) return;
+        if (messagesList.current?.scrollTop === 0) {
+            if (beginning) return;
+            if (!config.offline) {
+                fetch({
+                    friendshipId: friendship?.id || null,
+                    serverId: channel?.serverId || null,
+                    channelId: channel?.id || null,
+                    offset: offset
+                });
+                setOffset(offset + 30);
+                return;
+            }
+        }
+    }, [channel, fetch, offset, beginning, friendship]);
+
+    function reply(messageId: number) {
+        setReplyId(messageId);
+        setIsReplying(true);
+    }
+
+    function messageSent() {
+        setReplyId(undefined);
+        setIsReplying(false);
+    }
+
+    return (
+        <DivBodyMain>
+            <DivBodyMessages ref={messagesList} onScroll={onScroll}>
+                <Ol className="list">
+                    {
+                        messages.map(message =>
+                            <MessageComponent key={`message_${message.id}`}
+                                              message={message}
+                                              username={users.find(user => user.id === message.userId)?.username || ""}
+                                              reply={reply}
+                            />
+                        ).sort((a, b) => Date.parse(a.props.timestamp) - Date.parse(b.props.timestamp))
+                    }
+                </Ol>
+            </DivBodyMessages>
+            {
+                !isReplying ||
+                <div>replying</div>
+            }
+            <MessageInputContainerComponent isReplying={isReplying} replyId={replyId} messageSent={messageSent}/>
+        </DivBodyMain>
+    );
 
 }
 

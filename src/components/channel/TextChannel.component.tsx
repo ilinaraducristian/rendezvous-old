@@ -25,13 +25,13 @@ function TextChannelComponent({channel}: ComponentProps) {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (!isSuccess) return;
-    if (messages === undefined) return;
-    dispatch(addMessages(messages));
-    dispatch(selectChannelAction(channel.id));
-    dispatch(setThirdPanel(ThirdPanelTypes.channelMessages));
-    dispatch(setHeader(HeaderTypes.channel))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+      if (!isSuccess) return;
+      if (messages === undefined) return;
+      dispatch(addMessages(messages));
+      dispatch(selectChannelAction(channel.id));
+      dispatch(setThirdPanel(ThirdPanelTypes.messages));
+      dispatch(setHeader(HeaderTypes.channel))
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess]);
 
   const selectChannel = useCallback(() => {

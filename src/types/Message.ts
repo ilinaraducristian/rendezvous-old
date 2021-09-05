@@ -1,6 +1,6 @@
 type Message = {
     id: number,
-    friendshipIdId: number | null,
+    friendshipId: number | null,
     serverId: number | null,
     channelId: number | null,
     userId: string,

@@ -1,16 +1,16 @@
 const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
-      offline: false,
-      backend: "https://rendezvous-api-radu.herokuapp.com/",
-      socketIoUrl: "https://rendezvous-api-radu.herokuapp.com/",
-      auth0: {
-        domain: "rendezvous-iam.eu.auth0.com",
-        client_id: "l1ZnZCOMXFKzMO0plbn0dl4o6Ijyg0se"
-      },
-      keycloak: {
-        url: "https://rendezvous.myddns.me:30000/auth",
-        realm: "capp",
-        clientId: "auth-code",
-      },
+        offline: false,
+        backend: "http://rendezvous.myddns.me:30004",
+        socketIoUrl: "http://rendezvous.myddns.me:30004",
+        auth0: {
+            domain: "rendezvous-iam.eu.auth0.com",
+            client_id: "l1ZnZCOMXFKzMO0plbn0dl4o6Ijyg0se"
+        },
+        keycloak: {
+            url: "https://rendezvous.myddns.me:30000/auth",
+            realm: "capp",
+            clientId: "auth-code",
+        },
     }
     :
     {

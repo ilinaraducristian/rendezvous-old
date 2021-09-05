@@ -3,6 +3,8 @@ import User from "types/User";
 import Channel, {ChannelType, VoiceChannel} from "types/Channel";
 import Server from "types/Server";
 import FreindRequest from "../../types/FreindRequest";
+import Friendship from "../../types/Friendship";
+import Message from "../../types/Message";
 
 export const selectIsBackendInitialized = ({data}: { data: DataSliceState }): boolean => data.isBackendInitialized;
 
@@ -16,11 +18,18 @@ export const selectSelectedServer = ({data}: { data: DataSliceState }): Server |
     data.servers.find(server => server.id === data.selectedServer)
 ;
 
-export const selectFriends = ({data}: { data: DataSliceState }): any[] => data.friends;
+export const selectFriendships = ({data}: { data: DataSliceState }): Friendship[] => data.friendships;
 
 export const selectOverlay = ({data}: { data: DataSliceState }): { type: number; payload: any; } | null => data.overlay;
 
 export const selectUsers = ({data}: { data: DataSliceState }): User[] => data.users;
+
+export const selectSelectedFriendshipMessages = ({data}: { data: DataSliceState }): Message[] => {
+  if (data.selectedFriendship === null) return [];
+  const friendship = selectSelectedFriendship({data});
+  if (friendship === undefined) return [];
+  return friendship.messages;
+};
 
 export const selectJoinedChannel = ({data}: { data: DataSliceState }): VoiceChannel | null => {
   const joinedVoiceChannel = data.joinedVoiceChannel;
@@ -44,6 +53,7 @@ export const selectServers = ({data}: { data: DataSliceState }): Server[] => dat
 
 export const selectFriendRequests = ({data}: { data: DataSliceState }): FreindRequest[] => data.friendRequests;
 
+export const selectSelectedFriendship = ({data}: { data: DataSliceState }): Friendship | undefined => data.friendships.find(friendship => friendship.id === data.selectedFriendship);
 export const selectSecondPanelHeader = ({data}: { data: DataSliceState }): number => data.secondPanelHeader;
 export const selectSecondPanelBody = ({data}: { data: DataSliceState }): number => data.secondPanelBody;
 export const selectSecondPanelFooter = ({data}: { data: DataSliceState }): number => data.secondPanelFooter;

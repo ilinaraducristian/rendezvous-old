@@ -1,22 +1,49 @@
 import User from "types/User";
 import styled from "styled-components";
+import {useAppDispatch} from "../../state-management/store";
+import {
+    addMessages,
+    selectFriendship as selectFriendAction,
+    setThirdPanel
+} from "../../state-management/slices/data/data.slice";
+import {ThirdPanelTypes} from "../../types/UISelectionModes";
+import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio";
+import {useEffect} from "react";
 
 type ComponentProps = {
-  user: User
+    friendshipId: number,
+    user: User
 }
 
-function FriendComponent({user}: ComponentProps) {
+function FriendComponent({friendshipId, user}: ComponentProps) {
 
-  return (
-      <Li>{user.username}</Li>
-  );
+    const dispatch = useAppDispatch();
+    const [fetch, {data: messages, isSuccess}] = useLazyGetMessagesQuery();
+
+    useEffect(() => {
+        if (!isSuccess || messages === undefined) return;
+        dispatch(addMessages(messages));
+    }, [isSuccess, messages, dispatch])
+
+    function selectFriend() {
+        fetch({friendshipId: friendshipId, serverId: null, channelId: null, offset: 0})
+        dispatch(setThirdPanel(ThirdPanelTypes.messages))
+        dispatch(selectFriendAction(friendshipId))
+    }
+
+    return (
+        <li>
+            <Button type="button" onClick={selectFriend}>
+                {user.username}
+            </Button>
+        </li>
+    );
 
 }
 
 /* CSS */
 
-const Li = styled.li`
-  color: white;
+const Button = styled.button`
   cursor: pointer;
 `;
 
