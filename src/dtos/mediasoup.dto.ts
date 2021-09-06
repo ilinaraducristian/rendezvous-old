@@ -1,33 +1,33 @@
-import {SctpParameters} from "mediasoup-client/lib/SctpParameters";
+import {SctpParameters} from 'mediasoup-client/lib/SctpParameters';
 import {DtlsParameters, IceCandidate, IceParameters} from "mediasoup-client/lib/Transport";
 
 export type CreateTransportRequest = {
-    type: string
+  type: string
 }
 
 export type CreateTransportResponse = {
-    transportParameters: {
-        id: string,
-        iceParameters: IceParameters,
-        iceCandidates: IceCandidate[],
-        dtlsParameters: DtlsParameters,
-        sctpParameters: SctpParameters,
-    },
+  transportParameters: {
+    id: string,
+    iceParameters: IceParameters,
+    iceCandidates: IceCandidate[],
+    dtlsParameters: DtlsParameters,
+    sctpParameters: SctpParameters,
+  },
 }
 
 export type ConnectTransportRequest = {
-    type: string,
-    id: string
-    dtlsParameters: DtlsParameters,
+  type: string,
+  id: string
+  dtlsParameters: DtlsParameters,
 }
 
 export type CreateProducerRequest = {}
 
 export type CreateConsumerRequest = {
-    transportId: string,
-    socketId: string
+  transportId: string,
+  socketId: string
 }
 
 export type ResumeConsumerRequest = {
-    id: string
+  id: string
 }

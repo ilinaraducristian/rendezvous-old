@@ -1,6 +1,5 @@
 import {BaseQueryFn, createApi} from "@reduxjs/toolkit/dist/query/react";
 import socket from "socketio";
-import Message from "types/Message";
 import {
     JoinVoiceChannelRequest,
     JoinVoiceChannelResponse,
@@ -13,6 +12,7 @@ import {
     DeleteMessagesRequest,
     EditMessagesRequest,
     GetMessagesRequest,
+    Message,
     NewMessageRequest,
     NewMessageResponse
 } from "../../dtos/message.dto";
