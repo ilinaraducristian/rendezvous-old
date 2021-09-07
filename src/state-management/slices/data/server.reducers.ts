@@ -1,10 +1,10 @@
-import Server from "types/Server";
-import Channel from "types/Channel";
-import User from "types/User";
-import Member from "types/Member";
-import Group from "types/Group";
 import {DataSliceState} from "state-management/slices/data/data.slice";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {Server} from "../../../dtos/server.dto";
+import {User} from "../../../dtos/user.dto";
+import {Member} from "../../../dtos/member.dto";
+import {Channel} from "../../../dtos/channel.dto";
+import {Group} from "../../../dtos/group.dto";
 
 const serverReducers = {
   setInvitation(state: DataSliceState, action: { payload: any, type: string }) {

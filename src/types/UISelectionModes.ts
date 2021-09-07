@@ -1,4 +1,4 @@
-enum OverlayTypes {
+export enum OverlayTypes {
     AddServerOverlayComponent,
     CreateChannelOverlayComponent,
     CreateGroupOverlayComponent,
@@ -9,37 +9,28 @@ enum OverlayTypes {
     AddFriendOverlayComponent
 }
 
-enum SecondPanelHeaderTypes {
+export enum SecondPanelHeaderTypes {
     friends,
     channel,
 }
 
-enum SecondPanelBodyTypes {
+export enum SecondPanelBodyTypes {
     friends,
     channels,
 }
 
-enum SecondPanelFooterTypes {
+export enum SecondPanelFooterTypes {
     generic
 }
 
-enum HeaderTypes {
+export enum HeaderTypes {
     friends,
     channel
 }
 
-enum ThirdPanelTypes {
+export enum ThirdPanelTypes {
     allFriends,
     pendingFriendRequests,
     friendMessages,
     messages
 }
-
-export {
-    OverlayTypes,
-    SecondPanelHeaderTypes,
-    SecondPanelBodyTypes,
-    SecondPanelFooterTypes,
-    HeaderTypes,
-    ThirdPanelTypes
-};

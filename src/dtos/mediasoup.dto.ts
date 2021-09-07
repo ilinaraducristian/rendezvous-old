@@ -1,5 +1,5 @@
-import {SctpParameters} from 'mediasoup-client/lib/SctpParameters';
 import {DtlsParameters, IceCandidate, IceParameters} from "mediasoup-client/lib/Transport";
+import {SctpParameters} from "mediasoup-client/lib/SctpParameters";
 
 export type CreateTransportRequest = {
   type: string

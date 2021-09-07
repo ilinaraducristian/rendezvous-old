@@ -1,18 +1,19 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
-import Channel, {ChannelType, TextChannel, VoiceChannelUser} from "types/Channel";
-import Server from "types/Server";
-import Message from "types/Message";
 import {selectJoinedChannel, selectSelectedServer} from "state-management/selectors/data.selector";
+import {Channel, ChannelType, TextChannel} from "../../dtos/channel.dto";
+import {Message} from "../../dtos/message.dto";
+import {Server} from "../../dtos/server.dto";
+import {VoiceChannelUser} from "../../types/Channel";
 
 export const selectChannels = (payload: { serverId: number, groupId: number | null, channelId: number }[]) =>
     ({data}: { data: DataSliceState }): Channel[] => {
-      const foundChannels: Channel[] = [];
-      payload.forEach(requestedChannel => {
-        const foundServer = data.servers.find(server => server.id === requestedChannel.serverId);
-        if (foundServer === undefined) return;
-        addChannel(requestedChannel, foundServer, foundChannels);
-      });
-      return foundChannels;
+        const foundChannels: Channel[] = [];
+        payload.forEach(requestedChannel => {
+            const foundServer = data.servers.find(server => server.id === requestedChannel.serverId);
+            if (foundServer === undefined) return;
+            addChannel(requestedChannel, foundServer, foundChannels);
+        });
+        return foundChannels;
     };
 
 export const selectSelectedServerChannels = (payload: { groupId: number | null, channelId: number }[]) =>

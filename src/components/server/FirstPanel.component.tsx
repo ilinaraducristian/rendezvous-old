@@ -8,9 +8,9 @@ import {
 } from "state-management/slices/data/data.slice";
 import styled from "styled-components";
 import FirstPanelButtonComponent from "components/server/FirstPanelButton.component";
-import Server from "types/Server";
 import {selectServers} from "state-management/selectors/data.selector";
 import {HeaderTypes, OverlayTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../../types/UISelectionModes";
+import {Server} from "../../dtos/server.dto";
 
 function FirstPanelComponent() {
     const dispatch = useAppDispatch();

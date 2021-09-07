@@ -5,6 +5,7 @@ import mediasoup, {notificationSound} from "mediasoup";
 import {
     addChannel,
     addChannelUsers,
+    addFriendRequest,
     addGroup,
     addMember,
     addMessages,
@@ -79,10 +80,12 @@ socket.on("message_deleted", (payload) => {
     store.dispatch(deleteMessage(payload));
 });
 
-socket.on('new_friend_request', () => {
+socket.on('new_friend_request', (payload) => {
+    store.dispatch(addFriendRequest(payload));
 })
 
-socket.on('friend_request_accepted', () => {
+socket.on('friend_request_accepted', (payload) => {
+    // store.dispatch(add)
 })
 
 export default socket;

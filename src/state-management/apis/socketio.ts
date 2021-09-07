@@ -13,8 +13,7 @@ import {
     EditMessagesRequest,
     GetMessagesRequest,
     Message,
-    NewMessageRequest,
-    NewMessageResponse
+    NewMessageRequest
 } from "../../dtos/message.dto";
 import {
     JoinServerRequest,
@@ -50,7 +49,7 @@ export const socketioApi = createApi({
         createGroup: builder.query<NewGroupResponse, NewGroupRequest>({
             query: (data) => ({ev: "create_group", data})
         }),
-        sendMessage: builder.query<NewMessageResponse, NewMessageRequest>({
+        sendMessage: builder.query<Message, NewMessageRequest>({
             query: (data) => ({ev: "send_message", data})
         }),
         getMessages: builder.query<Message[], GetMessagesRequest>({

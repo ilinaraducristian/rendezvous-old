@@ -1,7 +1,8 @@
 import GroupComponent from "components/group/Group.component";
 import {useAppSelector} from "state-management/store";
-import Group from "types/Group";
+
 import {selectSelectedServerGroups} from "state-management/selectors/server.selector";
+import {Group} from "../../dtos/group.dto";
 
 function GroupsListComponent() {
 

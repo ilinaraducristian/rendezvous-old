@@ -17,6 +17,7 @@ import {
     selectUsers
 } from "state-management/selectors/data.selector";
 import {selectSelectedChannelMessages} from "state-management/selectors/channel.selector";
+import {Message} from "../../dtos/message.dto";
 
 function MessagesPanelComponent() {
 
@@ -86,7 +87,7 @@ function MessagesPanelComponent() {
             <DivBodyMessages ref={messagesList} onScroll={onScroll}>
                 <Ol className="list">
                     {
-                        messages.map(message =>
+                        messages.map((message: Message) =>
                             <MessageComponent key={`message_${message.id}`}
                                               message={message}
                                               username={users.find(user => user.id === message.userId)?.username || ""}

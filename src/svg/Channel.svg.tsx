@@ -1,13 +1,14 @@
-import {ChannelType} from "types/Channel";
+import {ChannelType} from "../dtos/channel.dto";
+
 
 type ComponentProps = {
-  type: ChannelType,
-  isPrivate: boolean
+    type: ChannelType,
+    isPrivate: boolean
 }
 
 function ChannelSVG({type, isPrivate}: ComponentProps) {
 
-  if (type === ChannelType.Text)
+    if (type === ChannelType.Text)
     return (
         isPrivate ?
             <svg width="24" height="24" viewBox="0 0 24 24">

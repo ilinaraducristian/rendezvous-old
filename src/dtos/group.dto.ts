@@ -1,4 +1,4 @@
-import {Channel} from "./channel.dto";
+import {Channel} from './channel.dto';
 
 export type Group = {
   id: number,

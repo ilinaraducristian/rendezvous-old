@@ -11,8 +11,8 @@ import {
 } from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
-import {TextChannel} from "types/Channel";
 import ChannelButtonComponent from "components/channel/ChannelButton.component";
+import {TextChannel} from "../../dtos/channel.dto";
 import {HeaderTypes, ThirdPanelTypes} from "../../types/UISelectionModes";
 
 type ComponentProps = {

@@ -7,7 +7,7 @@ import {
 } from "state-management/slices/data/data.slice";
 import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio";
 import config from "config";
-import Message from "../../types/Message";
+import {Message} from "../../dtos/message.dto";
 
 type ComponentProps = {
     message: Message,

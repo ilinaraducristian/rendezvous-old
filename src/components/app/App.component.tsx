@@ -28,8 +28,8 @@ import ImageInputOverlayComponent from "components/message/ImageInputOverlay.com
 import {useLazyLoginQuery} from "state-management/apis/http";
 import ForthPanelComponent from "../member/ForthPanel.component";
 import HeaderComponent from "../content/Header.component";
-import {OverlayTypes} from "../../types/UISelectionModes";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
+import {OverlayTypes} from "../../types/UISelectionModes";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;

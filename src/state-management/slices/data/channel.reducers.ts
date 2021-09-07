@@ -1,5 +1,5 @@
-import {ChannelType, TextChannel, VoiceChannel} from "types/Channel";
 import {DataSliceState} from "state-management/slices/data/data.slice";
+import {ChannelType, TextChannel, VoiceChannel} from "../../../dtos/channel.dto";
 
 const channelReducers = {
   editMessage(state: DataSliceState, {payload}: { payload: { serverId: number, channelId: number, messageId: number, text: string } }) {

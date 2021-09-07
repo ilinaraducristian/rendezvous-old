@@ -8,7 +8,7 @@ export enum ChannelType {
 export type Channel = {
   id: number,
   serverId: number,
-  groupId: number,
+  groupId: number | null,
   type: ChannelType,
   name: string,
   order: number

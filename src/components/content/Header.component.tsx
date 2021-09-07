@@ -1,5 +1,4 @@
 import ChannelSVG from "../../svg/Channel.svg";
-import {ChannelType} from "../../types/Channel";
 import MembersSVG from "../../svg/Members.svg";
 import styled from "styled-components";
 import {useState} from "react";
@@ -7,6 +6,7 @@ import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {selectHeader, selectSelectedChannel} from "../../state-management/selectors/data.selector";
 import {HeaderTypes, OverlayTypes, ThirdPanelTypes} from "../../types/UISelectionModes";
 import {setOverlay, setThirdPanel} from "../../state-management/slices/data/data.slice";
+import {ChannelType} from "../../dtos/channel.dto";
 
 function HeaderComponent() {
 

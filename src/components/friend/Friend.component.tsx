@@ -1,4 +1,3 @@
-import User from "types/User";
 import styled from "styled-components";
 import {useAppDispatch} from "../../state-management/store";
 import {
@@ -9,6 +8,7 @@ import {
 import {ThirdPanelTypes} from "../../types/UISelectionModes";
 import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio";
 import {useEffect} from "react";
+import {User} from "../../dtos/user.dto";
 
 type ComponentProps = {
     friendshipId: number,

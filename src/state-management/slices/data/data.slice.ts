@@ -1,19 +1,18 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {SliceCaseReducers} from "@reduxjs/toolkit/src/createSlice";
-import Server from "types/Server";
-import User from "types/User";
 import channelReducers from "state-management/slices/data/channel.reducers";
 import serverReducers from "state-management/slices/data/server.reducers";
-import FreindRequest from "../../../types/FreindRequest";
-import Friendship from "../../../types/Friendship";
-import Message from "../../../types/Message";
-import {ChannelType, TextChannel} from "../../../types/Channel";
+import {User, UserData} from "../../../dtos/user.dto";
+import {Server} from "../../../dtos/server.dto";
+import {FriendRequest, Friendship} from "../../../dtos/friend.dto";
+import {Message} from "../../../dtos/message.dto";
+import {ChannelType, TextChannel} from "../../../dtos/channel.dto";
 
 export type DataSliceState = {
     isBackendInitialized: boolean,
     servers: Server[],
     friendships: Friendship[],
-    friendRequests: FreindRequest[],
+    friendRequests: FriendRequest[],
     users: User[],
     selectedFriendship: number | null,
     selectedServer: number | null,
@@ -28,19 +27,11 @@ export type DataSliceState = {
 }
 
 const reducers = {
-    initializeBackend(state: DataSliceState, {
-        payload: {
-            servers,
-            friendships,
-            friendRequests,
-            users,
-        }
-    }: { payload: { servers: Server[], users: User[], friendships: Friendship[], friendRequests: FreindRequest[] } }) {
-        state.servers = servers;
-        state.friendships = friendships;
-        console.log(state.friendships)
-        state.friendRequests = friendRequests;
-        state.users = users;
+    initializeBackend(state: DataSliceState, {payload}: { payload: UserData }) {
+        state.servers = payload.servers;
+        state.friendships = payload.friendships;
+        state.friendRequests = payload.friendRequests;
+        state.users = payload.users;
         state.isBackendInitialized = true;
     },
     setOverlay(state: DataSliceState, {payload: overlay}: { payload: { type: number, payload: any } }) {

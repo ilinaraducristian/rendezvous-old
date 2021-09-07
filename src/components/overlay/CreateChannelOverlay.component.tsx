@@ -3,9 +3,9 @@ import config from "config";
 import {useLazyCreateChannelQuery} from "state-management/apis/socketio";
 import {addChannel, selectChannel, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {ChannelType, TextChannel} from "types/Channel";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import OverlayComponent from "components/overlay/Overlay.component";
+import {ChannelType, TextChannel} from "../../dtos/channel.dto";
 
 type ComponentProps = {
   groupId?: number | null

@@ -2,30 +2,32 @@
   "name": "rendezvous",
   "private": true,
   "dependencies": {
-    "@auth0/auth0-spa-js": "^1.17.0",
+    "@auth0/auth0-spa-js": "^1.17.1",
     "@reduxjs/toolkit": "^1.5.1",
-    "@testing-library/jest-dom": "^5.14.1",
-    "@testing-library/react": "^12.0.0",
-    "@testing-library/user-event": "^13.2.1",
-    "@types/jest": "^26.0.24",
-    "@types/node": "^16.4.7",
-    "@types/react": "^17.0.15",
-    "@types/react-dom": "^17.0.9",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "@types/jest": "^24.0.0",
+    "@types/node": "^12.0.0",
+    "@types/styled-components": "^5.1.14",
+    "@types/react": "^16.9.0",
+    "postcss-safe-parser": "^6.0.0",
+    "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
-    "browserlist": "^1.0.1",
-    "keycloak-js": "^15.0.0",
-    "mediasoup-client": "^3.6.36",
+    "keycloak-js": "^15.0.2",
+    "mediasoup-client": "^3.6.39",
     "react": "^17.0.2",
-    "react-dnd": "^14.0.2",
-    "react-dnd-html5-backend": "^14.0.0",
+    "react-dnd": "^14.0.3",
+    "react-dnd-html5-backend": "^14.0.1",
     "react-dom": "^17.0.2",
-    "react-redux": "^7.2.0",
-    "react-scripts": "^4.0.3",
-    "socket.io-client": "^4.1.3",
-    "styled-components": "^5.3.0",
+    "react-redux": "^7.2.5",
+    "react-scripts": "4.0.3",
+    "socket.io-client": "^4.2.0",
+    "styled-components": "^5.3.1",
     "trie-search": "^1.3.5",
-    "typescript": "^4.3.5",
-    "web-vitals": "^2.1.0"
+    "typescript": "~4.1.5",
+    "web-vitals": "^2.1.0",
+    "lorem-ipsum": "^2.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -35,17 +37,18 @@
     "build:prod": "env REACT_APP_ENVIRONMENT=\"production\" CI=\"false\" react-scripts build"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": "react-app"
   },
   "browserslist": {
-    "production": [],
-    "development": []
-  },
-  "devDependencies": {
-    "@types/styled-components": "^5.1.11",
-    "lorem-ipsum": "^2.0.3"
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

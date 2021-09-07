@@ -6,11 +6,11 @@ import {addChannelUsers, joinVoiceChannel} from "state-management/slices/data/da
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
 import config from "config";
-import {VoiceChannel} from "types/Channel";
 import styled from "styled-components";
 import ChannelButtonComponent from "components/channel/ChannelButton.component";
 import {selectUsers} from "state-management/selectors/data.selector";
 import {useLazyJoinVoiceChannelQuery} from "../../state-management/apis/socketio";
+import {VoiceChannel} from "../../dtos/channel.dto";
 
 type ComponentProps = {
     channel: VoiceChannel

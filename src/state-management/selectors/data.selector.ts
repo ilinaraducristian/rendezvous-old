@@ -1,10 +1,9 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
-import User from "types/User";
-import Channel, {ChannelType, VoiceChannel} from "types/Channel";
-import Server from "types/Server";
-import FreindRequest from "../../types/FreindRequest";
-import Friendship from "../../types/Friendship";
-import Message from "../../types/Message";
+import {Channel, ChannelType, VoiceChannel} from "../../dtos/channel.dto";
+import {Server} from "../../dtos/server.dto";
+import {FriendRequest, Friendship} from "../../dtos/friend.dto";
+import {User} from "../../dtos/user.dto";
+import {Message} from "../../dtos/message.dto";
 
 export const selectIsBackendInitialized = ({data}: { data: DataSliceState }): boolean => data.isBackendInitialized;
 
@@ -51,7 +50,7 @@ export const selectJoinedChannel = ({data}: { data: DataSliceState }): VoiceChan
 
 export const selectServers = ({data}: { data: DataSliceState }): Server[] => data.servers;
 
-export const selectFriendRequests = ({data}: { data: DataSliceState }): FreindRequest[] => data.friendRequests;
+export const selectFriendRequests = ({data}: { data: DataSliceState }): FriendRequest[] => data.friendRequests;
 
 export const selectSelectedFriendship = ({data}: { data: DataSliceState }): Friendship | undefined => data.friendships.find(friendship => friendship.id === data.selectedFriendship);
 export const selectSecondPanelHeader = ({data}: { data: DataSliceState }): number => data.secondPanelHeader;
