@@ -2,7 +2,7 @@ import {useState} from "react";
 import ChannelsListComponent from "components/channel/ChannelsList.component";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
-import {useAppSelector} from "state-management/store";
+import {useAppDispatch, useAppSelector} from "state-management/store";
 import DropdownComponent from "components/dropdown/Dropdown.component";
 import GroupsListComponent from "components/group/GroupsList.component";
 import styled from "styled-components";
@@ -18,6 +18,8 @@ import {SecondPanelBodyTypes, SecondPanelFooterTypes, SecondPanelHeaderTypes} fr
 import AvatarSVG from "../svg/Avatar.svg";
 import MicrophoneSVG from "../svg/Microphone.svg";
 import HeadphonesSVG from "../svg/Headphones.svg";
+import GearSVG from "../svg/Gear.svg";
+import {showSettings} from "../state-management/slices/data/data.slice";
 
 function SecondPanelComponent() {
 
@@ -26,6 +28,7 @@ function SecondPanelComponent() {
     const secondPanelHeader = useAppSelector(selectSecondPanelHeader);
     const secondPanelBody = useAppSelector(selectSecondPanelBody);
     const secondPanelFooter = useAppSelector(selectSecondPanelFooter);
+    const dispatch = useAppDispatch();
 
     function toggleDropdown() {
         if (selectedServer === undefined) return;
@@ -75,6 +78,11 @@ function SecondPanelComponent() {
                         <Username> User1 </Username>
                         <MicrophoneSVG/>
                         <HeadphonesSVG/>
+                        <button type="button" className="btn"
+                                onClick={() => dispatch(showSettings(undefined))}
+                        >
+                            <GearSVG/>
+                        </button>
                     </>
                 }
             </SecondPanelFooter>

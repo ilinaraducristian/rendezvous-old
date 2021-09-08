@@ -3,12 +3,14 @@ import AvatarPlaceholder from "../assets/avatar-placeholder.png";
 
 type ComponentProps = {
     src?: string;
+    width?: string,
+    height?: string
 }
 
-function AvatarSVG({src}: ComponentProps) {
+function AvatarSVG({src, width, height}: ComponentProps) {
 
     return (
-        <svg width="40" height="32" viewBox="0 0 40 32">
+        <svg width={width || "40"} height={height || "32"} viewBox="0 0 40 32">
             <mask id="b46f4c51-5fe0-4c9c-b8cd-f0a52ffb1d89" width="32" height="32">
                 <circle cx="16" cy="16" r="16" fill="white"/>
                 <rect color="black" x="19" y="19" width="16" height="16" rx="8" ry="8"/>

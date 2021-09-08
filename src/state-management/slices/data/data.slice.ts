@@ -24,6 +24,7 @@ export type DataSliceState = {
     thirdPanel: number,
     joinedVoiceChannel: { serverId: number, groupId: number | null, channelId: number } | null,
     overlay: { type: number, payload: any } | null,
+    isSettingsShown: boolean
 }
 
 const reducers = {
@@ -95,6 +96,12 @@ const reducers = {
                 channel.messages[messageId] = message;
         });
     },
+    showSettings(state: DataSliceState) {
+        state.isSettingsShown = true;
+    },
+    hideSettings(state: DataSliceState) {
+        state.isSettingsShown = false;
+    },
     ...serverReducers,
     ...channelReducers
 };
@@ -117,35 +124,45 @@ export const dataSlice = createSlice<DataSliceState, SliceCaseReducers<DataSlice
         thirdPanel: 0,
         joinedVoiceChannel: null,
         overlay: null,
+        isSettingsShown: false
     },
     reducers
 });
 
 export const {
-    setChannelsOrder,
     initializeBackend,
-    setInvitation,
-    addChannelUsers,
-    setJoinedVoiceChannel,
-    joinVoiceChannel,
-    leaveVoiceChannel,
-    selectFriendship,
+    setOverlay,
     selectServer,
+    selectFriendship,
     selectChannel,
     setSecondPanelHeader,
     setSecondPanelBody,
-    addFriendRequest,
+    setSecondPanelFooter,
     setHeader,
     setThirdPanel,
-    setOverlay,
-    addServer,
+    addFriendRequest,
     addMessages,
+    showSettings,
+    hideSettings,
+} = dataSlice.actions;
+
+export const {
+    setInvitation,
+    addServer,
+    addUser,
     addMember,
     addChannel,
-    deleteMessage,
-    editMessage,
     addGroup,
-    addUser
+    setChannelsOrder,
+} = dataSlice.actions;
+
+export const {
+    editMessage,
+    deleteMessage,
+    setJoinedVoiceChannel,
+    joinVoiceChannel,
+    leaveVoiceChannel,
+    addChannelUsers,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

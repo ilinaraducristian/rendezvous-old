@@ -3,7 +3,7 @@ import {store, useAppDispatch, useAppSelector} from "state-management/store";
 import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
 import {processedServerData} from "mock-data";
-import {initializeBackend, setOverlay} from "state-management/slices/data/data.slice";
+import {hideSettings, initializeBackend, setOverlay} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/FirstPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
 import SecondPanelComponent from "components/SecondPanel.component";
@@ -16,6 +16,7 @@ import InvitationOverlayComponent from "components/overlay/InvitationOverlay.com
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay.component";
 import {
     selectIsBackendInitialized,
+    selectIsSettingsShown,
     selectJoinedChannel,
     selectOverlay,
     selectSelectedServer
@@ -30,10 +31,14 @@ import ForthPanelComponent from "../ForthPanel.component";
 import HeaderComponent from "../Header.component";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
 import {OverlayTypes} from "../../types/UISelectionModes";
+import SettingsPanelComponent from "../settings/SettingsPanel.component";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
     store.dispatch(setOverlay(null));
+    const isSettingsShown = selectIsSettingsShown(store.getState());
+    console.log(isSettingsShown)
+    if (isSettingsShown) store.dispatch(hideSettings(undefined));
 };
 
 function AppComponent() {
@@ -46,6 +51,7 @@ function AppComponent() {
     const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
     const [fetchUserData, {data: backendData, isSuccess: isUserDataSuccess}] = useLazyGetUserDataQuery();
     const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
+    const isSettingsShown = useAppSelector(selectIsSettingsShown);
     const dispatch = useAppDispatch();
 
     useEffect(() => {
@@ -105,6 +111,10 @@ function AppComponent() {
             <SecondPanelComponent/>
             <ThirdPanelComponent/>
             <ForthPanelComponent/>
+            {
+                !isSettingsShown ||
+                <SettingsPanelComponent/>
+            }
             {
                 overlay === null ||
                 overlayToComponent(overlay)
