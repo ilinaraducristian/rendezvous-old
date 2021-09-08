@@ -1,4 +1,4 @@
-import MemberComponent from "./Member.component";
+import MemberComponent from "./member/Member.component";
 import {useAppSelector} from "state-management/store";
 import styled from "styled-components";
 import {selectUsers} from "state-management/selectors/data.selector";

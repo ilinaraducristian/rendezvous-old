@@ -15,6 +15,9 @@
     --color-10th: #18191c;
     --color-11th: #b9bbbe;
     --color-12th: hsl(235, 46.7%, 44.1%);
+    --color-13th: #292b2f;
+    --color-14th: rgba(79, 84, 92, 0.16);
+    --color-15th: rgba(79, 84, 92, 0.32);
     --small-shadow-bar: 0 1px 0 rgba(4, 4, 5, 0.2), 0 2px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
     --members-panel-width: 15em;
 }
@@ -44,6 +47,15 @@ body {
 
 .span {
     color: white;
+}
+
+.selected-popup-item {
+    background-color: var(--color-secondary);
+}
+
+.selected-tab {
+    color: white !important;
+    background-color: var(--color-15th) !important;
 }
 
 .btn {

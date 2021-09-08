@@ -32,5 +32,6 @@ export enum ThirdPanelTypes {
     allFriends,
     pendingFriendRequests,
     friendMessages,
-    messages
+    messages,
+    onlineFriends
 }

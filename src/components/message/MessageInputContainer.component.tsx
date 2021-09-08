@@ -3,13 +3,13 @@ import MessageInputComponent from "components/message/MessageInput.component";
 import GIFSVG from "svg/GIF.svg";
 import styled from "styled-components";
 import {useCallback, useEffect, useRef, useState} from "react";
-import EmojiContainerComponent from "components/message/EmojiContainer.component";
-import trie from "trie";
+import trie, {emojis} from "trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel, selectSelectedFriendship} from "state-management/selectors/data.selector";
 import {useLazySendMessageQuery} from "../../state-management/apis/socketio";
 import {NewMessageRequest} from "../../dtos/message.dto";
+import PopupContainerComponent from "./PopupContainer.component";
 
 type ComponentProps = {
     isReplying: boolean,
@@ -20,6 +20,7 @@ type ComponentProps = {
 function MessageInputContainerComponent({isReplying, replyId, messageSent}: ComponentProps) {
 
     const emojiRef = useRef<any>(null);
+    const inputRef = useRef<any>(null);
     const [isEmojiShown, setIsEmojiShown] = useState(false);
     const [foundEmojis, setFoundEmojis] = useState<any[]>([]);
     const selectedChannel = useAppSelector(selectSelectedChannel);
@@ -86,6 +87,18 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         return emojis;
     }, []);
 
+    const replaceEmoji = useCallback(() => {
+        if (inputRef.current === null) return;
+        const lastIndexObject = findLastIndexOfColon(inputRef.current);
+        if (lastIndexObject === undefined) return;
+        let {selection, cursorPosition, message, lastIndexOfColon} = lastIndexObject;
+        if (emojiRef.current === null) return;
+        inputRef.current.innerText = `${message.substring(0, lastIndexOfColon)}${emojiRef.current.getEmoji()}${message.substring(cursorPosition + 1)}`;
+        selection.setPosition(selection.focusNode, 1);
+        setFoundEmojis([]);
+        setIsEmojiShown(false);
+    }, []);
+
     const onKeyDown = useCallback((event) => {
         if (["ArrowDown", "ArrowUp"].includes(event.code) && isEmojiShown) {
             event.preventDefault();
@@ -96,23 +109,19 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         if (!isEmojiShown)
             return sendInputFieldContent(event);
         event.preventDefault();
-        const lastIndexObject = findLastIndexOfColon(event);
-        if (lastIndexObject === undefined) return;
-        let {selection, cursorPosition, message, lastIndexOfColon} = lastIndexObject;
-        if (emojiRef.current === null) return;
-        event.target.innerText = `${message.substring(0, lastIndexOfColon)}${emojiRef.current.getEmoji()}${message.substring(cursorPosition + 1)}`;
-        selection.setPosition(selection.focusNode, 1);
-        setFoundEmojis([]);
-        setIsEmojiShown(false);
-        return;
-
-    }, [isEmojiShown, sendInputFieldContent]);
+        return replaceEmoji();
+    }, [isEmojiShown, sendInputFieldContent, replaceEmoji]);
 
     const shouldDisplayEmojiPanelEventHandler = useCallback((event) => {
-        const emojis = shouldDisplayEmojiPanel(event);
-        if (emojis !== undefined) {
+        const localEmojis = shouldDisplayEmojiPanel(event);
+        if (localEmojis !== undefined) {
             setIsEmojiShown(true);
-            setFoundEmojis(emojis);
+            setFoundEmojis(localEmojis.map((result: any, index: number) => (
+                <Div key={`emoji_${index}`}>
+                    <div>{result}</div>
+                    <div>{`:${emojis.find(emoji => emoji.emoji === result)?.shortcut}:`}</div>
+                </Div>
+            )));
             return;
         }
         setIsEmojiShown(false);
@@ -120,15 +129,20 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     }, [shouldDisplayEmojiPanel]);
 
     return <>
-        {
-            !isEmojiShown ||
-            <EmojiContainerComponent ref={emojiRef} foundEmojis={foundEmojis}/>
-        }
+        {!isEmojiShown || <PopupContainerComponent
+            ref={emojiRef}
+            selectElement={() => {
+                replaceEmoji();
+            }}
+            title={'EMOJI MATCHING'}
+            elements={foundEmojis}
+        />}
         <Footer>
             <button type="button" className="btn btn--off btn--hover btn__icon">
                 <PlusSVG/>
             </button>
             <MessageInputComponent
+                ref={inputRef}
                 onKeyDown={onKeyDown}
                 onKeyUp={shouldDisplayEmojiPanelEventHandler}
                 onClick={shouldDisplayEmojiPanelEventHandler}
@@ -145,6 +159,11 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
 }
 
 /* CSS */
+
+const Div = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
 
 const Footer = styled.footer`
   background-color: var(--color-fifth);

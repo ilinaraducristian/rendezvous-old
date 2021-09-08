@@ -6,9 +6,9 @@ import {
     selectThirdPanel,
     selectUsers
 } from "state-management/selectors/data.selector";
-import {ThirdPanelTypes} from "../../types/UISelectionModes";
-import {useLazyAcceptFriendRequestQuery} from "../../state-management/apis/socketio";
-import MessagesPanelComponent from "../message/MessagesPanel.component";
+import {ThirdPanelTypes} from "../types/UISelectionModes";
+import {useLazyAcceptFriendRequestQuery} from "../state-management/apis/socketio";
+import MessagesPanelComponent from "./message/MessagesPanel.component";
 
 function ThirdPanelComponent() {
 

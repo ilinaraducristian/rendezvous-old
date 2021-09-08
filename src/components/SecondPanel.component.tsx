@@ -13,8 +13,11 @@ import {
     selectSecondPanelHeader,
     selectSelectedServer
 } from "state-management/selectors/data.selector";
-import FriendsListComponent from "../friend/FriendsList.component";
-import {SecondPanelBodyTypes, SecondPanelFooterTypes, SecondPanelHeaderTypes} from "../../types/UISelectionModes";
+import FriendsListComponent from "./friend/FriendsList.component";
+import {SecondPanelBodyTypes, SecondPanelFooterTypes, SecondPanelHeaderTypes} from "../types/UISelectionModes";
+import AvatarSVG from "../svg/Avatar.svg";
+import MicrophoneSVG from "../svg/Microphone.svg";
+import HeadphonesSVG from "../svg/Headphones.svg";
 
 function SecondPanelComponent() {
 
@@ -66,7 +69,13 @@ function SecondPanelComponent() {
             </SecondPanelBody>
             <SecondPanelFooter>
                 {
-                    secondPanelFooter !== SecondPanelFooterTypes.generic || undefined
+                    secondPanelFooter !== SecondPanelFooterTypes.generic ||
+                    <>
+                        <AvatarSVG/>
+                        <Username> User1 </Username>
+                        <MicrophoneSVG/>
+                        <HeadphonesSVG/>
+                    </>
                 }
             </SecondPanelFooter>
         </SecondPanelDiv>
@@ -77,11 +86,26 @@ function SecondPanelComponent() {
 
 /* CSS */
 
-const SecondPanelFooter = styled.footer``
+const Username = styled.span`
+  color: white;
+  flex-grow: 1;
+`
 
-const SecondPanelBody = styled.div``;
+const SecondPanelFooter = styled.footer`
+  color: white;
+  background-color: var(--color-13th);
+  height: 3.25em;
+  display: flex;
+  align-items: center;
+`
+
+const SecondPanelBody = styled.div`
+  flex-grow: 1;
+`;
 
 const SecondPanelDiv = styled.div`
+  display: flex;
+  flex-direction: column;
   grid-area: second-panel;
   flex-shrink: 0;
   background-color: var(--color-third);
