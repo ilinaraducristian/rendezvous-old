@@ -8,6 +8,7 @@ const audioContext = new AudioContext();
 const notificationSound = new Audio("/notification.ogg");
 // let producer: Producer;
 const consumers: { socketId: string, consumer: Consumer }[] = [];
+let localStream: MediaStream;
 
 let created = false;
 
@@ -19,7 +20,8 @@ function createMediaStreamSource() {
 }
 
 async function createProducer() {
-    const localStream = await navigator.mediaDevices.getUserMedia({audio: true});
+    if (localStream === undefined)
+        localStream = await navigator.mediaDevices.getUserMedia({audio: true});
     const {transportParameters} = await socket.emitAck("create_transport", {type: "send"});
     const sendTransport = mediasoup.createSendTransport(transportParameters);
 
@@ -62,6 +64,7 @@ export {
     notificationSound,
     remoteStream,
     consumers,
+    localStream,
     createMediaStreamSource,
     createProducer,
     createConsumer,

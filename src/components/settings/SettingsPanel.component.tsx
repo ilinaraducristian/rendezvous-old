@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import AvatarSVG from "../../svg/Avatar.svg";
+import config from "../../config";
 
 function SettingsPanelComponent() {
+    const href = `${config.keycloak.url}/realms/${config.keycloak.realm}/account/#/personal-info`;
     return (
         <Div>
             <SidePanelList className="list">
@@ -11,13 +13,33 @@ function SettingsPanelComponent() {
             </SidePanelList>
             <MainPanelDiv>
                 <AvatarSVG width={"80"} height={"72"}/>
-
+                <A href={href} className="btn">
+                    Edit Profile
+                </A>
             </MainPanelDiv>
         </Div>
     )
 }
 
 /* CSS */
+
+const A = styled.a`
+  &:link {
+    text-decoration: none;
+  }
+
+  &:active {
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:visited {
+    text-decoration: none;
+  }
+`
 
 const Div = styled.div`
   position: absolute;

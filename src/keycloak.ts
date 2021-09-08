@@ -46,11 +46,12 @@ class AuthClient {
     return isAuthenticated;
   }
 
-  isAuthenticated(): Promise<boolean> {
+  async isAuthenticated(): Promise<boolean> {
     if (this.isProduction)
       return (this.authInstance as Auth0Client).isAuthenticated();
     const isAuthenticated = (this.authInstance as KeycloakInstance).authenticated;
     if (isAuthenticated === undefined) return Promise.resolve(false);
+    await (this.authInstance as KeycloakInstance).loadUserProfile();
     return Promise.resolve(isAuthenticated);
   }
 
@@ -72,6 +73,10 @@ class AuthClient {
     const subject = (this.authInstance as KeycloakInstance).subject;
     if (subject === undefined) return Promise.resolve("");
     return Promise.resolve(subject);
+  }
+
+  getUsername() {
+    return (this.authInstance as KeycloakInstance).loadUserProfile();
   }
 
 }
