@@ -157,6 +157,7 @@ export const {
 } = dataSlice.actions;
 
 export const {
+    deleteServer,
     editMessage,
     deleteMessage,
     setJoinedVoiceChannel,

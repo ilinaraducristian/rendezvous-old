@@ -10,6 +10,7 @@ import {
     addMember,
     addMessages,
     deleteMessage,
+    deleteServer,
     editMessage
 } from "state-management/slices/data/data.slice";
 import {store} from "state-management/store";
@@ -84,8 +85,12 @@ socket.on('new_friend_request', (payload) => {
     store.dispatch(addFriendRequest(payload));
 })
 
-socket.on('friend_request_accepted', (payload) => {
+socket.on('friend_request_accepted', () => {
     // store.dispatch(add)
+})
+
+socket.on('server_deleted', (payload) => {
+    store.dispatch(deleteServer(payload))
 })
 
 export default socket;

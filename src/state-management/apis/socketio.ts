@@ -80,6 +80,9 @@ export const socketioApi = createApi({
         acceptFriendRequest: builder.query<any, AcceptFriendRequest>({
             query: (data) => ({ev: "accept_friend_request", data})
         }),
+        deleteServer: builder.query<void, { serverId: number }>({
+            query: (data) => ({ev: "delete_server", data})
+        }),
     }),
 });
 
@@ -92,6 +95,7 @@ export const {
     useLazySendMessageQuery,
     useLazyGetMessagesQuery,
     useLazyCreateInvitationQuery,
+    useLazyDeleteServerQuery,
     useLazyEditMessageQuery,
     useLazyDeleteMessageQuery,
     useLazySendFriendRequestQuery,
