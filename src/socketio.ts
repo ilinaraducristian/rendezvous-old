@@ -32,7 +32,11 @@ class Socket extends socketio_Socket {
 
 }
 
-const socket: Socket = socketio_io(config.socketIoUrl, {autoConnect: false, transports: ["websocket"]}) as Socket;
+const socket: Socket = socketio_io(config.socketIoUrl, {
+    autoConnect: false,
+    transports: ["websocket"],
+    path: config.production ? '/api/socket.io' : undefined
+}) as Socket;
 
 Object.assign(socket, {emitAck});
 

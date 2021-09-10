@@ -1,7 +1,8 @@
 const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
+        production: true,
         offline: false,
-        backend: "http://rendezvous.myddns.me:30004",
-        socketIoUrl: "http://rendezvous.myddns.me:30004",
+        backend: "https://rendezvous.myddns.me:30000/api",
+        socketIoUrl: "https://rendezvous.myddns.me:30000",
         auth0: {
             domain: "rendezvous-iam.eu.auth0.com",
             client_id: "l1ZnZCOMXFKzMO0plbn0dl4o6Ijyg0se"
@@ -14,6 +15,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
     }
     :
     {
+        production: false,
         offline: false,
         backend: "http://localhost:3100",
         socketIoUrl: "http://localhost:3100",

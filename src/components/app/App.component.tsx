@@ -1,4 +1,4 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import {store, useAppDispatch, useAppSelector} from "state-management/store";
 import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
@@ -32,6 +32,7 @@ import HeaderComponent from "../Header.component";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
 import {OverlayTypes} from "../../types/UISelectionModes";
 import SettingsPanelComponent from "../settings/SettingsPanel.component";
+import LoadingComponent from "./Loading.component";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
@@ -53,6 +54,7 @@ function AppComponent() {
     const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
     const isSettingsShown = useAppSelector(selectIsSettingsShown);
     const dispatch = useAppDispatch();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (joinedChannel === null) {
@@ -100,24 +102,30 @@ function AppComponent() {
     useEffect(() => {
         if (!isUserDataSuccess || backendData === undefined) return;
         dispatch(initializeBackend(backendData));
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserDataSuccess]);
 
     return (
         <>
-            {/*((!initialized || !keycloak.authenticated) && !config.offline) ||*/}
-            <FirstPanelComponent/>
-            <HeaderComponent/>
-            <SecondPanelComponent/>
-            <ThirdPanelComponent/>
-            <ForthPanelComponent/>
-            {
-                !isSettingsShown ||
-                <SettingsPanelComponent/>
-            }
-            {
-                overlay === null ||
-                overlayToComponent(overlay)
+            {isLoading ?
+                <LoadingComponent/>
+                :
+                <>
+                    <FirstPanelComponent/>
+                    <HeaderComponent/>
+                    <SecondPanelComponent/>
+                    <ThirdPanelComponent/>
+                    <ForthPanelComponent/>
+                    {
+                        !isSettingsShown ||
+                        <SettingsPanelComponent/>
+                    }
+                    {
+                        overlay === null ||
+                        overlayToComponent(overlay)
+                    }
+                </>
             }
         </>
     );
