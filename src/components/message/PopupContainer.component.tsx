@@ -52,7 +52,10 @@ const PopupContainerComponent = forwardRef<PopupContainerRefType, ComponentProps
                 {elements.map((element, index) =>
                     (
                         <Li onMouseEnter={() => onMouseEnter(index)}
-                            onMouseUp={() => selectElement(element)}
+                            onMouseUp={(event) => {
+                                event.preventDefault();
+                                selectElement(element)
+                            }}
                             className={selectedElementIndex === index ? "selected-popup-item" : ""}
                             key={`popup-item_${index}`}
                         >

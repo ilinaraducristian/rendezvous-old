@@ -3,14 +3,15 @@ import MessageInputComponent from "components/message/MessageInput.component";
 import GIFSVG from "svg/GIF.svg";
 import styled from "styled-components";
 import {KeyboardEvent, useCallback, useEffect, useRef, useState} from "react";
-import trie, {emojis} from "util/trie";
+import {emojis} from "util/trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectUsers} from "state-management/selectors/data.selector";
+import {selectSelectedChannel, selectSelectedFriendship, selectUsers} from "state-management/selectors/data.selector";
 import {useLazySendMessageQuery} from "../../state-management/apis/socketio";
 import PopupContainerComponent, {PopupContainerRefType} from "./PopupContainer.component";
 import {stringSimilarity} from "string-similarity-js";
 import {selectSelectedServerMembers} from "../../state-management/selectors/server.selector";
+import {NewMessageRequest} from "../../dtos/message.dto";
 
 type ComponentProps = {
     isReplying: boolean,
@@ -20,149 +21,78 @@ type ComponentProps = {
 
 enum PopupType {
     commands,
-    emojis,
-    mentions
+    emojisAndMentions
 }
 
 function MessageInputContainerComponent({isReplying, replyId, messageSent}: ComponentProps) {
 
-    const emojiRef = useRef<PopupContainerRefType>(null);
+    const popupRef = useRef<PopupContainerRefType>(null);
     const inputRef = useRef<HTMLSpanElement>(null);
-    // const [isEmojiShown, setIsEmojiShown] = useState(false);
-    // const [foundEmojis, setFoundEmojis] = useState<any[]>([]);
-    // const selectedChannel = useAppSelector(selectSelectedChannel);
-    // const selectedFriendship = useAppSelector(selectSelectedFriendship);
-    const [fetchSendMessage, {data: message, isSuccess}] = useLazySendMessageQuery()
+    const selectedChannel = useAppSelector(selectSelectedChannel);
+    const selectedFriendship = useAppSelector(selectSelectedFriendship);
+    const [fetchSendMessage, {data: dataMessage, isSuccess: isSuccessSendMessage}] = useLazySendMessageQuery()
     const dispatch = useAppDispatch();
+    const [cursorPosition, setCursorPosition] = useState(0);
 
     const [popupType, setPopupType] = useState<PopupType | null>(null);
     const [popupList, setPopupList] = useState<any[]>([]);
     const members = useAppSelector(selectSelectedServerMembers);
     const users = useAppSelector(selectUsers);
 
-    // const sendInputFieldContent = useCallback(async (event: any) => {
-    //     event.preventDefault();
-    //     if (selectedChannel === undefined && selectedFriendship === undefined) return;
-    //     let message = (event.target as any).innerText;
-    //     (event.target as any).innerText = "";
-    //     let payload: NewMessageRequest = {
-    //         friendshipId: selectedFriendship?.id || null,
-    //         channelId: selectedChannel?.id || null,
-    //         text: message,
-    //         isReply: false,
-    //         replyId: null,
-    //         image: null
-    //     };
-    //     if (isReplying) {
-    //         if (replyId === undefined) return;
-    //         payload.isReply = true;
-    //         payload.replyId = replyId;
-    //     }
-    //     fetchSendMessage(payload);
-    // }, [isReplying, replyId, selectedChannel, fetchSendMessage, selectedFriendship])
+    const sendMessage = useCallback(async (event: any) => {
+        event.preventDefault();
+        if (selectedChannel === undefined && selectedFriendship === undefined) return;
+        let message = (event.target as any).innerText;
+        (event.target as any).innerText = "";
+        let payload: NewMessageRequest = {
+            friendshipId: selectedFriendship?.id || null,
+            channelId: selectedChannel?.id || null,
+            text: message,
+            isReply: false,
+            replyId: null,
+            image: null
+        };
+        if (isReplying) {
+            if (replyId === undefined) return;
+            payload.isReply = true;
+            payload.replyId = replyId;
+        }
+        fetchSendMessage(payload);
+    }, [isReplying, replyId, selectedChannel, fetchSendMessage, selectedFriendship])
 
     useEffect(() => {
-        if (!isSuccess || message === undefined) return;
+        if (!isSuccessSendMessage || dataMessage === undefined) return;
         messageSent();
-        dispatch(addMessages([message]));
-    }, [isSuccess, message, messageSent, dispatch])
-
-    function findLastIndexOfColon(event: any) {
-        const selection = getSelection();
-        if (selection === null) return;
-        const cursorPosition = selection.anchorOffset;
-        let message = event.target.innerText as string | undefined;
-        if (message === undefined) return;
-        // find last ":" until cursor position
-        const lastIndexOfColon = message.lastIndexOf(":", cursorPosition);
-        if (lastIndexOfColon === -1) return;
-        return {
-            selection,
-            cursorPosition,
-            message,
-            lastIndexOfColon,
-        };
-    }
-
-    const shouldDisplayEmojiPanel = useCallback((event: any) => {
-        const lastIndexObject = findLastIndexOfColon(event);
-        if (lastIndexObject === undefined) return;
-        let {cursorPosition, message, lastIndexOfColon} = lastIndexObject;
-        // from ":" to cursor position
-        message = message.substring(lastIndexOfColon, cursorPosition);
-        const indexOfSpace = message.indexOf(" ");
-        // if command contains white spaces return
-        if (indexOfSpace !== -1) return;
-        if (message.charCodeAt(message.length - 1) === 160) return;
-        const emojis = trie.search(message);
-        if (emojis.length === 0) return;
-        return emojis;
-    }, []);
-
-    // const replaceEmoji = useCallback(() => {
-    //     if (inputRef.current === null) return;
-    //     const lastIndexObject = findLastIndexOfColon(inputRef.current);
-    //     if (lastIndexObject === undefined) return;
-    //     let {selection, cursorPosition, message, lastIndexOfColon} = lastIndexObject;
-    //     if (emojiRef.current === null) return;
-    //     inputRef.current.innerText = `${message.substring(0, lastIndexOfColon)}${emojiRef.current.getSelectedElement()}${message.substring(cursorPosition + 1)}`;
-    //     selection.setPosition(selection.focusNode, 1);
-    //     // setFoundEmojis([]);
-    //     // setIsEmojiShown(false);
-    // }, []);
-
-    // const oldOnKeyDown = useCallback((event) => {
-    //     if (["ArrowDown", "ArrowUp"].includes(event.code) && isEmojiShown) {
-    //         event.preventDefault();
-    //         emojiRef.current?.move(event.code === "ArrowUp");
-    //         return;
-    //     }
-    //     if (!event.code.includes("Enter")) return;
-    //     if (!isEmojiShown)
-    //         return sendInputFieldContent(event);
-    //     event.preventDefault();
-    //     return replaceEmoji();
-    // }, [isEmojiShown, sendInputFieldContent, replaceEmoji]);
-
-    const shouldDisplayEmojiPanelEventHandler = useCallback(() => {
-        // const localEmojis = shouldDisplayEmojiPanel(event);
-        // if (localEmojis !== undefined) {
-        //     setIsEmojiShown(true);
-        //     setFoundEmojis(localEmojis.map((result: any, index: number) => (
-        //         <Div key={`emoji_${index}`} emojiId={0}>
-        //             <div>{result}</div>
-        //             <div>{`:${emojis.find(emoji => emoji.emoji === result)?.shortcut}:`}</div>
-        //         </Div>
-        //     )));
-        //     return;
-        // }
-        // setIsEmojiShown(false);
-        // setFoundEmojis([]);
-    }, [shouldDisplayEmojiPanel]);
+        dispatch(addMessages([dataMessage]));
+    }, [isSuccessSendMessage, dataMessage, messageSent, dispatch])
 
     const onKeyDown = useCallback((event: KeyboardEvent<HTMLSpanElement>) => {
 
         if (event.key.includes("Enter")) {
-            if (popupType === null || emojiRef.current === null) return;
-            if (popupType === PopupType.emojis) {
+            if (popupType === null) {
+                sendMessage(event).then()
+                return;
+            }
+            if (popupRef.current === null) return;
+            if (popupType === PopupType.emojisAndMentions) {
                 event.preventDefault();
-                replaceTextWithEmoji(emojiRef.current.getSelectedElement().props.emojiId);
+                replaceTextWithEmoji(popupRef.current.getSelectedElement().props.emojiId);
             }
             return;
         } else if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
-            if (popupType === null || emojiRef.current === null) return;
+            if (popupType === null || popupRef.current === null) return;
             event.preventDefault();
-            emojiRef.current.move(event.key === 'ArrowUp');
+            popupRef.current.move(event.key === 'ArrowUp');
         }
-    }, [popupType])
+    }, [popupType, sendMessage])
 
-    const onKeyUp = useCallback((event: KeyboardEvent<HTMLSpanElement>) => {
-        const text = event.currentTarget.innerText;
+    useEffect(() => {
+        if (inputRef.current === null) return;
+        const text = inputRef.current.innerText;
         if (text.length === 0) {
             setPopupType(null)
             return;
         }
-
         const shouldDisplayCommandPallet = checkShouldDisplayCommandPallet(text);
         if (shouldDisplayCommandPallet) return displayCommandPallet();
         let matchedString = checkShouldDisplayPopupBasedOnChar(text, ':');
@@ -170,13 +100,12 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         matchedString = checkShouldDisplayPopupBasedOnChar(text, '@');
         if (matchedString !== undefined) return displayMentions(matchedString);
         setPopupType(null)
-    }, [])
+    }, [cursorPosition])
 
     function replaceTextWithEmoji(emojiId: number) {
         const selection = getSelection();
-        if (inputRef.current === null || emojiRef.current === null || selection === null || selection.anchorNode === null) return;
+        if (inputRef.current === null || popupRef.current === null || selection === null || selection.anchorNode === null) return;
         const emoji = emojis[emojiId];
-        const cursorPosition = selection.anchorOffset;
         const textUntilCursor = inputRef.current.innerText.substring(0, cursorPosition);
         const lastIndexOfColon = textUntilCursor.lastIndexOf(":");
         if (lastIndexOfColon === -1) return;
@@ -185,6 +114,8 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         inputRef.current.innerText = textBeforeColon + emoji.emoji + textAfterEmoji;
         const textNode = selection.anchorNode.childNodes[0];
         selection.setPosition(textNode, lastIndexOfColon + 2);
+        setPopupList([]);
+        setPopupType(null);
         return false;
     }
 
@@ -201,7 +132,6 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     function checkShouldDisplayPopupBasedOnChar(text: string, char: string) {
         const selection = getSelection();
         if (selection === null) return;
-        const cursorPosition = selection.anchorOffset;
         const textUntilCursor = text.substring(0, cursorPosition);
         const lastIndexOfChar = textUntilCursor.lastIndexOf(char);
         if (lastIndexOfChar === -1) return;
@@ -229,7 +159,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             ));
         if (emojisToDisplay.length === 0) return setPopupType(null);
         setPopupList(emojisToDisplay)
-        setPopupType(PopupType.emojis)
+        setPopupType(PopupType.emojisAndMentions)
     }
 
     function displayMentions(matchedString: string) {
@@ -247,17 +177,24 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
                     <span>{user.lastName}</span>
                 </UserContainerDiv>
             ));
-        console.log(usersToDisplay)
+        if (usersToDisplay.length) return setPopupType(null);
         setPopupList(usersToDisplay)
-        setPopupType(PopupType.emojis)
+        setPopupType(PopupType.emojisAndMentions)
+    }
+
+    function updateCursorPosition() {
+        const selection = getSelection();
+        if (selection !== null) {
+            setCursorPosition(selection.anchorOffset)
+        }
     }
 
     return <>
-        {popupType !== PopupType.emojis ||
+        {popupType !== PopupType.emojisAndMentions ||
         <PopupContainerComponent
-            ref={emojiRef}
-            selectElement={() => {
-                replaceEmoji();
+            ref={popupRef}
+            selectElement={element => {
+                replaceTextWithEmoji(element.props.emojiId);
             }}
             title={'EMOJI MATCHING'}
             elements={popupList}
@@ -269,8 +206,8 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             <MessageInputComponent
                 ref={inputRef}
                 onKeyDown={onKeyDown}
-                onKeyUp={onKeyUp}
-                onClick={shouldDisplayEmojiPanelEventHandler}
+                onKeyUp={updateCursorPosition}
+                onClick={updateCursorPosition}
             />
             <button type="button" className="btn btn--off btn--hover btn__icon">
                 <GIFSVG/>
