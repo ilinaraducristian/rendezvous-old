@@ -2,8 +2,9 @@ import styled from "styled-components";
 import AvatarSVG from "../../svg/Avatar.svg";
 import config from "../../config";
 
+const href = `${config.keycloak.url}/realms/${config.keycloak.realm}/account/#/personal-info`;
+
 function SettingsPanelComponent() {
-    const href = `${config.keycloak.url}/realms/${config.keycloak.realm}/account/#/personal-info`;
     return (
         <Div>
             <SidePanelList className="list">

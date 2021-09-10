@@ -3,6 +3,7 @@ import {ClipboardEvent, EventHandler, forwardRef, KeyboardEvent, MouseEvent, use
 import {useAppDispatch} from "state-management/store";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {OverlayTypes} from "../../types/UISelectionModes";
+import fileToDataUrl from "../../util/file-to-data-url";
 
 type ComponentProps = {
     onKeyDown: EventHandler<KeyboardEvent<HTMLSpanElement>>,
@@ -22,7 +23,7 @@ const MessageInputComponent = forwardRef<HTMLSpanElement, ComponentProps>(({onKe
         clipboard.setData("text/plain", selection.toString());
     }, []);
 
-    const onPaste = useCallback((event: ClipboardEvent<HTMLSpanElement>) => {
+    const onPaste = useCallback(async (event: ClipboardEvent<HTMLSpanElement>) => {
         event.preventDefault();
         if (!event.clipboardData.types.includes("Files")) {
             document.execCommand("insertText", false, event.clipboardData.getData("text/plain"));
@@ -35,17 +36,12 @@ const MessageInputComponent = forwardRef<HTMLSpanElement, ComponentProps>(({onKe
                 break;
             }
         }
-        if (file === undefined) return false;
+        if (file === undefined || file === null) return false;
 
-        if (file === null) {
-            return false;
-        }
-        const fr = new FileReader();
-        fr.onloadend = () => {
-            if (typeof fr.result !== "string") return;
-            dispatch(setOverlay({type: OverlayTypes.ImageInputOverlayComponent, payload: {image: fr.result}}));
-        };
-        fr.readAsDataURL(file);
+        dispatch(setOverlay({
+            type: OverlayTypes.ImageInputOverlayComponent,
+            payload: {image: await fileToDataUrl(file)}
+        }));
 
     }, [dispatch]);
 

@@ -1,18 +1,27 @@
 import styled from "styled-components";
 import {forwardRef, useImperativeHandle, useState} from "react";
 
-type ComponentProps = {
+type ComponentProps<T = any> = {
     title: string,
-    elements: any[],
-    selectElement: (index: number) => void
+    elements: T[],
+    selectElement: (element: T) => void
 }
 
-const PopupContainerComponent = forwardRef(({title, elements, selectElement}: ComponentProps, ref) => {
+export type PopupContainerRefType<T = any> = {
+    move: (up: boolean) => void,
+    getSelectedElement: () => T,
+}
 
-    const [selectedElementIndex, setSelectedElementIndex] = useState<number>(0)
+const PopupContainerComponent = forwardRef<PopupContainerRefType, ComponentProps>(({
+                                                                                       title,
+                                                                                       elements,
+                                                                                       selectElement
+                                                                                   }: ComponentProps, ref) => {
+
+    const [selectedElementIndex, setSelectedElementIndex] = useState<number>(0);
 
     useImperativeHandle(ref, () => ({
-        move: (up: boolean) => {
+        move(up: boolean) {
             if (up) {
                 if (selectedElementIndex - 1 === -1) {
                     setSelectedElementIndex(elements.length - 1)
@@ -27,8 +36,8 @@ const PopupContainerComponent = forwardRef(({title, elements, selectElement}: Co
                 }
             }
         },
-        getSelectedElementIndex: () => {
-            return selectedElementIndex;
+        getSelectedElement() {
+            return elements[selectedElementIndex];
         }
     }));
 
@@ -43,7 +52,7 @@ const PopupContainerComponent = forwardRef(({title, elements, selectElement}: Co
                 {elements.map((element, index) =>
                     (
                         <Li onMouseEnter={() => onMouseEnter(index)}
-                            onMouseUp={() => selectElement(index)}
+                            onMouseUp={() => selectElement(element)}
                             className={selectedElementIndex === index ? "selected-popup-item" : ""}
                             key={`popup-item_${index}`}
                         >
@@ -61,6 +70,8 @@ const Div = styled.div`
   margin: 0 1em 1em 1em;
   border: solid var(--color-third);
   border-radius: 0.5em;
+  max-height: 22.375em;
+  overflow-y: auto;
 `
 
 const Ul = styled.ul`

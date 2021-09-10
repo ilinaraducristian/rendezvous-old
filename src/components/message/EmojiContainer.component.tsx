@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {forwardRef, useImperativeHandle, useState} from "react";
-import {emojis} from "trie";
+import {emojis} from "util/trie";
 
 type ComponentProps = {
   foundEmojis: any[]
