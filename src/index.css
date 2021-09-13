@@ -18,6 +18,8 @@
     --color-13th: #292b2f;
     --color-14th: rgba(79, 84, 92, 0.16);
     --color-15th: rgba(79, 84, 92, 0.32);
+    --color-16th: #2b2e33;
+    --color-17th: #5865f2;
     --small-shadow-bar: 0 1px 0 rgba(4, 4, 5, 0.2), 0 2px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
     --members-panel-width: 15em;
 }

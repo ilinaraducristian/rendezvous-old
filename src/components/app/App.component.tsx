@@ -25,7 +25,7 @@ import {selectJoinedChannelUsers} from "state-management/selectors/channel.selec
 import {consumers, createConsumer, createMediaStreamSource} from "mediasoup";
 import socket from "socketio";
 import authClient from "keycloak";
-import ImageInputOverlayComponent from "components/message/ImageInputOverlay.component";
+import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
 import {useLazyLoginQuery} from "state-management/apis/http";
 import ForthPanelComponent from "../ForthPanel.component";
 import HeaderComponent from "../Header.component";
@@ -108,7 +108,7 @@ function AppComponent() {
 
     return (
         <>
-            {isLoading ?
+            {isLoading && !config.offline ?
                 <LoadingComponent/>
                 :
                 <>
