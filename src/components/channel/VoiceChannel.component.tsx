@@ -9,7 +9,7 @@ import config from "config";
 import styled from "styled-components";
 import ChannelButtonComponent from "components/channel/ChannelButton.component";
 import {selectUsers} from "state-management/selectors/data.selector";
-import {useLazyJoinVoiceChannelQuery} from "../../state-management/apis/socketio";
+import {useLazyJoinVoiceChannelQuery} from "../../state-management/apis/socketio.api";
 import {VoiceChannel} from "../../dtos/channel.dto";
 
 type ComponentProps = {

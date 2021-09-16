@@ -2,7 +2,7 @@ import {useCallback, useEffect} from "react";
 import {useDrag} from "react-dnd";
 import config from "config";
 import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
-import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
+import {useLazyGetMessagesQuery} from "state-management/apis/socketio.api";
 import {
     addMessages,
     selectChannel as selectChannelAction,
@@ -43,10 +43,10 @@ function TextChannelComponent({channel}: ComponentProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [channel.id, channel.serverId]);
 
-  const [, drag] = useDrag<ChannelDragObject, any, any>({
-    type: ItemTypes.CHANNEL,
-    item: {id: channel.id, order: channel.order, groupId: channel.groupId}
-  }, [channel.order]);
+    const [, drag] = useDrag<ChannelDragObject, any, any>({
+        type: ItemTypes.CHANNEL,
+        item: {id: channel.id, order: channel.order, groupId: channel.groupId}
+    }, [channel]);
 
   return (
       <li ref={drag}>

@@ -5,7 +5,7 @@ import {
     deleteMessage as deleteMessageAction,
     editMessage as editMessageAction
 } from "state-management/slices/data/data.slice";
-import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio";
+import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio.api";
 import config from "config";
 import {Message} from "../../dtos/message.dto";
 

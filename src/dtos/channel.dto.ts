@@ -49,3 +49,7 @@ export type MoveChannelRequest = {
   groupId: number | null,
   order: number
 }
+
+export type MoveChannelResponse = {
+  channels: { id: number, groupId: number | null, order: number }[]
+}

@@ -5,7 +5,7 @@ import config from "config";
 import {processedServerData} from "mock-data";
 import {hideSettings, initializeBackend, setOverlay} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/FirstPanel.component";
-import {useLazyGetUserDataQuery} from "state-management/apis/socketio";
+import {useLazyGetUserDataQuery} from "state-management/apis/socketio.api";
 import SecondPanelComponent from "components/SecondPanel.component";
 import ThirdPanelComponent from "components/ThirdPanel.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";
@@ -26,7 +26,7 @@ import {consumers, createConsumer, createMediaStreamSource} from "mediasoup";
 import socket from "socketio";
 import authClient from "keycloak";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
-import {useLazyLoginQuery} from "state-management/apis/http";
+import {useLazyLoginQuery} from "state-management/apis/http.api";
 import ForthPanelComponent from "../ForthPanel.component";
 import HeaderComponent from "../Header.component";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
@@ -38,7 +38,6 @@ document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
     store.dispatch(setOverlay(null));
     const isSettingsShown = selectIsSettingsShown(store.getState());
-    console.log(isSettingsShown)
     if (isSettingsShown) store.dispatch(hideSettings(undefined));
 };
 

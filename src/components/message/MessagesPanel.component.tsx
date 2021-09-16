@@ -7,7 +7,7 @@ import {
     selectFriendship,
 } from "state-management/slices/data/data.slice";
 import styled from "styled-components";
-import {useLazyGetMessagesQuery} from "state-management/apis/socketio";
+import {useLazyGetMessagesQuery} from "state-management/apis/socketio.api";
 import config from "config";
 import MessageInputContainerComponent from "components/message/MessageInputContainer.component";
 import {

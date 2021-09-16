@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {useLazyCreateServerQuery} from "state-management/apis/socketio";
+import {useLazyCreateServerQuery} from "state-management/apis/socketio.api";
 import {addServer, addUser, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay.component";

@@ -7,7 +7,7 @@ import {emojis} from "util/trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel, selectSelectedFriendship, selectUsers} from "state-management/selectors/data.selector";
-import {useLazySendMessageQuery} from "../../state-management/apis/socketio";
+import {useLazySendMessageQuery} from "../../state-management/apis/socketio.api";
 import PopupContainerComponent, {PopupContainerRefType} from "./PopupContainer.component";
 import {stringSimilarity} from "string-similarity-js";
 import {selectSelectedServerMembers} from "../../state-management/selectors/server.selector";
@@ -66,6 +66,23 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         dispatch(addMessages([dataMessage]));
     }, [isSuccessSendMessage, dataMessage, messageSent, dispatch])
 
+    const replaceTextWithEmoji = useCallback((emojiId: number) => {
+        const selection = getSelection();
+        if (inputRef.current === null || popupRef.current === null || selection === null || selection.anchorNode === null) return;
+        const emoji = emojis[emojiId];
+        const textUntilCursor = inputRef.current.innerText.substring(0, cursorPosition);
+        const lastIndexOfColon = textUntilCursor.lastIndexOf(":");
+        if (lastIndexOfColon === -1) return;
+        const textBeforeColon = inputRef.current.innerText.substring(0, lastIndexOfColon);
+        const textAfterEmoji = inputRef.current.innerText.substring(cursorPosition + 1);
+        inputRef.current.innerText = textBeforeColon + emoji.emoji + textAfterEmoji;
+        const textNode = selection.anchorNode.childNodes[0];
+        selection.setPosition(textNode, lastIndexOfColon + 2);
+        setPopupList([]);
+        setPopupType(null);
+        return false;
+    }, [cursorPosition]);
+
     const onKeyDown = useCallback((event: KeyboardEvent<HTMLSpanElement>) => {
 
         if (event.key.includes("Enter")) {
@@ -84,85 +101,9 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             event.preventDefault();
             popupRef.current.move(event.key === 'ArrowUp');
         }
-    }, [popupType, sendMessage])
+    }, [popupType, sendMessage, replaceTextWithEmoji])
 
-    useEffect(() => {
-        if (inputRef.current === null) return;
-        const text = inputRef.current.innerText;
-        if (text.length === 0) {
-            setPopupType(null)
-            return;
-        }
-        const shouldDisplayCommandPallet = checkShouldDisplayCommandPallet(text);
-        if (shouldDisplayCommandPallet) return displayCommandPallet();
-        let matchedString = checkShouldDisplayPopupBasedOnChar(text, ':');
-        if (matchedString !== undefined) return displayEmojisList(matchedString);
-        matchedString = checkShouldDisplayPopupBasedOnChar(text, '@');
-        if (matchedString !== undefined) return displayMentions(matchedString);
-        setPopupType(null)
-    }, [cursorPosition])
-
-    function replaceTextWithEmoji(emojiId: number) {
-        const selection = getSelection();
-        if (inputRef.current === null || popupRef.current === null || selection === null || selection.anchorNode === null) return;
-        const emoji = emojis[emojiId];
-        const textUntilCursor = inputRef.current.innerText.substring(0, cursorPosition);
-        const lastIndexOfColon = textUntilCursor.lastIndexOf(":");
-        if (lastIndexOfColon === -1) return;
-        const textBeforeColon = inputRef.current.innerText.substring(0, lastIndexOfColon);
-        const textAfterEmoji = inputRef.current.innerText.substring(cursorPosition + 1);
-        inputRef.current.innerText = textBeforeColon + emoji.emoji + textAfterEmoji;
-        const textNode = selection.anchorNode.childNodes[0];
-        selection.setPosition(textNode, lastIndexOfColon + 2);
-        setPopupList([]);
-        setPopupType(null);
-        return false;
-    }
-
-    function checkShouldDisplayCommandPallet(text: string): boolean {
-        const forwardSlashRegexMatches = text.match(/\//g);
-        if (forwardSlashRegexMatches === null || forwardSlashRegexMatches.length > 1) return false;
-        return false
-    }
-
-    function displayCommandPallet() {
-        setPopupType(PopupType.commands)
-    }
-
-    function checkShouldDisplayPopupBasedOnChar(text: string, char: string) {
-        const selection = getSelection();
-        if (selection === null) return;
-        const textUntilCursor = text.substring(0, cursorPosition);
-        const lastIndexOfChar = textUntilCursor.lastIndexOf(char);
-        if (lastIndexOfChar === -1) return;
-        const charBeforeChar = textUntilCursor[lastIndexOfChar - 1];
-        if (charBeforeChar !== undefined && charBeforeChar !== ' ') return;
-        const textFromCharToCursor = textUntilCursor.substring(lastIndexOfChar + 1);
-        if (textFromCharToCursor.length < 2) return;
-        const match = textFromCharToCursor.match(/^[a-z0-9_]+$/);
-        if (match === null) return;
-        return match[0];
-    }
-
-    function displayEmojisList(matchedString: string) {
-        const emojisToDisplay = emojis.map(emoji => ({
-            ...emoji,
-            score: stringSimilarity(emoji.shortcut, matchedString)
-        }))
-            .filter(({score}) => score > 0.15)
-            .sort((a, b) => b.score - a.score)
-            .map((emoji, index) => (
-                <EmojiContainerDiv key={`emoji_${index}`} emojiId={emoji.id}>
-                    <div>{emoji.emoji}</div>
-                    <div>{emoji.shortcut}</div>
-                </EmojiContainerDiv>
-            ));
-        if (emojisToDisplay.length === 0) return setPopupType(null);
-        setPopupList(emojisToDisplay)
-        setPopupType(PopupType.emojisAndMentions)
-    }
-
-    function displayMentions(matchedString: string) {
+    const displayMentions = useCallback((matchedString: string) => {
         const usersToDisplay = members
             .map(member => users.find(user => user.id === member.userId))
             .map((user) => ({
@@ -180,14 +121,80 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         if (usersToDisplay.length) return setPopupType(null);
         setPopupList(usersToDisplay)
         setPopupType(PopupType.emojisAndMentions)
-    }
+    }, [members, users]);
 
-    function updateCursorPosition() {
+    const checkShouldDisplayCommandPallet = useCallback((text: string): boolean => {
+        const forwardSlashRegexMatches = text.match(/\//g);
+        if (forwardSlashRegexMatches === null || forwardSlashRegexMatches.length > 1) return false;
+        return false
+    }, []);
+
+    const checkShouldDisplayPopupBasedOnChar = useCallback((text: string, char: string) => {
+        const selection = getSelection();
+        if (selection === null) return;
+        const textUntilCursor = text.substring(0, cursorPosition);
+        const lastIndexOfChar = textUntilCursor.lastIndexOf(char);
+        if (lastIndexOfChar === -1) return;
+        const charBeforeChar = textUntilCursor[lastIndexOfChar - 1];
+        if (charBeforeChar !== undefined && charBeforeChar !== ' ') return;
+        const textFromCharToCursor = textUntilCursor.substring(lastIndexOfChar + 1);
+        if (textFromCharToCursor.length < 2) return;
+        const match = textFromCharToCursor.match(/^[a-z0-9_]+$/);
+        if (match === null) return;
+        return match[0];
+    }, [cursorPosition]);
+
+    const displayCommandPallet = useCallback(() => {
+        setPopupType(PopupType.commands)
+    }, []);
+
+    const displayEmojisList = useCallback((matchedString: string) => {
+        const emojisToDisplay = emojis.map(emoji => ({
+            ...emoji,
+            score: stringSimilarity(emoji.shortcut, matchedString)
+        }))
+            .filter(({score}) => score > 0.15)
+            .sort((a, b) => b.score - a.score)
+            .map((emoji, index) => (
+                <EmojiContainerDiv key={`emoji_${index}`} emojiId={emoji.id}>
+                    <div>{emoji.emoji}</div>
+                    <div>{emoji.shortcut}</div>
+                </EmojiContainerDiv>
+            ));
+        if (emojisToDisplay.length === 0) return setPopupType(null);
+        setPopupList(emojisToDisplay)
+        setPopupType(PopupType.emojisAndMentions)
+    }, []);
+
+    useEffect(() => {
+        if (inputRef.current === null) return;
+        const text = inputRef.current.innerText;
+        if (text.length === 0) {
+            setPopupType(null)
+            return;
+        }
+        const shouldDisplayCommandPallet = checkShouldDisplayCommandPallet(text);
+        if (shouldDisplayCommandPallet) return displayCommandPallet();
+        let matchedString = checkShouldDisplayPopupBasedOnChar(text, ':');
+        if (matchedString !== undefined) return displayEmojisList(matchedString);
+        matchedString = checkShouldDisplayPopupBasedOnChar(text, '@');
+        if (matchedString !== undefined) return displayMentions(matchedString);
+        setPopupType(null)
+    }, [
+        displayEmojisList,
+        displayCommandPallet,
+        displayMentions,
+        cursorPosition,
+        checkShouldDisplayCommandPallet,
+        checkShouldDisplayPopupBasedOnChar
+    ])
+
+    const updateCursorPosition = useCallback(() => {
         const selection = getSelection();
         if (selection !== null) {
             setCursorPosition(selection.anchorOffset)
         }
-    }
+    }, []);
 
     return <>
         {popupType !== PopupType.emojisAndMentions ||

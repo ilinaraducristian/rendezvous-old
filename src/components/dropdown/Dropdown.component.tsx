@@ -1,5 +1,5 @@
 import {useCallback, useEffect} from "react";
-import {useLazyCreateInvitationQuery, useLazyDeleteServerQuery} from "state-management/apis/socketio";
+import {useLazyCreateInvitationQuery, useLazyDeleteServerQuery} from "state-management/apis/socketio.api";
 import {setInvitation, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import styled from "styled-components";

@@ -4,6 +4,7 @@ import {
     JoinVoiceChannelRequest,
     JoinVoiceChannelResponse,
     MoveChannelRequest,
+    MoveChannelResponse,
     NewChannelRequest,
     NewChannelResponse
 } from "../../dtos/channel.dto";
@@ -43,7 +44,7 @@ export const socketioApi = createApi({
         createChannel: builder.query<NewChannelResponse, NewChannelRequest>({
             query: (data) => ({ev: "create_channel", data})
         }),
-        moveChannel: builder.query<void, MoveChannelRequest>({
+        moveChannel: builder.query<MoveChannelResponse, MoveChannelRequest>({
             query: (data) => ({ev: "move_channel", data})
         }),
         createGroup: builder.query<NewGroupResponse, NewGroupRequest>({
@@ -100,5 +101,6 @@ export const {
     useLazyDeleteMessageQuery,
     useLazySendFriendRequestQuery,
     useLazyAcceptFriendRequestQuery,
+    useLazyMoveChannelQuery,
     useLazyJoinVoiceChannelQuery
 } = socketioApi;

@@ -77,7 +77,6 @@ const reducers = {
         messages.forEach(message => {
             if (message.friendshipId !== null) {
                 const friendship = state.friendships.find(friendship => friendship.id === message.friendshipId);
-                // console.log(state.friendships)
                 if (friendship === undefined) return;
                 const messageId = friendship.messages.findIndex(m1 => m1.id === message.id);
                 if (messageId === -1)
@@ -146,6 +145,7 @@ export const {
     hideSettings,
 } = dataSlice.actions;
 
+// server reducers
 export const {
     setInvitation,
     addServer,
@@ -156,9 +156,11 @@ export const {
     setChannelsOrder,
 } = dataSlice.actions;
 
+// channel reducers
 export const {
     deleteServer,
     editMessage,
+    moveChannels,
     deleteMessage,
     setJoinedVoiceChannel,
     joinVoiceChannel,

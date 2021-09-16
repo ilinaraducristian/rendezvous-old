@@ -1,10 +1,11 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
-import {setChannelsOrder} from "state-management/slices/data/data.slice";
+import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import DropHandleComponent from "components/DropHandle.component";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {useLazyMoveChannelQuery} from "../../state-management/apis/socketio.api";
 
 type ComponentProps = {
   index: number,
@@ -15,68 +16,18 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
   const server = useAppSelector(selectSelectedServer);
   const [hidden, setHidden] = useState(true);
+  const [fetchMoveChannel, {data: dataMoveChannel, isSuccess: isSuccessMoveChannel}] = useLazyMoveChannelQuery();
   const dispatch = useAppDispatch();
 
   const handleDrop = useCallback((item: { id: number, order: number, groupId: number | null }) => {
+    if (server === undefined) return;
+    fetchMoveChannel({serverId: server.id, channelId: item.id, order: index, groupId})
+  }, [groupId, index, server, fetchMoveChannel]);
 
-    if (groupId === item.groupId) {
-      // if channel moved inside the same group
-      if (server === undefined) return;
-      if (groupId === null) {
-        if (item.order === index || item.order + 1 === index) return;
-        // if the group is the default one
-        const channels = server.channels.filter(channel => channel.id !== item.id).map(channel => ({
-          id: channel.id,
-          order: channel.order,
-          groupId: null
-        }));
-        if (item.order < index) {
-          channels.forEach(channel => {
-            if (channel.order >= index) channel.order++;
-          });
-          channels.forEach(channel => {
-            if (channel.order > item.order) channel.order--;
-          });
-        } else {
-          channels.forEach(channel => {
-            if (channel.order > item.order) channel.order--;
-          });
-          channels.forEach(channel => {
-            if (channel.order >= index) channel.order++;
-          });
-        }
-        channels.push({id: item.id, order: index, groupId});
-        dispatch(setChannelsOrder(channels));
-      } else {
-        // if the group is some group
-        const group = server.groups.find(group => group.id === groupId);
-        if (group === undefined) return;
-        const channels = group.channels.filter(channel => channel.id !== item.id)
-            .map(channel => ({id: channel.id, order: channel.order, groupId}));
-        if (item.order < index) {
-          channels.forEach(channel => {
-            if (channel.order >= index) channel.order++;
-          });
-          channels.forEach(channel => {
-            if (channel.order > item.order) channel.order--;
-          });
-        } else {
-          channels.forEach(channel => {
-            if (channel.order > item.order) channel.order--;
-          });
-          channels.forEach(channel => {
-            if (channel.order >= index) channel.order++;
-          });
-        }
-        channels.push({id: item.id, order: index, groupId});
-        dispatch(setChannelsOrder(channels));
-      }
-    } else {
-      // if channel moved to another group
-    }
-
-
-  }, [groupId, index, dispatch, server]);
+  useEffect(() => {
+    if (!isSuccessMoveChannel || dataMoveChannel === undefined) return;
+    dispatch(moveChannels(dataMoveChannel.channels));
+  }, [dispatch, isSuccessMoveChannel, dataMoveChannel])
 
   const handleHover = useCallback(() => {
     setHidden(false);

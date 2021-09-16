@@ -6,7 +6,7 @@ import {
     setThirdPanel
 } from "../../state-management/slices/data/data.slice";
 import {ThirdPanelTypes} from "../../types/UISelectionModes";
-import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio";
+import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio.api";
 import {useEffect} from "react";
 import {User} from "../../dtos/user.dto";
 

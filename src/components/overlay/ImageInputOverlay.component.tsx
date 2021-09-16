@@ -5,7 +5,7 @@ import {addMessages, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel} from "state-management/selectors/data.selector";
 import {NewMessageRequest} from "../../dtos/message.dto";
-import {useLazySendMessageQuery} from "../../state-management/apis/socketio";
+import {useLazySendMessageQuery} from "../../state-management/apis/socketio.api";
 
 type ComponentProps = {
   image: string
