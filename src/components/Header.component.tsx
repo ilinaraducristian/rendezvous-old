@@ -7,6 +7,7 @@ import {selectHeader, selectSelectedChannel} from "../state-management/selectors
 import {HeaderTypes, OverlayTypes, ThirdPanelTypes} from "../types/UISelectionModes";
 import {setOverlay, setThirdPanel} from "../state-management/slices/data/data.slice";
 import {ChannelType} from "../dtos/channel.dto";
+import FriendSVG from "../svg/Friend.svg";
 
 function HeaderComponent() {
 
@@ -40,6 +41,7 @@ function HeaderComponent() {
             {
                 header !== HeaderTypes.friends ||
                 <>
+                    <FriendSVG/>
                     <span>Friends</span>
                     <Button type="button" className={tab === ThirdPanelTypes.onlineFriends ? "selected-tab" : ""}
                             onClick={selectOnline}>Online</Button>
@@ -77,10 +79,11 @@ const Button = styled.button`
   color: var(--color-11th);
   border: none;
   cursor: pointer;
+  font-size: 1rem;
 
   &:hover {
     background-color: var(--color-14th);
-    color: var(--color-seventh);
+    color: var(--color-7th);
   }
 `
 
@@ -106,6 +109,7 @@ const Header = styled.header`
 const DivHeader = styled.div`
   flex-grow: 1;
   display: flex;
+  gap: 1em;
 `;
 
 /* CSS */

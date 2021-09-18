@@ -7,10 +7,10 @@ import {
     setSecondPanelHeader
 } from "state-management/slices/data/data.slice";
 import styled from "styled-components";
-import FirstPanelButtonComponent from "components/FirstPanelButton.component";
+import FirstPanelButtonComponent from "components/first-panel/FirstPanelButton.component";
 import {selectServers} from "state-management/selectors/data.selector";
-import {HeaderTypes, OverlayTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../types/UISelectionModes";
-import {Server} from "../dtos/server.dto";
+import {HeaderTypes, OverlayTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../../types/UISelectionModes";
+import {Server} from "../../dtos/server.dto";
 
 function FirstPanelComponent() {
     const dispatch = useAppDispatch();
@@ -37,8 +37,11 @@ function FirstPanelComponent() {
         <Ol className="list">
             <FirstPanelButtonComponent name={"Home"} onClick={selectFriends}/>
             {servers.map((server: Server) =>
-                <FirstPanelButtonComponent key={`server_${server.id}`} name={server.name}
-                                           onClick={() => selectServer(server)}
+                <FirstPanelButtonComponent
+                    key={`server_${server.id}`}
+                    name={server.name}
+                    serverId={server.id}
+                    onClick={() => selectServer(server)}
                 />
             )}
             <FirstPanelButtonComponent name={"+"} onClick={showAddServerOverlay}/>

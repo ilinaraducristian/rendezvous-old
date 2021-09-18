@@ -7,8 +7,8 @@ import {
     selectUsers
 } from "state-management/selectors/data.selector";
 import {ThirdPanelTypes} from "../types/UISelectionModes";
-import {useLazyAcceptFriendRequestQuery} from "../state-management/apis/socketio.api";
 import MessagesPanelComponent from "./message/MessagesPanel.component";
+import ThirdPanelFriendComponent from "./third-panel/ThirdPanelFriend.component";
 
 function ThirdPanelComponent() {
 
@@ -19,11 +19,7 @@ function ThirdPanelComponent() {
     const friends = useAppSelector(selectFriendships)
     const users = useAppSelector(selectUsers)
     const friendRequests = useAppSelector(selectFriendRequests)
-    const [fetch] = useLazyAcceptFriendRequestQuery();
 
-    function acceptFriendRequest(userId: string, friendRequestId: number) {
-        fetch({friendRequestId})
-    }
 
     return (
         <DivContainer>
@@ -34,33 +30,30 @@ function ThirdPanelComponent() {
                 }
                 {
                     thirdPanel !== ThirdPanelTypes.allFriends ||
-                    <ul className="list">
+                    <Ul className="list">
                         {
                             friends.map(friend => users.find(user => user.id === friend.user1Id || user.id === friend.user2Id))
-                                .map((friend, i) => <li key={`friend_${i}`}><span>{friend?.username}</span></li>)
+                                .map((friend, i) => {
+                                    if (friend === undefined) return;
+                                    return <ThirdPanelFriendComponent key={`friend_${i}`} user={friend}/>;
+                                })
                         }
-                    </ul>
+                    </Ul>
                 }
                 {
                     thirdPanel !== ThirdPanelTypes.pendingFriendRequests ||
-                    <ul className="list">
-                        {friendRequests.map((friendRequest, i) =>
-                            <li key={`friendRequest_${i}`}>
-                                <div>
-                            <span>
-                                {friendRequest.userId}
-                            </span>
-                                    {
-                                        !friendRequest.incoming ||
-                                        <button type="button"
-                                                onClick={() => acceptFriendRequest(friendRequest.userId, friendRequest.id)}>
-                                            Accept request
-                                        </button>
-                                    }
-                                </div>
-                            </li>
-                        )}
-                    </ul>
+                    <Ul className="list">
+                        {friendRequests.map(friendRequest => ({
+                            friend: users.find(user => user.id === friendRequest.userId),
+                            friendRequest
+                        }))
+                            .map(({friend, friendRequest}, i) => {
+                                    if (friend === undefined) return;
+                                    return <ThirdPanelFriendComponent key={`pending_friend-request_${i}`} user={friend}
+                                                                      friendRequest={friendRequest}/>;
+                                }
+                            )}
+                    </Ul>
                 }
             </DivContentBody>
         </DivContainer>
@@ -83,12 +76,17 @@ const DivContainer = styled.div`
   color: white;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
 `;
 
 const DivContentBody = styled.div`
   display: flex;
   flex-grow: 1;
   max-height: 100%;
+`;
+
+const Ul = styled.ul`
+  width: 100%;
 `;
 
 /* CSS */

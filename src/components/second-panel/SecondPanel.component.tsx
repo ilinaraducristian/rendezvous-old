@@ -6,45 +6,22 @@ import {useAppSelector} from "state-management/store";
 import DropdownComponent from "components/dropdown/Dropdown.component";
 import GroupsListComponent from "components/group/GroupsList.component";
 import styled from "styled-components";
-import {ArrowXSVG} from "svg/Arrow.svg";
-import {
-    selectSecondPanelBody,
-    selectSecondPanelHeader,
-    selectSelectedServer
-} from "state-management/selectors/data.selector";
-import FriendsListComponent from "./friend/FriendsList.component";
-import {SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../types/UISelectionModes";
+import {selectSecondPanelBody, selectSelectedServer} from "state-management/selectors/data.selector";
+import FriendsListComponent from "../friend/FriendsList.component";
+import {SecondPanelBodyTypes} from "../../types/UISelectionModes";
 
-import SecondPanelFooterComponent from "./second-panel/SecondPanelFooter.component";
+import SecondPanelFooterComponent from "./SecondPanelFooter.component";
+import SecondPanelHeaderComponent from "./SecondPanelHeader.component";
 
 function SecondPanelComponent() {
 
     const [isDropdownShown, setIsDropdownShown] = useState(false);
     const selectedServer = useAppSelector(selectSelectedServer);
-    const secondPanelHeader = useAppSelector(selectSecondPanelHeader);
     const secondPanelBody = useAppSelector(selectSecondPanelBody);
-
-
-    function toggleDropdown() {
-        if (selectedServer === undefined) return;
-        setIsDropdownShown(!isDropdownShown);
-    }
 
     return (
         <SecondPanelDiv>
-            <SecondPanelHeader>
-                {
-                    secondPanelHeader !== SecondPanelHeaderTypes.channel || selectedServer === undefined ||
-                    <Button className="btn" type="button" onClick={toggleDropdown}>
-                        <Span>{selectedServer.name}</Span>
-                        <ArrowXSVG isCollapsed={!isDropdownShown}/>
-                    </Button>
-                }
-                {
-                    secondPanelHeader !== SecondPanelHeaderTypes.friends ||
-                    <Span>Friends</Span>
-                }
-            </SecondPanelHeader>
+            <SecondPanelHeaderComponent isDropdownShown={isDropdownShown} setIsDropdownShown={setIsDropdownShown}/>
             {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
             <SecondPanelBody>
                 {
@@ -77,6 +54,7 @@ function SecondPanelComponent() {
 
 const SecondPanelBody = styled.div`
   flex-grow: 1;
+  overflow-y: auto;
 `;
 
 const SecondPanelDiv = styled.div`
@@ -88,42 +66,9 @@ const SecondPanelDiv = styled.div`
   width: 15em;
 `;
 
-const SecondPanelHeader = styled.header`
-  //background: none;
-  //font-size: 1.5em;
-  //text-align: left;
-  width: 100%;
 
-  border-style: none;
-  box-shadow: var(--small-shadow-bar);
-  //display: flex;
-  //align-items: center;
-  height: 3em;
-  //color: var(--color-9th)
-`
 
-// const FriendsSpan = styled.span`
-//   color: white;
-// `;
 
-const Span = styled.span`
-  flex-grow: 1;
-  color: white;
-`;
-
-const Button = styled.button`
-  background: none;
-  font-size: 1.5em;
-  text-align: left;
-  width: 100%;
-
-  border-style: none;
-  box-shadow: var(--small-shadow-bar);
-  display: flex;
-  align-items: center;
-  height: 2em;
-  color: var(--color-9th)
-`;
 
 /* CSS */
 

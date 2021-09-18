@@ -73,6 +73,7 @@ const Footer = styled.footer`
   color: white;
   background-color: var(--color-13th);
   height: 3.25em;
+  min-height: 3.25em;
   display: flex;
   align-items: center;
 `
