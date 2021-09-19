@@ -6,9 +6,9 @@ import {
     selectThirdPanel,
     selectUsers
 } from "state-management/selectors/data.selector";
-import {ThirdPanelTypes} from "../types/UISelectionModes";
-import MessagesPanelComponent from "./message/MessagesPanel.component";
-import ThirdPanelFriendComponent from "./third-panel/ThirdPanelFriend.component";
+import {ThirdPanelTypes} from "../../types/UISelectionModes";
+import MessagesPanelComponent from "../message/MessagesPanel.component";
+import ThirdPanelFriendComponent from "./ThirdPanelFriend.component";
 
 function ThirdPanelComponent() {
 
@@ -19,7 +19,6 @@ function ThirdPanelComponent() {
     const friends = useAppSelector(selectFriendships)
     const users = useAppSelector(selectUsers)
     const friendRequests = useAppSelector(selectFriendRequests)
-
 
     return (
         <DivContainer>
@@ -34,7 +33,7 @@ function ThirdPanelComponent() {
                         {
                             friends.map(friend => users.find(user => user.id === friend.user1Id || user.id === friend.user2Id))
                                 .map((friend, i) => {
-                                    if (friend === undefined) return;
+                                    if (friend === undefined) return null;
                                     return <ThirdPanelFriendComponent key={`friend_${i}`} user={friend}/>;
                                 })
                         }
@@ -48,7 +47,7 @@ function ThirdPanelComponent() {
                             friendRequest
                         }))
                             .map(({friend, friendRequest}, i) => {
-                                    if (friend === undefined) return;
+                                if (friend === undefined) return null;
                                     return <ThirdPanelFriendComponent key={`pending_friend-request_${i}`} user={friend}
                                                                       friendRequest={friendRequest}/>;
                                 }

@@ -7,7 +7,7 @@ import {hideSettings, initializeBackend, setOverlay} from "state-management/slic
 import FirstPanelComponent from "components/first-panel/FirstPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio.api";
 import SecondPanelComponent from "components/second-panel/SecondPanel.component";
-import ThirdPanelComponent from "components/ThirdPanel.component";
+import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";
 import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay.component";

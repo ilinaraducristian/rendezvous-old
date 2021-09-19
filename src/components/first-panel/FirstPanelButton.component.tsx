@@ -28,7 +28,7 @@ function FirstPanelButtonComponent({name, serverId, onClick}: ComponentProps) {
             setSelectedClass('');
             setNotchClass('');
         }
-    }, [selectedServer, serverId])
+    }, [selectedServer, serverId, name, secondPanelHeader])
 
     return (
         <Li className="li">

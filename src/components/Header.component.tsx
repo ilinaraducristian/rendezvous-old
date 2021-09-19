@@ -3,7 +3,7 @@ import MembersSVG from "../svg/Members.svg";
 import styled from "styled-components";
 import {useState} from "react";
 import {useAppDispatch, useAppSelector} from "../state-management/store";
-import {selectHeader, selectSelectedChannel} from "../state-management/selectors/data.selector";
+import {selectFriendRequests, selectHeader, selectSelectedChannel} from "../state-management/selectors/data.selector";
 import {HeaderTypes, OverlayTypes, ThirdPanelTypes} from "../types/UISelectionModes";
 import {setOverlay, setThirdPanel} from "../state-management/slices/data/data.slice";
 import {ChannelType} from "../dtos/channel.dto";
@@ -16,7 +16,8 @@ function HeaderComponent() {
     const dispatch = useAppDispatch();
     const selectedChannel = useAppSelector(selectSelectedChannel);
     const header = useAppSelector(selectHeader);
-    const [tab, setTab] = useState<ThirdPanelTypes>(ThirdPanelTypes.allFriends)
+    const [tab, setTab] = useState<ThirdPanelTypes>(ThirdPanelTypes.allFriends);
+    const friendRequests = useAppSelector(selectFriendRequests)
 
     function selectOnline() {
         setTab(ThirdPanelTypes.onlineFriends)
@@ -43,14 +44,20 @@ function HeaderComponent() {
                 <>
                     <FriendSVG/>
                     <span>Friends</span>
-                    <Button type="button" className={tab === ThirdPanelTypes.onlineFriends ? "selected-tab" : ""}
+                    <Button type="button" className={tab === ThirdPanelTypes.onlineFriends ? "btn selected-tab" : "btn"}
                             onClick={selectOnline}>Online</Button>
-                    <Button type="button" className={tab === ThirdPanelTypes.allFriends ? "selected-tab" : ""}
+                    <Button type="button" className={tab === ThirdPanelTypes.allFriends ? "btn selected-tab" : "btn"}
                             onClick={selectAll}>All</Button>
-                    <Button type="button"
-                            className={tab === ThirdPanelTypes.pendingFriendRequests ? "selected-tab" : ""}
-                            onClick={selectPending}>Pending</Button>
-                    <Button type="button" onClick={addFriend}>Add Friend</Button>
+                    <PendingButton type="button"
+                                   className={tab === ThirdPanelTypes.pendingFriendRequests ? "btn selected-tab" : "btn"}
+                                   onClick={selectPending}>
+                        <span>Pending</span>
+                        {
+                            friendRequests.length === 0 ||
+                            <Badge>{friendRequests.length}</Badge>
+                        }
+                    </PendingButton>
+                    <AddFriendButton type="button" className="btn" onClick={addFriend}>Add Friend</AddFriendButton>
                 </>
             }
             {
@@ -75,17 +82,49 @@ function HeaderComponent() {
 /* CSS */
 
 const Button = styled.button`
-  background: none;
   color: var(--color-11th);
-  border: none;
-  cursor: pointer;
   font-size: 1rem;
 
   &:hover {
     background-color: var(--color-14th);
     color: var(--color-7th);
   }
+`;
+
+const PendingButton = styled.button`
+  color: var(--color-11th);
+  font-size: 1rem;
+
+  &:hover {
+    background-color: var(--color-14th);
+    color: var(--color-7th);
+  }
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
+
+const AddFriendButton = styled.button`
+  background-color: var(--color-18th);
+  border: solid var(--color-18th);
+  border-radius: 0.3em;
+  border-width: 0.1em 0.3em;
+`;
+
+const Badge = styled.span`
+  background-color: var(--color-19th);
+  border-radius: 50%;
+  border-width: 0.5em;
+  color: white;
+  flex-grow: 1;
+  width: 1em;
+  height: 1em;
+  margin-left: 0.4em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 
 const Span = styled.span`
   flex-grow: 1;

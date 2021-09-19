@@ -6,7 +6,7 @@ import {
     useLazyAcceptFriendRequestQuery,
     useLazyRejectFriendRequestQuery
 } from "../../state-management/apis/socketio.api";
-import {useCallback} from "react";
+import {useCallback, useEffect} from "react";
 import CheckSVG from "../../svg/Check.svg";
 import XSVG from "../../svg/X.svg";
 
@@ -28,11 +28,19 @@ function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
 
     const acceptFriendRequest = useCallback((userId: string, friendRequestId: number) => {
         fetchAcceptFriendRequest({friendRequestId})
-    }, []);
+    }, [fetchAcceptFriendRequest]);
 
     const rejectFriendRequest = useCallback((userId: string, friendRequestId: number) => {
         fetchRejectFriendRequest({friendRequestId})
-    }, []);
+    }, [fetchRejectFriendRequest]);
+
+    useEffect(() => {
+        if (dataAcceptFriendRequest === undefined || !isSuccessAcceptFriendRequest) return;
+    }, [dataAcceptFriendRequest, isSuccessAcceptFriendRequest]);
+
+    useEffect(() => {
+        if (dataRejectFriendRequest === undefined || !isSuccessRejectFriendRequest) return;
+    }, [dataRejectFriendRequest, isSuccessRejectFriendRequest]);
 
     return (
         <Li>

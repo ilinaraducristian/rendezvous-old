@@ -1,17 +1,43 @@
 import styled from "styled-components";
+import {ReactNode} from "react";
+import XSVG from "../../svg/X.svg";
+import {useAppDispatch} from "../../state-management/store";
+import {setOverlay} from "../../state-management/slices/data/data.slice";
 
 type ComponentProps = {
-  children: any;
+    title?: string,
+    description?: string,
+    children?: ReactNode;
 }
 
-function OverlayComponent({children}: ComponentProps) {
-  return (
-      <DivOverlay>
-        <DivContainer>
-          {children}
-        </DivContainer>
-      </DivOverlay>
-  );
+function OverlayComponent({title, description, children}: ComponentProps) {
+
+    const dispatch = useAppDispatch();
+
+    function closeOverlay() {
+        dispatch(setOverlay(null));
+    }
+
+    return (
+        <DivOverlay>
+            <DivContainer>
+                <CloseButton type="button" className="btn" onClick={closeOverlay}>
+                    <XSVG/>
+                </CloseButton>
+                <Header>
+                    {
+                        title === undefined ||
+                        <h1 className="h1">{title}</h1>
+                    }
+                    {
+                        description === undefined ||
+                        <h5 className="h1">{description}</h5>
+                    }
+                </Header>
+                {children}
+            </DivContainer>
+        </DivOverlay>
+    );
 }
 
 /* CSS */
@@ -27,14 +53,35 @@ const DivOverlay = styled.div`
 `;
 
 const DivContainer = styled.div`
-  width: 30em;
-  height: 15em;
+  min-width: 30em;
+  min-height: 15em;
   background-color: var(--color-secondary);
   display: flex;
   flex-direction: column;
-  padding: 2em;
-  justify-content: space-between;
-  gap: 2.5em;
+  border: solid var(--color-secondary);
+  border-radius: 0.3em;
+  position: relative;
+  color: white;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  right: 0.5em;
+  top: 0.5em;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+
+  &:hover {
+    color: black;
+  }
+
+`;
+
+const Header = styled.header`
+  display: flex;
+  flex-direction: column;
+  max-width: 30em;
 `;
 
 /* CSS */

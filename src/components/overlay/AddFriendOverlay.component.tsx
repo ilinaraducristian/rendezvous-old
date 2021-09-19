@@ -22,8 +22,7 @@ function AddFriendOverlayComponent() {
     }, [isSuccess, data, dispatch])
 
     return (
-        <OverlayComponent>
-            <h1 className="h1">Friend username</h1>
+        <OverlayComponent title="Friend username">
             <input type="text" ref={ref}/>
             <button type="button" className="btn btn__overlay-select" onClick={sendFriendRequest}>
                 Send friend request

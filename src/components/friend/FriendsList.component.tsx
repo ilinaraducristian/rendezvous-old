@@ -10,10 +10,10 @@ function FriendsListComponent() {
     // const friendUsers: User[] = friendships.map(friend => users.find(user => user.id === friend.user1Id || user.id === friend.user2Id)).filter(user => user !== undefined) as User[];
 
     return <Ul className="list">
-        {friendships.map((friendship) => {
+        {friendships.map((friendship, index) => {
                 const user = users.find(user => user.id === friendship.user1Id || user.id === friendship.user2Id)
                 if (user === undefined) return null;
-                return <FriendComponent key={`friend_${user.id}`} friendshipId={friendship.id} user={user}/>
+                return <FriendComponent key={`friendship_${index}`} friendshipId={friendship.id} user={user}/>
             }
         )}
     </Ul>;
