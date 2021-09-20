@@ -2,28 +2,60 @@ import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay.component";
 import {OverlayTypes} from "../../types/UISelectionModes";
+import styled from "styled-components";
 
 function AddServerOverlayComponent() {
-  const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
 
-  function createServer() {
-      dispatch(setOverlay({type: OverlayTypes.CreateServerOverlayComponent}));
-  }
+    function createServer() {
+        dispatch(setOverlay({type: OverlayTypes.CreateServerOverlayComponent}));
+    }
 
-  function joinServer() {
-      dispatch(setOverlay({type: OverlayTypes.JoinServerOverlayComponent}));
-  }
+    function joinServer() {
+        dispatch(setOverlay({type: OverlayTypes.JoinServerOverlayComponent}));
+    }
 
-  return (
-      <OverlayComponent>
-        <h1 className="h1">Add a server</h1>
-        <div className="overlay__body">
-          <button type="button" className="btn btn__overlay-select" onClick={createServer}>Create a server</button>
-          <button type="button" className="btn btn__overlay-select" onClick={joinServer}>Join a server</button>
-        </div>
-      </OverlayComponent>
-  );
+    return (
+        <OverlayComponent title="Add a server">
+            <Div>
+                <Button type="button" className="btn" onClick={createServer}>
+                    Create a new server
+                </Button>
+                <Button type="button" className="btn" onClick={joinServer}>
+                    Join a server
+                </Button>
+            </Div>
+        </OverlayComponent>
+    );
 
 }
+
+/* CSS */
+
+const Div = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-grow: 1;
+`;
+
+const Button = styled.button`
+  --color: var(--color-18th);
+  //background-color: var(--color);
+  border: solid var(--color);
+  border-radius: 1em;
+  margin: 0 4.35em;
+  width: 21.354em;
+  height: 3.4371em;
+  font-size: 1.2rem;
+
+  &:hover {
+    border-color: var(--color-8th);
+  }
+
+`;
+
+/* CSS */
 
 export default AddServerOverlayComponent;

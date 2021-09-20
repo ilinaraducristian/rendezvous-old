@@ -62,6 +62,7 @@ const DivContainer = styled.div`
   border-radius: 0.3em;
   position: relative;
   color: white;
+  align-items: center;
 `;
 
 const CloseButton = styled.button`
