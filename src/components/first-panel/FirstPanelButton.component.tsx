@@ -65,8 +65,8 @@ const Div = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: var(--color-secondary);
-  border: thin solid var(--color-secondary);
+  background-color: var(--color-2nd);
+  border: thin solid var(--color-2nd);
   margin-right: 0.5em;
 
   color: white;
@@ -84,7 +84,7 @@ const Button = styled.button`
   @keyframes in {
     from {
       border-radius: 50%;
-      background-color: var(--color-secondary);
+      background-color: var(--color-2nd);
     }
     to {
       border-radius: 30%;
@@ -99,7 +99,7 @@ const Button = styled.button`
     }
     to {
       border-radius: 50%;
-      background-color: var(--color-secondary);
+      background-color: var(--color-2nd);
     }
   }
 

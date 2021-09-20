@@ -47,13 +47,13 @@ const Div = styled.div`
   width: 100%;
   height: 100%;
   color: white;
-  background-color: var(--color-secondary);
+  background-color: var(--color-2nd);
   display: flex;
 `;
 
 const SidePanelList = styled.ol`
   height: 100%;
-  background-color: var(--color-third);
+  background-color: var(--color-3rd);
   min-width: 15em;
   display: flex;
   flex-direction: column;
@@ -62,7 +62,7 @@ const SidePanelList = styled.ol`
 
 const MainPanelDiv = styled.div`
   height: 100%;
-  background-color: var(--color-secondary);
+  background-color: var(--color-2nd);
   flex-grow: 1;
   overflow-y: auto;
 `;

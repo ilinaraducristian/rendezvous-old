@@ -78,7 +78,7 @@ const OverlayDiv = styled.div`
 `;
 
 const MainDiv = styled.div`
-  --color: var(--color-secondary);
+  --color: var(--color-2nd);
   background-color: var(--color);
   width: 100%;
   height: 247px;
@@ -93,7 +93,7 @@ const MainDiv = styled.div`
 `;
 
 const Span = styled.span`
-  color: var(--color-sixth);
+  color: var(--color-6th);
 `;
 
 const UploadSpan = styled(Span)`
@@ -116,7 +116,7 @@ const Input = styled.input`
 `;
 
 const Footer = styled.footer`
-  --color: var(--color-third);
+  --color: var(--color-3rd);
   background-color: var(--color);
   border: solid var(--color);
   border-radius: 0 0 5px 5px;

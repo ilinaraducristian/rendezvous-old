@@ -71,7 +71,7 @@ function ThirdPanelComponent() {
 const DivContainer = styled.div`
   grid-area: third-panel;
   flex-grow: 1;
-  background-color: var(--color-secondary);
+  background-color: var(--color-2nd);
   color: white;
   display: flex;
   flex-direction: column;

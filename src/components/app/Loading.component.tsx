@@ -26,7 +26,7 @@ const Container = styled.div`
   justify-content: center;
   margin: 0;
   padding: 0;
-  background-color: var(--color-third);
+  background-color: var(--color-3rd);
 `
 
 const Div = styled.div`

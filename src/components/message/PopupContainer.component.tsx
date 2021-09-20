@@ -69,9 +69,9 @@ const PopupContainerComponent = forwardRef<PopupContainerRefType, ComponentProps
 });
 
 const Div = styled.div`
-  background-color: var(--color-third);
+  background-color: var(--color-3rd);
   margin: 0 1em 1em 1em;
-  border: solid var(--color-third);
+  border: solid var(--color-3rd);
   border-radius: 0.5em;
   max-height: 22.375em;
   overflow-y: auto;

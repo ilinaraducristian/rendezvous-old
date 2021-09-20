@@ -3,12 +3,12 @@
 }
 
 :root {
-    --color-primary: #202225;
-    --color-secondary: #36393f;
-    --color-third: #2f3136;
-    --color-forth: rgba(79, 84, 92, 0.32);
-    --color-fifth: #40444b;
-    --color-sixth: #fff;
+    --color-1st: #202225;
+    --color-2nd: #36393f;
+    --color-3rd: #2f3136;
+    --color-4th: rgba(79, 84, 92, 0.32);
+    --color-5th: #40444b;
+    --color-6th: #fff;
     --color-7th: #dcddde;
     --color-8th: #b9bbb3;
     --color-9th: #8e9297;
@@ -57,7 +57,7 @@ body {
 }
 
 .selected-popup-item {
-    background-color: var(--color-secondary);
+    background-color: var(--color-2nd);
 }
 
 .selected-tab {
@@ -89,7 +89,7 @@ body {
 }
 
 .btn--active {
-    color: var(--color-sixth);
+    color: var(--color-6th);
 }
 
 .btn--hover:hover {
@@ -120,7 +120,7 @@ body {
 .overlay__container {
     width: 30em;
     height: 15em;
-    background-color: var(--color-secondary);
+    background-color: var(--color-2nd);
     display: flex;
     flex-direction: column;
     padding: 2em;

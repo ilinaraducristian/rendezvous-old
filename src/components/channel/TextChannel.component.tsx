@@ -52,7 +52,7 @@ function TextChannelComponent({channel}: ComponentProps) {
       <li ref={drag}>
         <ChannelButtonComponent className="btn" type="button" onClick={selectChannel}>
           <ChannelSVG type={channel.type} isPrivate={false}/>
-          <span className="span">{channel.name}</span>
+            <span>{channel.name}</span>
         </ChannelButtonComponent>
       </li>
   );

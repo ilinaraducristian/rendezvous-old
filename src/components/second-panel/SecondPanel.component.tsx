@@ -62,7 +62,7 @@ const SecondPanelDiv = styled.div`
   flex-direction: column;
   grid-area: second-panel;
   flex-shrink: 0;
-  background-color: var(--color-third);
+  background-color: var(--color-3rd);
   width: 15em;
 `;
 

@@ -1,13 +1,42 @@
+import styled from "styled-components";
+import AvatarSVG from "../../svg/Avatar.svg";
+
 type ComponentProps = {
-  name: string
+    name: string
 }
 
 function MemberComponent({name}: ComponentProps) {
-  return (
-      <li>
-        {name}
-      </li>
-  );
+    return (
+        <Li>
+            <Button type="button" className="btn">
+                <AvatarSVG/>
+                <span>{name}</span>
+            </Button>
+        </Li>
+    );
 }
+
+/* CSS */
+
+const Li = styled.li`
+`;
+
+const Button = styled.button`
+  color: var(--color-9th);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px;
+  border: 0;
+  border-radius: 4px;
+
+  &:hover {
+    color: var(--color-6th);
+    background-color: var(--color-14th);
+  }
+
+`;
+
+/* CSS */
 
 export default MemberComponent;

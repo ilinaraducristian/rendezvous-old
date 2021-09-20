@@ -55,10 +55,10 @@ const DivOverlay = styled.div`
 const DivContainer = styled.div`
   min-width: 30em;
   min-height: 15em;
-  background-color: var(--color-secondary);
+  background-color: var(--color-2nd);
   display: flex;
   flex-direction: column;
-  border: solid var(--color-secondary);
+  border: solid var(--color-2nd);
   border-radius: 0.3em;
   position: relative;
   color: white;

@@ -240,7 +240,7 @@ const UserContainerDiv = styled.div<{ userId: string }>`
 `;
 
 const Footer = styled.footer`
-  background-color: var(--color-fifth);
+  background-color: var(--color-5th);
   border-radius: 0.5em;
   max-height: 12.5em;
   margin: 0 1em 1.5em 1em;

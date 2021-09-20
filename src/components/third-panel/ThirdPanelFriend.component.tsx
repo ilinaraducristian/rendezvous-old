@@ -107,8 +107,8 @@ const Div2 = styled.div`
 `;
 
 const Button = styled.button<{ acceptOrReject: boolean }>`
-  background-color: var(--color-third);
-  border: var(--color-third) solid;
+  background-color: var(--color-3rd);
+  border: var(--color-3rd) solid;
   color: white;
   border-radius: 50%;
   display: flex;

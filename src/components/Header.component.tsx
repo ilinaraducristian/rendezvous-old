@@ -74,7 +74,6 @@ function HeaderComponent() {
             }
         </DivHeader>
         <DivMembers>
-            placeholder
         </DivMembers>
     </Header>
 }
@@ -142,7 +141,7 @@ const Header = styled.header`
   box-shadow: var(--small-shadow-bar);
   z-index: 0;
   color: white;
-  background-color: var(--color-secondary);
+  background-color: var(--color-2nd);
 `;
 
 const DivHeader = styled.div`

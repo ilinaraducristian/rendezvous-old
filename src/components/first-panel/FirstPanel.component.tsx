@@ -57,7 +57,7 @@ const Ol = styled.ol`
   display: flex;
   align-items: center;
   flex-direction: column;
-  background-color: var(--color-primary);
+  background-color: var(--color-1st);
   width: 4.5em;
   overflow-y: auto;
   flex-shrink: 0;
