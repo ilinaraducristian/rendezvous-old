@@ -11,6 +11,7 @@ import ChannelButtonComponent from "components/channel/ChannelButton.component";
 import {selectUsers} from "state-management/selectors/data.selector";
 import {useLazyJoinVoiceChannelQuery} from "../../state-management/apis/socketio.api";
 import {VoiceChannel} from "../../dtos/channel.dto";
+import AvatarSVG from "../../svg/Avatar.svg";
 
 type ComponentProps = {
     channel: VoiceChannel
@@ -49,7 +50,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
         <li ref={drag}>
             <ChannelButtonComponent className="btn" type="button" onClick={selectChannel}>
                 <ChannelSVG type={channel.type} isPrivate={false}/>
-                <span className="span">{channel.name}</span>
+                <span>{channel.name}</span>
             </ChannelButtonComponent>
             {
                 <Ul className="list">
@@ -58,7 +59,12 @@ function VoiceChannelComponent({channel}: ComponentProps) {
                             .map(_user => users.find(user => user.id === _user.userId))
                             .filter(user => user !== undefined)
                             .map((user, i) =>
-                                <li className="li" key={`channel_${channel.id}_user${i}`}>{user?.username}</li>
+                                <li key={`channel_${channel.id}_user${i}`}>
+                                    <Button type="button" className="btn">
+                                        <AvatarSVG width="24" height="24"/>
+                                        <span>{`${user?.firstName} ${user?.lastName}`}</span>
+                                    </Button>
+                                </li>
                             )
                     }
                 </Ul>
@@ -72,6 +78,19 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
 const Ul = styled.ul`
   color: white;
+  margin-left: 36px;
+`;
+
+const Button = styled.button`
+  display: flex;
+  align-items: center;
+  color: var(--color-9th);
+
+  &:hover {
+    color: var(--color-7th);
+    background-color: var(--color-15th);
+  }
+
 `;
 
 /* CSS */

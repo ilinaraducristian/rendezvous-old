@@ -219,7 +219,7 @@ const mockGroups = [
                 type: ChannelType.Voice,
                 name: "channel 7",
                 order: 0,
-                users: []
+                users: [{socketId: 'id1', userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4"}]
             },
             {
                 id: 8,
