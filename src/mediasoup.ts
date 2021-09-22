@@ -5,10 +5,22 @@ import {Consumer} from "mediasoup-client/lib/Consumer";
 const mediasoup = new Device();
 const remoteStream = new MediaStream();
 const audioContext = new AudioContext();
+export {audioContext};
 const notificationSound = new Audio("/notification.ogg");
 // let producer: Producer;
 const consumers: { socketId: string, consumer: Consumer }[] = [];
 let localStream: MediaStream;
+
+/* CHROME FIX FOR AUDIO NOT PLAYING */
+
+let a: any = new Audio();
+a.muted = true;
+a.srcObject = remoteStream;
+a.addEventListener('canplaythrough', () => {
+    a = null;
+});
+
+/* CHROME FIX FOR AUDIO NOT PLAYING */
 
 let created = false;
 

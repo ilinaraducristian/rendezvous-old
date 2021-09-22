@@ -22,7 +22,7 @@ import {
     selectSelectedServer
 } from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
-import {consumers, createConsumer, createMediaStreamSource} from "mediasoup";
+import {audioContext, consumers, createConsumer, createMediaStreamSource} from "mediasoup";
 import socket from "socketio";
 import authClient from "keycloak";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
@@ -40,6 +40,10 @@ document.onkeyup = (event: any) => {
     const isSettingsShown = selectIsSettingsShown(store.getState());
     if (isSettingsShown) store.dispatch(hideSettings(undefined));
 };
+
+document.onmousedown = () => {
+    if (audioContext.state === 'suspended') audioContext.resume().then();
+}
 
 function AppComponent() {
 
