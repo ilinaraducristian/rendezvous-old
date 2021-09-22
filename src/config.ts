@@ -2,7 +2,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
         production: true,
         offline: false,
         backend: "https://rendezvous.myddns.me:30000/api",
-        socketIoUrl: "http://rendezvous.myddns.me:3000",
+        socketIoUrl: "https://rendezvous.myddns.me:30000",
         auth0: {
             domain: "",
             client_id: ""
