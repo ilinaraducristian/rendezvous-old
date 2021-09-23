@@ -9,7 +9,7 @@ import {ThirdPanelTypes} from "../../types/UISelectionModes";
 import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio.api";
 import {useEffect} from "react";
 import {User} from "../../dtos/user.dto";
-import AvatarSVG from "../../svg/Avatar.svg";
+import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
 
 type ComponentProps = {
     friendshipId: number,
@@ -35,7 +35,7 @@ function FriendComponent({friendshipId, user}: ComponentProps) {
     return (
         <Li>
             <Button type="button" className="btn" onClick={selectFriend}>
-                <AvatarSVG/>
+                <AvatarWithStatusSVG/>
                 {user.firstName} {user.lastName}
             </Button>
         </Li>

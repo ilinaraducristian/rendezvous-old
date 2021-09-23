@@ -12,6 +12,7 @@ import {SecondPanelBodyTypes} from "../../types/UISelectionModes";
 
 import SecondPanelFooterComponent from "./SecondPanelFooter.component";
 import SecondPanelHeaderComponent from "./SecondPanelHeader.component";
+import SecondPanelVoiceComponent from "./SecondPanelVoice.component";
 
 function SecondPanelComponent() {
 
@@ -20,7 +21,7 @@ function SecondPanelComponent() {
     const secondPanelBody = useAppSelector(selectSecondPanelBody);
 
     return (
-        <SecondPanelDiv>
+        <SecondPanelContainer>
             <SecondPanelHeaderComponent isDropdownShown={isDropdownShown} setIsDropdownShown={setIsDropdownShown}/>
             {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
             <SecondPanelBody>
@@ -42,8 +43,9 @@ function SecondPanelComponent() {
                     <FriendsListComponent/>
                 }
             </SecondPanelBody>
+            <SecondPanelVoiceComponent/>
             <SecondPanelFooterComponent/>
-        </SecondPanelDiv>
+        </SecondPanelContainer>
     );
 
 }
@@ -51,24 +53,19 @@ function SecondPanelComponent() {
 
 /* CSS */
 
+const SecondPanelContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-3rd);
+  width: 240px;
+  min-width: 240px;
+  max-width: 240px;
+`;
 
 const SecondPanelBody = styled.div`
   flex-grow: 1;
   overflow-y: auto;
 `;
-
-const SecondPanelDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  grid-area: second-panel;
-  flex-shrink: 0;
-  background-color: var(--color-3rd);
-  width: 15em;
-`;
-
-
-
-
 
 /* CSS */
 

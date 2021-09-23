@@ -1,42 +1,33 @@
 import styled from "styled-components";
 import {SecondPanelFooterTypes} from "../../types/UISelectionModes";
-import AvatarSVG from "../../svg/Avatar.svg";
+import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
 import MicrophoneSVG from "../../svg/Microphone.svg";
 import HeadphonesSVG from "../../svg/Headphones.svg";
 import {showSettings} from "../../state-management/slices/data/data.slice";
 import GearSVG from "../../svg/Gear.svg";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {selectSecondPanelFooter} from "../../state-management/selectors/data.selector";
-import {useState} from "react";
-import {toggleMute as toggleMuteAction} from "../../state-management/slices/mediasoup.slice";
+import {useEffect, useState} from "react";
 import {selectIsMuted} from "../../state-management/selectors/mediasoup.selector";
+import {useKeycloak} from "@react-keycloak/web";
+import socketio from "../../socketio";
 
 function SecondPanelFooterComponent() {
 
     const secondPanelFooter = useAppSelector(selectSecondPanelFooter);
     const isMuted = useAppSelector(selectIsMuted)
-    // const users = useAppSelector(selectUsers)
-    const [username/*, setUsername*/] = useState('');
+    const [name, setName] = useState('');
     const dispatch = useAppDispatch();
+    const {keycloak, initialized} = useKeycloak();
 
-    // TODO weird hack to get the username, must be replaced
-    // useEffect(() => {
-    // (async () => {
-    //     let details, error;
-    //     do {
-    //         try {
-    //             error = undefined;
-    //             details = await keycloak.getUsername();
-    //         } catch (e) {
-    //             error = e;
-    //         }
-    //     } while (error !== undefined || details === undefined);
-    //     setUsername(`${details.firstName} ${details.lastName}` || '')
-    // })()
-    // }, []);
+    useEffect(() => {
+        if (!initialized || !keycloak.authenticated) return;
+        setName((keycloak.userInfo as any).name);
+    }, [keycloak, initialized]);
 
-    function toggleMute() {
-        dispatch(toggleMuteAction(undefined));
+    async function toggleMute() {
+        await socketio.emitAck('pause_producer');
+        // dispatch(toggleMuteAction(undefined));
     }
 
     return (
@@ -44,8 +35,8 @@ function SecondPanelFooterComponent() {
             {
                 secondPanelFooter !== SecondPanelFooterTypes.generic ||
                 <>
-                    <AvatarSVG/>
-                    <Username> {username} </Username>
+                    <AvatarWithStatusSVG/>
+                    <Username> {name} </Username>
                     <Button type="button" className="btn"
                             onClick={toggleMute}
                     >
@@ -66,14 +57,14 @@ function SecondPanelFooterComponent() {
 }
 
 const Button = styled.button`
-  margin: 0 .3em;
+  margin: 0 4px;
 `
 
 const Footer = styled.footer`
   color: white;
   background-color: var(--color-13th);
-  height: 3.25em;
-  min-height: 3.25em;
+  height: 52px;
+  min-height: 52px;
   display: flex;
   align-items: center;
 `

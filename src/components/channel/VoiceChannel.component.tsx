@@ -11,6 +11,7 @@ import ChannelButtonComponent from "components/channel/ChannelButton.component";
 import {selectUsers} from "state-management/selectors/data.selector";
 import {useLazyJoinVoiceChannelQuery} from "../../state-management/apis/socketio.api";
 import {VoiceChannel} from "../../dtos/channel.dto";
+import AvatarPlaceholder from "../../assets/avatar-placeholder.png";
 import AvatarSVG from "../../svg/Avatar.svg";
 
 type ComponentProps = {
@@ -22,7 +23,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const users = useAppSelector(selectUsers);
     const dispatch = useAppDispatch();
     const joined = useRef(false);
-    const [fetch, {data: usersInVoiceChannel, isSuccess}] = useLazyJoinVoiceChannelQuery()
+    const [fetch, {data: usersInVoiceChannel, isSuccess}] = useLazyJoinVoiceChannelQuery();
 
     const selectChannel = useCallback(async () => {
         if (config.offline) return;
@@ -56,16 +57,21 @@ function VoiceChannelComponent({channel}: ComponentProps) {
                 <Ul className="list">
                     {
                         channel.users
-                            .map(_user => users.find(user => user.id === _user.userId))
-                            .filter(user => user !== undefined)
-                            .map((user, i) =>
-                                <li key={`channel_${channel.id}_user${i}`}>
-                                    <Button type="button" className="btn">
-                                        <AvatarSVG width="24" height="24"/>
-                                        <span>{`${user?.firstName} ${user?.lastName}`}</span>
-                                    </Button>
-                                </li>
-                            )
+                            .map(_user => ({
+                                isTalking: _user.isTalking,
+                                user: users.find(user => user.id === _user.userId)
+                            }))
+                            .map((user, i) => {
+                                if (user.user === undefined) return <div/>
+                                return (
+                                    <li key={`channel_${channel.id}_user_${i}`}>
+                                        <Button type="button" className="btn">
+                                            <AvatarSVG sursa={AvatarPlaceholder} isActive={user.isTalking}/>
+                                            <span>{`${user.user.firstName} ${user.user.lastName}`}</span>
+                                        </Button>
+                                    </li>
+                                );
+                            })
                     }
                 </Ul>
             }

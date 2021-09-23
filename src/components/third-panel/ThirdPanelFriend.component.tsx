@@ -1,5 +1,5 @@
 import {User} from "../../dtos/user.dto";
-import AvatarSVG from "../../svg/Avatar.svg";
+import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
 import styled from "styled-components";
 import {FriendRequest} from "../../dtos/friend.dto";
 import {
@@ -45,7 +45,7 @@ function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
     return (
         <Li>
             <Div className="btn">
-                <AvatarSVG/>
+                <AvatarWithStatusSVG/>
                 <Div2>
                     <span>{user.firstName} {user.lastName}</span>
                     {

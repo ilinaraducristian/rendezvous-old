@@ -1,7 +1,7 @@
 import config from "config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
-import mediasoup, {notificationSound} from "mediasoup";
+import mediasoup, {consumers, notificationSound} from "mediasoup";
 import {
     addChannel,
     addChannelUsers,
@@ -95,6 +95,18 @@ socket.on('friend_request_accepted', () => {
 
 socket.on('server_deleted', (payload) => {
     store.dispatch(deleteServer(payload))
+})
+
+socket.on('consumer_pause', (payload) => {
+    const found = consumers.find(({consumer}) => consumer.id === payload.consumerId);
+    if (found === undefined) return;
+    found.consumer.pause();
+})
+
+socket.on('consumer_resume', (payload) => {
+    const found = consumers.find(({consumer}) => consumer.id === payload.consumerId);
+    if (found === undefined) return;
+    found.consumer.resume();
 })
 
 export default socket;

@@ -1,19 +1,22 @@
 import {Device} from "mediasoup-client";
 import socket from "./socketio";
 import {Consumer} from "mediasoup-client/lib/Consumer";
+import {Producer} from "mediasoup-client/lib/Producer";
+import {store} from "./state-management/store";
+import {setUserIsTalking} from "./state-management/slices/data/data.slice";
 
 const mediasoup = new Device();
 const remoteStream = new MediaStream();
-const audioContext = new AudioContext();
+let audioContext: AudioContext;
 export {audioContext};
 const notificationSound = new Audio("/notification.ogg");
-// let producer: Producer;
+let producer: Producer;
 const consumers: { socketId: string, consumer: Consumer }[] = [];
 let localStream: MediaStream;
 
 /* CHROME FIX FOR AUDIO NOT PLAYING */
 
-let a: any = new Audio();
+let a: HTMLAudioElement | null = new Audio();
 a.muted = true;
 a.srcObject = remoteStream;
 a.addEventListener('canplaythrough', () => {
@@ -22,12 +25,13 @@ a.addEventListener('canplaythrough', () => {
 
 /* CHROME FIX FOR AUDIO NOT PLAYING */
 
-let created = false;
+let mediaStreamSourceCreated = false;
 
 function createMediaStreamSource() {
-    if (created) return;
+    if (mediaStreamSourceCreated) return;
     if (remoteStream.getAudioTracks().length === 0) return;
-    created = true;
+    mediaStreamSourceCreated = true;
+    audioContext = new AudioContext();
     audioContext.createMediaStreamSource(remoteStream).connect(audioContext.destination);
 }
 
@@ -49,7 +53,7 @@ async function createProducer() {
             appData: parameters.appData
         }, cb)
     });
-    await sendTransport.produce({
+    producer = await sendTransport.produce({
         track: localStream?.getAudioTracks()[0]
     });
 }
@@ -66,6 +70,12 @@ async function createConsumer(socketId: string) {
         rtpCapabilities: mediasoup.rtpCapabilities
     });
     const consumer = await recvTransport.consume(consumerParameters);
+    consumer.observer.on("pause", () => {
+        store.dispatch(setUserIsTalking({socketId, isTalking: false}));
+    });
+    consumer.observer.on("resume", () => {
+        store.dispatch(setUserIsTalking({socketId, isTalking: true}));
+    });
     remoteStream.addTrack(consumer.track);
     socket.emit("resume_consumer", {id: consumer.id});
     consumers.push({socketId, consumer});
@@ -75,6 +85,7 @@ async function createConsumer(socketId: string) {
 export {
     notificationSound,
     remoteStream,
+    producer,
     consumers,
     localStream,
     createMediaStreamSource,

@@ -22,7 +22,6 @@ function ThirdPanelComponent() {
 
     return (
         <DivContainer>
-            <DivContentBody>
                 {
                     thirdPanel !== ThirdPanelTypes.messages ||
                     <MessagesPanelComponent/>
@@ -54,7 +53,6 @@ function ThirdPanelComponent() {
                             )}
                     </Ul>
                 }
-            </DivContentBody>
         </DivContainer>
     );
 
@@ -69,19 +67,13 @@ function ThirdPanelComponent() {
 // `
 
 const DivContainer = styled.div`
-  grid-area: third-panel;
+  width: 100%;
   flex-grow: 1;
   background-color: var(--color-2nd);
   color: white;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-`;
-
-const DivContentBody = styled.div`
-  display: flex;
-  flex-grow: 1;
-  max-height: 100%;
 `;
 
 const Ul = styled.ul`

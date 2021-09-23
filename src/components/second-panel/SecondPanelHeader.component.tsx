@@ -41,6 +41,14 @@ function SecondPanelHeaderComponent({isDropdownShown, setIsDropdownShown}: Compo
     )
 }
 
+const SecondPanelHeader = styled.header`
+  width: 100%;
+  border-style: none;
+  box-shadow: var(--small-shadow-bar);
+  height: 48px;
+  min-height: 48px;
+`
+
 const Span = styled.span`
   flex-grow: 1;
   color: white;
@@ -48,7 +56,7 @@ const Span = styled.span`
 
 const Button = styled.button`
   background: none;
-  font-size: 1.5em;
+  font-size: 24px;
   text-align: left;
   width: 100%;
 
@@ -56,24 +64,11 @@ const Button = styled.button`
   box-shadow: var(--small-shadow-bar);
   display: flex;
   align-items: center;
-  height: 2em;
+  height: 32px;
   color: var(--color-9th)
 `;
 
-const SecondPanelHeader = styled.header`
-  //background: none;
-  //font-size: 1.5em;
-  //text-align: left;
-  width: 100%;
 
-  border-style: none;
-  box-shadow: var(--small-shadow-bar);
-  //display: flex;
-  //align-items: center;
-  height: 3em;
-  min-height: 3em;
-  //color: var(--color-9th)
-`
 
 const FriendsButton = styled.button`
   height: 100%;
@@ -81,8 +76,8 @@ const FriendsButton = styled.button`
   display: flex;
   align-items: center;
   text-align: left;
-  font-size: 1.1rem;
-  gap: 0.5em;
-  margin-left: 1em;
+  font-size: 18px;
+  gap: 8px;
+  margin-left: 16px;
 `;
 export default SecondPanelHeaderComponent;

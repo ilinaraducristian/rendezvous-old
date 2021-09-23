@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import {store, useAppDispatch, useAppSelector} from "state-management/store";
+import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
 import {processedServerData} from "mock-data";
-import {hideSettings, initializeBackend, setOverlay} from "state-management/slices/data/data.slice";
+import {initializeBackend} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/first-panel/FirstPanel.component";
 import {useLazyGetUserDataQuery} from "state-management/apis/socketio.api";
 import SecondPanelComponent from "components/second-panel/SecondPanel.component";
@@ -22,9 +22,8 @@ import {
     selectSelectedServer
 } from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
-import {audioContext, consumers, createConsumer, createMediaStreamSource} from "mediasoup";
+import {consumers, createConsumer, createMediaStreamSource} from "mediasoup";
 import socket from "socketio";
-import authClient from "keycloak";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
 import ForthPanelComponent from "../ForthPanel.component";
@@ -33,17 +32,8 @@ import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
 import {OverlayTypes} from "../../types/UISelectionModes";
 import SettingsPanelComponent from "../settings/SettingsPanel.component";
 import LoadingComponent from "./Loading.component";
-
-document.onkeyup = (event: any) => {
-    if (event.code !== "Escape") return false;
-    store.dispatch(setOverlay(null));
-    const isSettingsShown = selectIsSettingsShown(store.getState());
-    if (isSettingsShown) store.dispatch(hideSettings(undefined));
-};
-
-document.onmousedown = () => {
-    if (audioContext.state === 'suspended') audioContext.resume().then();
-}
+import styled from "styled-components";
+import {useKeycloak} from '@react-keycloak/web';
 
 function AppComponent() {
 
@@ -58,33 +48,34 @@ function AppComponent() {
     const isSettingsShown = useAppSelector(selectIsSettingsShown);
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
+    const {keycloak, initialized} = useKeycloak();
 
     useEffect(() => {
+        if (!initialized || !keycloak.authenticated) return;
         if (joinedChannel === null) {
             // TODO disconnect
             return;
         }
 
         (async () => {
-            const subject = await authClient.getSubject();
-            const users = joinedChannelUsers.filter(user => user.userId !== subject &&
+            const users = joinedChannelUsers.filter(user => user.userId !== keycloak.subject &&
                 !consumers.find(consumer => user.socketId === consumer.socketId));
             createMediaStreamSource();
             await Promise.all(users.map(user => createConsumer(user.socketId)));
         })();
-    }, [joinedChannelUsers, joinedChannel, selectedServer]);
+    }, [joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
 
     useEffect(() => {
         if (config.offline) return;
-        (async () => {
-            const authenticated = await authClient.isAuthenticated();
-            if (authenticated) return;
-            const isAuthenticated = await authClient.init();
-            if (isAuthenticated) {
+        if (!initialized) return;
+        if (!keycloak.authenticated) {
+            keycloak.login();
+        } else {
+            keycloak.loadUserInfo().then(() => {
                 fetchLogin();
-            }
-        })();
-    }, [fetchLogin]);
+            });
+        }
+    }, [fetchLogin, keycloak, initialized]);
 
     useEffect(() => {
         if (config.offline) {
@@ -109,31 +100,50 @@ function AppComponent() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isUserDataSuccess]);
 
-    return (
-        <>
-            {isLoading && !config.offline ?
-                <LoadingComponent/>
-                :
-                <>
-                    <FirstPanelComponent/>
+    return isLoading && !config.offline ?
+        <LoadingComponent/>
+        :
+        (
+            <>
+                <FirstPanelComponent/>
+                <SecondPanelComponent/>
+                <ContentContainer>
                     <HeaderComponent/>
-                    <SecondPanelComponent/>
-                    <ThirdPanelComponent/>
-                    <ForthPanelComponent/>
-                    {
-                        !isSettingsShown ||
-                        <SettingsPanelComponent/>
-                    }
-                    {
-                        overlay === null ||
-                        overlayToComponent(overlay)
-                    }
-                </>
-            }
-        </>
-    );
+                    <MainContainer>
+                        <ThirdPanelComponent/>
+                        <ForthPanelComponent/>
+                    </MainContainer>
+                </ContentContainer>
+                {
+                    !isSettingsShown ||
+                    <SettingsPanelComponent/>
+                }
+                {
+                    overlay === null ||
+                    overlayToComponent(overlay)
+                }
+            </>
+        );
 
 }
+
+/* CSS */
+
+const ContentContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  width: 100%;
+`;
+
+/* CSS */
 
 function overlayToComponent({type, payload}: { type: number, payload: any }) {
     switch (type) {

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import AvatarSVG from "../../svg/Avatar.svg";
+import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
 
 type ComponentProps = {
     name: string
@@ -9,7 +9,7 @@ function MemberComponent({name}: ComponentProps) {
     return (
         <Li>
             <Button type="button" className="btn">
-                <AvatarSVG/>
+                <AvatarWithStatusSVG/>
                 <span>{name}</span>
             </Button>
         </Li>

@@ -1,40 +1,32 @@
 import styled from "styled-components";
-import {MouseEventHandler, useEffect, useState} from "react";
-import {useAppSelector} from "../../state-management/store";
-import {selectSecondPanelHeader, selectSelectedServer} from "../../state-management/selectors/data.selector";
-import {SecondPanelHeaderTypes} from "../../types/UISelectionModes";
+import {MouseEventHandler, ReactNode, useEffect, useState} from "react";
 
 type ComponentProps = {
-    name: string,
-    serverId?: number,
+    selected: boolean,
+    children?: ReactNode,
     onClick: MouseEventHandler<HTMLButtonElement>
 }
 
-function FirstPanelButtonComponent({name, serverId, onClick}: ComponentProps) {
+function FirstPanelButtonComponent({selected, children, onClick}: ComponentProps) {
 
-    const selectedServer = useAppSelector(selectSelectedServer);
-    const secondPanelHeader = useAppSelector(selectSecondPanelHeader);
     const [selectedClass, setSelectedClass] = useState('');
     const [notchClass, setNotchClass] = useState('');
 
     useEffect(() => {
-        if (
-            (selectedServer !== undefined && serverId !== undefined && selectedServer.id === serverId) ||
-            (name === "Home" && secondPanelHeader === SecondPanelHeaderTypes.friends)
-        ) {
-            setSelectedClass(' btn__first-panel--selected');
+        if (selected) {
+            setSelectedClass('btn__first-panel--selected');
             setNotchClass('div__first-panel-notch--selected');
         } else {
             setSelectedClass('');
             setNotchClass('');
         }
-    }, [selectedServer, serverId, name, secondPanelHeader])
+    }, [selected])
 
     return (
-        <Li className="li">
+        <Li>
             <Div className={notchClass}/>
-            <Button className={`btn${selectedClass}`} type="button" onClick={onClick}>
-                {name[0]}
+            <Button className={`btn ${selectedClass}`} type="button" onClick={onClick}>
+                {children}
             </Button>
         </Li>
     );
@@ -45,7 +37,7 @@ function FirstPanelButtonComponent({name, serverId, onClick}: ComponentProps) {
 
 export const Li = styled.li`
   display: flex;
-  margin: 0.5em 0;
+  margin: 8px 0;
   align-items: center;
   justify-content: space-between;
   width: 100%;
@@ -56,9 +48,9 @@ export const Li = styled.li`
 `;
 
 const Div = styled.div`
-  height: 1em;
+  height: 16px;
   background-color: white;
-  width: 0.3em;
+  width: 5px;
   border-radius: 20%;
   border-right: solid white;
   opacity: 0;
@@ -67,13 +59,13 @@ const Div = styled.div`
 const Button = styled.button`
   background-color: var(--color-2nd);
   border: thin solid var(--color-2nd);
-  margin-right: 0.5em;
+  margin-right: 8px;
 
   color: white;
-  font-size: 1.5rem;
+  font-size: 24px;
   border-radius: 50%;
-  width: 2em;
-  height: 2em;
+  width: 48px;
+  height: 48px;
   transition: background-color 300ms, border-radius 300ms;
 
   &:hover {

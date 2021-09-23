@@ -1,9 +1,8 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
 import {selectJoinedChannel, selectSelectedServer} from "state-management/selectors/data.selector";
-import {Channel, ChannelType, TextChannel} from "../../dtos/channel.dto";
+import {Channel, ChannelType, TextChannel, VoiceChannelUser} from "../../dtos/channel.dto";
 import {Message} from "../../dtos/message.dto";
 import {Server} from "../../dtos/server.dto";
-import {VoiceChannelUser} from "../../types/Channel";
 
 export const selectChannels = (payload: { serverId: number, groupId: number | null, channelId: number }[]) =>
     ({data}: { data: DataSliceState }): Channel[] => {

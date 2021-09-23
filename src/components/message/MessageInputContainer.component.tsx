@@ -220,7 +220,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
                 <GIFSVG/>
             </button>
             <button type="button" className="btn btn__icon">
-                <DivEmoji/>
+                <DivEmoji emoji={"emojis.png"}/>
             </button>
         </Footer>
     </>;
@@ -248,8 +248,8 @@ const Footer = styled.footer`
   align-items: flex-start;
 `;
 
-const DivEmoji = styled.div`
-  background-image: url("../../assets/emojis.png");
+const DivEmoji = styled.div<{ emoji: string }>`
+  background-image: url(${props => props.emoji});
   background-position: 0 0;
   background-size: 242px 110px;
   background-repeat: no-repeat;

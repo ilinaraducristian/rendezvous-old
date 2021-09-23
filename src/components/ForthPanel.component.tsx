@@ -13,11 +13,12 @@ function ForthPanelComponent() {
         <Div>
             <ol className="list">
                 {
-                    selectedMembers.map(member => {
+                    selectedMembers.map((member, index) => {
                         const user = users.find(user => user.id === member.userId);
                         return (
-                            <MemberComponent key={`member_${member.id}`}
-                                             name={`${user?.firstName} ${user?.lastName}`}
+                            <MemberComponent
+                                key={`member_${index}`}
+                                name={`${user?.firstName} ${user?.lastName}`}
                             />
                         );
                     })
@@ -31,11 +32,10 @@ function ForthPanelComponent() {
 /* CSS */
 
 const Div = styled.div`
-  grid-area: forth-panel;
-  width: var(--members-panel-width);
+  width: 240px;
+  min-width: 240px;
   background-color: var(--color-3rd);
   height: 100%;
-  flex-shrink: 0;
   padding-top: 12px;
   padding-left: 8px;
   padding-right: 8px;

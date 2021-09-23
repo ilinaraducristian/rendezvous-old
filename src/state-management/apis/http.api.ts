@@ -6,7 +6,7 @@ export const httpApi = createApi({
   reducerPath: "httpApi",
   baseQuery: fetchBaseQuery({
     baseUrl: config.backend, prepareHeaders: async (headers) => {
-      headers.set("authorization", `Bearer ${await keycloak.getToken()}`);
+      headers.set("authorization", `Bearer ${keycloak.token}`);
       return headers;
     },
   }),

@@ -1,6 +1,7 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
 import {ChannelType, TextChannel, VoiceChannel} from "../../../dtos/channel.dto";
 import {selectSelectedServer} from "../../selectors/data.selector";
+import {selectJoinedChannelUsers} from "../../selectors/channel.selector";
 
 const channelReducers = {
     editMessage(state: DataSliceState, {payload}: { payload: { serverId: number, channelId: number, messageId: number, text: string } }) {
@@ -68,11 +69,17 @@ const channelReducers = {
             if (channel === undefined) return;
             const existingUserIndex = channel.users.findIndex(user => user.userId === u1.userId);
             if (existingUserIndex === -1)
-                channel.users.push(u1);
+                channel.users.push({...u1, isTalking: false});
             else
-                channel.users[existingUserIndex] = u1;
+                channel.users[existingUserIndex] = {...u1, isTalking: false};
         });
     },
+    setUserIsTalking(state: DataSliceState, {payload}: { payload: { socketId: string, isTalking: boolean } }) {
+        const users = selectJoinedChannelUsers({data: state});
+        const user = users.find(user => user.socketId === payload.socketId);
+        if (user === undefined) return;
+        user.isTalking = payload.isTalking;
+    }
 };
 
 export default channelReducers;

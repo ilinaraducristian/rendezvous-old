@@ -31,10 +31,9 @@ const Container = styled.div`
 
 const Div = styled.div`
   display: inline-block;
-  //position: relative;
   width: 100px;
   height: 100px;
-  color: #fff;
+  color: var(--color-6th);
 
   & div {
     animation: roller-animation 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;

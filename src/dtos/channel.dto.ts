@@ -14,8 +14,12 @@ export type Channel = {
   order: number
 }
 
+export type VoiceChannelUser = {
+  socketId: string, userId: string, isTalking: boolean
+}
+
 export type VoiceChannel = Channel & {
-  users: { socketId: string, userId: string }[],
+  users: VoiceChannelUser[],
 }
 
 export type TextChannel = Channel & {

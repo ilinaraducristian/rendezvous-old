@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import AvatarSVG from "../../svg/Avatar.svg";
+import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
 import config from "../../config";
 
 const href = `${config.keycloak.url}/realms/${config.keycloak.realm}/account/#/personal-info`;
@@ -13,7 +13,7 @@ function SettingsPanelComponent() {
                 </Button>
             </SidePanelList>
             <MainPanelDiv>
-                <AvatarSVG width={"80"} height={"72"}/>
+                <AvatarWithStatusSVG width={"80"} height={"72"}/>
                 <A href={href} className="btn">
                     Edit Profile
                 </A>

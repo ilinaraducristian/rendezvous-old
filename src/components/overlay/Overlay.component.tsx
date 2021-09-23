@@ -27,11 +27,11 @@ function OverlayComponent({title, description, children}: ComponentProps) {
                 <Header>
                     {
                         title === undefined ||
-                        <h1 className="h1">{title}</h1>
+                        <h1>{title}</h1>
                     }
                     {
                         description === undefined ||
-                        <h5 className="h1">{description}</h5>
+                        <h5>{description}</h5>
                     }
                 </Header>
                 {children}
