@@ -1,5 +1,4 @@
 import styled from "styled-components";
-/* CSS */
 
 const AvatarSVG = styled.div<{ sursa: any, isActive: boolean }>`
   width: 24px;
@@ -12,7 +11,5 @@ const AvatarSVG = styled.div<{ sursa: any, isActive: boolean }>`
   background-size: 100%;
   ${({isActive}) => isActive ? "box-shadow: inset 0 0 0 2px hsl(139, 47.3%, 43.9%), inset 0 0 0 3px #2f3136;" : ""}
 `;
-
-/* CSS */
 
 export default AvatarSVG;
