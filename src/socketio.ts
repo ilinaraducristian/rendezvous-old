@@ -1,7 +1,7 @@
 import config from "config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
-import mediasoup, {consumers, notificationSound} from "mediasoup";
+
 import {
     addChannel,
     addChannelUsers,
@@ -14,7 +14,7 @@ import {
     editMessage
 } from "state-management/slices/data/data.slice";
 import {store} from "state-management/store";
-import {connect} from "state-management/slices/socketio.slice";
+import {notificationSound} from "./mediasoup/ReactMediasoupProvider";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
     return new Promise(resolve => {
@@ -41,13 +41,6 @@ const socket: Socket = socketio_io(config.socketIoUrl, {
 Object.assign(socket, {emitAck});
 
 socket.auth = {};
-
-socket.on("connect", async () => {
-    if (mediasoup.loaded) return;
-    const {routerRtpCapabilities} = await socket.emitAck(`get_router_capabilities`);
-    await mediasoup.load({routerRtpCapabilities});
-    store.dispatch(connect());
-});
 
 socket.on("disconnect", () => {
     // window.location.reload();
@@ -95,18 +88,6 @@ socket.on('friend_request_accepted', () => {
 
 socket.on('server_deleted', (payload) => {
     store.dispatch(deleteServer(payload))
-})
-
-socket.on('consumer_pause', (payload) => {
-    const found = consumers.find(({consumer}) => consumer.id === payload.consumerId);
-    if (found === undefined) return;
-    found.consumer.pause();
-})
-
-socket.on('consumer_resume', (payload) => {
-    const found = consumers.find(({consumer}) => consumer.id === payload.consumerId);
-    if (found === undefined) return;
-    found.consumer.resume();
 })
 
 export default socket;

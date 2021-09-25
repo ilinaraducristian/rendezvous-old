@@ -8,14 +8,14 @@ import GearSVG from "../../svg/Gear.svg";
 import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {selectSecondPanelFooter} from "../../state-management/selectors/data.selector";
 import {useEffect, useState} from "react";
-import {selectIsMuted} from "../../state-management/selectors/mediasoup.selector";
 import {useKeycloak} from "@react-keycloak/web";
 import socketio from "../../socketio";
+import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
 
 function SecondPanelFooterComponent() {
 
     const secondPanelFooter = useAppSelector(selectSecondPanelFooter);
-    const isMuted = useAppSelector(selectIsMuted)
+    const {isMuted} = useMediasoup();
     const [name, setName] = useState('');
     const dispatch = useAppDispatch();
     const {keycloak, initialized} = useKeycloak();

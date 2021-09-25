@@ -1,7 +1,6 @@
 import {useCallback, useEffect, useRef} from "react";
 import {useDrag} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
-import {createProducer} from "mediasoup";
+import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
 import {addChannelUsers, joinVoiceChannel} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
@@ -13,6 +12,7 @@ import {useLazyJoinVoiceChannelQuery} from "../../state-management/apis/socketio
 import {VoiceChannel} from "../../dtos/channel.dto";
 import AvatarPlaceholder from "../../assets/avatar-placeholder.png";
 import AvatarSVG from "../../svg/Avatar.svg";
+import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
 
 type ComponentProps = {
     channel: VoiceChannel
@@ -24,6 +24,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const dispatch = useAppDispatch();
     const joined = useRef(false);
     const [fetch, {data: usersInVoiceChannel, isSuccess}] = useLazyJoinVoiceChannelQuery();
+    const {createProducer} = useMediasoup();
 
     const selectChannel = useCallback(async () => {
         if (config.offline) return;
@@ -34,6 +35,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
             serverId: channel.serverId,
             channelId: channel.id
         });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [channel, fetch]);
 
     useEffect(() => {

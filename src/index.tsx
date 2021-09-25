@@ -5,10 +5,11 @@ import reportWebVitals from "reportWebVitals";
 import AppComponent from "components/app/App.component";
 import {store} from "state-management/store";
 import {Provider} from "react-redux";
-import {hideSettings, setOverlay} from "./state-management/slices/data/data.slice";
-import {selectIsSettingsShown} from "./state-management/selectors/data.selector";
+import {hideSettings, setOverlay} from "state-management/slices/data/data.slice";
+import {selectIsSettingsShown} from "state-management/selectors/data.selector";
 import {ReactKeycloakProvider} from '@react-keycloak/web'
 import keycloak from "./keycloak";
+import ReactMediasoupProvider from 'mediasoup/ReactMediasoupProvider';
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
@@ -21,7 +22,9 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <ReactKeycloakProvider authClient={keycloak}>
-                <AppComponent/>
+                <ReactMediasoupProvider>
+                    <AppComponent/>
+                </ReactMediasoupProvider>
             </ReactKeycloakProvider>
         </Provider>
     </React.StrictMode>,

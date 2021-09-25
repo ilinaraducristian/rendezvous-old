@@ -1,7 +1,7 @@
 import {useCallback, useEffect} from "react";
 import {useDrag} from "react-dnd";
 import config from "config";
-import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
+import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
 import {useLazyGetMessagesQuery} from "state-management/apis/socketio.api";
 import {
     addMessages,

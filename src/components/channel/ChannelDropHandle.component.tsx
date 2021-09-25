@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "DnDItemTypes";
+import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
 import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import DropHandleComponent from "components/DropHandle.component";

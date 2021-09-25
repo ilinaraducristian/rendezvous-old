@@ -22,7 +22,6 @@ import {
     selectSelectedServer
 } from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
-import {consumers, createConsumer, createMediaStreamSource} from "mediasoup";
 import socket from "socketio";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
@@ -34,6 +33,7 @@ import SettingsPanelComponent from "../settings/SettingsPanel.component";
 import LoadingComponent from "./Loading.component";
 import styled from "styled-components";
 import {useKeycloak} from '@react-keycloak/web';
+import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
 
 function AppComponent() {
 
@@ -49,6 +49,7 @@ function AppComponent() {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const {keycloak, initialized} = useKeycloak();
+    const {createConsumer, consumers} = useMediasoup();
 
     useEffect(() => {
         if (!initialized || !keycloak.authenticated) return;
@@ -60,7 +61,6 @@ function AppComponent() {
         (async () => {
             const users = joinedChannelUsers.filter(user => user.userId !== keycloak.subject &&
                 !consumers.find(consumer => user.socketId === consumer.socketId));
-            createMediaStreamSource();
             await Promise.all(users.map(user => createConsumer(user.socketId)));
         })();
     }, [joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
@@ -91,7 +91,8 @@ function AppComponent() {
         if (!isLoginSuccess || loginData === undefined) return;
         socket.auth.token = loginData;
         if (!socket.connected) socket.connect();
-    }, [isLoginSuccess, loginData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isLoginSuccess]);
 
     useEffect(() => {
         if (!isUserDataSuccess || backendData === undefined) return;
