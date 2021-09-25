@@ -7,11 +7,12 @@ import {emojis} from "util/trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel, selectSelectedFriendship, selectUsers} from "state-management/selectors/data.selector";
-import {useLazySendMessageQuery} from "../../state-management/apis/socketio.api";
+
 import PopupContainerComponent, {PopupContainerRefType} from "./PopupContainer.component";
 import {stringSimilarity} from "string-similarity-js";
 import {selectSelectedServerMembers} from "../../state-management/selectors/server.selector";
 import {NewMessageRequest} from "../../dtos/message.dto";
+import {sendMessage} from "../../socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     isReplying: boolean,
@@ -30,7 +31,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const inputRef = useRef<HTMLSpanElement>(null);
     const selectedChannel = useAppSelector(selectSelectedChannel);
     const selectedFriendship = useAppSelector(selectSelectedFriendship);
-    const [fetchSendMessage, {data: dataMessage, isSuccess: isSuccessSendMessage}] = useLazySendMessageQuery()
+
     const dispatch = useAppDispatch();
     const [cursorPosition, setCursorPosition] = useState(0);
 
@@ -39,7 +40,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const members = useAppSelector(selectSelectedServerMembers);
     const users = useAppSelector(selectUsers);
 
-    const sendMessage = useCallback(async (event: any) => {
+    const sendMessageCallback = useCallback(async (event: any) => {
         event.preventDefault();
         if (selectedChannel === undefined && selectedFriendship === undefined) return;
         let message = (event.target as any).innerText;
@@ -57,14 +58,10 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             payload.isReply = true;
             payload.replyId = replyId;
         }
-        fetchSendMessage(payload);
-    }, [isReplying, replyId, selectedChannel, fetchSendMessage, selectedFriendship])
-
-    useEffect(() => {
-        if (!isSuccessSendMessage || dataMessage === undefined) return;
+        const dataMessage = await sendMessage(payload);
         messageSent();
         dispatch(addMessages([dataMessage]));
-    }, [isSuccessSendMessage, dataMessage, messageSent, dispatch])
+    }, [isReplying, replyId, selectedChannel, selectedFriendship])
 
     const replaceTextWithEmoji = useCallback((emojiId: number) => {
         const selection = getSelection();
@@ -87,7 +84,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
 
         if (event.key.includes("Enter")) {
             if (popupType === null) {
-                sendMessage(event).then()
+                sendMessageCallback(event).then()
                 return;
             }
             if (popupRef.current === null) return;
@@ -101,7 +98,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             event.preventDefault();
             popupRef.current.move(event.key === 'ArrowUp');
         }
-    }, [popupType, sendMessage, replaceTextWithEmoji])
+    }, [popupType, sendMessageCallback, replaceTextWithEmoji])
 
     const displayMentions = useCallback((matchedString: string) => {
         const usersToDisplay = members
@@ -113,7 +110,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             .filter(({score}) => score > 0.15)
             .sort((a, b) => b.score - a.score)
             .map((user, index) => (
-                <UserContainerDiv key={`popup_user_${index}`} userId={user.id}>
+                <UserContainerDiv key={`popup_user_${index}`} userId={user.id || ''}>
                     <span>{user.firstName}</span>
                     <span>{user.lastName}</span>
                 </UserContainerDiv>

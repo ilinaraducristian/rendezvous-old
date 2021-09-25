@@ -2,13 +2,10 @@ import {User} from "../../dtos/user.dto";
 import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
 import styled from "styled-components";
 import {FriendRequest} from "../../dtos/friend.dto";
-import {
-    useLazyAcceptFriendRequestQuery,
-    useLazyRejectFriendRequestQuery
-} from "../../state-management/apis/socketio.api";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 import CheckSVG from "../../svg/Check.svg";
 import XSVG from "../../svg/X.svg";
+import {acceptFriendRequest, rejectFriendRequest} from "../../socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     user: User,
@@ -17,30 +14,13 @@ type ComponentProps = {
 
 function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
 
-    const [fetchAcceptFriendRequest, {
-        data: dataAcceptFriendRequest,
-        isSuccess: isSuccessAcceptFriendRequest
-    }] = useLazyAcceptFriendRequestQuery();
-    const [fetchRejectFriendRequest, {
-        data: dataRejectFriendRequest,
-        isSuccess: isSuccessRejectFriendRequest
-    }] = useLazyRejectFriendRequestQuery();
+    const acceptFriendRequestCallback = useCallback((userId: string, friendRequestId: number) => {
+        acceptFriendRequest({friendRequestId}).then();
+    }, []);
 
-    const acceptFriendRequest = useCallback((userId: string, friendRequestId: number) => {
-        fetchAcceptFriendRequest({friendRequestId})
-    }, [fetchAcceptFriendRequest]);
-
-    const rejectFriendRequest = useCallback((userId: string, friendRequestId: number) => {
-        fetchRejectFriendRequest({friendRequestId})
-    }, [fetchRejectFriendRequest]);
-
-    useEffect(() => {
-        if (dataAcceptFriendRequest === undefined || !isSuccessAcceptFriendRequest) return;
-    }, [dataAcceptFriendRequest, isSuccessAcceptFriendRequest]);
-
-    useEffect(() => {
-        if (dataRejectFriendRequest === undefined || !isSuccessRejectFriendRequest) return;
-    }, [dataRejectFriendRequest, isSuccessRejectFriendRequest]);
+    const rejectFriendRequestCallback = useCallback((userId: string, friendRequestId: number) => {
+        rejectFriendRequest({friendRequestId}).then();
+    }, []);
 
     return (
         <Li>
@@ -62,11 +42,11 @@ function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
                     friendRequest === undefined || !friendRequest.incoming ||
                     <>
                         <Button type="button" className="btn" acceptOrReject={true}
-                                onClick={() => acceptFriendRequest(friendRequest.userId, friendRequest.id)}>
+                                onClick={() => acceptFriendRequestCallback(friendRequest.userId, friendRequest.id)}>
                             <CheckSVG/>
                         </Button>
                         <Button type="button" className="btn" acceptOrReject={false}
-                                onClick={() => rejectFriendRequest(friendRequest.userId, friendRequest.id)}>
+                                onClick={() => rejectFriendRequestCallback(friendRequest.userId, friendRequest.id)}>
                             <XSVG/>
                         </Button>
                     </>

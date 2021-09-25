@@ -9,8 +9,8 @@ import {useAppDispatch, useAppSelector} from "../../state-management/store";
 import {selectSecondPanelFooter} from "../../state-management/selectors/data.selector";
 import {useEffect, useState} from "react";
 import {useKeycloak} from "@react-keycloak/web";
-import socketio from "../../socketio";
 import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
+import {pauseProducer} from "../../socketio/ReactSocketIOProvider";
 
 function SecondPanelFooterComponent() {
 
@@ -26,7 +26,7 @@ function SecondPanelFooterComponent() {
     }, [keycloak, initialized]);
 
     async function toggleMute() {
-        await socketio.emitAck('pause_producer');
+        await pauseProducer();
         // dispatch(toggleMuteAction(undefined));
     }
 

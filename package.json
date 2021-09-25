@@ -29,7 +29,6 @@
     "lorem-ipsum": "^2.0.3",
     "string-similarity-js": "^2.1.4",
     "@react-keycloak/web": "^3.4.0",
-    "socket.io-react-hook": "^1.0.12"
   },
   "scripts": {
     "start": "react-scripts start",

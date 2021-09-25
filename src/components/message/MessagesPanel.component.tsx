@@ -7,7 +7,7 @@ import {
     selectFriendship,
 } from "state-management/slices/data/data.slice";
 import styled from "styled-components";
-import {useLazyGetMessagesQuery} from "state-management/apis/socketio.api";
+
 import config from "config";
 import MessageInputContainerComponent from "components/message/MessageInputContainer.component";
 import {
@@ -26,7 +26,7 @@ function MessagesPanelComponent() {
     const friendshipMessages = useAppSelector(selectSelectedFriendshipMessages);
     const users = useAppSelector(selectUsers);
     const channel = useAppSelector(selectSelectedChannel);
-    const [fetch, {data, isSuccess}] = useLazyGetMessagesQuery();
+
     const dispatch = useAppDispatch();
     // const [offset, setOffset] = useState(2040);
     const [offset, setOffset] = useState(0);

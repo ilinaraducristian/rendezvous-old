@@ -1,11 +1,9 @@
 import {useEffect, useState} from "react";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectConnected} from "state-management/slices/socketio.slice";
 import config from "config";
 import {processedServerData} from "mock-data";
 import {initializeBackend} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/first-panel/FirstPanel.component";
-import {useLazyGetUserDataQuery} from "state-management/apis/socketio.api";
 import SecondPanelComponent from "components/second-panel/SecondPanel.component";
 import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";
@@ -22,9 +20,8 @@ import {
     selectSelectedServer
 } from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
-import socket from "socketio";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
-import {useLazyLoginQuery} from "state-management/apis/http.api";
+
 import ForthPanelComponent from "../ForthPanel.component";
 import HeaderComponent from "../Header.component";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
@@ -34,22 +31,24 @@ import LoadingComponent from "./Loading.component";
 import styled from "styled-components";
 import {useKeycloak} from '@react-keycloak/web';
 import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
+import {getUserData, useSocket} from "../../socketio/ReactSocketIOProvider";
+import useAsyncEffect from "../../util/useAsyncEffect";
+import {useLazyLoginQuery} from "../../state-management/apis/http.api";
 
 function AppComponent() {
 
-    const connected = useAppSelector(selectConnected);
     const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
     const selectedServer = useAppSelector(selectSelectedServer);
     const overlay = useAppSelector(selectOverlay);
     const joinedChannel = useAppSelector(selectJoinedChannel);
     const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
-    const [fetchUserData, {data: backendData, isSuccess: isUserDataSuccess}] = useLazyGetUserDataQuery();
-    const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
     const isSettingsShown = useAppSelector(selectIsSettingsShown);
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const {keycloak, initialized} = useKeycloak();
     const {createConsumer, consumers} = useMediasoup();
+    const {socket, connected} = useSocket();
+    const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
 
     useEffect(() => {
         if (!initialized || !keycloak.authenticated) return;
@@ -63,7 +62,7 @@ function AppComponent() {
                 !consumers.find(consumer => user.socketId === consumer.socketId));
             await Promise.all(users.map(user => createConsumer(user.socketId)));
         })();
-    }, [joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
+    }, [consumers, createConsumer, joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
 
     useEffect(() => {
         if (config.offline) return;
@@ -77,29 +76,24 @@ function AppComponent() {
         }
     }, [fetchLogin, keycloak, initialized]);
 
-    useEffect(() => {
+    useAsyncEffect(async () => {
         if (config.offline) {
             dispatch(initializeBackend(processedServerData));
             return;
         }
         if (!connected || isBackendInitialized) return;
-        fetchUserData();
+        const backendData = getUserData();
+        dispatch(initializeBackend(backendData));
+        setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isBackendInitialized, connected]);
 
     useEffect(() => {
         if (!isLoginSuccess || loginData === undefined) return;
-        socket.auth.token = loginData;
+        socket.auth = {token: loginData};
         if (!socket.connected) socket.connect();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isLoginSuccess]);
-
-    useEffect(() => {
-        if (!isUserDataSuccess || backendData === undefined) return;
-        dispatch(initializeBackend(backendData));
-        setIsLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isUserDataSuccess]);
 
     return isLoading && !config.offline ?
         <LoadingComponent/>

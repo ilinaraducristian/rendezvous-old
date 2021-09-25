@@ -5,9 +5,10 @@ import {
     deleteMessage as deleteMessageAction,
     editMessage as editMessageAction
 } from "state-management/slices/data/data.slice";
-import {useLazyDeleteMessageQuery, useLazyEditMessageQuery} from "state-management/apis/socketio.api";
+
 import config from "config";
 import {Message} from "../../dtos/message.dto";
+import {deleteMessage, editMessage} from "../../socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     message: Message,
@@ -34,14 +35,6 @@ function MessageComponent(
     const time = new Date(timestamp);
     const [actions, setActions] = useState(false);
     const dispatch = useAppDispatch();
-    const [fetchEditMessage, {
-        isFetching: isFetchingEditMessage,
-        isSuccess: isSuccessEditMessage
-    }] = useLazyEditMessageQuery();
-    const [fetchDeleteMessage, {
-        isFetching: isFetchingDeleteMessage,
-        isSuccess: isSuccessDeleteMessage
-    }] = useLazyDeleteMessageQuery();
     const [isEditing, setIsEditing] = useState(false);
     const textRef = useRef<HTMLSpanElement>(null);
     const [oldMessage, setOldMessage] = useState("");
@@ -73,37 +66,27 @@ function MessageComponent(
         }
     }
 
-    function editMessage() {
+    async function editMessageCallback() {
         if (!config.offline) {
-            fetchEditMessage({
+            await editMessage({
                 serverId: serverId || 0,
                 channelId: channelId || 0,
                 messageId,
                 text: textRef.current?.innerText || ""
             });
+            dispatch(editMessageAction({serverId, channelId, messageId, text: textRef.current?.innerText}));
+            setIsEditing(false);
         }
     }
 
-    function deleteMessage() {
+    async function deleteMessageCallback() {
         if (!config.offline) {
-            fetchDeleteMessage({serverId: serverId || 0, channelId: channelId || 0, messageId});
+            await deleteMessage({serverId: serverId || 0, channelId: channelId || 0, messageId});
+            dispatch(deleteMessageAction({serverId, channelId, messageId}));
         } else {
             dispatch(deleteMessageAction({serverId, channelId, messageId}));
         }
     }
-
-    useEffect(() => {
-        if (!isSuccessEditMessage || isFetchingEditMessage) return;
-        dispatch(editMessageAction({serverId, channelId, messageId, text: textRef.current?.innerText}));
-        setIsEditing(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccessEditMessage, isFetchingEditMessage]);
-
-    useEffect(() => {
-        if (!isFetchingDeleteMessage || isSuccessDeleteMessage) return;
-        dispatch(deleteMessageAction({serverId, channelId, messageId}));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isFetchingDeleteMessage, isSuccessDeleteMessage]);
 
     return (
         <DivContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
@@ -111,7 +94,7 @@ function MessageComponent(
             <DivActions>
                 <button type="button" onClick={editMode}>E</button>
                 <button type="button" onClick={() => reply(messageId)}>R</button>
-                <button type="button" onClick={deleteMessage}>D</button>
+                <button type="button" onClick={deleteMessageCallback}>D</button>
             </DivActions>
             }
             {
@@ -133,7 +116,7 @@ function MessageComponent(
                                  ref={textRef}>{text}</SpanMessage>
                     {
                         !isEditing ||
-                        <button type="button" onClick={editMessage}>Save</button>
+                        <button type="button" onClick={editMessageCallback}>Save</button>
                     }
                     {
                         image === null ||

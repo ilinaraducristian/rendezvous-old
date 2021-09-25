@@ -6,7 +6,7 @@ import {
     setThirdPanel
 } from "../../state-management/slices/data/data.slice";
 import {ThirdPanelTypes} from "../../types/UISelectionModes";
-import {useLazyGetMessagesQuery} from "../../state-management/apis/socketio.api";
+
 import {useEffect} from "react";
 import {User} from "../../dtos/user.dto";
 import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
@@ -19,7 +19,7 @@ type ComponentProps = {
 function FriendComponent({friendshipId, user}: ComponentProps) {
 
     const dispatch = useAppDispatch();
-    const [fetch, {data: messages, isSuccess}] = useLazyGetMessagesQuery();
+
 
     useEffect(() => {
         if (!isSuccess || messages === undefined) return;

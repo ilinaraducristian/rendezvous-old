@@ -10,6 +10,7 @@ import {selectIsSettingsShown} from "state-management/selectors/data.selector";
 import {ReactKeycloakProvider} from '@react-keycloak/web'
 import keycloak from "./keycloak";
 import ReactMediasoupProvider from 'mediasoup/ReactMediasoupProvider';
+import ReactSocketIOProvider from "./socketio/ReactSocketIOProvider";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
@@ -22,9 +23,11 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <ReactKeycloakProvider authClient={keycloak}>
-                <ReactMediasoupProvider>
-                    <AppComponent/>
-                </ReactMediasoupProvider>
+                <ReactSocketIOProvider>
+                    <ReactMediasoupProvider>
+                        <AppComponent/>
+                    </ReactMediasoupProvider>
+                </ReactSocketIOProvider>
             </ReactKeycloakProvider>
         </Provider>
     </React.StrictMode>,

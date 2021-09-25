@@ -5,7 +5,7 @@ import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import DropHandleComponent from "components/DropHandle.component";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import {useLazyMoveChannelQuery} from "../../state-management/apis/socketio.api";
+
 
 type ComponentProps = {
   index: number,
@@ -16,7 +16,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
   const server = useAppSelector(selectSelectedServer);
   const [hidden, setHidden] = useState(true);
-  const [fetchMoveChannel, {data: dataMoveChannel, isSuccess: isSuccessMoveChannel}] = useLazyMoveChannelQuery();
+
   const dispatch = useAppDispatch();
 
   const handleDrop = useCallback((item: { id: number, order: number, groupId: number | null }) => {

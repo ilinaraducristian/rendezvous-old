@@ -2,13 +2,15 @@ import React, {createContext, PropsWithChildren, useContext, useEffect, useState
 import {Device} from "mediasoup-client";
 import {Producer} from "mediasoup-client/lib/Producer";
 import {Consumer} from "mediasoup-client/lib/Consumer";
-import socket from "../socketio";
 import {useAppDispatch} from "../state-management/store";
 import {setUserIsTalking} from "../state-management/slices/data/data.slice";
-import {connect} from "../state-management/slices/socketio.slice";
+import {useSocket} from "../socketio/ReactSocketIOProvider";
+import useAsyncEffect from "../util/useAsyncEffect";
+
 
 type InitialObjectProperties = {
     mediasoup: Device,
+    loaded: boolean,
     localStream?: MediaStream,
     remoteStream: MediaStream,
     producer?: Producer,
@@ -26,6 +28,7 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
 
     const [state, setState] = useState<InitialObjectProperties>({} as unknown as InitialObjectProperties);
     const dispatch = useAppDispatch();
+    const {socket, connected} = useSocket();
 
     useEffect(() => {
         const initialObject: InitialObjectProperties = {
@@ -33,6 +36,7 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
             remoteStream: new MediaStream(),
             consumers: [],
             isMuted: true,
+            loaded: false,
             setMute: isMuted => {
                 initialObject.isMuted = isMuted;
                 setState({...initialObject});
@@ -101,15 +105,18 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
             found.consumer.resume();
         });
 
-        socket.on("connect", async () => {
-            if (initialObject.mediasoup.loaded) return;
-            const {routerRtpCapabilities} = await socket.emitAck(`get_router_capabilities`);
-            await initialObject.mediasoup.load({routerRtpCapabilities});
-            dispatch(connect());
-        });
         setState(initialObject);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useAsyncEffect(async () => {
+        if (!connected) return;
+        if (state.loaded) return;
+        const {routerRtpCapabilities} = await socket.emitAck(`get_router_capabilities`);
+        await state.mediasoup.load({routerRtpCapabilities});
+        state.loaded = true;
+        setState({...state});
+    }, [state, connected]);
 
     return (
         <MediasoupContext.Provider value={state}>

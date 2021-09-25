@@ -1,19 +1,14 @@
 import {Action, configureStore, ThunkAction} from "@reduxjs/toolkit";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
-import socketioReducer from "state-management/slices/socketio.slice";
 import dataReducer from "state-management/slices/data/data.slice";
-import {socketioApi} from "state-management/apis/socketio.api";
 import {httpApi} from "state-management/apis/http.api";
 
 export const store = configureStore({
   reducer: {
-    socketio: socketioReducer,
     data: dataReducer,
-    [socketioApi.reducerPath]: socketioApi.reducer,
     [httpApi.reducerPath]: httpApi.reducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware()
-      .concat([socketioApi.middleware, httpApi.middleware]),
+  middleware: getDefaultMiddleware => getDefaultMiddleware().concat(httpApi.middleware),
 });
 
 export const useAppDispatch = () => useDispatch<AppDispatch>();

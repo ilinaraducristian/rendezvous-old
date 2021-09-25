@@ -1,5 +1,5 @@
 import {useEffect, useRef} from "react";
-import {useLazyJoinServerQuery} from "state-management/apis/socketio.api";
+
 import {addServer, addUser, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay.component";
@@ -8,7 +8,7 @@ import styled from "styled-components";
 function JoinServerOverlayComponent() {
 
     const ref = useRef<HTMLInputElement>(null);
-    const [fetch, {data, isSuccess}] = useLazyJoinServerQuery();
+
     const dispatch = useAppDispatch();
 
     function joinServer() {

@@ -1,5 +1,5 @@
 import {useCallback, useEffect} from "react";
-import {useLazyCreateInvitationQuery, useLazyDeleteServerQuery} from "state-management/apis/socketio.api";
+
 import {setInvitation, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import styled from "styled-components";
@@ -9,8 +9,8 @@ import {OverlayTypes} from "../../types/UISelectionModes";
 function DropdownComponent({setIsDropdownShown}: any) {
 
     const selectedServer = useAppSelector(selectSelectedServer);
-    const [fetch, {data: invitation, isSuccess: isSuccessCreateInvitation}] = useLazyCreateInvitationQuery();
-    const [fetchDeleteServer, {isSuccess: isSuccessDeleteServer}] = useLazyDeleteServerQuery();
+
+
     const dispatch = useAppDispatch();
 
     const createInvitation = useCallback(() => {

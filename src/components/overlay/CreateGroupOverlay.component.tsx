@@ -1,41 +1,35 @@
-import {useEffect, useRef} from "react";
+import {useRef} from "react";
 import config from "config";
-import {useLazyCreateGroupQuery} from "state-management/apis/socketio.api";
+
 import {useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import OverlayComponent from "components/overlay/Overlay.component";
+import {createGroup} from "../../socketio/ReactSocketIOProvider";
 
 function CreateGroupOverlayComponent() {
 
   const ref = useRef<HTMLInputElement>(null);
   const selectedServer = useAppSelector(selectSelectedServer);
-  const [fetch, {data}] = useLazyCreateGroupQuery();
 
-  function createGroup() {
-    if (config.offline) return;
-    if (selectedServer === undefined) return;
-    const groupName = ref.current?.value as string;
-    fetch({serverId: selectedServer.id, groupName});
-  }
-
-  useEffect(() => {
-    if (data === undefined) return;
-    if (selectedServer === undefined) return;
-    // const groupName = ref.current?.value as string;
-    // dispatch(setGroup({
-    //   id: data.groupId,
-    //   serverId: selectedServer.id,
-    //   name: groupName
-    // }));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+    async function createGroupCallback() {
+        if (config.offline) return;
+        if (selectedServer === undefined) return;
+        const groupName = ref.current?.value as string;
+        const data = await createGroup({serverId: selectedServer.id, groupName});
+        // const groupName = ref.current?.value as string;
+        // dispatch(setGroup({
+        //   id: data.groupId,
+        //   serverId: selectedServer.id,
+        //   name: groupName
+        // }));
+    }
 
   return (
       <OverlayComponent>
         <h1 className="h1">Group name</h1>
-        <input type="text" ref={ref}/>
-        <button type="button" className="btn btn__overlay-select" onClick={createGroup}>Create
-        </button>
+          <input type="text" ref={ref}/>
+          <button type="button" className="btn btn__overlay-select" onClick={createGroupCallback}>Create
+          </button>
       </OverlayComponent>
   );
 }

@@ -1,11 +1,12 @@
-import {useEffect, useRef} from "react";
+import {useRef} from "react";
 import config from "config";
-import {useLazyCreateChannelQuery} from "state-management/apis/socketio.api";
+
 import {addChannel, selectChannel, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import OverlayComponent from "components/overlay/Overlay.component";
 import {ChannelType, TextChannel} from "../../dtos/channel.dto";
+import {createChannel} from "../../socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
   groupId?: number | null
@@ -15,22 +16,15 @@ function CreateChannelOverlayComponent({groupId = null}: ComponentProps) {
 
   const ref = useRef<HTMLInputElement>(null);
   const selectedServer = useAppSelector(selectSelectedServer);
-  const [fetch, {data, isSuccess}] = useLazyCreateChannelQuery();
+
   const dispatch = useAppDispatch();
 
-  function createChannel() {
+  async function createChannelCallback() {
     if (config.offline) return;
     if (selectedServer === undefined) return;
     // TODO
     const channelName = ref.current?.value as string;
-    fetch({serverId: selectedServer.id, groupId, channelName});
-  }
-
-  useEffect(() => {
-    if (selectedServer === undefined) return;
-    if (!isSuccess) return;
-    if (data === undefined) return;
-    const channelName = ref.current?.value as string;
+    const data = await createChannel({serverId: selectedServer.id, groupId, channelName});
     const channel: TextChannel = {
       id: data?.channelId,
       serverId: selectedServer.id,
@@ -43,14 +37,13 @@ function CreateChannelOverlayComponent({groupId = null}: ComponentProps) {
     dispatch(addChannel(channel));
     dispatch(selectChannel(channel.id));
     dispatch(setOverlay(null));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccess]);
+  }
 
   return (
       <OverlayComponent>
         <h1 className="h1">Channel name</h1>
         <input type="text" ref={ref}/>
-        <button type="button" className="btn btn__overlay-select" onClick={createChannel}>Create
+        <button type="button" className="btn btn__overlay-select" onClick={createChannelCallback}>Create
         </button>
       </OverlayComponent>
   );

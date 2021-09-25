@@ -2,7 +2,7 @@ import {useCallback, useEffect} from "react";
 import {useDrag} from "react-dnd";
 import config from "config";
 import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
-import {useLazyGetMessagesQuery} from "state-management/apis/socketio.api";
+
 import {
     addMessages,
     selectChannel as selectChannelAction,
@@ -21,8 +21,8 @@ type ComponentProps = {
 
 function TextChannelComponent({channel}: ComponentProps) {
 
-  const [fetch, {data: messages, isSuccess}] = useLazyGetMessagesQuery();
-  const dispatch = useAppDispatch();
+
+    const dispatch = useAppDispatch();
 
   useEffect(() => {
       if (!isSuccess) return;
