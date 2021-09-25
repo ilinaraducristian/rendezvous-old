@@ -1,4 +1,4 @@
-import React, {Context, createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
+import React, {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {Device} from "mediasoup-client";
 import {Producer} from "mediasoup-client/lib/Producer";
 import {Consumer} from "mediasoup-client/lib/Consumer";
@@ -20,15 +20,12 @@ type InitialObjectProperties = {
     createConsumer: (socketId: string) => void
 };
 
-const AudioInterface = createContext(undefined) as unknown as Context<InitialObjectProperties>;
+const MediasoupContext = createContext(undefined as unknown as InitialObjectProperties);
 
 function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }) {
 
-    const [state, setState] = useState<any>();
+    const [state, setState] = useState<InitialObjectProperties>({} as unknown as InitialObjectProperties);
     const dispatch = useAppDispatch();
-
-    useEffect(() => {
-    })
 
     useEffect(() => {
         const initialObject: InitialObjectProperties = {
@@ -110,17 +107,18 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
             await initialObject.mediasoup.load({routerRtpCapabilities});
             dispatch(connect());
         });
+        setState(initialObject);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     return (
-        <AudioInterface.Provider value={state}>
+        <MediasoupContext.Provider value={state}>
             {children}
-        </AudioInterface.Provider>
+        </MediasoupContext.Provider>
     );
 }
 
-const useMediasoup = () => useContext(AudioInterface);
+const useMediasoup = () => useContext(MediasoupContext);
 const notificationSound = new Audio("/notification.ogg");
 
 export {useMediasoup, notificationSound};
