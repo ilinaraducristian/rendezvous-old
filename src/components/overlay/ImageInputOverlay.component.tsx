@@ -1,9 +1,10 @@
 import styled from "styled-components";
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 import {addMessages, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel} from "state-management/selectors/data.selector";
 import {NewMessageRequest} from "../../dtos/message.dto";
+import {sendMessage} from "../../socketio/ReactSocketIOProvider";
 
 
 type ComponentProps = {
@@ -26,14 +27,10 @@ function ImageInputOverlayComponent({image}: ComponentProps) {
             replyId: null,
             image
         };
-        fetch(payload);
-    }, [image, selectedChannel, fetch]);
-
-    useEffect(() => {
-        if (!isSuccess || message === undefined) return;
+        const message = await sendMessage(payload);
         dispatch(addMessages([message]));
         dispatch(setOverlay(null));
-    }, [isSuccess, message, dispatch])
+    }, [image, selectedChannel, dispatch]);
 
     return (
         <TransparentBackground>

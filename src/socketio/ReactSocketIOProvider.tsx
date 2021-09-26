@@ -58,17 +58,18 @@ type InitialObjectProperties = {
     connected: boolean,
 };
 
-const SocketIOContext = createContext(undefined as unknown as InitialObjectProperties);
+const initialObject: InitialObjectProperties = {
+    socket,
+    connected: false
+};
+
+const SocketIOContext = createContext(initialObject);
 
 function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> }) {
 
-    const [state, setState] = useState({} as unknown as InitialObjectProperties);
+    const [state, setState] = useState(initialObject);
 
     useEffect(() => {
-        const initialObject: InitialObjectProperties = {
-            socket,
-            connected: false
-        };
         initialObject.socket.on("connect", () => {
             initialObject.connected = true;
             setState({...initialObject});
@@ -150,7 +151,7 @@ export function rejectFriendRequest(data: any): Promise<any> {
     return socket.emitAck("reject_friend_request", data);
 }
 
-export function deleteServer(data: { serverId: string }) {
+export function deleteServer(data: { serverId: number }) {
     return socket.emitAck("delete_server", data);
 }
 

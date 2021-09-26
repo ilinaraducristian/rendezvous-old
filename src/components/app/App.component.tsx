@@ -82,7 +82,7 @@ function AppComponent() {
             return;
         }
         if (!connected || isBackendInitialized) return;
-        const backendData = getUserData();
+        const backendData = await getUserData();
         dispatch(initializeBackend(backendData));
         setIsLoading(false);
         // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -61,7 +61,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         const dataMessage = await sendMessage(payload);
         messageSent();
         dispatch(addMessages([dataMessage]));
-    }, [isReplying, replyId, selectedChannel, selectedFriendship])
+    }, [messageSent, dispatch, isReplying, replyId, selectedChannel, selectedFriendship])
 
     const replaceTextWithEmoji = useCallback((emojiId: number) => {
         const selection = getSelection();

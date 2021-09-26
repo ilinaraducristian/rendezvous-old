@@ -5,6 +5,7 @@ import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import DropHandleComponent from "components/DropHandle.component";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {moveChannel} from "../../socketio/ReactSocketIOProvider";
 
 
 type ComponentProps = {
@@ -19,15 +20,11 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
   const dispatch = useAppDispatch();
 
-  const handleDrop = useCallback((item: { id: number, order: number, groupId: number | null }) => {
+  const handleDrop = useCallback(async (item: { id: number, order: number, groupId: number | null }) => {
     if (server === undefined) return;
-    fetchMoveChannel({serverId: server.id, channelId: item.id, order: index, groupId})
-  }, [groupId, index, server, fetchMoveChannel]);
-
-  useEffect(() => {
-    if (!isSuccessMoveChannel || dataMoveChannel === undefined) return;
+    const dataMoveChannel = await moveChannel({serverId: server.id, channelId: item.id, order: index, groupId});
     dispatch(moveChannels(dataMoveChannel.channels));
-  }, [dispatch, isSuccessMoveChannel, dataMoveChannel])
+  }, [groupId, index, server, dispatch]);
 
   const handleHover = useCallback(() => {
     setHidden(false);

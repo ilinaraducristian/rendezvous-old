@@ -1,7 +1,7 @@
-import {useCallback, useEffect, useRef} from "react";
+import {useCallback, useRef} from "react";
 import {useDrag} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
-import {addChannelUsers, joinVoiceChannel} from "state-management/slices/data/data.slice";
+import {addChannelUsers, joinVoiceChannel as joinVoiceChannelAction} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import ChannelSVG from "svg/Channel.svg";
 import config from "config";
@@ -13,6 +13,7 @@ import {VoiceChannel} from "../../dtos/channel.dto";
 import AvatarPlaceholder from "../../assets/avatar-placeholder.png";
 import AvatarSVG from "../../svg/Avatar.svg";
 import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
+import {joinVoiceChannel} from "../../socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     channel: VoiceChannel
@@ -31,18 +32,14 @@ function VoiceChannelComponent({channel}: ComponentProps) {
         if (joined.current) return;
         joined.current = true;
         await createProducer();
-        fetch({
+        const usersInVoiceChannel = await joinVoiceChannel({
             serverId: channel.serverId,
             channelId: channel.id
         });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [channel, fetch]);
-
-    useEffect(() => {
-        if (!isSuccess || usersInVoiceChannel === undefined) return;
-        dispatch(joinVoiceChannel({serverId: channel.serverId, groupId: channel.groupId, channelId: channel.id}));
+        dispatch(joinVoiceChannelAction({serverId: channel.serverId, groupId: channel.groupId, channelId: channel.id}));
         dispatch(addChannelUsers(usersInVoiceChannel));
-    }, [usersInVoiceChannel, isSuccess, channel, dispatch])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [channel]);
 
     const [, drag] = useDrag<ChannelDragObject, any, any>({
         type: ItemTypes.CHANNEL,

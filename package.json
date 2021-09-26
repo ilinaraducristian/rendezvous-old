@@ -28,7 +28,7 @@
     "web-vitals": "^2.1.0",
     "lorem-ipsum": "^2.0.3",
     "string-similarity-js": "^2.1.4",
-    "@react-keycloak/web": "^3.4.0",
+    "@react-keycloak/web": "^3.4.0"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -1,30 +1,25 @@
-import {useCallback, useEffect} from "react";
+import {useCallback} from "react";
 
 import {setInvitation, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import styled from "styled-components";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {OverlayTypes} from "../../types/UISelectionModes";
+import {createInvitation, deleteServer} from "../../socketio/ReactSocketIOProvider";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
     const selectedServer = useAppSelector(selectSelectedServer);
 
-
     const dispatch = useAppDispatch();
 
-    const createInvitation = useCallback(() => {
+    const createInvitationCallback = useCallback(async () => {
         if (selectedServer === undefined) return;
-        fetch({serverId: selectedServer.id});
-    }, [fetch, selectedServer]);
-
-    useEffect(() => {
-        if (!isSuccessCreateInvitation && invitation === undefined) return;
+        const invitation = await createInvitation({serverId: selectedServer.id});
         dispatch(setInvitation(invitation));
         dispatch(setOverlay({type: OverlayTypes.InvitationOverlayComponent, payload: {invitation}}));
         setIsDropdownShown(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [invitation, isSuccessCreateInvitation]);
+    }, [selectedServer, dispatch, setIsDropdownShown]);
 
     const showCreateChannelOverlay = useCallback(() => {
         setIsDropdownShown(false);
@@ -36,15 +31,11 @@ function DropdownComponent({setIsDropdownShown}: any) {
         dispatch(setOverlay({type: OverlayTypes.CreateGroupOverlayComponent}));
     }, [setIsDropdownShown, dispatch]);
 
-    const deleteServer = useCallback(() => {
+    const deleteServerCallback = useCallback(async () => {
         if (selectedServer === undefined) return;
-        fetchDeleteServer({serverId: selectedServer.id})
-    }, [fetchDeleteServer, selectedServer]);
-
-    useEffect(() => {
-        if (!isSuccessDeleteServer) return;
+        await deleteServer({serverId: selectedServer.id})
         setIsDropdownShown(false);
-    }, [isSuccessDeleteServer, setIsDropdownShown])
+    }, [selectedServer, setIsDropdownShown]);
 
     return (
         <Div>
@@ -53,7 +44,7 @@ function DropdownComponent({setIsDropdownShown}: any) {
                     <Button
                         type="button"
                         className="btn"
-                        onClick={createInvitation}
+                        onClick={createInvitationCallback}
                     >
                         Invite people
                     </Button>
@@ -80,7 +71,7 @@ function DropdownComponent({setIsDropdownShown}: any) {
                     <Button
                         type="button"
                         className="btn"
-                        onClick={deleteServer}
+                        onClick={deleteServerCallback}
                     >
                         Delete server
                     </Button>

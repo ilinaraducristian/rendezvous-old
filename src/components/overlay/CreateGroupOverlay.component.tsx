@@ -15,7 +15,7 @@ function CreateGroupOverlayComponent() {
         if (config.offline) return;
         if (selectedServer === undefined) return;
         const groupName = ref.current?.value as string;
-        const data = await createGroup({serverId: selectedServer.id, groupName});
+        await createGroup({serverId: selectedServer.id, groupName});
         // const groupName = ref.current?.value as string;
         // dispatch(setGroup({
         //   id: data.groupId,

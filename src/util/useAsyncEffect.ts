@@ -5,6 +5,7 @@ function useAsyncEffect(effect: Function, deps?: DependencyList) {
         (async () => {
             await effect();
         })();
+        // eslint-disable-next-line
     }, deps);
 }
 

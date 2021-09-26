@@ -6,10 +6,9 @@ import {
     setThirdPanel
 } from "../../state-management/slices/data/data.slice";
 import {ThirdPanelTypes} from "../../types/UISelectionModes";
-
-import {useEffect} from "react";
 import {User} from "../../dtos/user.dto";
 import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
+import {getMessages} from "../../socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     friendshipId: number,
@@ -20,16 +19,11 @@ function FriendComponent({friendshipId, user}: ComponentProps) {
 
     const dispatch = useAppDispatch();
 
-
-    useEffect(() => {
-        if (!isSuccess || messages === undefined) return;
-        dispatch(addMessages(messages));
-    }, [isSuccess, messages, dispatch])
-
-    function selectFriend() {
-        fetch({friendshipId: friendshipId, serverId: null, channelId: null, offset: 0})
+    async function selectFriend() {
+        const messages = await getMessages({friendshipId: friendshipId, serverId: null, channelId: null, offset: 0})
         dispatch(setThirdPanel(ThirdPanelTypes.messages))
         dispatch(selectFriendAction(friendshipId))
+        dispatch(addMessages(messages));
     }
 
     return (

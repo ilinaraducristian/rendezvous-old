@@ -18,6 +18,7 @@ import {
 } from "state-management/selectors/data.selector";
 import {selectSelectedChannelMessages} from "state-management/selectors/channel.selector";
 import {Message} from "../../dtos/message.dto";
+import {getMessages} from "../../socketio/ReactSocketIOProvider";
 
 function MessagesPanelComponent() {
 
@@ -40,37 +41,29 @@ function MessagesPanelComponent() {
         messagesList.current?.scroll(0, messagesList.current.scrollHeight);
     }, [messages]);
 
-    useEffect(() => {
-        if (!isSuccess || data === undefined || (channel === undefined && friendship === undefined)) return;
-
-        if (data.length === 0) {
-            setBeginning(true);
-            return;
-        }
-        dispatch(addMessages(data));
-        if (friendship !== undefined)
-            dispatch(selectFriendship(friendship.id));
-        if (channel !== undefined)
-            dispatch(selectChannelAction(channel.id));
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
-
-    const onScroll = useCallback(() => {
+    const onScroll = useCallback(async () => {
         if (channel === undefined && friendship === undefined) return;
         if (messagesList.current?.scrollTop === 0) {
             if (beginning) return;
-            if (!config.offline) {
-                fetch({
-                    friendshipId: friendship?.id || null,
-                    serverId: channel?.serverId || null,
-                    channelId: channel?.id || null,
-                    offset: offset
-                });
-                setOffset(offset + 30);
+            if (config.offline) return;
+            const data = await getMessages({
+                friendshipId: friendship?.id || null,
+                serverId: channel?.serverId || null,
+                channelId: channel?.id || null,
+                offset: offset
+            });
+            setOffset(offset + 30);
+            if (data.length === 0) {
+                setBeginning(true);
                 return;
             }
+            dispatch(addMessages(data));
+            if (friendship !== undefined)
+                dispatch(selectFriendship(friendship.id));
+            if (channel !== undefined)
+                dispatch(selectChannelAction(channel.id));
         }
-    }, [channel, fetch, offset, beginning, friendship]);
+    }, [dispatch, channel, offset, beginning, friendship]);
 
     function reply(messageId: number) {
         setReplyId(messageId);
