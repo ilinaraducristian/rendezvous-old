@@ -26,6 +26,13 @@
     --color-21th: #e0e3e5;
     --color-22th: rgba(0, 0, 0, 0.85);
     --color-23th: hsl(235, 86.1%, 77.5%);
+    --color-24th: #303339;
+    --color-25th: rgba(0, 0, 0, 0.3);
+    --color-26th: #040405;
+    --color-27th: hsl(197, 100%, 47.8%);
+    --color-28th: #72767d;
+    --color-29th: hsl(235, 85.6%, 64.6%);
+    --color-30th: hsl(235, 51.4%, 52.4%);
     --small-shadow-bar: 0 1px 0 rgba(4, 4, 5, 0.2), 0 2px 0 rgba(6, 6, 7, 0.05), 0 2px 0 rgba(4, 4, 5, 0.05);
 }
 
@@ -59,6 +66,11 @@ body {
 .selected-tab {
     color: white !important;
     background-color: var(--color-15th) !important;
+}
+
+.btn--disabled {
+    cursor: not-allowed !important;
+    opacity: 0.5;
 }
 
 .btn__first-panel--selected {
