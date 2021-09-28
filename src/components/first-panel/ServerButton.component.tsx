@@ -1,13 +1,13 @@
-import FirstPanelButtonComponent from "./FirstPanelButton.component";
+import FirstPanelButtonComponent from "components/first-panel/FirstPanelButton/FirstPanelButton.component";
 import {
     selectServer as selectServerAction,
     setSecondPanelBody,
-    setSecondPanelHeader
+    setSecondPanelHeader,
 } from "../../state-management/slices/data/data.slice";
-import {SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../../types/UISelectionModes";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {selectSelectedServer} from "../../state-management/selectors/data.selector";
-import {Server} from "../../dtos/server.dto";
+import {SecondPanelBodyTypes, SecondPanelHeaderTypes} from "types/UISelectionModes";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {Server} from "dtos/server.dto";
 
 type ComponentProps = {
     server: Server

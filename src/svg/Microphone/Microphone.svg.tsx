@@ -1,5 +1,5 @@
 import {SVGProps} from "react";
-import styles from "./Microphone.module.css";
+import styles from "svg/Microphone/Microphone.module.css";
 
 function MicrophoneSVG({isMuted = false, className, ...props}: SVGProps<SVGSVGElement> & { isMuted?: boolean }) {
     return (

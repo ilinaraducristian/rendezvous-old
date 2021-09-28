@@ -1,10 +1,10 @@
 import styled from "styled-components";
-import {SecondPanelHeaderTypes} from "../../types/UISelectionModes";
-import {useAppSelector} from "../../state-management/store";
-import {selectSecondPanelHeader, selectSelectedServer} from "../../state-management/selectors/data.selector";
+import {SecondPanelHeaderTypes} from "types/UISelectionModes";
+import {useAppSelector} from "state-management/store";
+import {selectSecondPanelHeader, selectSelectedServer} from "state-management/selectors/data.selector";
 import {Dispatch, SetStateAction} from "react";
-import {ArrowXSVG} from "../../svg/Arrow.svg";
-import FriendSVG from "../../svg/Friend.svg";
+import {ArrowXSVG} from "svg/Arrow/Arrow.svg";
+import FriendSVG from "svg/Friend/Friend.svg";
 
 type ComponentProps = {
     isDropdownShown: boolean,

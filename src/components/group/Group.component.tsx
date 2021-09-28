@@ -1,10 +1,10 @@
 import {useState} from "react";
 import ChannelsListComponent from "components/channel/ChannelsList.component";
-import {ArrowSVG} from "svg/Arrow.svg";
+import {ArrowSVG} from "svg/Arrow/Arrow.svg";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import styled from "styled-components";
-import {OverlayTypes} from "../../types/UISelectionModes";
+import {OverlayTypes} from "types/UISelectionModes";
 
 type ComponentProps = {
   id: number,

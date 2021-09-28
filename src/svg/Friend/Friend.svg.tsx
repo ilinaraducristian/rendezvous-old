@@ -1,4 +1,4 @@
-import styles from "./Friend.module.css";
+import styles from "svg/Friend/Friend.module.css";
 import {SVGProps} from "react";
 
 function FriendSVG({isSelected = false, className, ...props}: SVGProps<SVGSVGElement> & { isSelected?: boolean }) {

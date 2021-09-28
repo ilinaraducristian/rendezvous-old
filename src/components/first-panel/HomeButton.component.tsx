@@ -1,18 +1,18 @@
-import FirstPanelButtonComponent from "./FirstPanelButton.component";
+import FirstPanelButtonComponent from "components/first-panel/FirstPanelButton/FirstPanelButton.component";
 import {
     selectServer as selectServerAction,
     setHeader,
     setSecondPanelBody,
-    setSecondPanelHeader
+    setSecondPanelHeader,
 } from "../../state-management/slices/data/data.slice";
-import {HeaderTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes} from "../../types/UISelectionModes";
-import {useAppDispatch, useAppSelector} from "../../state-management/store";
-import {selectSecondPanelHeader} from "../../state-management/selectors/data.selector";
+import {HeaderTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes} from "types/UISelectionModes";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectSecondPanelHeader} from "state-management/selectors/data.selector";
 
 function HomeButtonComponent() {
 
     const dispatch = useAppDispatch();
-    const selectedFriends = useAppSelector(selectSecondPanelHeader)
+    const selectedFriends = useAppSelector(selectSecondPanelHeader);
 
     function selectFriends() {
         dispatch(setSecondPanelHeader(SecondPanelHeaderTypes.friends));

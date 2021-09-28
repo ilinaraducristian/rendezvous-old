@@ -1,5 +1,5 @@
 import {SVGProps} from "react";
-import styles from "./EndCall.module.css";
+import styles from "svg/EndCall/EndCall.module.css";
 
 function EndCallSVG({className, ...props}: SVGProps<SVGSVGElement>) {
     return (

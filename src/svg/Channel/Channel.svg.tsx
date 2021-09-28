@@ -1,12 +1,6 @@
-import {ChannelType} from "../dtos/channel.dto";
-import styles from "./Channel.module.css";
+import {ChannelType} from "dtos/channel.dto";
+import styles from "svg/Channel/Channel.module.css";
 import {SVGProps} from "react";
-
-type ComponentProps = {
-    as?: any,
-    type: ChannelType,
-    isPrivate: boolean,
-}
 
 function ChannelSVG({
                         type,

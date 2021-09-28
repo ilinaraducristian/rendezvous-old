@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
+import AvatarWithStatusSVG from "svg/AvatarWithStatus/AvatarWithStatus.svg";
 
 type ComponentProps = {
     name: string

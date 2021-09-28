@@ -1,9 +1,9 @@
 import ChannelDropHandleComponent from "components/channel/ChannelDropHandle.component";
 import {useAppSelector} from "state-management/store";
-import VoiceChannelComponent from "components/channel/VoiceChannel.component";
+import VoiceChannelComponent from "components/channel/VoiceChannel/VoiceChannel.component";
 import TextChannelComponent from "components/channel/TextChannel.component";
 import {selectSelectedServerChannelsByGroupId} from "state-management/selectors/channel.selector";
-import {Channel, ChannelType, TextChannel, VoiceChannel} from "../../dtos/channel.dto";
+import {Channel, ChannelType, TextChannel, VoiceChannel} from "dtos/channel.dto";
 
 type ComponentProps = {
   groupId?: number | null

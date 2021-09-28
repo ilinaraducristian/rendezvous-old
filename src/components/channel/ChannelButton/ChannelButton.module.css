@@ -1,0 +1,9 @@
+.button {
+    display: flex;
+    color: var(--color-9th);
+}
+
+.button:hover {
+    color: var(--color-7th);
+    background-color: var(--color-15th);
+}

@@ -1,5 +1,5 @@
-import AvatarPlaceholder from "../assets/avatar-placeholder.png";
-import styles from "./AvatarWithStatus.module.css";
+import AvatarPlaceholder from "assets/avatar-placeholder.png";
+import styles from "svg/AvatarWithStatus/AvatarWithStatus.module.css";
 import {SVGProps} from "react";
 
 function AvatarWithStatusSVG({src, className}: SVGProps<SVGSVGElement> & { src?: string }) {
@@ -11,7 +11,7 @@ function AvatarWithStatusSVG({src, className}: SVGProps<SVGSVGElement> & { src?:
             </mask>
             <foreignObject x="0" y="0" width="32" height="32" mask="url(#mask)">
                 <div>
-                    <img src={src || AvatarPlaceholder} className={styles.img}/>
+                    <img alt=" " src={src || AvatarPlaceholder} className={styles.img}/>
                 </div>
             </foreignObject>
             <svg x="14.5" y="17" width="25" height="15" viewBox="0 0 25 15">

@@ -5,7 +5,7 @@ import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import DropHandleComponent from "components/DropHandle.component";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import {moveChannel} from "../../socketio/ReactSocketIOProvider";
+import {moveChannel} from "socketio/ReactSocketIOProvider";
 
 
 type ComponentProps = {

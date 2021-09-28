@@ -6,7 +6,7 @@ function ButtonComponent({
                              ...props
                          }: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
     return (
-        <button type="button" className={"btn " + ` ${className ?? " "}`} {...props}>
+        <button type="button" className={`btn ${className ?? " "}`} {...props}>
             {children}
         </button>
     );

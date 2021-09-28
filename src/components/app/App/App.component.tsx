@@ -3,7 +3,7 @@ import {useAppDispatch, useAppSelector} from "state-management/store";
 import config from "config";
 import {processedServerData} from "mock-data";
 import {initializeBackend} from "state-management/slices/data/data.slice";
-import FirstPanelComponent from "components/first-panel/FirstPanel.component";
+import FirstPanelComponent from "components/first-panel/FirstPanel/FirstPanel.component";
 import SecondPanelComponent from "components/second-panel/SecondPanel.component";
 import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";

@@ -1,5 +1,5 @@
 import {SVGProps} from "react";
-import styles from "./Check.module.css";
+import styles from "svg/Check/Check.module.css";
 
 function CheckSVG({className, ...props}: SVGProps<SVGSVGElement>) {
     return (

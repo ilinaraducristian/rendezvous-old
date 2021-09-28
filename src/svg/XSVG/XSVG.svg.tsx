@@ -1,7 +1,7 @@
-import styles from "./XSVG.module.css";
+import styles from "svg/XSVG/XSVG.module.css";
 import {SVGProps} from "react";
 
-function XSVG({className, ...props}: SVGProps<SVGSVGElement>) {
+function XSVGSvg({className, ...props}: SVGProps<SVGSVGElement>) {
     return (
         <svg viewBox="0 0 24 24" className={styles.svg + ` ${className ?? " "}`} {...props}>
             <path fill="currentColor"
@@ -10,4 +10,4 @@ function XSVG({className, ...props}: SVGProps<SVGSVGElement>) {
     );
 }
 
-export default XSVG;
+export default XSVGSvg;

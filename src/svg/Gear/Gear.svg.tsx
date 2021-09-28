@@ -1,5 +1,5 @@
 import {SVGProps} from "react";
-import styles from "./Gear.module.css";
+import styles from "svg/Gear/Gear.module.css";
 
 function GearSVG({className, ...props}: SVGProps<SVGSVGElement>) {
     return (

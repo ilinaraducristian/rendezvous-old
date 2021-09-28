@@ -1,11 +1,11 @@
-import {User} from "../../dtos/user.dto";
-import AvatarWithStatusSVG from "../../svg/AvatarWithStatus.svg";
+import {User} from "dtos/user.dto";
+import AvatarWithStatusSVG from "svg/AvatarWithStatus/AvatarWithStatus.svg";
 import styled from "styled-components";
-import {FriendRequest} from "../../dtos/friend.dto";
+import {FriendRequest} from "dtos/friend.dto";
 import {useCallback} from "react";
-import CheckSVG from "../../svg/Check.svg";
-import XSVG from "../../svg/X.svg";
-import {acceptFriendRequest, rejectFriendRequest} from "../../socketio/ReactSocketIOProvider";
+import CheckSVG from "svg/Check/Check.svg";
+import XSVGSvg from "svg/XSVG/XSVG.svg";
+import {acceptFriendRequest, rejectFriendRequest} from "socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     user: User,
@@ -47,7 +47,7 @@ function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
                         </Button>
                         <Button type="button" className="btn" acceptOrReject={false}
                                 onClick={() => rejectFriendRequestCallback(friendRequest.userId, friendRequest.id)}>
-                            <XSVG/>
+                            <XSVGSvg/>
                         </Button>
                     </>
                 }

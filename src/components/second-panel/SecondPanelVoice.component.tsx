@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import EndCallSVG from "../../svg/EndCall.svg";
+import EndCallSVG from "svg/EndCall/EndCall.svg";
 import ScreenSVG from "../../svg/Screen.svg";
 
 function SecondPanelVoiceComponent() {

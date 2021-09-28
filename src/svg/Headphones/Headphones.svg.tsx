@@ -1,4 +1,4 @@
-import styles from "./Headphones.module.css";
+import styles from "svg/Headphones/Headphones.module.css";
 import {SVGProps} from "react";
 
 function HeadphonesSVG({isMuted = false, className, ...props}: SVGProps<SVGSVGElement> & { isMuted?: boolean }) {

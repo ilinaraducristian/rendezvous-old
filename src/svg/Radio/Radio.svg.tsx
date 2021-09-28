@@ -1,5 +1,5 @@
 import {SVGProps} from "react";
-import styles from "./Radio.module.css";
+import styles from "svg/Radio/Radio.module.css";
 
 function RadioSVG({checked = false, className, ...props}: SVGProps<SVGSVGElement> & { checked?: boolean }) {
     return (

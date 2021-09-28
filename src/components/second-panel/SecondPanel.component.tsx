@@ -7,8 +7,8 @@ import DropdownComponent from "components/dropdown/Dropdown.component";
 import GroupsListComponent from "components/group/GroupsList.component";
 import styled from "styled-components";
 import {selectSecondPanelBody, selectSelectedServer} from "state-management/selectors/data.selector";
-import FriendsListComponent from "../friend/FriendsList.component";
-import {SecondPanelBodyTypes} from "../../types/UISelectionModes";
+import FriendsListComponent from "components/friend/FriendsList/FriendsList.component";
+import {SecondPanelBodyTypes} from "types/UISelectionModes";
 
 import SecondPanelFooterComponent from "./SecondPanelFooter.component";
 import SecondPanelHeaderComponent from "./SecondPanelHeader.component";

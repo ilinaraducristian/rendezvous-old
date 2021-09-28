@@ -3,8 +3,8 @@ import {setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay.component";
 import styled from "styled-components";
-import {selectSelectedServer} from "../../state-management/selectors/data.selector";
-import XSVG from "../../svg/X.svg";
+import {selectSelectedServer} from "state-management/selectors/data.selector";
+import XSVGSvg from "svg/XSVG/XSVG.svg";
 
 type ComponentProps = {
     invitation: string
@@ -12,7 +12,7 @@ type ComponentProps = {
 
 function InvitationOverlayComponent({invitation}: ComponentProps) {
 
-    const selectedServer = useAppSelector(selectSelectedServer)
+    const selectedServer = useAppSelector(selectSelectedServer);
     const [status, setStatus] = useState("Copy");
     const dispatch = useAppDispatch();
 
@@ -35,7 +35,7 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
             <Container>
                 <FirstRow>
                     <Span1>INVITE FRIENDS TO {selectedServer?.name}</Span1>
-                    <button className="btn" type="button" onClick={close}><XSVG/></button>
+                    <button className="btn" type="button" onClick={close}><XSVGSvg/></button>
                 </FirstRow>
                 <H5>SEND A SERVER INVITE LINK TO A FRIEND</H5>
                 <ThirdRow>

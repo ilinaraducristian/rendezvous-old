@@ -1,4 +1,4 @@
-import styles from "./Arrow.module.css";
+import styles from "svg/Arrow/Arrow.module.css";
 import {SVGProps} from "react";
 
 type ComponentProps = SVGProps<SVGSVGElement> & { isCollapsed?: boolean };

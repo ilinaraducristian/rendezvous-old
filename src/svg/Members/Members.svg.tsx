@@ -1,4 +1,4 @@
-import styles from "./Members.module.css";
+import styles from "svg/Members/Members.module.css";
 import {SVGProps} from "react";
 
 function MembersSVG({className, ...props}: SVGProps<SVGSVGElement>) {

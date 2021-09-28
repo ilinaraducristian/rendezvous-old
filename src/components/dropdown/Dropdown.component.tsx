@@ -1,11 +1,11 @@
 import {useCallback} from "react";
-
 import {setInvitation, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import styled from "styled-components";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import {OverlayTypes} from "../../types/UISelectionModes";
-import {createInvitation, deleteServer} from "../../socketio/ReactSocketIOProvider";
+import {OverlayTypes} from "types/UISelectionModes";
+import {createInvitation, deleteServer} from "socketio/ReactSocketIOProvider";
+import styles from "./Dropdown.module.css";
+import ButtonComponent from "components/ButtonComponent";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
@@ -33,83 +33,38 @@ function DropdownComponent({setIsDropdownShown}: any) {
 
     const deleteServerCallback = useCallback(async () => {
         if (selectedServer === undefined) return;
-        await deleteServer({serverId: selectedServer.id})
+        await deleteServer({serverId: selectedServer.id});
         setIsDropdownShown(false);
     }, [selectedServer, setIsDropdownShown]);
 
     return (
-        <Div>
-            <Ul className="list">
-                <Li>
-                    <Button
-                        type="button"
-                        className="btn"
-                        onClick={createInvitationCallback}
-                    >
+        <div className={styles.div}>
+            <ul className={`list ${styles.ul}`}>
+                <li className={styles.li}>
+                    <ButtonComponent className={styles.button} onClick={createInvitationCallback}>
                         Invite people
-                    </Button>
-                </Li>
-                <Li>
-                    <Button
-                        type="button"
-                        className="btn"
-                        onClick={showCreateChannelOverlay}
-                    >
+                    </ButtonComponent>
+                </li>
+                <li className={styles.li}>
+                    <ButtonComponent className={styles.button} onClick={showCreateChannelOverlay}>
                         Create channel
-                    </Button>
-                </Li>
-                <Li>
-                    <Button
-                        type="button"
-                        className="btn"
-                        onClick={showCreateGroupOverlay}
-                    >
+                    </ButtonComponent>
+                </li>
+                <li className={styles.li}>
+                    <ButtonComponent className={styles.button} onClick={showCreateGroupOverlay}>
                         Create group
-                    </Button>
-                </Li>
-                <Li>
-                    <Button
-                        type="button"
-                        className="btn"
-                        onClick={deleteServerCallback}
-                    >
+                    </ButtonComponent>
+                </li>
+                <li className={styles.li}>
+                    <ButtonComponent className={styles.button} onClick={deleteServerCallback}>
                         Delete server
-                    </Button>
-                </Li>
-            </Ul>
+                    </ButtonComponent>
+                </li>
+            </ul>
 
-        </Div>
+        </div>
     );
 
 }
-
-/* CSS */
-
-const Div = styled.div`
-  padding: 1em;
-`;
-
-const Ul = styled.ul`
-  background-color: var(--color-10th);
-  color: var(--color-11th);
-  border-radius: 0.5em;
-  border: solid var(--color-10th);
-  border-width: 0.5em;
-`;
-
-const Li = styled.li`
-  &:hover {
-    background-color: var(--color-12th);
-    color: white;
-  }
-`;
-
-const Button = styled.button`
-  color: currentColor;
-  width: 100%;
-  text-align: start;
-`;
-
-/* CSS */
 
 export default DropdownComponent;
