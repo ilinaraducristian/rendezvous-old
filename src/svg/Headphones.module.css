@@ -1,0 +1,13 @@
+.svg {
+    color: var(--color-8th);
+    width: 20px;
+    height: 20px;
+}
+
+.svg:hover {
+    color: var(--color-7th);
+}
+
+.svg path:nth-child(3) {
+    color: var(--color-19th);
+}

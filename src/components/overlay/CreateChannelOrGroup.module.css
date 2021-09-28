@@ -1,0 +1,168 @@
+.body {
+    width: 440px;
+    height: 450px;
+    background-color: var(--color-2nd);
+    border: 0;
+    border-radius: 5px 5px 0 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    color: var(--color-6th);
+    align-items: center;
+    padding: 0;
+}
+
+.styledButton {
+    top: 16px;
+    right: 12px;
+    position: absolute;
+    color: var(--color-11th);
+    transition: opacity .2s;
+    opacity: .5;
+}
+
+.styledButton:hover {
+    opacity: 1;
+}
+
+.h2 {
+    width: max-content;
+    margin: 32px 0 0;
+}
+
+.h5 {
+    width: max-content;
+    color: gray;
+    margin: 0 0 20px;
+}
+
+.channelSpan {
+    align-self: start;
+    font-size: 12px;
+    margin-top: 12px;
+    margin-bottom: 8px;
+    margin-left: 16px;
+}
+
+.channelButton {
+    width: 408px;
+    height: 56px;
+    background-color: var(--color-3rd);
+    color: var(--color-8th);
+    padding: 10px;
+    column-gap: 8px;
+    margin-bottom: 8px;
+    border: 0;
+    border-radius: 3px;
+
+    display: grid;
+    grid-template:
+    "radio svg h4"
+      "radio svg h5"
+      / auto auto 1fr;
+    justify-items: start;
+    align-items: center;
+}
+
+.channelButtonChecked {
+    background-color: var(--color-1st);
+}
+
+.channelButton:not(.channelButtonChecked):hover {
+    color: var(--color-7th);
+    background-color: var(--color-14th);
+}
+
+.styledRadioSvg {
+    grid-area: radio;
+}
+
+.styledChannel1SVG {
+    grid-area: svg;
+}
+
+.styledChannel2SVG {
+    width: 16px;
+    height: 16px;
+}
+
+.cancelButton {
+    margin-right: 32px;
+    height: 100%;
+}
+
+.cancelButton:hover {
+    text-decoration: underline;
+}
+
+.createButton {
+    padding: 2px 16px;
+    background-color: var(--color-29th);
+    transition: background-color 300ms;
+    border: 0;
+    border-radius: 3px;
+    height: 100%;
+}
+
+.createButtonDisabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.createButton:not(.createButtonDisabled):hover {
+    background-color: var(--color-30th);
+}
+
+.textChannelH4 {
+    grid-area: h4;
+    margin: 0;
+    padding: 0;
+    align-self: end;
+}
+
+.textChannelH5 {
+    grid-area: h5;
+    margin: 0;
+    padding: 0;
+    align-self: start;
+}
+
+.input {
+    outline: none;
+    background: none;
+    border: none;
+    color: var(--color-28th);
+    width: 100%;
+}
+
+.footer {
+    width: 440px;
+    height: 70px;
+    background-color: var(--color-3rd);
+    padding: 16px;
+    border: 0;
+    border-radius: 0 0 5px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-24th);
+    width: 408px;
+    height: 40px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid var(--color-25th);
+    transition: border-color .2s ease-in-out;
+}
+
+.inputContainer:hover {
+    border-color: var(--color-26th);
+}
+
+.inputContainer:focus-within {
+    border-color: var(--color-27th);
+}

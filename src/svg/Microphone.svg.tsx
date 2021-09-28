@@ -1,13 +1,9 @@
-import styled from "styled-components";
+import {SVGProps} from "react";
+import styles from "./Microphone.module.css";
 
-type ComponentProps = {
-    as?: any,
-    isMuted?: boolean
-}
-
-function MicrophoneSVG({isMuted = false, as}: ComponentProps) {
+function MicrophoneSVG({isMuted = false, className, ...props}: SVGProps<SVGSVGElement> & { isMuted?: boolean }) {
     return (
-        <Svg as={as} viewBox="0 0 24 24">
+        <svg viewBox="0 0 24 24" className={`${styles.svg} ${className ?? ""}`} {...props}>
             {isMuted ?
                 <>
                     <path fill="currentColor"
@@ -27,28 +23,9 @@ function MicrophoneSVG({isMuted = false, as}: ComponentProps) {
                           d="M14.99 11C14.99 12.66 13.66 14 12 14C10.34 14 9 12.66 9 11V5C9 3.34 10.34 2 12 2C13.66 2 15 3.34 15 5L14.99 11ZM12 16.1C14.76 16.1 17.3 14 17.3 11H19C19 14.42 16.28 17.24 13 17.72V22H11V17.72C7.72 17.23 5 14.41 5 11H6.7C6.7 14 9.24 16.1 12 16.1Z"/>
                 </>
             }
-        </Svg>
+        </svg>
     );
 
 }
-
-/* CSS */
-
-const Svg = styled.svg`
-  color: var(--color-8th);
-  width: 20px;
-  height: 20px;
-
-  &:hover {
-    color: var(--color-7th);
-  }
-
-  & path:nth-child(4) {
-    color: var(--color-19th);
-  }
-
-`;
-
-/* CSS */
 
 export default MicrophoneSVG;

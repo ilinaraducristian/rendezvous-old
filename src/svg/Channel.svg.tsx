@@ -1,5 +1,6 @@
 import {ChannelType} from "../dtos/channel.dto";
-import styled from "styled-components";
+import styles from "./Channel.module.css";
+import {SVGProps} from "react";
 
 type ComponentProps = {
     as?: any,
@@ -7,9 +8,14 @@ type ComponentProps = {
     isPrivate: boolean,
 }
 
-function ChannelSVG({type, isPrivate, as}: ComponentProps) {
+function ChannelSVG({
+                        type,
+                        isPrivate,
+                        className,
+                        ...props
+                    }: SVGProps<SVGSVGElement> & { type: ChannelType, isPrivate: boolean }) {
     return (
-        <Svg viewBox="0 0 24 24" as={as}>
+        <svg viewBox="0 0 24 24" className={`${styles.svg} ${className ?? ""}`} {...props}>
             {type === ChannelType.Text ?
                 <>
                     {isPrivate ?
@@ -45,18 +51,9 @@ function ChannelSVG({type, isPrivate, as}: ComponentProps) {
                     }
                 </>
             }
-        </Svg>
+        </svg>
     );
 
 }
-
-/* CSS */
-
-const Svg = styled.svg`
-  width: 24px;
-  height: 24px;
-`;
-
-/* CSS */
 
 export default ChannelSVG;

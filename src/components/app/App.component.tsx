@@ -17,7 +17,7 @@ import {
     selectIsSettingsShown,
     selectJoinedChannel,
     selectOverlay,
-    selectSelectedServer
+    selectSelectedServer,
 } from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
@@ -25,16 +25,16 @@ import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.com
 import ForthPanelComponent from "../ForthPanel.component";
 import HeaderComponent from "../Header.component";
 import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
-import {OverlayTypes} from "../../types/UISelectionModes";
+import {OverlayTypes} from "types/UISelectionModes";
 import SettingsPanelComponent from "../settings/SettingsPanel.component";
 import LoadingComponent from "./Loading.component";
 import styled from "styled-components";
-import {useKeycloak} from '@react-keycloak/web';
-import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
-import {getUserData, useSocket} from "../../socketio/ReactSocketIOProvider";
+import {useKeycloak} from "@react-keycloak/web";
+import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
+import {getUserData, useSocket} from "socketio/ReactSocketIOProvider";
 import useAsyncEffect from "../../util/useAsyncEffect";
-import {useLazyLoginQuery} from "../../state-management/apis/http.api";
-import CreateChannelOrGroupComponent from "../overlay/CreateChannelOrGroup.component";
+import {useLazyLoginQuery} from "state-management/apis/http.api";
+import CreateChannelOrGroupComponent from "components/overlay/CreateChannelOrGroup.component";
 
 function AppComponent() {
 

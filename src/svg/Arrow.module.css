@@ -1,0 +1,9 @@
+.svgArrow {
+    transition: transform 300ms;
+    width: 24px;
+    height: 24px;
+}
+
+.svgArrowCollapsed {
+    transform: rotate(-90deg);
+}

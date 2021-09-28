@@ -1,23 +1,15 @@
-import styled from "styled-components";
-import {PropsWithChildren} from "react";
+import {ButtonHTMLAttributes, DetailedHTMLProps} from "react";
 
-type ComponentProps = {
-    children: PropsWithChildren<any>,
-    as?: any
-}
-
-function ButtonComponent({children, as}: ComponentProps) {
+function ButtonComponent({
+                             children,
+                             className,
+                             ...props
+                         }: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>) {
     return (
-        <Button type="button" className="btn" as={as}>
+        <button type="button" className={"btn " + ` ${className ?? " "}`} {...props}>
             {children}
-        </Button>
+        </button>
     );
 }
-
-/* CSS */
-
-const Button = styled.button``;
-
-/* CSS */
 
 export default ButtonComponent;

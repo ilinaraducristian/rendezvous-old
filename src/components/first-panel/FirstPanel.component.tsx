@@ -1,7 +1,7 @@
 import {useAppSelector} from "state-management/store";
 import styled from "styled-components";
 import {selectServers} from "state-management/selectors/data.selector";
-import {Server} from "../../dtos/server.dto";
+import {Server} from "dtos/server.dto";
 import AddServerButtonComponent from "./AddServerButton.component";
 import ServerButtonComponent from "./ServerButton.component";
 import HomeButtonComponent from "./HomeButton.component";
@@ -13,7 +13,7 @@ function FirstPanelComponent() {
         <Ol className="list">
             <HomeButtonComponent/>
             {servers.map((server: Server, index) =>
-                <ServerButtonComponent key={`server_${index}`} server={server}/>
+                <ServerButtonComponent key={`server_${index}`} server={server}/>,
             )}
             <AddServerButtonComponent/>
         </Ol>
