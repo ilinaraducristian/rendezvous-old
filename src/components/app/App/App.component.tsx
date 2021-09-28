@@ -22,19 +22,18 @@ import {
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
 
-import ForthPanelComponent from "../ForthPanel.component";
-import HeaderComponent from "../Header.component";
-import AddFriendOverlayComponent from "../overlay/AddFriendOverlay.component";
+import ForthPanelComponent from "components/ForthPanel.component";
+import HeaderComponent from "components/Header.component";
+import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay.component";
 import {OverlayTypes} from "types/UISelectionModes";
-import SettingsPanelComponent from "../settings/SettingsPanel.component";
-import LoadingComponent from "./Loading.component";
-import styled from "styled-components";
+import SettingsPanelComponent from "components/settings/SettingsPanel.component";
+import LoadingComponent from "components/app/Loading/Loading.component";
 import {useKeycloak} from "@react-keycloak/web";
 import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
 import {getUserData, useSocket} from "socketio/ReactSocketIOProvider";
-import useAsyncEffect from "../../util/useAsyncEffect";
+import useAsyncEffect from "util/useAsyncEffect";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
-import CreateChannelOrGroupComponent from "components/overlay/CreateChannelOrGroup.component";
+import styles from "components/app/App/App.module.css";
 
 function AppComponent() {
 
@@ -103,13 +102,13 @@ function AppComponent() {
             <>
                 <FirstPanelComponent/>
                 <SecondPanelComponent/>
-                <ContentContainer>
+                <div className={styles.contentContainer}>
                     <HeaderComponent/>
-                    <MainContainer>
+                    <div className={styles.mainContainer}>
                         <ThirdPanelComponent/>
                         <ForthPanelComponent/>
-                    </MainContainer>
-                </ContentContainer>
+                    </div>
+                </div>
                 {
                     !isSettingsShown ||
                     <SettingsPanelComponent/>
@@ -118,28 +117,9 @@ function AppComponent() {
                     overlay === null ||
                     overlayToComponent(overlay)
                 }
-                <CreateChannelOrGroupComponent/>
             </>
         );
 }
-
-/* CSS */
-
-const ContentContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  width: 100%;
-`;
-
-/* CSS */
 
 function overlayToComponent({type, payload}: { type: number, payload: any }) {
     switch (type) {

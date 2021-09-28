@@ -2,14 +2,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "index.css";
 import reportWebVitals from "reportWebVitals";
-import AppComponent from "components/app/App.component";
+import AppComponent from "components/app/App/App.component";
 import {store} from "state-management/store";
 import {Provider} from "react-redux";
 import {hideSettings, setOverlay} from "state-management/slices/data/data.slice";
 import {selectIsSettingsShown} from "state-management/selectors/data.selector";
-import {ReactKeycloakProvider} from '@react-keycloak/web'
+import {ReactKeycloakProvider} from "@react-keycloak/web";
 import keycloak from "./keycloak";
-import ReactMediasoupProvider from 'mediasoup/ReactMediasoupProvider';
+import ReactMediasoupProvider from "mediasoup/ReactMediasoupProvider";
 import ReactSocketIOProvider from "./socketio/ReactSocketIOProvider";
 
 document.onkeyup = (event: any) => {
