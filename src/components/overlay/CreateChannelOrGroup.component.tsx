@@ -1,20 +1,13 @@
 import TransparentBackgroundDiv from "./TransparentBackgroundDiv";
 import styled from "styled-components";
-import XSVG from "../../svg/X.svg";
 import {useState} from "react";
 import RadioSVG from "../../svg/Radio.svg";
 import ChannelSVG from "../../svg/Channel.svg";
 import {ChannelType} from "../../dtos/channel.dto";
+import ButtonComponent from "../ButtonComponent";
+import XSVG from "../../svg/X.svg";
 
-const UniversalButton = styled.button``;
-if (UniversalButton.defaultProps !== undefined) {
-    if (UniversalButton.defaultProps.type !== undefined)
-        UniversalButton.defaultProps.type = "button";
-    if (UniversalButton.defaultProps.className !== undefined)
-        UniversalButton.defaultProps.className = "btn";
-}
-
-function NewOverlayComponent() {
+function CreateChannelOrGroupComponent() {
 
     const [channelType, setChannelType] = useState(ChannelType.Text);
     const [channelName, setChannelName] = useState('');
@@ -23,29 +16,29 @@ function NewOverlayComponent() {
         <TransparentBackgroundDiv>
             <div>
                 <Body>
-                    <Button className="btn" type="button">
+                    <ButtonComponent as={StyledButton}>
                         <XSVG/>
-                    </Button>
+                    </ButtonComponent>
                     <H2>Create {channelType === ChannelType.Voice ? "Voice" : "Text"} Channel</H2>
                     <H5>in Text Channels</H5>
                     <ChannelSpan>CHANNEL TYPE</ChannelSpan>
-                    <TextChannelButton className="btn" onClick={() => setChannelType(ChannelType.Text)}
-                                       checked={channelType === ChannelType.Text}>
-                        <RadioSVG style={{gridArea: 'radio'}} checked={channelType === ChannelType.Text}/>
-                        <ChannelSVG type={ChannelType.Text} isPrivate={false} style={{gridArea: "svg"}}/>
+                    <ChannelButton className="btn" onClick={() => setChannelType(ChannelType.Text)}
+                                   checked={channelType === ChannelType.Text}>
+                        <RadioSVG as={StyledRadioSvg} checked={channelType === ChannelType.Text}/>
+                        <ChannelSVG as={StyledChannel1SVG} type={ChannelType.Text} isPrivate={false}/>
                         <TextChannelH4>Text Channel</TextChannelH4>
                         <TextChannelH5>Post images, GIFs, stickers, opinions and puns</TextChannelH5>
-                    </TextChannelButton>
-                    <TextChannelButton className="btn" onClick={() => setChannelType(ChannelType.Voice)}
-                                       checked={channelType === ChannelType.Voice}>
-                        <RadioSVG style={{gridArea: 'radio'}} checked={channelType === ChannelType.Voice}/>
-                        <ChannelSVG type={ChannelType.Voice} isPrivate={false} style={{gridArea: "svg"}}/>
+                    </ChannelButton>
+                    <ChannelButton className="btn" onClick={() => setChannelType(ChannelType.Voice)}
+                                   checked={channelType === ChannelType.Voice}>
+                        <RadioSVG as={StyledRadioSvg} checked={channelType === ChannelType.Voice}/>
+                        <ChannelSVG as={StyledChannel1SVG} type={ChannelType.Voice} isPrivate={false}/>
                         <TextChannelH4>Voice Channel</TextChannelH4>
                         <TextChannelH5>Hang out with voice, video and screen sharing</TextChannelH5>
-                    </TextChannelButton>
+                    </ChannelButton>
                     <ChannelSpan>CHANNEL NAME</ChannelSpan>
                     <InputContainer>
-                        <ChannelSVG type={channelType} isPrivate={false} style={{width: "16px", height: "16px"}}/>
+                        <ChannelSVG as={StyledChannel2SVG} type={channelType} isPrivate={false}/>
                         <Input placeholder="new-channel" onChange={event => setChannelName(event.target.value)}/>
                     </InputContainer>
                 </Body>
@@ -53,8 +46,11 @@ function NewOverlayComponent() {
                     <CancelButton type="button" className="btn">
                         Cancel
                     </CancelButton>
-                    <CreateButton type="button" disabled={channelName.trim().length === 0}
-                                  className={"btn" + (channelName.trim().length === 0 ? " btn--disabled" : "")}>
+                    <CreateButton
+                        type="button"
+                        disabled={channelName.trim().length === 0}
+                        className="btn"
+                    >
                         Create Channel
                     </CreateButton>
                 </Footer>
@@ -64,6 +60,19 @@ function NewOverlayComponent() {
 }
 
 /* CSS */
+
+const StyledRadioSvg = styled.svg`
+  grid-area: radio;
+`;
+
+const StyledChannel1SVG = styled.svg`
+  grid-area: svg;
+`;
+
+const StyledChannel2SVG = styled.svg`
+  width: 16px;
+  height: 16px;
+`;
 
 const CancelButton = styled.button`
 
@@ -84,7 +93,10 @@ const CreateButton = styled.button`
   border-radius: 3px;
   height: 100%;
 
-  ${props => props.disabled ? "" : `
+  ${props => props.disabled ? `
+  cursor: not-allowed;
+  opacity: 0.5;
+  ` : `
   &:hover {
     background-color: var(--color-30th);
   }
@@ -106,10 +118,10 @@ const Body = styled.div`
   padding: 0;
 `;
 
-const Button = styled(UniversalButton)`
-  position: absolute;
+const StyledButton = styled.button`
   top: 16px;
   right: 12px;
+  position: absolute;
   color: var(--color-11th);
   transition: opacity .2s;
   opacity: .5;
@@ -117,7 +129,6 @@ const Button = styled(UniversalButton)`
   &:hover {
     opacity: 1;
   }
-
 `;
 
 const css = `
@@ -144,7 +155,7 @@ const ChannelSpan = styled.span`
   margin-left: 16px;
 `;
 
-const TextChannelButton = styled.button<{ checked: boolean }>`
+const ChannelButton = styled.button<{ checked: boolean }>`
 
   width: 408px;
   height: 56px;
@@ -171,8 +182,6 @@ const TextChannelButton = styled.button<{ checked: boolean }>`
   }`
           : ""
   }
-
-
 `;
 
 const TextChannelH4 = styled.h4`
@@ -232,4 +241,4 @@ const Footer = styled.footer`
 
 /* CSS */
 
-export default NewOverlayComponent;
+export default CreateChannelOrGroupComponent;

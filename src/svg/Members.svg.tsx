@@ -1,10 +1,13 @@
 import styled from "styled-components";
 
-function MembersSVG() {
+type ComponentProps = {
+    as?: any
+}
+
+function MembersSVG({as}: ComponentProps) {
 
     return (
-        <Svg x="0" y="0" width="24" height="24"
-             viewBox="0 0 24 24">
+        <Svg x="0" y="0" as={as} viewBox="0 0 24 24">
             <path fill="currentColor" fillRule="evenodd" clipRule="evenodd"
                   d="M14 8.00598C14 10.211 12.206 12.006 10 12.006C7.795 12.006 6 10.211 6 8.00598C6 5.80098 7.794 4.00598 10 4.00598C12.206 4.00598 14 5.80098 14 8.00598ZM2 19.006C2 15.473 5.29 13.006 10 13.006C14.711 13.006 18 15.473 18 19.006V20.006H2V19.006Z"
             />
@@ -24,7 +27,10 @@ function MembersSVG() {
 
 /* CSS */
 
-const Svg = styled.svg``;
+const Svg = styled.svg`
+  width: 24px;
+  height: 24px;
+`;
 
 /* CSS */
 

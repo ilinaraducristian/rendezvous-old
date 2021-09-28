@@ -34,6 +34,7 @@ import {useMediasoup} from "../../mediasoup/ReactMediasoupProvider";
 import {getUserData, useSocket} from "../../socketio/ReactSocketIOProvider";
 import useAsyncEffect from "../../util/useAsyncEffect";
 import {useLazyLoginQuery} from "../../state-management/apis/http.api";
+import CreateChannelOrGroupComponent from "../overlay/CreateChannelOrGroup.component";
 
 function AppComponent() {
 
@@ -117,6 +118,7 @@ function AppComponent() {
                     overlay === null ||
                     overlayToComponent(overlay)
                 }
+                <CreateChannelOrGroupComponent/>
             </>
         );
 }

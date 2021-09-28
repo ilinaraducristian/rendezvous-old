@@ -65,7 +65,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
                                 return (
                                     <li key={`channel_${channel.id}_user_${i}`}>
                                         <Button type="button" className="btn">
-                                            <AvatarSVG sursa={AvatarPlaceholder} isActive={user.isTalking}/>
+                                            <AvatarSVG url={AvatarPlaceholder} isActive={user.isTalking}/>
                                             <span>{`${user.user.firstName} ${user.user.lastName}`}</span>
                                         </Button>
                                     </li>

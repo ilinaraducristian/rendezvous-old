@@ -43,7 +43,7 @@ function SecondPanelFooterComponent() {
                         <MicrophoneSVG isMuted={isMuted}/>
                     </Button>
                     <Button type="button" className="btn">
-                        <HeadphonesSVG/>
+                        <HeadphonesSVG isMuted={false}/>
                     </Button>
                     <Button type="button" className="btn"
                             onClick={() => dispatch(showSettings(undefined))}

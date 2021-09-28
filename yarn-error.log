@@ -1268,7 +1268,7 @@ Lockfile:
     dependencies:
       regenerator-runtime "^0.13.4"
   
-  "@babel/runtime@^7.5.1", "@babel/runtime@^7.9.0":
+  "@babel/runtime@^7.13.10", "@babel/runtime@^7.5.1", "@babel/runtime@^7.9.0":
     version "7.15.4"
     resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.15.4.tgz#fd17d16bfdf878e6dd02d19753a39fa8a8d9c84a"
     integrity sha512-99catp6bHCaxr4sJ/DbTGgHS4+Rs2RVd2g7iOap6SLGPDknRK9ztKNsE/Fg6QhSeh1FGE5f6gHGQmvvn3I3xhw==
@@ -1363,6 +1363,22 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-10.1.0.tgz#f0950bba18819512d42f7197e56c518aa491cf18"
     integrity sha512-ij4wRiunFfaJxjB0BdrYHIH8FxBJpOwNPhhAcunlmPdXudL1WQV1qoP9un6JsEBAgQH+7UXyyjh0g7jTxXK6tg==
   
+  "@emotion/cache@^11.4.0":
+    version "11.4.0"
+    resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-11.4.0.tgz#293fc9d9a7a38b9aad8e9337e5014366c3b09ac0"
+    integrity sha512-Zx70bjE7LErRO9OaZrhf22Qye1y4F7iDl+ITjet0J+i+B88PrAOBkKvaAWhxsZf72tDLajwCgfCjJ2dvH77C3g==
+    dependencies:
+      "@emotion/memoize" "^0.7.4"
+      "@emotion/sheet" "^1.0.0"
+      "@emotion/utils" "^1.0.0"
+      "@emotion/weak-memoize" "^0.2.5"
+      stylis "^4.0.3"
+  
+  "@emotion/hash@^0.8.0":
+    version "0.8.0"
+    resolved "https://registry.yarnpkg.com/@emotion/hash/-/hash-0.8.0.tgz#bbbff68978fefdbe68ccb533bc8cbe1d1afb5413"
+    integrity sha512-kBJtf7PH6aWwZ6fka3zQ0p6SBYzx4fl1LoZXE2RrnYST9Xljm7WfKJrU4g/Xr3Beg72MLrp1AWNUmuYJTL7Cow==
+  
   "@emotion/is-prop-valid@^0.8.8":
     version "0.8.8"
     resolved "https://registry.yarnpkg.com/@emotion/is-prop-valid/-/is-prop-valid-0.8.8.tgz#db28b1c4368a259b60a97311d6a952d4fd01ac1a"
@@ -1375,15 +1391,59 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.7.4.tgz#19bf0f5af19149111c40d98bb0cf82119f5d9eeb"
     integrity sha512-Ja/Vfqe3HpuzRsG1oBtWTHk2PGZ7GR+2Vz5iYGelAw8dx32K0y7PjVuxK6z1nMpZOqAFsRUPCkK1YjJ56qJlgw==
   
+  "@emotion/memoize@^0.7.4":
+    version "0.7.5"
+    resolved "https://registry.yarnpkg.com/@emotion/memoize/-/memoize-0.7.5.tgz#2c40f81449a4e554e9fc6396910ed4843ec2be50"
+    integrity sha512-igX9a37DR2ZPGYtV6suZ6whr8pTFtyHL3K/oLUotxpSVO2ASaprmAe2Dkq7tBo7CRY7MMDrAa9nuQP9/YG8FxQ==
+  
+  "@emotion/react@^11.4.1":
+    version "11.4.1"
+    resolved "https://registry.yarnpkg.com/@emotion/react/-/react-11.4.1.tgz#a1b0b767b5bad57515ffb0cad9349614d27f4d57"
+    integrity sha512-pRegcsuGYj4FCdZN6j5vqCALkNytdrKw3TZMekTzNXixRg4wkLsU5QEaBG5LC6l01Vppxlp7FE3aTHpIG5phLg==
+    dependencies:
+      "@babel/runtime" "^7.13.10"
+      "@emotion/cache" "^11.4.0"
+      "@emotion/serialize" "^1.0.2"
+      "@emotion/sheet" "^1.0.2"
+      "@emotion/utils" "^1.0.0"
+      "@emotion/weak-memoize" "^0.2.5"
+      hoist-non-react-statics "^3.3.1"
+  
+  "@emotion/serialize@^1.0.2":
+    version "1.0.2"
+    resolved "https://registry.yarnpkg.com/@emotion/serialize/-/serialize-1.0.2.tgz#77cb21a0571c9f68eb66087754a65fa97bfcd965"
+    integrity sha512-95MgNJ9+/ajxU7QIAruiOAdYNjxZX7G2mhgrtDWswA21VviYIRP1R5QilZ/bDY42xiKsaktP4egJb3QdYQZi1A==
+    dependencies:
+      "@emotion/hash" "^0.8.0"
+      "@emotion/memoize" "^0.7.4"
+      "@emotion/unitless" "^0.7.5"
+      "@emotion/utils" "^1.0.0"
+      csstype "^3.0.2"
+  
+  "@emotion/sheet@^1.0.0", "@emotion/sheet@^1.0.2":
+    version "1.0.2"
+    resolved "https://registry.yarnpkg.com/@emotion/sheet/-/sheet-1.0.2.tgz#1d9ffde531714ba28e62dac6a996a8b1089719d0"
+    integrity sha512-QQPB1B70JEVUHuNtzjHftMGv6eC3Y9wqavyarj4x4lg47RACkeSfNo5pxIOKizwS9AEFLohsqoaxGQj4p0vSIw==
+  
   "@emotion/stylis@^0.8.4":
     version "0.8.5"
     resolved "https://registry.yarnpkg.com/@emotion/stylis/-/stylis-0.8.5.tgz#deacb389bd6ee77d1e7fcaccce9e16c5c7e78e04"
     integrity sha512-h6KtPihKFn3T9fuIrwvXXUOwlx3rfUvfZIcP5a6rh8Y7zjE3O06hT5Ss4S/YI1AYhuZ1kjaE/5EaOOI2NqSylQ==
   
-  "@emotion/unitless@^0.7.4":
+  "@emotion/unitless@^0.7.4", "@emotion/unitless@^0.7.5":
     version "0.7.5"
     resolved "https://registry.yarnpkg.com/@emotion/unitless/-/unitless-0.7.5.tgz#77211291c1900a700b8a78cfafda3160d76949ed"
     integrity sha512-OWORNpfjMsSSUBVrRBVGECkhWcULOAJz9ZW8uK9qgxD+87M7jHRcvh/A96XXNhXTLmKcoYSQtBEX7lHMO7YRwg==
+  
+  "@emotion/utils@^1.0.0":
+    version "1.0.0"
+    resolved "https://registry.yarnpkg.com/@emotion/utils/-/utils-1.0.0.tgz#abe06a83160b10570816c913990245813a2fd6af"
+    integrity sha512-mQC2b3XLDs6QCW+pDQDiyO/EdGZYOygE8s5N5rrzjSI4M3IejPE/JPndCBwRT9z982aqQNi6beWs1UeayrQxxA==
+  
+  "@emotion/weak-memoize@^0.2.5":
+    version "0.2.5"
+    resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
+    integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
   
   "@eslint/eslintrc@^0.3.0":
     version "0.3.0"
@@ -3889,7 +3949,7 @@ Lockfile:
     resolved "https://registry.yarnpkg.com/commondir/-/commondir-1.0.1.tgz#ddd800da0c66127393cca5950ea968a3aaf1253b"
     integrity sha1-3dgA2gxmEnOTzKWVDqloo6rxJTs=
   
-  component-emitter@^1.2.1, component-emitter@^1.3.0, component-emitter@~1.3.0:
+  component-emitter@^1.2.1, component-emitter@~1.3.0:
     version "1.3.0"
     resolved "https://registry.yarnpkg.com/component-emitter/-/component-emitter-1.3.0.tgz#16e4070fba8ae29b679f2215853ee181ab2eabc0"
     integrity sha512-Rd3se6QB+sO1TwqZjscQrurpEPIfO0/yYnSin6Q/rD3mOutHvUrCAhJub3r90uNb+SESBuE0QYoB90YdfatsRg==
@@ -6064,7 +6124,7 @@ Lockfile:
       minimalistic-assert "^1.0.0"
       minimalistic-crypto-utils "^1.0.1"
   
-  hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.2:
+  hoist-non-react-statics@^3.0.0, hoist-non-react-statics@^3.3.0, hoist-non-react-statics@^3.3.1, hoist-non-react-statics@^3.3.2:
     version "3.3.2"
     resolved "https://registry.yarnpkg.com/hoist-non-react-statics/-/hoist-non-react-statics-3.3.2.tgz#ece0acaf71d62c2969c2ec59feff42a4b1a85b45"
     integrity sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==
@@ -10679,7 +10739,7 @@ Lockfile:
       source-map-resolve "^0.5.0"
       use "^3.1.0"
   
-  socket.io-client@^4.1.3, socket.io-client@^4.2.0:
+  socket.io-client@^4.2.0:
     version "4.2.0"
     resolved "https://registry.yarnpkg.com/socket.io-client/-/socket.io-client-4.2.0.tgz#195feed3de40283b1ae3f7d02cf91d3eb2c905c1"
     integrity sha512-3GJ2KMh7inJUNAOjgf8NaKJZJa9uRyfryh2LrVJyKyxmzoXlfW9DeDNqylJn0ovOFt4e/kRLNWzMt/YqqEWYSA==
@@ -10692,13 +10752,6 @@ Lockfile:
       parseuri "0.0.6"
       socket.io-parser "~4.0.4"
   
-  socket.io-mock@^1.3.2:
-    version "1.3.2"
-    resolved "https://registry.yarnpkg.com/socket.io-mock/-/socket.io-mock-1.3.2.tgz#3f6f56f9bc2a2852783bd8aae85159def5cd1942"
-    integrity sha512-p4MQBue3NAR8bXIHynRJxK/C+J3I3NpnnpgjptgLFSWv4u9Bdkubf2t0GCmyLmUTi03up0Cx/hQwzQfOpD187g==
-    dependencies:
-      component-emitter "^1.3.0"
-  
   socket.io-parser@~4.0.4:
     version "4.0.4"
     resolved "https://registry.yarnpkg.com/socket.io-parser/-/socket.io-parser-4.0.4.tgz#9ea21b0d61508d18196ef04a2c6b9ab630f4c2b0"
@@ -10707,15 +10760,6 @@ Lockfile:
       "@types/component-emitter" "^1.2.10"
       component-emitter "~1.3.0"
       debug "~4.3.1"
-  
-  socket.io-react-hook@^1.0.12:
-    version "1.0.12"
-    resolved "https://registry.yarnpkg.com/socket.io-react-hook/-/socket.io-react-hook-1.0.12.tgz#40c6334522b723ad32d490e3d8bbf47007285212"
-    integrity sha512-mtrnVH4aFdVRrV0lMs19882b2Rn/JFiEi80H5IHdUZi62asn+h8n1+F3M/fEpdBhMl0t03pSrTCZSXyTHpBkRw==
-    dependencies:
-      parseuri "0.0.6"
-      socket.io-client "^4.1.3"
-      socket.io-mock "^1.3.2"
   
   sockjs-client@^1.5.0:
     version "1.5.0"
@@ -11137,6 +11181,11 @@ Lockfile:
       browserslist "^4.0.0"
       postcss "^7.0.0"
       postcss-selector-parser "^3.0.0"
+  
+  stylis@^4.0.3:
+    version "4.0.10"
+    resolved "https://registry.yarnpkg.com/stylis/-/stylis-4.0.10.tgz#446512d1097197ab3f02fb3c258358c3f7a14240"
+    integrity sha512-m3k+dk7QeJw660eIKRRn3xPF6uuvHs/FFzjX3HQ5ove0qYsiygoAhwn5a3IYKaZPo5LrYD0rfVmtv1gNY1uYwg==
   
   supports-color@^5.3.0, supports-color@^5.5.0:
     version "5.5.0"

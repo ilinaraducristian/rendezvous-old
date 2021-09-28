@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-const AvatarSVG = styled.div<{ sursa: any, isActive: boolean }>`
+const AvatarSVG = styled.div<{ url: any, isActive: boolean }>`
   width: 24px;
   height: 24px;
   border: 0;
   border-radius: 50%;
-  background-image: url(${props => props.sursa});
+  background-image: url(${props => props.url});
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-size: 100%;

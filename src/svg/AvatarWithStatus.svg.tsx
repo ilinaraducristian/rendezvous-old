@@ -1,17 +1,17 @@
 import styled from "styled-components";
 import AvatarPlaceholder from "../assets/avatar-placeholder.png";
-import {ReactNode} from "react";
 
 type ComponentProps = {
+    as?: any,
     src?: string;
     width?: string,
     height?: string
 }
 
-function AvatarWithStatusSVG({src, width, height}: ComponentProps) {
+function AvatarWithStatusSVG({src, as}: ComponentProps) {
 
     return (
-        <Svg width={width || "40"} height={height || "32"} viewBox="0 0 40 32">
+        <Svg as={as} viewBox="0 0 40 32">
             <mask id="mask" width="32" height="32">
                 <circle cx="16" cy="16" r="16" fill="white"/>
                 <rect color="black" x="19" y="19" width="16" height="16" rx="8" ry="8"/>
@@ -39,18 +39,20 @@ function AvatarWithStatusSVG({src, width, height}: ComponentProps) {
 
 /* CSS */
 
-const Polygon = styled.polygon`
-  transform: scale(0) translate(13.125 10);
-  transform-origin: 13.125px 10px 0;
-`
+const Svg = styled.svg`
+  width: 40px;
+  height: 32px;
+`;
 
 const Img = styled.img`
   width: 100%;
   height: 100%;
+`;
 
-`
-
-const Svg = styled.svg<{ children: ReactNode }>``;
+const Polygon = styled.polygon`
+  transform: scale(0) translate(13.125 10);
+  transform-origin: 13.125px 10px 0;
+`;
 
 /* CSS */
 
