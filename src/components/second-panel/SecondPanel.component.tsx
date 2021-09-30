@@ -5,26 +5,31 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import {useAppSelector} from "state-management/store";
 import DropdownComponent from "components/dropdown/Dropdown.component";
 import GroupsListComponent from "components/group/GroupsList.component";
-import styled from "styled-components";
-import {selectSecondPanelBody, selectSelectedServer} from "state-management/selectors/data.selector";
+import {
+    selectJoinedChannel,
+    selectSecondPanelBody,
+    selectSelectedServer,
+} from "state-management/selectors/data.selector";
 import FriendsListComponent from "components/friend/FriendsList/FriendsList.component";
 import {SecondPanelBodyTypes} from "types/UISelectionModes";
 
 import SecondPanelFooterComponent from "./SecondPanelFooter.component";
 import SecondPanelHeaderComponent from "./SecondPanelHeader.component";
 import SecondPanelVoiceComponent from "./SecondPanelVoice.component";
+import styles from "./SecondPanel.module.css";
 
 function SecondPanelComponent() {
 
     const [isDropdownShown, setIsDropdownShown] = useState(false);
     const selectedServer = useAppSelector(selectSelectedServer);
     const secondPanelBody = useAppSelector(selectSecondPanelBody);
+    const joinedChannel = useAppSelector(selectJoinedChannel);
 
     return (
-        <SecondPanelContainer>
+        <div className={styles.secondPanelContainer}>
             <SecondPanelHeaderComponent isDropdownShown={isDropdownShown} setIsDropdownShown={setIsDropdownShown}/>
             {!isDropdownShown || <DropdownComponent setIsDropdownShown={setIsDropdownShown}/>}
-            <SecondPanelBody>
+            <div className={styles.secondPanelBody}>
                 {
                     secondPanelBody !== SecondPanelBodyTypes.channels ||
                     <DndProvider backend={HTML5Backend}>
@@ -42,31 +47,15 @@ function SecondPanelComponent() {
                     secondPanelBody !== SecondPanelBodyTypes.friends ||
                     <FriendsListComponent/>
                 }
-            </SecondPanelBody>
-            <SecondPanelVoiceComponent/>
+            </div>
+            {
+                joinedChannel === null ||
+                <SecondPanelVoiceComponent/>
+            }
             <SecondPanelFooterComponent/>
-        </SecondPanelContainer>
+        </div>
     );
 
 }
-
-
-/* CSS */
-
-const SecondPanelContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-3rd);
-  width: 240px;
-  min-width: 240px;
-  max-width: 240px;
-`;
-
-const SecondPanelBody = styled.div`
-  flex-grow: 1;
-  overflow-y: auto;
-`;
-
-/* CSS */
 
 export default SecondPanelComponent;

@@ -4,7 +4,7 @@ import {useAppDispatch, useAppSelector} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay.component";
 import styled from "styled-components";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import XSVGSvg from "svg/XSVG/XSVG.svg";
+import XSVG from "svg/XSVG/X.svg";
 
 type ComponentProps = {
     invitation: string
@@ -35,7 +35,7 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
             <Container>
                 <FirstRow>
                     <Span1>INVITE FRIENDS TO {selectedServer?.name}</Span1>
-                    <button className="btn" type="button" onClick={close}><XSVGSvg/></button>
+                    <button className="btn" type="button" onClick={close}><XSVG/></button>
                 </FirstRow>
                 <H5>SEND A SERVER INVITE LINK TO A FRIEND</H5>
                 <ThirdRow>

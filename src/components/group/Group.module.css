@@ -1,0 +1,15 @@
+.button {
+    display: flex;
+    flex-grow: 1;
+    color: var(--color-9th)
+}
+
+.div {
+    display: flex;
+    /*flex-direction: column;*/
+    align-items: center;
+}
+
+.buttonCreateChannel {
+    font-size: 1.5em;
+}

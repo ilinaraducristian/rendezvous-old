@@ -15,13 +15,9 @@ import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay.com
 import {
     selectIsBackendInitialized,
     selectIsSettingsShown,
-    selectJoinedChannel,
     selectOverlay,
-    selectSelectedServer,
 } from "state-management/selectors/data.selector";
-import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
-
 import ForthPanelComponent from "components/ForthPanel.component";
 import HeaderComponent from "components/Header.component";
 import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay.component";
@@ -29,7 +25,6 @@ import {OverlayTypes} from "types/UISelectionModes";
 import SettingsPanelComponent from "components/settings/SettingsPanel.component";
 import LoadingComponent from "components/app/Loading/Loading.component";
 import {useKeycloak} from "@react-keycloak/web";
-import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
 import {getUserData, useSocket} from "socketio/ReactSocketIOProvider";
 import useAsyncEffect from "util/useAsyncEffect";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
@@ -38,31 +33,13 @@ import styles from "components/app/App/App.module.css";
 function AppComponent() {
 
     const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
-    const selectedServer = useAppSelector(selectSelectedServer);
     const overlay = useAppSelector(selectOverlay);
-    const joinedChannel = useAppSelector(selectJoinedChannel);
-    const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
     const isSettingsShown = useAppSelector(selectIsSettingsShown);
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const {keycloak, initialized} = useKeycloak();
-    const {createConsumer, consumers} = useMediasoup();
     const {socket, connected} = useSocket();
     const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
-
-    useEffect(() => {
-        if (!initialized || !keycloak.authenticated) return;
-        if (joinedChannel === null) {
-            // TODO disconnect
-            return;
-        }
-
-        (async () => {
-            const users = joinedChannelUsers.filter(user => user.userId !== keycloak.subject &&
-                !consumers.find(consumer => user.socketId === consumer.socketId));
-            await Promise.all(users.map(user => createConsumer(user.socketId)));
-        })();
-    }, [consumers, createConsumer, joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
 
     useEffect(() => {
         if (config.offline) return;

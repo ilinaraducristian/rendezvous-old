@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import {forwardRef, useImperativeHandle, useState} from "react";
+import styles from "components/message/PopupContainer/PopupContainer.module.css";
 
 type ComponentProps<T = any> = {
     title: string,
@@ -15,7 +15,7 @@ export type PopupContainerRefType<T = any> = {
 const PopupContainerComponent = forwardRef<PopupContainerRefType, ComponentProps>(({
                                                                                        title,
                                                                                        elements,
-                                                                                       selectElement
+                                                                                       selectElement,
                                                                                    }: ComponentProps, ref) => {
 
     const [selectedElementIndex, setSelectedElementIndex] = useState<number>(0);
@@ -24,21 +24,21 @@ const PopupContainerComponent = forwardRef<PopupContainerRefType, ComponentProps
         move(up: boolean) {
             if (up) {
                 if (selectedElementIndex - 1 === -1) {
-                    setSelectedElementIndex(elements.length - 1)
+                    setSelectedElementIndex(elements.length - 1);
                 } else {
-                    setSelectedElementIndex(selectedElementIndex - 1)
+                    setSelectedElementIndex(selectedElementIndex - 1);
                 }
             } else {
                 if (selectedElementIndex + 1 === elements.length) {
-                    setSelectedElementIndex(0)
+                    setSelectedElementIndex(0);
                 } else {
-                    setSelectedElementIndex(selectedElementIndex + 1)
+                    setSelectedElementIndex(selectedElementIndex + 1);
                 }
             }
         },
         getSelectedElement() {
             return elements[selectedElementIndex];
-        }
+        },
     }));
 
     function onMouseEnter(index: number) {
@@ -46,44 +46,26 @@ const PopupContainerComponent = forwardRef<PopupContainerRefType, ComponentProps
     }
 
     return (
-        <Div>
+        <div className={styles.div}>
             <span>{title}</span>
-            <Ul className="list">
+            <ul className={`list ${styles.ul}`}>
                 {elements.map((element, index) =>
                     (
-                        <Li onMouseEnter={() => onMouseEnter(index)}
+                        <li onMouseEnter={() => onMouseEnter(index)}
                             onMouseUp={(event) => {
                                 event.preventDefault();
-                                selectElement(element)
+                                selectElement(element);
                             }}
-                            className={selectedElementIndex === index ? "selected-popup-item" : ""}
+                            className={`${styles.li} ${selectedElementIndex === index ? styles.liSelected : ""}`}
                             key={`popup-item_${index}`}
                         >
                             {element}
-                        </Li>
+                        </li>
                     ))}
-            </Ul>
-        </Div>
-    )
+            </ul>
+        </div>
+    );
 
 });
-
-const Div = styled.div`
-  background-color: var(--color-3rd);
-  margin: 0 1em 1em 1em;
-  border: solid var(--color-3rd);
-  border-radius: 0.5em;
-  max-height: 22.375em;
-  overflow-y: auto;
-`
-
-const Ul = styled.ul`
-  margin: 1em;
-`
-
-const Li = styled.li`
-  cursor: pointer;
-  margin: 1em 0;
-`
 
 export default PopupContainerComponent;

@@ -8,24 +8,24 @@ import {
     MoveChannelRequest,
     MoveChannelResponse,
     NewChannelRequest,
-    NewChannelResponse
-} from "../dtos/channel.dto";
-import {NewGroupRequest, NewGroupResponse} from "../dtos/group.dto";
+    NewChannelResponse,
+} from "dtos/channel.dto";
+import {NewGroupRequest, NewGroupResponse} from "dtos/group.dto";
 import {
     DeleteMessagesRequest,
     EditMessagesRequest,
     GetMessagesRequest,
     Message,
-    NewMessageRequest
-} from "../dtos/message.dto";
+    NewMessageRequest,
+} from "dtos/message.dto";
 import {
     JoinServerRequest,
     JoinServerResponse,
     NewInvitationRequest,
     NewServerRequest,
-    NewServerResponse
-} from "../dtos/server.dto";
-import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "../dtos/user.dto";
+    NewServerResponse,
+} from "dtos/server.dto";
+import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
     return new Promise(resolve => {

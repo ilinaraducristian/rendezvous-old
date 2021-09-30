@@ -1,0 +1,33 @@
+.emojiContainerDiv {
+    display: flex;
+    justify-content: space-between;
+}
+
+.userContainerDiv {
+    display: flex;
+    gap: 0.5rem
+}
+
+.footer {
+    background-color: var(--color-5th);
+    border-radius: 0.5em;
+    max-height: 12.5em;
+    margin: 0 1em 1.5em 1em;
+    display: flex;
+    align-items: flex-start;
+}
+
+.divEmoji {
+    background-position: 0 0;
+    background-size: 242px 110px;
+    background-repeat: no-repeat;
+    width: 22px;
+    height: 22px;
+    transform: scale(1);
+    filter: grayscale(100%);
+}
+
+.divEmoji:hover {
+    transform: scale(1.14);
+    filter: grayscale(0%);
+}

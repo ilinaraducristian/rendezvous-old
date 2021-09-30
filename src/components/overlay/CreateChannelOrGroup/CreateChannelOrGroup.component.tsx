@@ -4,7 +4,7 @@ import RadioSVG from "svg/Radio/Radio.svg";
 import ChannelSVG from "svg/Channel/Channel.svg";
 import {ChannelType} from "dtos/channel.dto";
 import ButtonComponent from "components/ButtonComponent";
-import XSVGSvg from "svg/XSVG/XSVG.svg";
+import XSVG from "svg/XSVG/X.svg";
 import styles from "components/overlay/CreateChannelOrGroup/CreateChannelOrGroup.module.css";
 
 function CreateChannelOrGroupComponent() {
@@ -17,7 +17,7 @@ function CreateChannelOrGroupComponent() {
             <div>
                 <div className={styles.body}>
                     <ButtonComponent className={styles.styledButton}>
-                        <XSVGSvg/>
+                        <XSVG/>
                     </ButtonComponent>
                     <h2 className={styles.h2}>Create {channelType === ChannelType.Voice ? "Voice" : "Text"} Channel</h2>
                     <h5 className={styles.h5}>in Text Channels</h5>

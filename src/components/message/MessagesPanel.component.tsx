@@ -9,16 +9,16 @@ import {
 import styled from "styled-components";
 
 import config from "config";
-import MessageInputContainerComponent from "components/message/MessageInputContainer.component";
+import MessageInputContainerComponent from "components/message/MessageInputContainer/MessageInputContainer.component";
 import {
     selectSelectedChannel,
     selectSelectedFriendship,
     selectSelectedFriendshipMessages,
-    selectUsers
+    selectUsers,
 } from "state-management/selectors/data.selector";
 import {selectSelectedChannelMessages} from "state-management/selectors/channel.selector";
-import {Message} from "../../dtos/message.dto";
-import {getMessages} from "../../socketio/ReactSocketIOProvider";
+import {Message} from "dtos/message.dto";
+import {getMessages} from "socketio/ReactSocketIOProvider";
 
 function MessagesPanelComponent() {
 

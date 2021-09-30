@@ -4,7 +4,7 @@ import styled from "styled-components";
 import {FriendRequest} from "dtos/friend.dto";
 import {useCallback} from "react";
 import CheckSVG from "svg/Check/Check.svg";
-import XSVGSvg from "svg/XSVG/XSVG.svg";
+import XSVG from "svg/XSVG/X.svg";
 import {acceptFriendRequest, rejectFriendRequest} from "socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
@@ -47,7 +47,7 @@ function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
                         </Button>
                         <Button type="button" className="btn" acceptOrReject={false}
                                 onClick={() => rejectFriendRequestCallback(friendRequest.userId, friendRequest.id)}>
-                            <XSVGSvg/>
+                            <XSVG/>
                         </Button>
                     </>
                 }

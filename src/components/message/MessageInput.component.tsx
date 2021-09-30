@@ -2,7 +2,7 @@ import styled from "styled-components";
 import {ClipboardEvent, EventHandler, forwardRef, KeyboardEvent, MouseEvent, useCallback} from "react";
 import {useAppDispatch} from "state-management/store";
 import {setOverlay} from "state-management/slices/data/data.slice";
-import {OverlayTypes} from "../../types/UISelectionModes";
+import {OverlayTypes} from "types/UISelectionModes";
 import fileToDataUrl from "../../util/file-to-data-url";
 
 type ComponentProps = {

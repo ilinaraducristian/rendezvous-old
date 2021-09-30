@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {SecondPanelFooterTypes} from "types/UISelectionModes";
 import AvatarWithStatusSVG from "svg/AvatarWithStatus/AvatarWithStatus.svg";
 import MicrophoneSVG from "svg/Microphone/Microphone.svg";
@@ -11,65 +10,59 @@ import {useEffect, useState} from "react";
 import {useKeycloak} from "@react-keycloak/web";
 import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
 import {pauseProducer} from "socketio/ReactSocketIOProvider";
+import ButtonComponent from "components/ButtonComponent";
+import styles from "./SecondPanelFooter.module.css";
+import {useCallbackDebounced} from "util/debounce";
 
 function SecondPanelFooterComponent() {
 
     const secondPanelFooter = useAppSelector(selectSecondPanelFooter);
-    const {isMuted} = useMediasoup();
+    const {isMuted: isMicrophoneMuted, audioContext} = useMediasoup();
     const [name, setName] = useState("");
     const dispatch = useAppDispatch();
     const {keycloak, initialized} = useKeycloak();
+    const [isDeafen, setIsDeafen] = useState(false);
 
     useEffect(() => {
         if (!initialized || !keycloak.authenticated) return;
         setName((keycloak.userInfo as any).name);
     }, [keycloak, initialized]);
 
-    async function toggleMute() {
-        await pauseProducer();
-        // dispatch(toggleMuteAction(undefined));
-    }
+    const toggleMute = useCallbackDebounced(pauseProducer, []);
+
+    const toggleDeafen = useCallbackDebounced(async () => {
+        if (audioContext === undefined) return;
+        if (audioContext.state === "running") {
+            await audioContext.suspend();
+            setIsDeafen(true);
+        } else if (audioContext.state === "suspended") {
+            await audioContext.resume();
+            setIsDeafen(false);
+        }
+    }, []);
 
     return (
-        <Footer>
+        <footer className={styles.footer}>
             {
                 secondPanelFooter !== SecondPanelFooterTypes.generic ||
                 <>
                     <AvatarWithStatusSVG/>
-                    <Username> {name} </Username>
-                    <Button type="button" className="btn"
-                            onClick={toggleMute}
+                    <span className={styles.span}> {name} </span>
+                    <ButtonComponent className={styles.button} onClick={toggleMute}
                     >
-                        <MicrophoneSVG isMuted={isMuted}/>
-                    </Button>
-                    <Button type="button" className="btn">
-                        <HeadphonesSVG isMuted={false}/>
-                    </Button>
-                    <Button type="button" className="btn"
-                            onClick={() => dispatch(showSettings(undefined))}
+                        <MicrophoneSVG isMuted={isMicrophoneMuted}/>
+                    </ButtonComponent>
+                    <ButtonComponent className={styles.button} onClick={toggleDeafen}>
+                        <HeadphonesSVG isMuted={isDeafen}/>
+                    </ButtonComponent>
+                    <ButtonComponent className={styles.button} onClick={() => dispatch(showSettings(undefined))}
                     >
                         <GearSVG/>
-                    </Button>
+                    </ButtonComponent>
                 </>
             }
-        </Footer>
-    )
+        </footer>
+    );
 }
 
-const Button = styled.button`
-  margin: 0 4px;
-`
-
-const Footer = styled.footer`
-  color: white;
-  background-color: var(--color-13th);
-  height: 52px;
-  min-height: 52px;
-  display: flex;
-  align-items: center;
-`
-const Username = styled.span`
-  color: white;
-  flex-grow: 1;
-`
 export default SecondPanelFooterComponent;

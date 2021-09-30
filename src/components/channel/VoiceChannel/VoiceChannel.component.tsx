@@ -1,4 +1,4 @@
-import {useCallback, useRef} from "react";
+import {useRef} from "react";
 import {useDrag} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
 import {addChannelUsers, joinVoiceChannel as joinVoiceChannelAction} from "state-management/slices/data/data.slice";
@@ -13,6 +13,7 @@ import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
 import {joinVoiceChannel} from "socketio/ReactSocketIOProvider";
 import styles from "components/channel/VoiceChannel/VoiceChannel.module.css";
 import ButtonComponent from "components/ButtonComponent";
+import {useCallbackDebounced} from "util/debounce";
 
 type ComponentProps = {
     channel: VoiceChannel
@@ -26,7 +27,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
     const {createProducer} = useMediasoup();
 
-    const selectChannel = useCallback(async () => {
+    const selectChannel = useCallbackDebounced(async () => {
         if (config.offline) return;
         if (joined.current) return;
         joined.current = true;

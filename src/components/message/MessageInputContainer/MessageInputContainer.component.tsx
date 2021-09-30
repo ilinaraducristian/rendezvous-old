@@ -1,18 +1,18 @@
 import PlusSVG from "svg/Plus.svg";
 import MessageInputComponent from "components/message/MessageInput.component";
 import GIFSVG from "svg/GIF.svg";
-import styled from "styled-components";
 import {KeyboardEvent, useCallback, useEffect, useRef, useState} from "react";
 import {emojis} from "util/trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel, selectSelectedFriendship, selectUsers} from "state-management/selectors/data.selector";
-
-import PopupContainerComponent, {PopupContainerRefType} from "./PopupContainer.component";
+import PopupContainerComponent, {PopupContainerRefType} from "components/message/PopupContainer/PopupContainer.component";
 import {stringSimilarity} from "string-similarity-js";
-import {selectSelectedServerMembers} from "../../state-management/selectors/server.selector";
-import {NewMessageRequest} from "../../dtos/message.dto";
-import {sendMessage} from "../../socketio/ReactSocketIOProvider";
+import {selectSelectedServerMembers} from "state-management/selectors/server.selector";
+import {NewMessageRequest} from "dtos/message.dto";
+import {sendMessage} from "socketio/ReactSocketIOProvider";
+import styles from "components/message/MessageInputContainer/MessageInputContainer.module.css";
+import ButtonComponent from "components/ButtonComponent";
 
 type ComponentProps = {
     isReplying: boolean,
@@ -51,7 +51,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             text: message,
             isReply: false,
             replyId: null,
-            image: null
+            image: null,
         };
         if (isReplying) {
             if (replyId === undefined) return;
@@ -61,7 +61,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         const dataMessage = await sendMessage(payload);
         messageSent();
         dispatch(addMessages([dataMessage]));
-    }, [messageSent, dispatch, isReplying, replyId, selectedChannel, selectedFriendship])
+    }, [messageSent, dispatch, isReplying, replyId, selectedChannel, selectedFriendship]);
 
     const replaceTextWithEmoji = useCallback((emojiId: number) => {
         const selection = getSelection();
@@ -84,7 +84,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
 
         if (event.key.includes("Enter")) {
             if (popupType === null) {
-                sendMessageCallback(event).then()
+                sendMessageCallback(event).then();
                 return;
             }
             if (popupRef.current === null) return;
@@ -93,37 +93,37 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
                 replaceTextWithEmoji(popupRef.current.getSelectedElement().props.emojiId);
             }
             return;
-        } else if (['ArrowUp', 'ArrowDown'].includes(event.key)) {
+        } else if (["ArrowUp", "ArrowDown"].includes(event.key)) {
             if (popupType === null || popupRef.current === null) return;
             event.preventDefault();
-            popupRef.current.move(event.key === 'ArrowUp');
+            popupRef.current.move(event.key === "ArrowUp");
         }
-    }, [popupType, sendMessageCallback, replaceTextWithEmoji])
+    }, [popupType, sendMessageCallback, replaceTextWithEmoji]);
 
     const displayMentions = useCallback((matchedString: string) => {
         const usersToDisplay = members
             .map(member => users.find(user => user.id === member.userId))
             .map((user) => ({
                 ...user,
-                score: stringSimilarity(`${user?.firstName} + ${user?.lastName}`, matchedString)
+                score: stringSimilarity(`${user?.firstName} + ${user?.lastName}`, matchedString),
             }))
             .filter(({score}) => score > 0.15)
             .sort((a, b) => b.score - a.score)
             .map((user, index) => (
-                <UserContainerDiv key={`popup_user_${index}`} userId={user.id || ''}>
+                <div className={styles.userContainerDiv} key={`popup_user_${index}`}>
                     <span>{user.firstName}</span>
                     <span>{user.lastName}</span>
-                </UserContainerDiv>
+                </div>
             ));
         if (usersToDisplay.length) return setPopupType(null);
-        setPopupList(usersToDisplay)
-        setPopupType(PopupType.emojisAndMentions)
+        setPopupList(usersToDisplay);
+        setPopupType(PopupType.emojisAndMentions);
     }, [members, users]);
 
     const checkShouldDisplayCommandPallet = useCallback((text: string): boolean => {
         const forwardSlashRegexMatches = text.match(/\//g);
         if (forwardSlashRegexMatches === null || forwardSlashRegexMatches.length > 1) return false;
-        return false
+        return false;
     }, []);
 
     const checkShouldDisplayPopupBasedOnChar = useCallback((text: string, char: string) => {
@@ -133,7 +133,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         const lastIndexOfChar = textUntilCursor.lastIndexOf(char);
         if (lastIndexOfChar === -1) return;
         const charBeforeChar = textUntilCursor[lastIndexOfChar - 1];
-        if (charBeforeChar !== undefined && charBeforeChar !== ' ') return;
+        if (charBeforeChar !== undefined && charBeforeChar !== " ") return;
         const textFromCharToCursor = textUntilCursor.substring(lastIndexOfChar + 1);
         if (textFromCharToCursor.length < 2) return;
         const match = textFromCharToCursor.match(/^[a-z0-9_]+$/);
@@ -142,54 +142,54 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     }, [cursorPosition]);
 
     const displayCommandPallet = useCallback(() => {
-        setPopupType(PopupType.commands)
+        setPopupType(PopupType.commands);
     }, []);
 
     const displayEmojisList = useCallback((matchedString: string) => {
         const emojisToDisplay = emojis.map(emoji => ({
             ...emoji,
-            score: stringSimilarity(emoji.shortcut, matchedString)
+            score: stringSimilarity(emoji.shortcut, matchedString),
         }))
             .filter(({score}) => score > 0.15)
             .sort((a, b) => b.score - a.score)
             .map((emoji, index) => (
-                <EmojiContainerDiv key={`emoji_${index}`} emojiId={emoji.id}>
+                <div className={styles.emojiContainerDiv} key={`emoji_${index}`}>
                     <div>{emoji.emoji}</div>
                     <div>{emoji.shortcut}</div>
-                </EmojiContainerDiv>
+                </div>
             ));
         if (emojisToDisplay.length === 0) return setPopupType(null);
-        setPopupList(emojisToDisplay)
-        setPopupType(PopupType.emojisAndMentions)
+        setPopupList(emojisToDisplay);
+        setPopupType(PopupType.emojisAndMentions);
     }, []);
 
     useEffect(() => {
         if (inputRef.current === null) return;
         const text = inputRef.current.innerText;
         if (text.length === 0) {
-            setPopupType(null)
+            setPopupType(null);
             return;
         }
         const shouldDisplayCommandPallet = checkShouldDisplayCommandPallet(text);
         if (shouldDisplayCommandPallet) return displayCommandPallet();
-        let matchedString = checkShouldDisplayPopupBasedOnChar(text, ':');
+        let matchedString = checkShouldDisplayPopupBasedOnChar(text, ":");
         if (matchedString !== undefined) return displayEmojisList(matchedString);
-        matchedString = checkShouldDisplayPopupBasedOnChar(text, '@');
+        matchedString = checkShouldDisplayPopupBasedOnChar(text, "@");
         if (matchedString !== undefined) return displayMentions(matchedString);
-        setPopupType(null)
+        setPopupType(null);
     }, [
         displayEmojisList,
         displayCommandPallet,
         displayMentions,
         cursorPosition,
         checkShouldDisplayCommandPallet,
-        checkShouldDisplayPopupBasedOnChar
-    ])
+        checkShouldDisplayPopupBasedOnChar,
+    ]);
 
     const updateCursorPosition = useCallback(() => {
         const selection = getSelection();
         if (selection !== null) {
-            setCursorPosition(selection.anchorOffset)
+            setCursorPosition(selection.anchorOffset);
         }
     }, []);
 
@@ -200,67 +200,28 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             selectElement={element => {
                 replaceTextWithEmoji(element.props.emojiId);
             }}
-            title={'EMOJI MATCHING'}
+            title={"EMOJI MATCHING"}
             elements={popupList}
         />}
-        <Footer>
-            <button type="button" className="btn btn--off btn--hover btn__icon">
+        <footer className={styles.footer}>
+            <ButtonComponent type="button" className="btn--off btn--hover btn__icon">
                 <PlusSVG/>
-            </button>
+            </ButtonComponent>
             <MessageInputComponent
                 ref={inputRef}
                 onKeyDown={onKeyDown}
                 onKeyUp={updateCursorPosition}
                 onClick={updateCursorPosition}
             />
-            <button type="button" className="btn btn--off btn--hover btn__icon">
+            <ButtonComponent className="btn--off btn--hover btn__icon">
                 <GIFSVG/>
-            </button>
+            </ButtonComponent>
             <button type="button" className="btn btn__icon">
-                <DivEmoji emoji={"emojis.png"}/>
+                <div className={styles.divEmoji} style={{backgroundImage: "emojis.png"}}/>
             </button>
-        </Footer>
+        </footer>
     </>;
 
 }
-
-/* CSS */
-
-const EmojiContainerDiv = styled.div<{ emojiId: number }>`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const UserContainerDiv = styled.div<{ userId: string }>`
-  display: flex;
-  gap: 0.5rem
-`;
-
-const Footer = styled.footer`
-  background-color: var(--color-5th);
-  border-radius: 0.5em;
-  max-height: 12.5em;
-  margin: 0 1em 1.5em 1em;
-  display: flex;
-  align-items: flex-start;
-`;
-
-const DivEmoji = styled.div<{ emoji: string }>`
-  background-image: url(${props => props.emoji});
-  background-position: 0 0;
-  background-size: 242px 110px;
-  background-repeat: no-repeat;
-  width: 22px;
-  height: 22px;
-  transform: scale(1);
-  filter: grayscale(100%);
-
-  &:hover {
-    transform: scale(1.14);
-    filter: grayscale(0%);
-  }
-`;
-
-/* CSS */
 
 export default MessageInputContainerComponent;

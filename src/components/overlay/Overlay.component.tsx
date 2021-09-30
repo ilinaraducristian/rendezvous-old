@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import {ReactNode} from "react";
-import XSVGSvg from "svg/XSVG/XSVG.svg";
+import XSVG from "svg/XSVG/X.svg";
 import {useAppDispatch} from "state-management/store";
 import {setOverlay} from "state-management/slices/data/data.slice";
 
@@ -22,7 +22,7 @@ function OverlayComponent({title, description, children}: ComponentProps) {
         <DivOverlay>
             <DivContainer>
                 <CloseButton type="button" className="btn" onClick={closeOverlay}>
-                    <XSVGSvg/>
+                    <XSVG/>
                 </CloseButton>
                 <Header>
                     {

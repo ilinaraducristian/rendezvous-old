@@ -3,12 +3,12 @@ import {useEffect, useRef, useState} from "react";
 import {useAppDispatch} from "state-management/store";
 import {
     deleteMessage as deleteMessageAction,
-    editMessage as editMessageAction
+    editMessage as editMessageAction,
 } from "state-management/slices/data/data.slice";
 
 import config from "config";
-import {Message} from "../../dtos/message.dto";
-import {deleteMessage, editMessage} from "../../socketio/ReactSocketIOProvider";
+import {Message} from "dtos/message.dto";
+import {deleteMessage, editMessage} from "socketio/ReactSocketIOProvider";
 
 type ComponentProps = {
     message: Message,
@@ -19,14 +19,14 @@ type ComponentProps = {
 function MessageComponent(
     {
         message: {
+            id: messageId,
             serverId,
             channelId,
-            id: messageId,
             timestamp,
             text,
             isReply,
             replyId,
-            image
+            image,
         },
         username,
         reply,
@@ -41,10 +41,10 @@ function MessageComponent(
     const [gifs, setGifs] = useState<string[]>([]);
 
     useEffect(() => {
-        const found = text.match(/https:\/\/media.tenor.com\/videos\/[0-9a-zA-Z]{32}\/mp4/g)
+        const found = text.match(/https:\/\/media.tenor.com\/videos\/[0-9a-zA-Z]{32}\/mp4/g);
         if (found === null) return;
-        setGifs(found)
-    }, [text])
+        setGifs(found);
+    }, [text]);
 
     function onMouseEnter() {
         setActions(true);
@@ -72,7 +72,7 @@ function MessageComponent(
                 serverId: serverId || 0,
                 channelId: channelId || 0,
                 messageId,
-                text: textRef.current?.innerText || ""
+                text: textRef.current?.innerText || "",
             });
             dispatch(editMessageAction({serverId, channelId, messageId, text: textRef.current?.innerText}));
             setIsEditing(false);
@@ -134,7 +134,7 @@ function MessageComponent(
                                 onMouseLeave={event => {
                                     (event.target as HTMLVideoElement).pause();
                                 }}
-                            />
+                            />,
                         )
                     }
                 </DivMessageContainer>
@@ -149,7 +149,7 @@ function MessageComponent(
 const Video = styled.video`
   max-width: 20rem;
   max-height: 30rem;
-`
+`;
 
 const DivMessageContainer = styled.div`
   display: flex;
