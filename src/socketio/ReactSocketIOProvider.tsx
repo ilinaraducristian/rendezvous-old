@@ -26,6 +26,19 @@ import {
     NewServerResponse,
 } from "dtos/server.dto";
 import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
+import {useAppDispatch} from "state-management/store";
+import {notificationSound} from "mediasoup/ReactMediasoupProvider";
+import {
+    addChannel,
+    addChannelUsers,
+    addFriendRequest,
+    addGroup,
+    addMember,
+    addMessages,
+    deleteMessage as deleteMessageAction,
+    deleteServer as deleteServerAction,
+    editMessage as editMessageAction,
+} from "state-management/slices/data/data.slice";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
     return new Promise(resolve => {
@@ -36,22 +49,17 @@ function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: Event
 }
 
 class Socket extends socketio_Socket {
-
     auth: { token?: string } = {};
-
     emitAck = emitAck;
-
 }
 
 const socket: Socket = socketio_io(config.socketIoUrl, {
     autoConnect: false,
     transports: ["websocket"],
-    path: config.production ? '/api/socket.io' : undefined
+    path: config.production ? "/api/socket.io" : undefined,
 }) as Socket;
 
-Object.assign(socket, {emitAck});
-
-socket.auth = {};
+Object.assign(socket, {emitAck, auth: {}});
 
 type InitialObjectProperties = {
     socket: Socket,
@@ -60,7 +68,7 @@ type InitialObjectProperties = {
 
 const initialObject: InitialObjectProperties = {
     socket,
-    connected: false
+    connected: false,
 };
 
 const SocketIOContext = createContext(initialObject);
@@ -68,6 +76,7 @@ const SocketIOContext = createContext(initialObject);
 function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> }) {
 
     const [state, setState] = useState(initialObject);
+    const dispatch = useAppDispatch();
 
     useEffect(() => {
         initialObject.socket.on("connect", () => {
@@ -79,6 +88,51 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
             initialObject.connected = false;
             setState({...initialObject});
         });
+
+        initialObject.socket.on("new_message", (payload) => {
+            dispatch(addMessages([payload]));
+            if (document.hidden) {
+                notificationSound.currentTime = 0;
+                notificationSound.play();
+            }
+        });
+
+        initialObject.socket.on("new_member", (payload) => {
+            dispatch(addMember(payload));
+        });
+
+        initialObject.socket.on("new_channel", (payload) => {
+            dispatch(addChannel(payload));
+        });
+
+        initialObject.socket.on("new_group", (payload) => {
+            dispatch(addGroup(payload));
+        });
+
+        initialObject.socket.on("user_joined_voice-channel", (payload) => {
+            dispatch(addChannelUsers([payload]));
+        });
+
+        initialObject.socket.on("message_edited", (payload) => {
+            dispatch(editMessageAction(payload));
+        });
+
+        initialObject.socket.on("message_deleted", (payload) => {
+            dispatch(deleteMessageAction(payload));
+        });
+
+        initialObject.socket.on("new_friend_request", (payload) => {
+            dispatch(addFriendRequest(payload));
+        });
+
+        initialObject.socket.on("friend_request_accepted", () => {
+            // dispatch(add)
+        });
+
+        initialObject.socket.on("server_deleted", (payload) => {
+            dispatch(deleteServerAction(payload));
+        });
+
         setState({...initialObject});
     }, []);
 
