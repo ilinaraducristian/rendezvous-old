@@ -166,7 +166,8 @@ export const {
     joinVoiceChannel,
     leaveVoiceChannel,
     addChannelUsers,
-    setUserIsTalking
+    removeChannelUsers,
+    setUserIsTalking,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

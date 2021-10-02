@@ -5,7 +5,7 @@ import {addChannelUsers, joinVoiceChannel as joinVoiceChannelAction} from "state
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import config from "config";
 import ChannelButtonComponent from "components/channel/ChannelButton/ChannelButton.component";
-import {selectUsers} from "state-management/selectors/data.selector";
+import {selectJoinedChannel, selectUsers} from "state-management/selectors/data.selector";
 import {VoiceChannel} from "dtos/channel.dto";
 import AvatarPlaceholder from "assets/avatar-placeholder.png";
 import AvatarSVG from "svg/Avatar.svg";
@@ -24,6 +24,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const users = useAppSelector(selectUsers);
     const dispatch = useAppDispatch();
     const joined = useRef(false);
+    const joinedChannel = useAppSelector(selectJoinedChannel);
 
     const {createProducer} = useMediasoup();
 
@@ -31,7 +32,8 @@ function VoiceChannelComponent({channel}: ComponentProps) {
         if (config.offline) return;
         if (joined.current) return;
         joined.current = true;
-        await createProducer();
+        if (joinedChannel === null)
+            await createProducer();
         const usersInVoiceChannel = await joinVoiceChannel({
             serverId: channel.serverId,
             channelId: channel.id,
@@ -53,28 +55,21 @@ function VoiceChannelComponent({channel}: ComponentProps) {
                 channelType={channel.type}
                 channelName={channel.name}
             />
-            {
-                <ul className={`list ${styles.ul}`}>
-                    {
-                        channel.users
-                            .map(_user => ({
-                                isTalking: _user.isTalking,
-                                user: users.find(user => user.id === _user.userId),
-                            }))
-                            .map((user, i) => {
-                                if (user.user === undefined) return <div/>;
-                                return (
-                                    <li key={`channel_${channel.id}_user_${i}`}>
-                                        <ButtonComponent className={styles.button}>
-                                            <AvatarSVG url={AvatarPlaceholder} isActive={user.isTalking}/>
-                                            <span>{`${user.user.firstName} ${user.user.lastName}`}</span>
-                                        </ButtonComponent>
-                                    </li>
-                                );
-                            })
-                    }
-                </ul>
-            }
+            <ul className={`list ${styles.ul}`}>
+                {channel.users
+                    .map((_user, i) => {
+                        const user = users.find(user => user.id === _user.userId);
+                        if (user === undefined) return <div/>;
+                        return (
+                            <li key={`channel_${channel.id}_user_${i}`}>
+                                <ButtonComponent className={styles.button}>
+                                    <AvatarSVG url={AvatarPlaceholder} isActive={joined.current && _user.isTalking}/>
+                                    <span>{`${user.firstName} ${user.lastName}`}</span>
+                                </ButtonComponent>
+                            </li>
+                        );
+                    })}
+            </ul>
         </li>
     );
 

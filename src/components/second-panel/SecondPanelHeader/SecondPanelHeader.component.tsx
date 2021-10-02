@@ -1,10 +1,11 @@
-import styled from "styled-components";
 import {SecondPanelHeaderTypes} from "types/UISelectionModes";
 import {useAppSelector} from "state-management/store";
 import {selectSecondPanelHeader, selectSelectedServer} from "state-management/selectors/data.selector";
 import {Dispatch, SetStateAction} from "react";
 import {ArrowXSVG} from "svg/Arrow/Arrow.svg";
 import FriendSVG from "svg/Friend/Friend.svg";
+import styles from "components/second-panel/SecondPanelHeader/SecondPanelHeader.module.css";
+import ButtonComponent from "components/ButtonComponent";
 
 type ComponentProps = {
     isDropdownShown: boolean,
@@ -22,62 +23,23 @@ function SecondPanelHeaderComponent({isDropdownShown, setIsDropdownShown}: Compo
     }
 
     return (
-        <SecondPanelHeader>
+        <header className={styles.secondPanelHeader}>
             {
                 secondPanelHeader !== SecondPanelHeaderTypes.channel || selectedServer === undefined ||
-                <Button className="btn" type="button" onClick={toggleDropdown}>
-                    <Span>{selectedServer.name}</Span>
+                <ButtonComponent className={styles.button} onClick={toggleDropdown}>
+                    <span className={styles.span}>{selectedServer.name}</span>
                     <ArrowXSVG isCollapsed={!isDropdownShown}/>
-                </Button>
+                </ButtonComponent>
             }
             {
                 secondPanelHeader !== SecondPanelHeaderTypes.friends ||
-                <FriendsButton type="button" className="btn">
+                <ButtonComponent className={styles.friendsButton}>
                     <FriendSVG/>
-                    <Span>Friends</Span>
-                </FriendsButton>
+                    <span className={styles.span}>Friends</span>
+                </ButtonComponent>
             }
-        </SecondPanelHeader>
-    )
+        </header>
+    );
 }
 
-const SecondPanelHeader = styled.header`
-  width: 100%;
-  border-style: none;
-  box-shadow: var(--small-shadow-bar);
-  height: 48px;
-  min-height: 48px;
-`
-
-const Span = styled.span`
-  flex-grow: 1;
-  color: white;
-`;
-
-const Button = styled.button`
-  background: none;
-  font-size: 24px;
-  text-align: left;
-  width: 100%;
-
-  border-style: none;
-  box-shadow: var(--small-shadow-bar);
-  display: flex;
-  align-items: center;
-  height: 32px;
-  color: var(--color-9th)
-`;
-
-
-
-const FriendsButton = styled.button`
-  height: 100%;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  text-align: left;
-  font-size: 18px;
-  gap: 8px;
-  margin-left: 16px;
-`;
 export default SecondPanelHeaderComponent;

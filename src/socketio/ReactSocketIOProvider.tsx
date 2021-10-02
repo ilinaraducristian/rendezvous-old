@@ -38,7 +38,17 @@ import {
     deleteMessage as deleteMessageAction,
     deleteServer as deleteServerAction,
     editMessage as editMessageAction,
+    removeChannelUsers,
 } from "state-management/slices/data/data.slice";
+import {
+    ConnectTransportRequest,
+    CreateConsumerRequest,
+    CreateConsumersResponse,
+    CreateProducerRequest,
+    CreateTransportResponse,
+    ResumeConsumerRequest,
+} from "dtos/mediasoup.dto";
+import {RtpCapabilities} from "mediasoup-client/src/RtpParameters";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
     return new Promise(resolve => {
@@ -113,6 +123,10 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
             dispatch(addChannelUsers([payload]));
         });
 
+        initialObject.socket.on("user_left_voice-channel", (payload) => {
+            dispatch(removeChannelUsers([payload]));
+        });
+
         initialObject.socket.on("message_edited", (payload) => {
             dispatch(editMessageAction(payload));
         });
@@ -145,12 +159,36 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
 
 export const useSocket = () => useContext(SocketIOContext);
 
+export function getRouterCapabilities(): Promise<{ routerRtpCapabilities: RtpCapabilities }> {
+    return socket.emitAck("get_router_capabilities");
+}
+
 export function joinVoiceChannel(data: JoinVoiceChannelRequest): Promise<JoinVoiceChannelResponse> {
     return socket.emitAck("join_voice_channel", data);
 }
 
 export function createChannel(data: NewChannelRequest): Promise<NewChannelResponse> {
     return socket.emitAck("create_channel", data);
+}
+
+export function createTransports(): Promise<CreateTransportResponse> {
+    return socket.emitAck("create_transports");
+}
+
+export function connectTransport(data: ConnectTransportRequest, callback: Function) {
+    socket.emit("connect_transport", data, callback);
+}
+
+export function createProducer(data: CreateProducerRequest, callback: Function) {
+    socket.emit("create_producer", data, callback);
+}
+
+export function createConsumers(data: CreateConsumerRequest): Promise<CreateConsumersResponse> {
+    return socket.emitAck("create_consumer", data);
+}
+
+export function resumeConsumer(data: ResumeConsumerRequest) {
+    socket.emit("resume_consumer", data);
 }
 
 export function moveChannel(data: MoveChannelRequest): Promise<MoveChannelResponse> {

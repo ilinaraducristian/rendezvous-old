@@ -26,7 +26,7 @@ const channelReducers = {
         channel.messages
             .filter(message => message.replyId === payload.messageId)
             .forEach(message =>
-                (message.replyId = null)
+                (message.replyId = null),
             );
         channel.messages.splice(messageIndex, 1);
     },
@@ -58,7 +58,7 @@ const channelReducers = {
                 if (group === undefined) return;
                 group.channels.push(found);
             }
-        })
+        });
 
     },
     addChannelUsers(state: DataSliceState, {payload}: { payload: { channelId: number, socketId: string, userId: string }[] }) {
@@ -74,12 +74,23 @@ const channelReducers = {
                 channel.users[existingUserIndex] = {...u1, isTalking: false};
         });
     },
+    removeChannelUsers(state: DataSliceState, {payload}: { payload: { socketId: string, channelId: number }[] }) {
+        const channels = state.servers.map(server => server.channels.concat(server.groups.map(group => group.channels).flat()).filter(channel => channel.type === ChannelType.Voice)).flat();
+        payload.forEach(payload => {
+            const channel = channels.find(channel => channel.id === payload.channelId) as VoiceChannel;
+            if (channel === undefined) return;
+            if (channel.type !== ChannelType.Voice) return;
+            const userIndex = channel.users.findIndex(user => user.socketId === payload.socketId);
+            if (userIndex === -1) return;
+            channel.users.splice(userIndex, 1);
+        });
+    },
     setUserIsTalking(state: DataSliceState, {payload}: { payload: { socketId: string, isTalking: boolean } }) {
         const users = selectJoinedChannelUsers({data: state});
         const user = users.find(user => user.socketId === payload.socketId);
         if (user === undefined) return;
         user.isTalking = payload.isTalking;
-    }
+    },
 };
 
 export default channelReducers;

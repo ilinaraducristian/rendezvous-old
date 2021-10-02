@@ -11,7 +11,7 @@ import {useKeycloak} from "@react-keycloak/web";
 import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
 import {pauseProducer} from "socketio/ReactSocketIOProvider";
 import ButtonComponent from "components/ButtonComponent";
-import styles from "./SecondPanelFooter.module.css";
+import styles from "components/second-panel/SecondPanelFooter/SecondPanelFooter.module.css";
 import {useCallbackDebounced} from "util/debounce";
 
 function SecondPanelFooterComponent() {

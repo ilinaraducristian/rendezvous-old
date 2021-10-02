@@ -1,59 +1,65 @@
-import {Message} from './message.dto';
+import {Message} from "./message.dto";
 
 export enum ChannelType {
-  Text = 'text',
-  Voice = 'voice'
+    Text = "text",
+    Voice = "voice"
 }
 
 export type Channel = {
-  id: number,
-  serverId: number,
-  groupId: number | null,
-  type: ChannelType,
-  name: string,
-  order: number
+    id: number,
+    serverId: number,
+    groupId: number | null,
+    type: ChannelType,
+    name: string,
+    order: number
 }
 
 export type VoiceChannelUser = {
-  socketId: string, userId: string, isTalking: boolean
+    socketId: string, userId: string, isTalking: boolean
 }
 
 export type VoiceChannel = Channel & {
-  users: VoiceChannelUser[],
+    users: VoiceChannelUser[],
 }
 
 export type TextChannel = Channel & {
-  messages: Message[]
+    messages: Message[]
 }
 
 export type JoinVoiceChannelRequest = {
-  serverId: number,
-  channelId: number,
+    serverId: number,
+    channelId: number,
 }
 
 export type JoinVoiceChannelResponse = {
-  channelId: number,
-  socketId: string,
-  userId: string
+    channelId: number,
+    socketId: string,
+    userId: string
 }[]
 
+export type LeaveVoiceChannelRequest = {
+    channelId: number
+}
+
+export type LeaveVoiceChannelResponse = {}
+
 export type NewChannelRequest = {
-  serverId: number,
-  groupId: number | null,
-  channelName: string
+    serverId: number,
+    groupId: number | null,
+    channelName: string
 }
 
 export type NewChannelResponse = {
-  channelId: number
+    channelId: number
 }
 
 export type MoveChannelRequest = {
-  serverId: number,
-  channelId: number,
-  groupId: number | null,
-  order: number
+    serverId: number,
+    channelId: number,
+    groupId: number | null,
+    order: number
 }
 
 export type MoveChannelResponse = {
-  channels: { id: number, groupId: number | null, order: number }[]
+    channels: { id: number, groupId: number | null, order: number }[]
 }

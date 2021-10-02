@@ -1,0 +1,37 @@
+.secondPanelHeader {
+    width: 100%;
+    border-style: none;
+    box-shadow: var(--small-shadow-bar);
+    height: 48px;
+    min-height: 48px;
+}
+
+.span {
+    flex-grow: 1;
+    color: white;
+}
+
+.button {
+    background: none;
+    font-size: 24px;
+    text-align: left;
+    width: 100%;
+
+    border-style: none;
+    box-shadow: var(--small-shadow-bar);
+    display: flex;
+    align-items: center;
+    height: 32px;
+    color: var(--color-9th)
+}
+
+.friendsButton {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    font-size: 18px;
+    gap: 8px;
+    margin-left: 16px;
+}

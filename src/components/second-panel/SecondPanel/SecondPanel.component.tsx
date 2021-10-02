@@ -13,10 +13,10 @@ import {
 import FriendsListComponent from "components/friend/FriendsList/FriendsList.component";
 import {SecondPanelBodyTypes} from "types/UISelectionModes";
 
-import SecondPanelFooterComponent from "./SecondPanelFooter.component";
-import SecondPanelHeaderComponent from "./SecondPanelHeader.component";
-import SecondPanelVoiceComponent from "./SecondPanelVoice.component";
-import styles from "./SecondPanel.module.css";
+import SecondPanelFooterComponent from "components/second-panel/SecondPanelFooter/SecondPanelFooter.component";
+import SecondPanelHeaderComponent from "components/second-panel/SecondPanelHeader/SecondPanelHeader.component";
+import SecondPanelVoiceComponent from "components/second-panel/SecondPanelVoice/SecondPanelVoice.component";
+import styles from "components/second-panel/SecondPanel/SecondPanel.module.css";
 
 function SecondPanelComponent() {
 

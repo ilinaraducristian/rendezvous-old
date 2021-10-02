@@ -12,14 +12,14 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
     :
     {
         production: false,
-        offline: true,
+        offline: false,
         backend: "http://localhost:3100",
         socketIoUrl: "http://localhost:3100",
         keycloak: {
             url: "http://localhost:8080/auth",
             realm: "capp",
             clientId: "auth-code",
-        }
+        },
     };
 
 export default config;

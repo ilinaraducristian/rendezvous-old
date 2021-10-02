@@ -4,11 +4,20 @@ import {Producer} from "mediasoup-client/lib/Producer";
 import {Consumer} from "mediasoup-client/lib/Consumer";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {setUserIsTalking} from "state-management/slices/data/data.slice";
-import {useSocket} from "socketio/ReactSocketIOProvider";
+import {
+    connectTransport,
+    createConsumers,
+    createProducer,
+    createTransports,
+    getRouterCapabilities,
+    resumeConsumer,
+    useSocket,
+} from "socketio/ReactSocketIOProvider";
 import useAsyncEffect from "../util/useAsyncEffect";
 import {useKeycloak} from "@react-keycloak/web";
 import {selectJoinedChannel, selectSelectedServer} from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
+import {Transport} from "mediasoup-client/lib/Transport";
 
 type InitialObjectProperties = {
     mediasoup: Device,
@@ -16,12 +25,15 @@ type InitialObjectProperties = {
     localStream?: MediaStream,
     remoteStream: MediaStream,
     producer?: Producer,
+    sendTransport?: Transport,
+    recvTransport?: Transport,
     audioContext?: AudioContext,
     consumers: { socketId: string, consumer: Consumer }[],
     isMuted: boolean,
     setMute: (isMuted: boolean) => void,
-    createProducer: () => void,
-    createConsumer: (socketId: string) => void
+    createProducer: () => Promise<void>,
+    createConsumers: (socketIds: string[]) => Promise<void>,
+    createTransports: () => Promise<void>
 };
 
 const initialObject: InitialObjectProperties = {
@@ -32,9 +44,11 @@ const initialObject: InitialObjectProperties = {
     loaded: false,
     setMute: () => {
     },
-    createProducer: () => {
+    createProducer: async () => {
     },
-    createConsumer: _ => {
+    createConsumers: async _ => {
+    },
+    createTransports: async () => {
     },
 };
 
@@ -50,60 +64,111 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
     const joinedChannel = useAppSelector(selectJoinedChannel);
     const joinedChannelUsers = useAppSelector(selectJoinedChannelUsers);
 
+    function updateState() {
+        setState({...state});
+    }
+
     useEffect(() => {
+
         initialObject.setMute = isMuted => {
             initialObject.isMuted = isMuted;
-            setState({...initialObject});
+            updateState();
         };
-        initialObject.createProducer = async () => {
+
+        initialObject.createTransports = async () => {
+            if (initialObject.sendTransport !== undefined || initialObject.recvTransport !== undefined) return;
             if (initialObject.localStream === undefined)
-                initialObject.localStream = await navigator.mediaDevices.getUserMedia({audio: true});
-            const {transportParameters} = await socket.emitAck("create_transport", {type: "send"});
-            const sendTransport = initialObject.mediasoup.createSendTransport(transportParameters);
+                initialObject.localStream = await navigator.mediaDevices.getUserMedia({audio: true}).catch();
+            const {sendTransportParameters, recvTransportParameters} = await createTransports();
+            const sendTransport = initialObject.mediasoup.createSendTransport(sendTransportParameters);
+            const recvTransport = initialObject.mediasoup.createRecvTransport(recvTransportParameters);
 
             sendTransport.on("connect", ({dtlsParameters}, cb) => {
-                socket.emit("connect_transport", {type: "send", dtlsParameters, id: sendTransport.id}, cb);
+                connectTransport({type: "send", dtlsParameters, id: sendTransport.id}, cb);
             });
 
             sendTransport.on("produce", (parameters, cb) => {
-                socket.emit("create_producer", {
+                createProducer({
                     id: sendTransport.id,
                     kind: parameters.kind,
                     rtpParameters: parameters.rtpParameters,
                     appData: parameters.appData,
                 }, cb);
             });
-            initialObject.producer = await sendTransport.produce({
-                track: initialObject.localStream?.getAudioTracks()[0],
-            });
-            setState({...initialObject});
-        };
-        initialObject.createConsumer = async (socketId: string) => {
-            const {transportParameters} = await socket.emitAck("create_transport", {type: "recv"});
-            const recvTransport = initialObject.mediasoup.createRecvTransport(transportParameters);
+
             recvTransport.on("connect", ({dtlsParameters}, cb) => {
-                socket.emit("connect_transport", {type: "recv", dtlsParameters, id: recvTransport.id}, cb);
+                connectTransport({type: "recv", dtlsParameters, id: recvTransport.id}, cb);
             });
-            const {consumerParameters} = await socket.emitAck("create_consumer", {
-                transportId: recvTransport.id,
-                socketId,
-                rtpCapabilities: initialObject.mediasoup.rtpCapabilities,
+
+            initialObject.sendTransport = sendTransport;
+            initialObject.recvTransport = recvTransport;
+            updateState();
+        };
+
+        initialObject.createProducer = async () => {
+            await initialObject.createTransports();
+            if (initialObject.localStream === undefined) return;
+
+            initialObject.producer = await initialObject.sendTransport?.produce({
+                track: initialObject.localStream.getAudioTracks()[0],
             });
-            const consumer = await recvTransport.consume(consumerParameters);
-            consumer.observer.on("pause", () => {
-                dispatch(setUserIsTalking({socketId, isTalking: false}));
+
+            updateState();
+        };
+
+        // initialObject.createConsumer = async (socketId: string) => {
+        //     await initialObject.createTransports();
+        //     if (initialObject.recvTransport === undefined) return;
+        //     const {consumersParameters} = await createConsumers({
+        //         consumers: [{
+        //             socketId,
+        //             rtpCapabilities: initialObject.mediasoup.rtpCapabilities,
+        //         }],
+        //     });
+        //     const consumer = await initialObject.recvTransport.consume(consumersParameters);
+        //     consumer.observer.on("pause", () => {
+        //         dispatch(setUserIsTalking({socketId, isTalking: false}));
+        //     });
+        //     consumer.observer.on("resume", () => {
+        //         dispatch(setUserIsTalking({socketId, isTalking: true}));
+        //     });
+        //     initialObject.remoteStream.addTrack(consumer.track);
+        //     resumeConsumer({id: consumer.id});
+        //     initialObject.consumers = [...initialObject.consumers, {socketId, consumer}];
+        //     if (initialObject.audioContext === undefined) {
+        //         initialObject.audioContext = new AudioContext();
+        //         initialObject.audioContext.createMediaStreamSource(initialObject.remoteStream).connect(initialObject.audioContext.destination);
+        //     }
+        //     updateState();
+        // };
+
+        initialObject.createConsumers = async (socketIds: string[]) => {
+            await initialObject.createTransports();
+            const {consumersParameters} = await createConsumers({
+                consumers: socketIds.map(socketId => ({
+                    socketId,
+                    rtpCapabilities: initialObject.mediasoup.rtpCapabilities,
+                })),
             });
-            consumer.observer.on("resume", () => {
-                dispatch(setUserIsTalking({socketId, isTalking: true}));
-            });
-            initialObject.remoteStream.addTrack(consumer.track);
-            socket.emit("resume_consumer", {id: consumer.id});
-            initialObject.consumers = [...initialObject.consumers, {socketId, consumer}];
-            if (initialObject.audioContext === undefined) {
-                initialObject.audioContext = new AudioContext();
-                initialObject.audioContext.createMediaStreamSource(initialObject.remoteStream).connect(initialObject.audioContext.destination);
-            }
-            setState({...initialObject});
+            await Promise.all(consumersParameters.map(async (consumerParameters, index) => {
+                if (initialObject.recvTransport === undefined) return;
+                const socketId = socketIds[index];
+                const consumer = await initialObject.recvTransport.consume(consumerParameters);
+                consumer.observer.on("pause", () => {
+                    dispatch(setUserIsTalking({socketId, isTalking: false}));
+                });
+                consumer.observer.on("resume", () => {
+                    dispatch(setUserIsTalking({socketId, isTalking: true}));
+                });
+                initialObject.remoteStream.addTrack(consumer.track);
+                resumeConsumer({id: consumer.id});
+                initialObject.consumers = [...initialObject.consumers, {socketId, consumer}];
+                if (initialObject.audioContext === undefined) {
+                    initialObject.audioContext = new AudioContext();
+                    initialObject.audioContext.createMediaStreamSource(initialObject.remoteStream).connect(initialObject.audioContext.destination);
+                }
+            }));
+            updateState();
         };
 
         socket.on("consumer_pause", (payload) => {
@@ -125,8 +190,7 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
     useAsyncEffect(async () => {
         if (!connected) return;
         if (state.loaded) return;
-        const {routerRtpCapabilities} = await socket.emitAck(`get_router_capabilities`);
-        await state.mediasoup.load({routerRtpCapabilities});
+        await state.mediasoup.load(await getRouterCapabilities());
         state.loaded = true;
         setState({...state});
     }, [state, connected, socket]);
@@ -135,13 +199,31 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
         if (!initialized || !keycloak.authenticated) return;
         if (joinedChannel === null) {
             // TODO disconnect
+            state.consumers.forEach(consumer => consumer.consumer.close());
+            state.consumers = [];
+            updateState();
             return;
         }
 
-        const users = joinedChannelUsers.filter(user => user.userId !== keycloak.subject &&
-            !state.consumers.find(consumer => user.socketId === consumer.socketId));
-        await Promise.all(users.map(user => state.createConsumer(user.socketId)));
-    }, [state.consumers, state.createConsumer, joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
+        // other users joined
+        const users = joinedChannelUsers.filter(user => user.userId !== keycloak.subject);
+        const newUsers = users.filter(user => !state.consumers.find(consumer => consumer.socketId === user.socketId));
+        await state.createConsumers(newUsers.map(user => user.socketId));
+        const {removedUsers, existingUsers} = state.consumers.reduce((prev: any, consumer) => {
+            if (users.find(user => user.socketId === consumer.socketId)) {
+                prev.existingUsers.push(consumer);
+            } else {
+                prev.removedUsers.push(consumer);
+            }
+            return prev;
+        }, {removedUsers: [], existingUsers: []});
+
+        removedUsers.forEach((consumer: any) => {
+            consumer.consumer.close();
+        });
+        state.consumers = existingUsers;
+        updateState();
+    }, [state.consumers, state.createConsumers, joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
 
     return (
         <MediasoupContext.Provider value={state}>
