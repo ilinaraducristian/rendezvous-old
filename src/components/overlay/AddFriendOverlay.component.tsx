@@ -2,7 +2,7 @@ import {addFriendRequest, setOverlay} from "state-management/slices/data/data.sl
 import {useAppDispatch} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay/Overlay.component";
 import {useRef} from "react";
-import {sendFriendRequest} from "socketio/ReactSocketIOProvider";
+import {sendFriendRequest} from "providers/ReactSocketIO.provider";
 
 function AddFriendOverlayComponent() {
     const dispatch = useAppDispatch();

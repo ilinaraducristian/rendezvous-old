@@ -18,7 +18,7 @@ import {
 } from "state-management/selectors/data.selector";
 import {selectSelectedChannelMessages} from "state-management/selectors/channel.selector";
 import {Message} from "dtos/message.dto";
-import {getMessages} from "socketio/ReactSocketIOProvider";
+import {getMessages} from "providers/ReactSocketIO.provider";
 
 function MessagesPanelComponent() {
 

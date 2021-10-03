@@ -12,8 +12,8 @@ import {
     getRouterCapabilities,
     resumeConsumer,
     useSocket,
-} from "socketio/ReactSocketIOProvider";
-import useAsyncEffect from "../util/useAsyncEffect";
+} from "providers/ReactSocketIO.provider";
+import useAsyncEffect from "util/useAsyncEffect";
 import {useKeycloak} from "@react-keycloak/web";
 import {selectJoinedChannel, selectSelectedServer} from "state-management/selectors/data.selector";
 import {selectJoinedChannelUsers} from "state-management/selectors/channel.selector";
@@ -175,8 +175,8 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
         if (state.loaded) return;
         await state.mediasoup.load(await getRouterCapabilities());
         state.loaded = true;
-        setState({...state});
-    }, [state, connected, socket]);
+        updateState();
+    }, [connected]);
 
     useAsyncEffect(async () => {
         if (!initialized || !keycloak.authenticated) return;
@@ -206,7 +206,7 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
         });
         state.consumers = existingUsers;
         updateState();
-    }, [state.consumers, state.createConsumers, joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
+    }, [joinedChannelUsers, joinedChannel, selectedServer, keycloak, initialized]);
 
     return (
         <MediasoupContext.Provider value={state}>

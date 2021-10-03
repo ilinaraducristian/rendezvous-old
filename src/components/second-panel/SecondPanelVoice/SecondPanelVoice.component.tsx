@@ -2,7 +2,7 @@ import EndCallSVG from "svg/EndCall/EndCall.svg";
 import ScreenSVG from "svg/Screen.svg";
 import styles from "components/second-panel/SecondPanelVoice/SecondPanelVoice.module.css";
 import ButtonComponent from "components/ButtonComponent";
-import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
+import {useMediasoup} from "providers/ReactMediasoup.provider";
 import {useAppDispatch} from "state-management/store";
 import {leaveVoiceChannel} from "state-management/slices/data/data.slice";
 

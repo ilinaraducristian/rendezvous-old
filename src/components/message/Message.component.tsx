@@ -8,7 +8,7 @@ import {
 
 import config from "config";
 import {Message} from "dtos/message.dto";
-import {deleteMessage, editMessage} from "socketio/ReactSocketIOProvider";
+import {deleteMessage, editMessage} from "providers/ReactSocketIO.provider";
 
 type ComponentProps = {
     message: Message,

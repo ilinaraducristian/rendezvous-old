@@ -9,8 +9,8 @@ import {hideSettings, setOverlay} from "state-management/slices/data/data.slice"
 import {selectIsSettingsShown} from "state-management/selectors/data.selector";
 import {ReactKeycloakProvider} from "@react-keycloak/web";
 import keycloak from "./keycloak";
-import ReactMediasoupProvider from "mediasoup/ReactMediasoupProvider";
-import ReactSocketIOProvider from "./socketio/ReactSocketIOProvider";
+import ReactMediasoupProvider from "providers/ReactMediasoup.provider";
+import ReactSocketIOProvider from "providers/ReactSocketIO.provider";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;

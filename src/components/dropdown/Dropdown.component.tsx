@@ -3,19 +3,18 @@ import {setInvitation, setOverlay} from "state-management/slices/data/data.slice
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {OverlayTypes} from "types/UISelectionModes";
-import {createInvitation, deleteServer} from "socketio/ReactSocketIOProvider";
+import {createInvitation, deleteServer} from "providers/ReactSocketIO.provider";
 import styles from "./Dropdown.module.css";
 import ButtonComponent from "components/ButtonComponent";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
     const selectedServer = useAppSelector(selectSelectedServer);
-
     const dispatch = useAppDispatch();
 
     const createInvitationCallback = useCallback(async () => {
         if (selectedServer === undefined) return;
-        const invitation = await createInvitation({serverId: selectedServer.id});
+        const {invitation} = await createInvitation({serverId: selectedServer.id});
         dispatch(setInvitation(invitation));
         dispatch(setOverlay({type: OverlayTypes.InvitationOverlayComponent, payload: {invitation}}));
         setIsDropdownShown(false);

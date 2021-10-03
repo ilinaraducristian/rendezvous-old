@@ -12,7 +12,7 @@ import {useAppDispatch} from "state-management/store";
 import ChannelButtonComponent from "components/channel/ChannelButton/ChannelButton.component";
 import {TextChannel} from "dtos/channel.dto";
 import {HeaderTypes, ThirdPanelTypes} from "types/UISelectionModes";
-import {getMessages} from "socketio/ReactSocketIOProvider";
+import {getMessages} from "providers/ReactSocketIO.provider";
 
 type ComponentProps = {
     channel: TextChannel

@@ -25,7 +25,7 @@ import {OverlayTypes} from "types/UISelectionModes";
 import SettingsPanelComponent from "components/settings/SettingsPanel.component";
 import LoadingComponent from "components/app/Loading/Loading.component";
 import {useKeycloak} from "@react-keycloak/web";
-import {getUserData, useSocket} from "socketio/ReactSocketIOProvider";
+import {getUserData, useSocket} from "providers/ReactSocketIO.provider";
 import useAsyncEffect from "util/useAsyncEffect";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
 import styles from "components/app/App/App.module.css";

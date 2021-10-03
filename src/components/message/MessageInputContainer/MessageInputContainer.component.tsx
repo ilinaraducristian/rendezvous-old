@@ -10,7 +10,7 @@ import PopupContainerComponent, {PopupContainerRefType} from "components/message
 import {stringSimilarity} from "string-similarity-js";
 import {selectSelectedServerMembers} from "state-management/selectors/server.selector";
 import {NewMessageRequest} from "dtos/message.dto";
-import {sendMessage} from "socketio/ReactSocketIOProvider";
+import {sendMessage} from "providers/ReactSocketIO.provider";
 import styles from "components/message/MessageInputContainer/MessageInputContainer.module.css";
 import ButtonComponent from "components/ButtonComponent";
 

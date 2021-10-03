@@ -1,7 +1,7 @@
-import {Channel} from './channel.dto';
-import {Group} from './group.dto';
-import {Member} from './member.dto';
-import {UserServersData} from './user.dto';
+import {Channel} from "./channel.dto";
+import {Group} from "./group.dto";
+import {Member} from "./member.dto";
+import {UserServersData} from "./user.dto";
 
 export type Server = {
   id: number,
@@ -22,6 +22,10 @@ export type NewServerResponse = UserServersData
 
 export type NewInvitationRequest = {
   serverId: number,
+}
+
+export type NewInvitationResponse = {
+  invitation: string
 }
 
 export type JoinServerRequest = {

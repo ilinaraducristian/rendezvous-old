@@ -4,7 +4,7 @@ import config from "config";
 import {useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import OverlayComponent from "components/overlay/Overlay/Overlay.component";
-import {createGroup} from "socketio/ReactSocketIOProvider";
+import {createGroup} from "providers/ReactSocketIO.provider";
 
 function CreateGroupOverlayComponent() {
 

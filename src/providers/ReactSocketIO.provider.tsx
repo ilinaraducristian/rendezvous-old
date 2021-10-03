@@ -22,12 +22,13 @@ import {
     JoinServerRequest,
     JoinServerResponse,
     NewInvitationRequest,
+    NewInvitationResponse,
     NewServerRequest,
     NewServerResponse,
 } from "dtos/server.dto";
 import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
 import {useAppDispatch} from "state-management/store";
-import {notificationSound} from "mediasoup/ReactMediasoupProvider";
+import {notificationSound} from "providers/ReactMediasoup.provider";
 import {
     addChannel,
     addChannelUsers,
@@ -220,7 +221,7 @@ export function createServer(data: NewServerRequest): Promise<NewServerResponse>
     return socket.emitAck("create_server", data);
 }
 
-export function createInvitation(data: NewInvitationRequest): Promise<string> {
+export function createInvitation(data: NewInvitationRequest): Promise<NewInvitationResponse> {
     return socket.emitAck("create_invitation", data);
 }
 

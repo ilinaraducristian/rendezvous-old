@@ -9,8 +9,8 @@ import {selectJoinedChannel, selectUsers} from "state-management/selectors/data.
 import {VoiceChannel} from "dtos/channel.dto";
 import AvatarPlaceholder from "assets/avatar-placeholder.png";
 import AvatarSVG from "svg/Avatar.svg";
-import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
-import {joinVoiceChannel} from "socketio/ReactSocketIOProvider";
+import {useMediasoup} from "providers/ReactMediasoup.provider";
+import {joinVoiceChannel} from "providers/ReactSocketIO.provider";
 import styles from "components/channel/VoiceChannel/VoiceChannel.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import {useCallbackDebounced} from "util/debounce";

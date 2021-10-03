@@ -3,7 +3,7 @@ import {addMessages, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel} from "state-management/selectors/data.selector";
 import {NewMessageRequest} from "dtos/message.dto";
-import {sendMessage} from "socketio/ReactSocketIOProvider";
+import {sendMessage} from "providers/ReactSocketIO.provider";
 import styles from "./ImageInputOverlay.module.css";
 import ButtonComponent from "components/ButtonComponent";
 

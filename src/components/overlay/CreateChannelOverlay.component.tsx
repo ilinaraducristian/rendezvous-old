@@ -6,7 +6,7 @@ import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import OverlayComponent from "components/overlay/Overlay/Overlay.component";
 import {ChannelType, TextChannel} from "dtos/channel.dto";
-import {createChannel} from "socketio/ReactSocketIOProvider";
+import {createChannel} from "providers/ReactSocketIO.provider";
 
 type ComponentProps = {
     groupId?: number | null

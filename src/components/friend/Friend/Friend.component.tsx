@@ -7,7 +7,7 @@ import {
 import {ThirdPanelTypes} from "types/UISelectionModes";
 import {User} from "dtos/user.dto";
 import AvatarWithStatusSVG from "svg/AvatarWithStatus/AvatarWithStatus.svg";
-import {getMessages} from "socketio/ReactSocketIOProvider";
+import {getMessages} from "providers/ReactSocketIO.provider";
 import ButtonComponent from "components/ButtonComponent";
 import styles from "components/friend/Friend/Friend.module.css";
 

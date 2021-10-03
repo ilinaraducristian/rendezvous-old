@@ -2,7 +2,7 @@ import {useRef} from "react";
 import {addServer, addUser, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
 import OverlayComponent from "components/overlay/Overlay/Overlay.component";
-import {joinServer} from "socketio/ReactSocketIOProvider";
+import {joinServer} from "providers/ReactSocketIO.provider";
 import styles from "./JoinServerOverlay.module.css";
 import ButtonComponent from "components/ButtonComponent";
 
