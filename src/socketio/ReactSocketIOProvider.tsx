@@ -148,6 +148,7 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
         });
 
         setState({...initialObject});
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

@@ -36,7 +36,7 @@ function ImageInputOverlayComponent({image}: ComponentProps) {
         <div className={styles.transparentBackground}>
             <div className={styles.overlayDiv}>
                 <div className={styles.mainDiv}>
-                    <img className={styles.img} src={image}/>
+                    <img className={styles.img} src={image} alt=" "/>
                     <span className={`${styles.span} ${styles.filenameSpan}`}>unknown.png</span>
                     <span className={`${styles.span} ${styles.uploadSpan}`}>Upload to</span>
                     <span className={styles.span}>ADD A COMMENT <span className={styles.optionalSpan}>(OPTIONAL)</span></span>

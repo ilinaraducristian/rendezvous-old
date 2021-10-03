@@ -12,4 +12,5 @@ export function debounce<T extends (...args: any[]) => any>(func: T): (...funcAr
     };
 }
 
+// eslint-disable-next-line react-hooks/exhaustive-deps
 export const useCallbackDebounced = <T extends (...args: any[]) => any>(func: T, deps: DependencyList) => useCallback(debounce(func), deps);
