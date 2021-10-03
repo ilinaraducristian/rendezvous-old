@@ -3,6 +3,8 @@ import ScreenSVG from "svg/Screen.svg";
 import styles from "components/second-panel/SecondPanelVoice/SecondPanelVoice.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import {useMediasoup} from "mediasoup/ReactMediasoupProvider";
+import {useAppDispatch} from "state-management/store";
+import {leaveVoiceChannel} from "state-management/slices/data/data.slice";
 
 function Button() {
     return (<ButtonComponent className={styles.button}>
@@ -13,13 +15,12 @@ function Button() {
 
 function SecondPanelVoiceComponent() {
 
-    const {producer, consumers} = useMediasoup();
+    const {closeProducer} = useMediasoup();
+    const dispatch = useAppDispatch();
 
     function endCall() {
-        consumers.forEach(consumer => {
-            consumer.consumer.close();
-        });
-        producer?.close();
+        closeProducer();
+        dispatch(leaveVoiceChannel(undefined));
     }
 
     return (

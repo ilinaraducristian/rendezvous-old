@@ -1,0 +1,21 @@
+.div {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.button {
+    --color: var(--color-18th);
+    border: solid var(--color);
+    border-radius: 1em;
+    margin: 0 4.35em;
+    width: 21.354em;
+    height: 3.4371em;
+    font-size: 1.2rem;
+}
+
+.button:hover {
+    border-color: var(--color-8th);
+}

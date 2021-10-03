@@ -1,0 +1,43 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.firstRow {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-between;
+    width: 100%;
+    align-items: start;
+}
+
+.thirdRow {
+    display: flex;
+    background-color: var(--color-16th);
+    padding: .7em;
+    align-items: center;
+}
+
+.span {
+    flex-grow: 1;
+    color: white;
+}
+
+.h5 {
+    color: white;
+    margin: 0 0 .5em;
+    padding: 0;
+}
+
+.button {
+    background-color: var(--color-17th);
+    border-color: var(--color-17th);
+    border-style: solid;
+    border-radius: 0.1em;
+    border-bottom: 10em;
+    border-top: 2em;
+    width: 5em;
+    height: 2.5em;
+}

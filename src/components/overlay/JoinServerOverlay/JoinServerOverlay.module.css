@@ -1,0 +1,37 @@
+.div {
+    display: flex;
+    flex-direction: column;
+}
+
+.h5 {
+    padding: 0;
+    margin: 1em 0 0.5em 1em;
+}
+
+.input {
+    --color: var(--color-21th);
+    background: var(--color);
+    border: solid var(--color);
+    margin: 0 1em 2em 1em;
+    border-radius: 0.2em;
+
+}
+
+.input:focus {
+    outline: none;
+}
+
+.button {
+    --color: var(--color-17th);
+    background-color: var(--color);
+    border: solid var(--color);
+    border-radius: 0.2em;
+    width: 7.2em;
+    height: 2.85em;
+    align-self: center;
+    transition: background-color 200ms, border 200ms;
+}
+
+.button:hover {
+    --color: var(--color-20th);
+}

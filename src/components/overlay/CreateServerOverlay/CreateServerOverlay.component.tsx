@@ -2,9 +2,10 @@ import {useRef} from "react";
 
 import {addServer, addUser, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
-import OverlayComponent from "components/overlay/Overlay.component";
-import styled from "styled-components";
-import {createServer} from "../../socketio/ReactSocketIOProvider";
+import OverlayComponent from "components/overlay/Overlay/Overlay.component";
+import {createServer} from "socketio/ReactSocketIOProvider";
+import styles from "components/overlay/CreateServerOverlay/CreateServerOverlay.module.css";
+import ButtonComponent from "components/ButtonComponent";
 
 function CreateServerOverlayComponent() {
     const dispatch = useAppDispatch();
@@ -20,27 +21,15 @@ function CreateServerOverlayComponent() {
 
     return (
         <OverlayComponent>
-            <h1 className="h1">Create a server</h1>
-            <Div>
+            <h1>Create a server</h1>
+            <div className={styles.div}>
                 <input type="text" ref={ref}/>
-                <button type="button" className="btn btn__overlay-select" onClick={createServerCallback}>Create
-                </button>
-            </Div>
+                <ButtonComponent className="btn__overlay-select" onClick={createServerCallback}>Create
+                </ButtonComponent>
+            </div>
         </OverlayComponent>
     );
 
 }
-
-/* CSS */
-
-const Div = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 1em;
-`;
-
-/* CSS */
 
 export default CreateServerOverlayComponent;

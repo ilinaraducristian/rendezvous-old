@@ -162,7 +162,6 @@ export const {
     editMessage,
     moveChannels,
     deleteMessage,
-    setJoinedVoiceChannel,
     joinVoiceChannel,
     leaveVoiceChannel,
     addChannelUsers,

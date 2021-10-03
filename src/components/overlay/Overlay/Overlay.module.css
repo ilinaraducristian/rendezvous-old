@@ -1,0 +1,41 @@
+.divOverlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.divContainer {
+    min-width: 30em;
+    min-height: 15em;
+    background-color: var(--color-2nd);
+    display: flex;
+    flex-direction: column;
+    border: solid var(--color-2nd);
+    border-radius: 0.3em;
+    position: relative;
+    color: white;
+    align-items: center;
+}
+
+.button {
+    position: absolute;
+    right: 0.5em;
+    top: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+}
+
+.button:hover {
+    color: black;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    max-width: 30em;
+}

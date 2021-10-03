@@ -1,9 +1,8 @@
 import {addFriendRequest, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch} from "state-management/store";
-import OverlayComponent from "components/overlay/Overlay.component";
+import OverlayComponent from "components/overlay/Overlay/Overlay.component";
 import {useRef} from "react";
-import {sendFriendRequest} from "../../socketio/ReactSocketIOProvider";
-
+import {sendFriendRequest} from "socketio/ReactSocketIOProvider";
 
 function AddFriendOverlayComponent() {
     const dispatch = useAppDispatch();
@@ -13,7 +12,7 @@ function AddFriendOverlayComponent() {
     async function sendFriendRequestCallback() {
         if (ref.current === null) return;
         const data = await sendFriendRequest({username: ref.current.value});
-        dispatch(addFriendRequest({id: data.id, userId: data.userId, incoming: false}))
+        dispatch(addFriendRequest({id: data.id, userId: data.userId, incoming: false}));
         dispatch(setOverlay(null));
     }
 

@@ -6,18 +6,18 @@ import {initializeBackend} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/first-panel/FirstPanel/FirstPanel.component";
 import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPanel.component";
 import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
-import AddServerOverlayComponent from "components/overlay/AddServerOverlay.component";
+import AddServerOverlayComponent from "components/overlay/AddServerOverlay/AddServerOverlay.component";
 import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay.component";
-import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay.component";
-import InvitationOverlayComponent from "components/overlay/InvitationOverlay.component";
-import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay.component";
+import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
+import InvitationOverlayComponent from "components/overlay/InvitationOverlay/InvitationOverlay.component";
+import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
 import {
     selectIsBackendInitialized,
     selectIsSettingsShown,
     selectOverlay,
 } from "state-management/selectors/data.selector";
-import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay.component";
+import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay/ImageInputOverlay.component";
 import ForthPanelComponent from "components/ForthPanel.component";
 import HeaderComponent from "components/Header.component";
 import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay.component";

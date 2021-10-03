@@ -1,4 +1,5 @@
-import TransparentBackgroundDiv from "components/overlay/TransparentBackgroundDiv";
+import TransparentBackgroundDivComponent
+    from "components/overlay/TransparentBackgroundDiv/TransparentBackgroundDiv.component";
 import {useState} from "react";
 import RadioSVG from "svg/Radio/Radio.svg";
 import ChannelSVG from "svg/Channel/Channel.svg";
@@ -13,7 +14,7 @@ function CreateChannelOrGroupComponent() {
     const [channelName, setChannelName] = useState("");
 
     return (
-        <TransparentBackgroundDiv>
+        <TransparentBackgroundDivComponent>
             <div>
                 <div className={styles.body}>
                     <ButtonComponent className={styles.styledButton}>
@@ -59,7 +60,7 @@ function CreateChannelOrGroupComponent() {
                     </ButtonComponent>
                 </footer>
             </div>
-        </TransparentBackgroundDiv>
+        </TransparentBackgroundDivComponent>
     );
 }
 

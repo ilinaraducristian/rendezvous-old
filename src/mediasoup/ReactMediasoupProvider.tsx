@@ -32,6 +32,7 @@ type InitialObjectProperties = {
     isMuted: boolean,
     setMute: (isMuted: boolean) => void,
     createProducer: () => Promise<void>,
+    closeProducer: () => void,
     createConsumers: (socketIds: string[]) => Promise<void>,
     createTransports: () => Promise<void>
 };
@@ -45,6 +46,8 @@ const initialObject: InitialObjectProperties = {
     setMute: () => {
     },
     createProducer: async () => {
+    },
+    closeProducer: () => {
     },
     createConsumers: async _ => {
     },
@@ -116,31 +119,11 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
             updateState();
         };
 
-        // initialObject.createConsumer = async (socketId: string) => {
-        //     await initialObject.createTransports();
-        //     if (initialObject.recvTransport === undefined) return;
-        //     const {consumersParameters} = await createConsumers({
-        //         consumers: [{
-        //             socketId,
-        //             rtpCapabilities: initialObject.mediasoup.rtpCapabilities,
-        //         }],
-        //     });
-        //     const consumer = await initialObject.recvTransport.consume(consumersParameters);
-        //     consumer.observer.on("pause", () => {
-        //         dispatch(setUserIsTalking({socketId, isTalking: false}));
-        //     });
-        //     consumer.observer.on("resume", () => {
-        //         dispatch(setUserIsTalking({socketId, isTalking: true}));
-        //     });
-        //     initialObject.remoteStream.addTrack(consumer.track);
-        //     resumeConsumer({id: consumer.id});
-        //     initialObject.consumers = [...initialObject.consumers, {socketId, consumer}];
-        //     if (initialObject.audioContext === undefined) {
-        //         initialObject.audioContext = new AudioContext();
-        //         initialObject.audioContext.createMediaStreamSource(initialObject.remoteStream).connect(initialObject.audioContext.destination);
-        //     }
-        //     updateState();
-        // };
+        initialObject.closeProducer = () => {
+            state.producer?.close();
+            state.producer = undefined;
+            updateState();
+        };
 
         initialObject.createConsumers = async (socketIds: string[]) => {
             await initialObject.createTransports();

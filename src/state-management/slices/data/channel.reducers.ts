@@ -30,9 +30,6 @@ const channelReducers = {
             );
         channel.messages.splice(messageIndex, 1);
     },
-    setJoinedVoiceChannel(state: DataSliceState, {payload}: { payload: { serverId: number, groupId: number | null, channelId: number } | null }) {
-        state.joinedVoiceChannel = payload;
-    },
     joinVoiceChannel(state: DataSliceState, {payload}: { payload: { serverId: number, groupId: number | null, channelId: number } }) {
         state.joinedVoiceChannel = payload;
     },
