@@ -89,15 +89,19 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
     const [state, setState] = useState(initialObject);
     const dispatch = useAppDispatch();
 
+    function updateState() {
+        setState({...state});
+    }
+
     useEffect(() => {
         initialObject.socket.on("connect", () => {
             initialObject.connected = true;
-            setState({...initialObject});
+            updateState();
         });
 
         initialObject.socket.on("disconnect", () => {
             initialObject.connected = false;
-            setState({...initialObject});
+            updateState();
         });
 
         initialObject.socket.on("new_message", (payload) => {
@@ -109,6 +113,7 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
         });
 
         initialObject.socket.on("new_member", (payload) => {
+            console.log({payload});
             dispatch(addMember(payload));
         });
 
@@ -148,7 +153,7 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
             dispatch(deleteServerAction(payload));
         });
 
-        setState({...initialObject});
+        setState(initialObject);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -167,6 +172,10 @@ export function getRouterCapabilities(): Promise<{ routerRtpCapabilities: RtpCap
 
 export function joinVoiceChannel(data: JoinVoiceChannelRequest): Promise<JoinVoiceChannelResponse> {
     return socket.emitAck("join_voice_channel", data);
+}
+
+export function leaveVoiceChannel(data: JoinVoiceChannelRequest): Promise<{ socketId: string, channelId: number }> {
+    return socket.emitAck("leave_voice_channel", data);
 }
 
 export function createChannel(data: NewChannelRequest): Promise<NewChannelResponse> {

@@ -3,8 +3,13 @@ import ScreenSVG from "svg/Screen.svg";
 import styles from "components/second-panel/SecondPanelVoice/SecondPanelVoice.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import {useMediasoup} from "providers/ReactMediasoup.provider";
-import {useAppDispatch} from "state-management/store";
-import {leaveVoiceChannel} from "state-management/slices/data/data.slice";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {
+    leaveVoiceChannel as leaveVoiceChannelAction,
+    removeChannelUsers,
+} from "state-management/slices/data/data.slice";
+import {leaveVoiceChannel} from "providers/ReactSocketIO.provider";
+import {selectJoinedChannel} from "state-management/selectors/data.selector";
 
 function Button() {
     return (<ButtonComponent className={styles.button}>
@@ -17,10 +22,17 @@ function SecondPanelVoiceComponent() {
 
     const {closeProducer} = useMediasoup();
     const dispatch = useAppDispatch();
+    const joinedVoiceChannel = useAppSelector(selectJoinedChannel);
 
-    function endCall() {
+    async function endCall() {
+        if (joinedVoiceChannel === null) return;
+        const response = await leaveVoiceChannel({
+            serverId: joinedVoiceChannel.serverId,
+            channelId: joinedVoiceChannel.id,
+        });
+        dispatch(removeChannelUsers([response]));
+        dispatch(leaveVoiceChannelAction(undefined));
         closeProducer();
-        dispatch(leaveVoiceChannel(undefined));
     }
 
     return (

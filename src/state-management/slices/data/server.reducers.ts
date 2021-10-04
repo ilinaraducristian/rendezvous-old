@@ -1,16 +1,11 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import {Server} from "../../../dtos/server.dto";
-import {User} from "../../../dtos/user.dto";
-import {Member} from "../../../dtos/member.dto";
-import {Channel} from "../../../dtos/channel.dto";
-import {Group} from "../../../dtos/group.dto";
-import {
-    HeaderTypes,
-    SecondPanelBodyTypes,
-    SecondPanelHeaderTypes,
-    ThirdPanelTypes
-} from "../../../types/UISelectionModes";
+import {Server} from "dtos/server.dto";
+import {User} from "dtos/user.dto";
+import {Member} from "dtos/member.dto";
+import {Channel} from "dtos/channel.dto";
+import {Group} from "dtos/group.dto";
+import {HeaderTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes, ThirdPanelTypes} from "types/UISelectionModes";
 
 const serverReducers = {
     deleteServer(state: DataSliceState, action: { payload: any, type: string }) {
@@ -22,7 +17,7 @@ const serverReducers = {
             state.header = HeaderTypes.friends;
             state.thirdPanel = ThirdPanelTypes.allFriends;
         }
-        const index = state.servers.findIndex(server => server.id === action.payload.serverId)
+        const index = state.servers.findIndex(server => server.id === action.payload.serverId);
         if (index === -1) return;
         state.servers.splice(index, 1);
     },

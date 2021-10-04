@@ -79,9 +79,9 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
         };
 
         initialObject.createTransports = async () => {
-            if (initialObject.sendTransport !== undefined || initialObject.recvTransport !== undefined) return;
             if (initialObject.localStream === undefined)
                 initialObject.localStream = await navigator.mediaDevices.getUserMedia({audio: true}).catch();
+            if (initialObject.sendTransport !== undefined || initialObject.recvTransport !== undefined) return;
             const {sendTransportParameters, recvTransportParameters} = await createTransports();
             const sendTransport = initialObject.mediasoup.createSendTransport(sendTransportParameters);
             const recvTransport = initialObject.mediasoup.createRecvTransport(recvTransportParameters);
@@ -122,6 +122,7 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
         initialObject.closeProducer = () => {
             state.producer?.close();
             state.producer = undefined;
+            state.localStream = undefined;
             updateState();
         };
 

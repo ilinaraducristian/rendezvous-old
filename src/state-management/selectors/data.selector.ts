@@ -1,9 +1,9 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
-import {Channel, ChannelType, VoiceChannel} from "../../dtos/channel.dto";
-import {Server} from "../../dtos/server.dto";
-import {FriendRequest, Friendship} from "../../dtos/friend.dto";
-import {User} from "../../dtos/user.dto";
-import {Message} from "../../dtos/message.dto";
+import {Channel, ChannelType, VoiceChannel} from "dtos/channel.dto";
+import {Server} from "dtos/server.dto";
+import {FriendRequest, Friendship} from "dtos/friend.dto";
+import {User} from "dtos/user.dto";
+import {Message} from "dtos/message.dto";
 
 export const selectIsBackendInitialized = ({data}: { data: DataSliceState }): boolean => data.isBackendInitialized;
 

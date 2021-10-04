@@ -4,9 +4,9 @@ import {
     selectFriendRequests,
     selectFriendships,
     selectThirdPanel,
-    selectUsers
+    selectUsers,
 } from "state-management/selectors/data.selector";
-import {ThirdPanelTypes} from "../../types/UISelectionModes";
+import {ThirdPanelTypes} from "types/UISelectionModes";
 import MessagesPanelComponent from "../message/MessagesPanel.component";
 import ThirdPanelFriendComponent from "./ThirdPanelFriend.component";
 

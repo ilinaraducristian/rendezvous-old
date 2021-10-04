@@ -3,7 +3,7 @@ import {
     selectServer as selectServerAction,
     setSecondPanelBody,
     setSecondPanelHeader,
-} from "../../state-management/slices/data/data.slice";
+} from "state-management/slices/data/data.slice";
 import {SecondPanelBodyTypes, SecondPanelHeaderTypes} from "types/UISelectionModes";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";

@@ -1,4 +1,3 @@
-import {useRef} from "react";
 import {useDrag} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
 import {addChannelUsers, joinVoiceChannel as joinVoiceChannelAction} from "state-management/slices/data/data.slice";
@@ -23,17 +22,15 @@ function VoiceChannelComponent({channel}: ComponentProps) {
 
     const users = useAppSelector(selectUsers);
     const dispatch = useAppDispatch();
-    const joined = useRef(false);
     const joinedChannel = useAppSelector(selectJoinedChannel);
 
     const {createProducer} = useMediasoup();
 
     const selectChannel = useCallbackDebounced(async () => {
         if (config.offline) return;
-        if (joined.current) return;
-        joined.current = true;
-        if (joinedChannel === null)
-            await createProducer();
+        if (joinedChannel !== null) return;
+        console.log({joinedChannel});
+        await createProducer();
         const usersInVoiceChannel = await joinVoiceChannel({
             serverId: channel.serverId,
             channelId: channel.id,
@@ -41,7 +38,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
         dispatch(joinVoiceChannelAction({serverId: channel.serverId, groupId: channel.groupId, channelId: channel.id}));
         dispatch(addChannelUsers(usersInVoiceChannel));
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [channel]);
+    }, [channel, joinedChannel]);
 
     const [, drag] = useDrag<ChannelDragObject, any, any>({
         type: ItemTypes.CHANNEL,
@@ -63,7 +60,8 @@ function VoiceChannelComponent({channel}: ComponentProps) {
                         return (
                             <li key={`channel_${channel.id}_user_${i}`}>
                                 <ButtonComponent className={styles.button}>
-                                    <AvatarSVG url={AvatarPlaceholder} isActive={joined.current && _user.isTalking}/>
+                                    <AvatarSVG url={AvatarPlaceholder}
+                                               isActive={joinedChannel !== null && _user.isTalking}/>
                                     <span>{`${user.firstName} ${user.lastName}`}</span>
                                 </ButtonComponent>
                             </li>

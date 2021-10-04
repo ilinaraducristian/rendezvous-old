@@ -2,11 +2,11 @@ import {createSlice} from "@reduxjs/toolkit";
 import {SliceCaseReducers} from "@reduxjs/toolkit/src/createSlice";
 import channelReducers from "state-management/slices/data/channel.reducers";
 import serverReducers from "state-management/slices/data/server.reducers";
-import {User, UserData} from "../../../dtos/user.dto";
-import {Server} from "../../../dtos/server.dto";
-import {FriendRequest, Friendship} from "../../../dtos/friend.dto";
-import {Message} from "../../../dtos/message.dto";
-import {ChannelType, TextChannel} from "../../../dtos/channel.dto";
+import {User, UserData} from "dtos/user.dto";
+import {Server} from "dtos/server.dto";
+import {FriendRequest, Friendship} from "dtos/friend.dto";
+import {Message} from "dtos/message.dto";
+import {ChannelType, TextChannel} from "dtos/channel.dto";
 
 export type DataSliceState = {
     isBackendInitialized: boolean,
