@@ -6,7 +6,6 @@ import {initializeBackend} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/first-panel/FirstPanel/FirstPanel.component";
 import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPanel.component";
 import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
-import AddServerOverlayComponent from "components/overlay/AddServerOverlay/AddServerOverlay.component";
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
 
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
@@ -30,6 +29,7 @@ import styles from "components/app/App/App.module.css";
 import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay/CreateGroupOverlay.component";
 import InvitationOverlayComponent from "components/overlay/InvitationOverlay/InvitationOverlay.component";
+import AddServerOverlayComponent from "components/overlay/AddServerOverlay/AddServerOverlay.component";
 
 function AppComponent() {
 

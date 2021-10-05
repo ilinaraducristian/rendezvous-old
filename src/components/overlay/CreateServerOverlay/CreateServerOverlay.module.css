@@ -1,7 +1,126 @@
-.div {
-    flex-grow: 1;
+.body {
+    width: 440px;
+    height: 240px;
+    background-color: var(--color-2nd);
+    border: 0;
+    border-radius: 5px 5px 0 0;
+    position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 1em;
+    color: var(--color-6th);
+    align-items: center;
+    padding: 0;
+}
+
+.header {
+    width: 100%;
+    height: 78px;
+    padding: 16px;
+    margin: 16px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.styledButton {
+    top: 16px;
+    right: 12px;
+    position: absolute;
+    color: var(--color-11th);
+    transition: opacity .2s;
+    opacity: .5;
+}
+
+.styledButton:hover {
+    opacity: 1;
+}
+
+.h5 {
+    width: 100%;
+    text-align: center;
+    color: gray;
+    margin: 0;
+    cursor: default;
+}
+
+.h2 {
+    margin: 0;
+    cursor: default;
+}
+
+.serverSpan {
+    align-self: flex-start;
+    font-size: 12px;
+    margin-top: 32px;
+    margin-bottom: 8px;
+    margin-left: 16px;
+    cursor: default;
+}
+
+.cancelButton {
+    margin-right: 32px;
+    height: 100%;
+}
+
+.cancelButton:hover {
+    text-decoration: underline;
+}
+
+.createButton {
+    padding: 2px 16px;
+    background-color: var(--color-29th);
+    transition: background-color 300ms;
+    border: 0;
+    border-radius: 3px;
+    height: 100%;
+}
+
+.createButtonDisabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.createButton:not(.createButtonDisabled):hover {
+    background-color: var(--color-30th);
+}
+
+.input {
+    outline: none;
+    background: none;
+    border: none;
+    color: var(--color-7th);
+    width: 100%;
+}
+
+.footer {
+    width: 440px;
+    height: 70px;
+    background-color: var(--color-3rd);
+    padding: 16px;
+    border: 0;
+    border-radius: 0 0 5px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+    background-color: var(--color-24th);
+    width: 408px;
+    height: 40px;
+    padding: 10px;
+    border-radius: 3px;
+    border: 1px solid var(--color-25th);
+    transition: border-color .2s ease-in-out;
+}
+
+.inputContainer:hover {
+    border-color: var(--color-26th);
+}
+
+.inputContainer:focus-within {
+    border-color: var(--color-27th);
 }

@@ -44,11 +44,15 @@ function CreateChannelOverlayComponent({groupId = null, groupName}: ComponentPro
         dispatch(setOverlay(null));
     }
 
+    function closeOverlay() {
+        dispatch(setOverlay(null));
+    }
+
     return (
         <TransparentBackgroundDivComponent>
             <div>
                 <div className={styles.body}>
-                    <ButtonComponent className={styles.styledButton}>
+                    <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
                     </ButtonComponent>
                     <header className={styles.header}>

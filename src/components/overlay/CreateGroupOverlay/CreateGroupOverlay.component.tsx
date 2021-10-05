@@ -4,17 +4,17 @@ import ButtonComponent from "components/ButtonComponent";
 import XSVG from "svg/XSVG/X.svg";
 import styles from "./CreateGroupOverlay.module.css";
 import {useState} from "react";
-import {useAppSelector} from "state-management/store";
+import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import config from "config";
 import {createGroup} from "providers/ReactSocketIO.provider";
+import {setOverlay} from "state-management/slices/data/data.slice";
 
 function CreateGroupOverlayComponent() {
 
     const [groupName, setGroupName] = useState("");
     const selectedServer = useAppSelector(selectSelectedServer);
-
-    // const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
 
     async function createGroupCallback() {
         if (config.offline) return;
@@ -28,11 +28,15 @@ function CreateGroupOverlayComponent() {
         // }));
     }
 
+    function closeOverlay() {
+        dispatch(setOverlay(null));
+    }
+
     return (
         <TransparentBackgroundDivComponent>
             <div>
                 <div className={styles.body}>
-                    <ButtonComponent className={styles.styledButton}>
+                    <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
                     </ButtonComponent>
                     <header className={styles.header}>

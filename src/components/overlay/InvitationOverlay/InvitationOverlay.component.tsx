@@ -4,8 +4,9 @@ import ButtonComponent from "components/ButtonComponent";
 import XSVG from "svg/XSVG/X.svg";
 import styles from "./InvitationOverlay.module.css";
 import {useCallback, useState} from "react";
-import {useAppSelector} from "state-management/store";
+import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
+import {setOverlay} from "state-management/slices/data/data.slice";
 
 type ComponentProps = {
     invitation: string
@@ -15,6 +16,7 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
 
     const selectedServer = useAppSelector(selectSelectedServer);
     const [status, setStatus] = useState("Copy");
+    const dispatch = useAppDispatch();
 
     const copyToClipboard = useCallback(async () => {
         try {
@@ -26,11 +28,15 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
         }
     }, [invitation]);
 
+    function closeOverlay() {
+        dispatch(setOverlay(null));
+    }
+
     return (
         <TransparentBackgroundDivComponent>
             <div>
                 <div className={styles.body}>
-                    <ButtonComponent className={styles.styledButton}>
+                    <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
                     </ButtonComponent>
                     <header className={styles.header}>

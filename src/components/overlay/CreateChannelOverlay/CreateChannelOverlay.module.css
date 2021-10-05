@@ -37,7 +37,8 @@
 }
 
 .h5 {
-    width: max-content;
+    width: 100%;
+    text-align: center;
     color: gray;
     margin: 0;
     cursor: default;
@@ -45,6 +46,7 @@
 
 .h2 {
     margin: 0;
+    cursor: default;
 }
 
 .channelSpan {
