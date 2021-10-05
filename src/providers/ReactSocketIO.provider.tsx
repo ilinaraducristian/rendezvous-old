@@ -182,6 +182,14 @@ export function createChannel(data: NewChannelRequest): Promise<NewChannelRespon
     return socket.emitAck("create_channel", data);
 }
 
+export function closeProducer(): Promise<void> {
+    return socket.emitAck("close_producer");
+}
+
+export function closeTransports() {
+    return socket.emitAck("close_transports");
+}
+
 export function createTransports(): Promise<CreateTransportResponse> {
     return socket.emitAck("create_transports");
 }

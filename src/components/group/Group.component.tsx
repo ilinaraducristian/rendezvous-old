@@ -19,7 +19,10 @@ function GroupComponent({id, name}: ComponentProps) {
 
 
     function createChannel() {
-        dispatch(setOverlay({type: OverlayTypes.CreateChannelOverlayComponent, payload: {groupId: id}}));
+        dispatch(setOverlay({
+            type: OverlayTypes.CreateChannelOverlayComponent,
+            payload: {groupId: id, groupName: name},
+        }));
     }
 
     return (

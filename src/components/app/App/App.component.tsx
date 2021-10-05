@@ -7,10 +7,8 @@ import FirstPanelComponent from "components/first-panel/FirstPanel/FirstPanel.co
 import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPanel.component";
 import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay/AddServerOverlay.component";
-import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay.component";
-import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay.component";
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
-import InvitationOverlayComponent from "components/overlay/InvitationOverlay/InvitationOverlay.component";
+
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
 import {
     selectIsBackendInitialized,
@@ -29,6 +27,9 @@ import {getUserData, useSocket} from "providers/ReactSocketIO.provider";
 import useAsyncEffect from "util/useAsyncEffect";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
 import styles from "components/app/App/App.module.css";
+import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay/CreateChannelOverlay.component";
+import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay/CreateGroupOverlay.component";
+import InvitationOverlayComponent from "components/overlay/InvitationOverlay/InvitationOverlay.component";
 
 function AppComponent() {
 
@@ -103,7 +104,7 @@ function overlayToComponent({type, payload}: { type: number, payload: any }) {
         case OverlayTypes.AddServerOverlayComponent:
             return <AddServerOverlayComponent/>;
         case OverlayTypes.CreateChannelOverlayComponent:
-            return <CreateChannelOverlayComponent groupId={payload.groupId}/>;
+            return <CreateChannelOverlayComponent groupId={payload.groupId} groupName={payload.groupName}/>;
         case OverlayTypes.CreateGroupOverlayComponent:
             return <CreateGroupOverlayComponent/>;
         case OverlayTypes.CreateServerOverlayComponent:

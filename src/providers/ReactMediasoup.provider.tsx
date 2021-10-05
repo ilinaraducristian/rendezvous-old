@@ -5,6 +5,8 @@ import {Consumer} from "mediasoup-client/lib/Consumer";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {setUserIsTalking} from "state-management/slices/data/data.slice";
 import {
+    closeProducer,
+    closeTransports,
     connectTransport,
     createConsumers,
     createProducer,
@@ -32,7 +34,8 @@ type InitialObjectProperties = {
     isMuted: boolean,
     setMute: (isMuted: boolean) => void,
     createProducer: () => Promise<void>,
-    closeProducer: () => void,
+    closeProducer: () => Promise<void>,
+    closeTransports: () => Promise<void>,
     createConsumers: (socketIds: string[]) => Promise<void>,
     createTransports: () => Promise<void>
 };
@@ -47,7 +50,9 @@ const initialObject: InitialObjectProperties = {
     },
     createProducer: async () => {
     },
-    closeProducer: () => {
+    closeProducer: async () => {
+    },
+    closeTransports: async () => {
     },
     createConsumers: async _ => {
     },
@@ -74,17 +79,17 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
     useEffect(() => {
 
         initialObject.setMute = isMuted => {
-            initialObject.isMuted = isMuted;
+            state.isMuted = isMuted;
             updateState();
         };
 
         initialObject.createTransports = async () => {
-            if (initialObject.localStream === undefined)
-                initialObject.localStream = await navigator.mediaDevices.getUserMedia({audio: true}).catch();
-            if (initialObject.sendTransport !== undefined || initialObject.recvTransport !== undefined) return;
+            if (state.localStream === undefined)
+                state.localStream = await navigator.mediaDevices.getUserMedia({audio: true}).catch();
+            if (state.sendTransport !== undefined || state.recvTransport !== undefined) return;
             const {sendTransportParameters, recvTransportParameters} = await createTransports();
-            const sendTransport = initialObject.mediasoup.createSendTransport(sendTransportParameters);
-            const recvTransport = initialObject.mediasoup.createRecvTransport(recvTransportParameters);
+            const sendTransport = state.mediasoup.createSendTransport(sendTransportParameters);
+            const recvTransport = state.mediasoup.createRecvTransport(recvTransportParameters);
 
             sendTransport.on("connect", ({dtlsParameters}, cb) => {
                 connectTransport({type: "send", dtlsParameters, id: sendTransport.id}, cb);
@@ -103,66 +108,76 @@ function ReactMediasoupProvider({children}: { children: PropsWithChildren<any> }
                 connectTransport({type: "recv", dtlsParameters, id: recvTransport.id}, cb);
             });
 
-            initialObject.sendTransport = sendTransport;
-            initialObject.recvTransport = recvTransport;
+            state.sendTransport = sendTransport;
+            state.recvTransport = recvTransport;
             updateState();
         };
 
         initialObject.createProducer = async () => {
-            await initialObject.createTransports();
-            if (initialObject.localStream === undefined) return;
+            await state.createTransports();
+            if (state.localStream === undefined) return;
 
-            initialObject.producer = await initialObject.sendTransport?.produce({
-                track: initialObject.localStream.getAudioTracks()[0],
+            state.producer = await state.sendTransport?.produce({
+                track: state.localStream.getAudioTracks()[0],
             });
 
             updateState();
         };
 
-        initialObject.closeProducer = () => {
+        initialObject.closeProducer = async () => {
             state.producer?.close();
+            await closeProducer();
             state.producer = undefined;
             state.localStream = undefined;
             updateState();
         };
 
+        initialObject.closeTransports = async () => {
+            state.recvTransport?.close();
+            state.sendTransport?.close();
+            await closeTransports();
+            state.recvTransport = undefined;
+            state.recvTransport = undefined;
+            updateState();
+        };
+
         initialObject.createConsumers = async (socketIds: string[]) => {
-            await initialObject.createTransports();
+            await state.createTransports();
             const {consumersParameters} = await createConsumers({
                 consumers: socketIds.map(socketId => ({
                     socketId,
-                    rtpCapabilities: initialObject.mediasoup.rtpCapabilities,
+                    rtpCapabilities: state.mediasoup.rtpCapabilities,
                 })),
             });
             await Promise.all(consumersParameters.map(async (consumerParameters, index) => {
-                if (initialObject.recvTransport === undefined) return;
+                if (state.recvTransport === undefined) return;
                 const socketId = socketIds[index];
-                const consumer = await initialObject.recvTransport.consume(consumerParameters);
+                const consumer = await state.recvTransport.consume(consumerParameters);
                 consumer.observer.on("pause", () => {
                     dispatch(setUserIsTalking({socketId, isTalking: false}));
                 });
                 consumer.observer.on("resume", () => {
                     dispatch(setUserIsTalking({socketId, isTalking: true}));
                 });
-                initialObject.remoteStream.addTrack(consumer.track);
+                state.remoteStream.addTrack(consumer.track);
                 resumeConsumer({id: consumer.id});
-                initialObject.consumers = [...initialObject.consumers, {socketId, consumer}];
-                if (initialObject.audioContext === undefined) {
-                    initialObject.audioContext = new AudioContext();
-                    initialObject.audioContext.createMediaStreamSource(initialObject.remoteStream).connect(initialObject.audioContext.destination);
+                state.consumers = [...state.consumers, {socketId, consumer}];
+                if (state.audioContext === undefined) {
+                    state.audioContext = new AudioContext();
+                    state.audioContext.createMediaStreamSource(state.remoteStream).connect(state.audioContext.destination);
                 }
             }));
             updateState();
         };
 
         socket.on("consumer_pause", (payload) => {
-            const found = initialObject.consumers.find(({consumer}) => consumer.id === payload.consumerId);
+            const found = state.consumers.find(({consumer}) => consumer.id === payload.consumerId);
             if (found === undefined) return;
             found.consumer.pause();
         });
 
         socket.on("consumer_resume", (payload) => {
-            const found = initialObject.consumers.find(({consumer}) => consumer.id === payload.consumerId);
+            const found = state.consumers.find(({consumer}) => consumer.id === payload.consumerId);
             if (found === undefined) return;
             found.consumer.resume();
         });

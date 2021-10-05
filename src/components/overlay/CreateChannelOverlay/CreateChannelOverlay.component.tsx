@@ -1,17 +1,48 @@
 import TransparentBackgroundDivComponent
     from "components/overlay/TransparentBackgroundDiv/TransparentBackgroundDiv.component";
-import {useState} from "react";
 import RadioSVG from "svg/Radio/Radio.svg";
 import ChannelSVG from "svg/Channel/Channel.svg";
-import {ChannelType} from "dtos/channel.dto";
+import {ChannelType, TextChannel} from "dtos/channel.dto";
 import ButtonComponent from "components/ButtonComponent";
 import XSVG from "svg/XSVG/X.svg";
-import styles from "components/overlay/CreateChannelOrGroup/CreateChannelOrGroup.module.css";
+import styles from "./CreateChannelOverlay.module.css";
+import {useState} from "react";
+import {useAppDispatch, useAppSelector} from "state-management/store";
+import {selectSelectedServer} from "state-management/selectors/data.selector";
+import config from "config";
+import {createChannel} from "providers/ReactSocketIO.provider";
+import {addChannel, selectChannel, setOverlay} from "state-management/slices/data/data.slice";
 
-function CreateChannelOrGroupComponent() {
+type ComponentProps = {
+    groupId?: number | null,
+    groupName?: string
+}
+
+function CreateChannelOverlayComponent({groupId = null, groupName}: ComponentProps) {
 
     const [channelType, setChannelType] = useState(ChannelType.Text);
     const [channelName, setChannelName] = useState("");
+    const selectedServer = useAppSelector(selectSelectedServer);
+    const dispatch = useAppDispatch();
+
+    async function createChannelCallback() {
+        if (config.offline) return;
+        if (selectedServer === undefined) return;
+        // TODO
+        const data = await createChannel({serverId: selectedServer.id, groupId, channelName});
+        const channel: TextChannel = {
+            id: data?.channelId,
+            serverId: selectedServer.id,
+            groupId,
+            type: ChannelType.Text,
+            name: channelName,
+            messages: [],
+            order: 0,
+        };
+        dispatch(addChannel(channel));
+        dispatch(selectChannel(channel.id));
+        dispatch(setOverlay(null));
+    }
 
     return (
         <TransparentBackgroundDivComponent>
@@ -20,8 +51,13 @@ function CreateChannelOrGroupComponent() {
                     <ButtonComponent className={styles.styledButton}>
                         <XSVG/>
                     </ButtonComponent>
-                    <h2 className={styles.h2}>Create {channelType === ChannelType.Voice ? "Voice" : "Text"} Channel</h2>
-                    <h5 className={styles.h5}>in Text Channels</h5>
+                    <header className={styles.header}>
+                        <h2 className={styles.h2}>Create {channelType === ChannelType.Voice ? "Voice" : "Text"} Channel</h2>
+                        {
+                            groupName === undefined ||
+                            <h5 className={styles.h5}>in {groupName}</h5>
+                        }
+                    </header>
                     <span className={styles.channelSpan}>CHANNEL TYPE</span>
                     <ButtonComponent
                         className={`${styles.channelButton} ${channelType === ChannelType.Text ? styles.channelButtonChecked : ""}`}
@@ -55,6 +91,7 @@ function CreateChannelOrGroupComponent() {
                     <ButtonComponent
                         disabled={channelName.trim().length === 0}
                         className={`${styles.createButton} ${channelName.trim().length === 0 ? styles.createButtonDisabled : ""}`}
+                        onClick={createChannelCallback}
                     >
                         Create Channel
                     </ButtonComponent>
@@ -64,6 +101,4 @@ function CreateChannelOrGroupComponent() {
     );
 }
 
-/* CSS */
-
-export default CreateChannelOrGroupComponent;
+export default CreateChannelOverlayComponent;

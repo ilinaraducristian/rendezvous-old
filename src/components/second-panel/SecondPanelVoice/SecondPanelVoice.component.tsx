@@ -20,7 +20,7 @@ function Button() {
 
 function SecondPanelVoiceComponent() {
 
-    const {closeProducer} = useMediasoup();
+    const {closeProducer, closeTransports} = useMediasoup();
     const dispatch = useAppDispatch();
     const joinedVoiceChannel = useAppSelector(selectJoinedChannel);
 
@@ -32,7 +32,8 @@ function SecondPanelVoiceComponent() {
         });
         dispatch(removeChannelUsers([response]));
         dispatch(leaveVoiceChannelAction(undefined));
-        closeProducer();
+        await closeProducer();
+        await closeTransports();
     }
 
     return (
