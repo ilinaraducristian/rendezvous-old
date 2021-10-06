@@ -2,13 +2,15 @@ import {DetailedHTMLProps, HTMLAttributes} from "react";
 import styles from "./TransparentBackgroundDiv.module.css";
 
 function TransparentBackgroundDivComponent({
-                                               children,
                                                className,
+                                               children,
                                                ...props
                                            }: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>) {
     return (
         <div className={`${styles.div} ${className ?? ""}`} {...props}>
-            {children}
+            <div>
+                {children}
+            </div>
         </div>
     );
 }

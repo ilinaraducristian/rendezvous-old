@@ -17,7 +17,6 @@ import {
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay/ImageInputOverlay.component";
 import ForthPanelComponent from "components/ForthPanel.component";
 import HeaderComponent from "components/Header.component";
-import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay.component";
 import {OverlayTypes} from "types/UISelectionModes";
 import SettingsPanelComponent from "components/settings/SettingsPanel.component";
 import LoadingComponent from "components/app/Loading/Loading.component";
@@ -30,6 +29,7 @@ import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverl
 import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay/CreateGroupOverlay.component";
 import InvitationOverlayComponent from "components/overlay/InvitationOverlay/InvitationOverlay.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay/AddServerOverlay.component";
+import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay/AddFriendOverlay.component";
 
 function AppComponent() {
 

@@ -32,7 +32,6 @@ function JoinServerOverlayComponent() {
 
     return (
         <TransparentBackgroundDivComponent>
-            <div>
                 <div className={styles.body}>
                     <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
@@ -58,7 +57,6 @@ function JoinServerOverlayComponent() {
                         Join Server
                     </ButtonComponent>
                 </footer>
-            </div>
         </TransparentBackgroundDivComponent>
     );
 }

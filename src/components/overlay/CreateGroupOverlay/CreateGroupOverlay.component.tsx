@@ -34,33 +34,31 @@ function CreateGroupOverlayComponent() {
 
     return (
         <TransparentBackgroundDivComponent>
-            <div>
-                <div className={styles.body}>
-                    <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
-                        <XSVG/>
-                    </ButtonComponent>
-                    <header className={styles.header}>
-                        <h2 className={styles.h2}>Create Group</h2>
-                    </header>
-                    <span className={styles.groupSpan}>GROUP NAME</span>
-                    <div className={styles.inputContainer}>
-                        <input className={styles.input} placeholder="New Group"
-                               onChange={event => setGroupName(event.target.value)}/>
-                    </div>
+            <div className={styles.body}>
+                <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
+                    <XSVG/>
+                </ButtonComponent>
+                <header className={styles.header}>
+                    <h2 className={styles.h2}>Create Group</h2>
+                </header>
+                <span className={styles.groupSpan}>GROUP NAME</span>
+                <div className={styles.inputContainer}>
+                    <input className={styles.input} placeholder="New Group"
+                           onChange={event => setGroupName(event.target.value.trim())}/>
                 </div>
-                <footer className={styles.footer}>
-                    <ButtonComponent className={styles.cancelButton}>
-                        Cancel
-                    </ButtonComponent>
-                    <ButtonComponent
-                        disabled={groupName.trim().length === 0}
-                        className={`${styles.createButton} ${groupName.trim().length === 0 ? styles.createButtonDisabled : ""}`}
-                        onClick={createGroupCallback}
-                    >
-                        Create Group
-                    </ButtonComponent>
-                </footer>
             </div>
+            <footer className={styles.footer}>
+                <ButtonComponent className={styles.cancelButton}>
+                    Cancel
+                </ButtonComponent>
+                <ButtonComponent
+                    disabled={groupName.length === 0}
+                    className={`${styles.createButton} ${groupName.length === 0 ? styles.createButtonDisabled : ""}`}
+                    onClick={createGroupCallback}
+                >
+                    Create Group
+                </ButtonComponent>
+            </footer>
         </TransparentBackgroundDivComponent>
     );
 }

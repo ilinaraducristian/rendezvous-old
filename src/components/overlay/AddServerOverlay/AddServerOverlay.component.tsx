@@ -26,7 +26,6 @@ function AddServerOverlayComponent() {
 
     return (
         <TransparentBackgroundDivComponent>
-            <div>
                 <div className={styles.body}>
                     <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
@@ -53,7 +52,6 @@ function AddServerOverlayComponent() {
                         <ArrowSVG/>
                     </ButtonComponent>
                 </div>
-            </div>
         </TransparentBackgroundDivComponent>
     );
 }

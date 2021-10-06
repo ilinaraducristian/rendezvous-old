@@ -1,9 +1,9 @@
 .body {
     width: 440px;
-    height: 290px;
+    height: 220px;
     background-color: var(--color-2nd);
     border: 0;
-    border-radius: 5px 5px 0 0;
+    border-radius: 5px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -41,22 +41,9 @@
     cursor: default;
 }
 
-.groupSpan {
-    align-self: flex-start;
-    font-size: 12px;
-    margin-top: 12px;
-    margin-bottom: 8px;
-    margin-left: 16px;
+.h5 {
+    margin: 0;
     cursor: default;
-}
-
-.cancelButton {
-    margin-right: 32px;
-    height: 100%;
-}
-
-.cancelButton:hover {
-    text-decoration: underline;
 }
 
 .createButton {
@@ -65,7 +52,9 @@
     transition: background-color 300ms;
     border: 0;
     border-radius: 3px;
-    height: 100%;
+    width: 250px;
+    height: 32px;
+    margin-right: 4px;
 }
 
 .createButtonDisabled {
@@ -81,20 +70,8 @@
     outline: none;
     background: none;
     border: none;
-    color: var(--color-28th);
+    color: var(--color-7th);
     width: 100%;
-}
-
-.footer {
-    width: 440px;
-    height: 70px;
-    background-color: var(--color-3rd);
-    padding: 16px;
-    border: 0;
-    border-radius: 0 0 5px 5px;
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
 }
 
 .inputContainer {
@@ -102,11 +79,11 @@
     align-items: center;
     background-color: var(--color-24th);
     width: 408px;
-    height: 40px;
-    padding: 10px;
+    height: 42px;
     border-radius: 3px;
     border: 1px solid var(--color-25th);
     transition: border-color .2s ease-in-out;
+    margin-top: 20px;
 }
 
 .inputContainer:hover {

@@ -34,7 +34,6 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
 
     return (
         <TransparentBackgroundDivComponent>
-            <div>
                 <div className={styles.body}>
                     <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
@@ -56,7 +55,6 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
                         </ButtonComponent>
                     </div>
                 </div>
-            </div>
         </TransparentBackgroundDivComponent>
     );
 }

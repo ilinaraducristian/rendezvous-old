@@ -50,7 +50,6 @@ function CreateChannelOverlayComponent({groupId = null, groupName}: ComponentPro
 
     return (
         <TransparentBackgroundDivComponent>
-            <div>
                 <div className={styles.body}>
                     <ButtonComponent className={styles.styledButton} onClick={closeOverlay}>
                         <XSVG/>
@@ -100,7 +99,6 @@ function CreateChannelOverlayComponent({groupId = null, groupName}: ComponentPro
                         Create Channel
                     </ButtonComponent>
                 </footer>
-            </div>
         </TransparentBackgroundDivComponent>
     );
 }

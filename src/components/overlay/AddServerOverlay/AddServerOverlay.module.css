@@ -3,7 +3,7 @@
     height: 350px;
     background-color: var(--color-2nd);
     border: 0;
-    border-radius: 5px 5px 5px 5px;
+    border-radius: 5px;
     position: relative;
     display: flex;
     flex-direction: column;
