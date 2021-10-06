@@ -4,6 +4,7 @@
     box-shadow: var(--small-shadow-bar);
     height: 48px;
     min-height: 48px;
+
 }
 
 .span {
@@ -18,10 +19,9 @@
     width: 100%;
 
     border-style: none;
-    box-shadow: var(--small-shadow-bar);
     display: flex;
     align-items: center;
-    height: 32px;
+    height: 48px;
     color: var(--color-9th)
 }
 

@@ -1,4 +1,4 @@
-import styles from "components/app/Loading/Loading.module.css";
+import styles from "components/Loading/Loading.module.css";
 
 function LoadingComponent() {
     return (

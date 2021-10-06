@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "index.css";
 import reportWebVitals from "reportWebVitals";
-import AppComponent from "components/app/App/App.component";
+import AppComponent from "components/App/App.component";
 import {store} from "state-management/store";
 import {Provider} from "react-redux";
 import {hideSettings, setOverlay} from "state-management/slices/data/data.slice";
