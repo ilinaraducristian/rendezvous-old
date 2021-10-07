@@ -40,7 +40,7 @@ function HeaderComponent() {
 
     return (
         <header className={styles.header}>
-            <div className={styles.DivHeader}>
+            <div className={styles.divHeader}>
                 {
                     header !== HeaderTypes.friends ||
                     <>
