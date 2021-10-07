@@ -3,9 +3,9 @@ import {useDrop} from "react-dnd";
 import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
 import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import DropHandleComponent from "components/DropHandle.component";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {moveChannel} from "providers/ReactSocketIO.provider";
+import DropHandleComponent from "components/DropHandle/DropHandle.component";
 
 
 type ComponentProps = {
@@ -47,7 +47,7 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
     setHidden(!props.isOver);
   }, [props]);
 
-  return <DropHandleComponent Hidden={hidden} ref={drop}/>;
+  return <DropHandleComponent hidden={hidden} ref={drop}/>;
 
 }
 

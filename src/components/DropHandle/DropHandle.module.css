@@ -1,0 +1,8 @@
+.div {
+    height: 0.5em;
+    background-color: green;
+}
+
+.hidden {
+    background-color: transparent !important;
+}

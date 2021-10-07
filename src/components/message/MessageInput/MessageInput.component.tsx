@@ -1,9 +1,9 @@
-import styled from "styled-components";
 import {ClipboardEvent, EventHandler, forwardRef, KeyboardEvent, MouseEvent, useCallback} from "react";
 import {useAppDispatch} from "state-management/store";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {OverlayTypes} from "types/UISelectionModes";
-import fileToDataUrl from "../../util/file-to-data-url";
+import styles from "./MessageInput.module.css";
+import fileToDataUrl from "util/file-to-data-url";
 
 type ComponentProps = {
     onKeyDown: EventHandler<KeyboardEvent<HTMLSpanElement>>,
@@ -40,13 +40,14 @@ const MessageInputComponent = forwardRef<HTMLSpanElement, ComponentProps>(({onKe
 
         dispatch(setOverlay({
             type: OverlayTypes.ImageInputOverlayComponent,
-            payload: {image: await fileToDataUrl(file)}
+            payload: {image: await fileToDataUrl(file)},
         }));
 
     }, [dispatch]);
 
     return (
-        <Span
+        <span
+            className={styles.span}
             ref={ref}
             role="textbox"
             contentEditable
@@ -58,23 +59,5 @@ const MessageInputComponent = forwardRef<HTMLSpanElement, ComponentProps>(({onKe
         />
     );
 });
-
-/* CSS */
-
-const Span = styled.span`
-  background: none;
-  border: none;
-  flex-grow: 1;
-  word-wrap: anywhere;
-  max-height: inherit;
-  overflow-y: auto;
-  align-self: center;
-
-  &:focus {
-    outline: none;
-  }
-`;
-
-/* CSS */
 
 export default MessageInputComponent;

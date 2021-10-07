@@ -1,5 +1,4 @@
 import PlusSVG from "svg/Plus.svg";
-import MessageInputComponent from "components/message/MessageInput.component";
 import GIFSVG from "svg/GIF.svg";
 import {KeyboardEvent, useCallback, useEffect, useRef, useState} from "react";
 import {emojis} from "util/trie";
@@ -13,6 +12,7 @@ import {NewMessageRequest} from "dtos/message.dto";
 import {sendMessage} from "providers/ReactSocketIO.provider";
 import styles from "components/message/MessageInputContainer/MessageInputContainer.module.css";
 import ButtonComponent from "components/ButtonComponent";
+import MessageInputComponent from "components/message/MessageInput/MessageInput.component";
 
 type ComponentProps = {
     isReplying: boolean,

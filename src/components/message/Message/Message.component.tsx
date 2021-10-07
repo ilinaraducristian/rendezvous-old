@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import {useEffect, useRef, useState} from "react";
 import {useAppDispatch} from "state-management/store";
 import {
@@ -9,6 +8,7 @@ import {
 import config from "config";
 import {Message} from "dtos/message.dto";
 import {deleteMessage, editMessage} from "providers/ReactSocketIO.provider";
+import styles from "./Message.module.css";
 
 type ComponentProps = {
     message: Message,
@@ -89,13 +89,13 @@ function MessageComponent(
     }
 
     return (
-        <DivContainer onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+        <div className={styles.divContainer} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
             {!actions ||
-            <DivActions>
+            <div className={styles.divActions}>
                 <button type="button" onClick={editMode}>E</button>
                 <button type="button" onClick={() => reply(messageId)}>R</button>
                 <button type="button" onClick={deleteMessageCallback}>D</button>
-            </DivActions>
+            </div>
             }
             {
                 !isReply ||
@@ -106,30 +106,31 @@ function MessageComponent(
                         `replied to ${replyId}`
                 }</div>
             }
-            <Div>
-                <Time dateTime={time.toISOString()}>
+            <div className={styles.div}>
+                <time className={styles.time} dateTime={time.toISOString()}>
                     {time.getHours()} : {time.getMinutes()}
-                </Time>
-                <SpanUsername>{username}</SpanUsername>
-                <DivMessageContainer>
-                    <SpanMessage suppressContentEditableWarning contentEditable={isEditing}
-                                 ref={textRef}>{text}</SpanMessage>
+                </time>
+                <span className={styles.spanUsername}>{username}</span>
+                <div className={styles.divMessageContainer}>
+                    <span className={styles.spanMessage} suppressContentEditableWarning contentEditable={isEditing}
+                          ref={textRef}>{text}</span>
                     {
                         !isEditing ||
                         <button type="button" onClick={editMessageCallback}>Save</button>
                     }
                     {
                         image === null ||
-                        <Img src={image} alt="user uploaded image"/>
+                        <img className={styles.img} src={image} alt="user uploaded content"/>
                     }
                     {
                         gifs.map((url, i) =>
-                            <Video
+                            <video
+                                className={styles.video}
                                 key={`video_${i}`}
                                 src={url}
                                 loop={true}
                                 onMouseEnter={event => {
-                                    (event.target as HTMLVideoElement).play();
+                                    (event.target as HTMLVideoElement).play().then();
                                 }}
                                 onMouseLeave={event => {
                                     (event.target as HTMLVideoElement).pause();
@@ -137,58 +138,11 @@ function MessageComponent(
                             />,
                         )
                     }
-                </DivMessageContainer>
-            </Div>
-        </DivContainer>
+                </div>
+            </div>
+        </div>
     );
 
 }
-
-/* CSS */
-
-const Video = styled.video`
-  max-width: 20rem;
-  max-height: 30rem;
-`;
-
-const DivMessageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const DivContainer = styled.div`
-  position: relative;
-`;
-
-const DivActions = styled.div`
-  position: absolute;
-  right: 1em;
-  background: blue;
-`;
-
-const Div = styled.div`
-  display: flex;
-`;
-
-const Time = styled.time`
-  margin: 0 1em;
-  flex-shrink: 0;
-`;
-
-const SpanUsername = styled.span`
-  font-weight: 1000;
-  flex-shrink: 0;
-`;
-
-const SpanMessage = styled.span`
-  margin: 0 1em;
-`;
-
-const Img = styled.img`
-  max-height: 13.188rem;
-  max-width: 40rem;
-`;
-
-/* CSS */
 
 export default MessageComponent;

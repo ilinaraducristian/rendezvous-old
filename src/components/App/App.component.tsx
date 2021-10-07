@@ -5,7 +5,6 @@ import {processedServerData} from "mock-data";
 import {initializeBackend} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/first-panel/FirstPanel/FirstPanel.component";
 import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPanel.component";
-import ThirdPanelComponent from "components/third-panel/ThirdPanel.component";
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
 
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
@@ -15,8 +14,6 @@ import {
     selectOverlay,
 } from "state-management/selectors/data.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay/ImageInputOverlay.component";
-import ForthPanelComponent from "components/ForthPanel.component";
-import HeaderComponent from "components/Header.component";
 import {OverlayTypes} from "types/UISelectionModes";
 import SettingsPanelComponent from "components/settings/SettingsPanel.component";
 import LoadingComponent from "components/Loading/Loading.component";
@@ -30,6 +27,9 @@ import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay/C
 import InvitationOverlayComponent from "components/overlay/InvitationOverlay/InvitationOverlay.component";
 import AddServerOverlayComponent from "components/overlay/AddServerOverlay/AddServerOverlay.component";
 import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay/AddFriendOverlay.component";
+import HeaderComponent from "components/Header/Header.component";
+import ThirdPanelComponent from "components/third-panel/ThirdPanel/ThirdPanel.component";
+import ForthPanelComponent from "components/forth-panel/ForthPanel.component";
 
 function AppComponent() {
 

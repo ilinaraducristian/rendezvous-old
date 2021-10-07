@@ -1,8 +1,8 @@
-import MemberComponent from "./member/Member.component";
 import {useAppSelector} from "state-management/store";
-import styled from "styled-components";
 import {selectUsers} from "state-management/selectors/data.selector";
 import {selectSelectedServerMembers} from "state-management/selectors/server.selector";
+import styles from "./ForthPanel.module.css";
+import MemberComponent from "components/member/Member.component";
 
 function ForthPanelComponent() {
 
@@ -10,7 +10,7 @@ function ForthPanelComponent() {
     const selectedMembers = useAppSelector(selectSelectedServerMembers);
 
     return (
-        <Div>
+        <div className={styles.div}>
             <ol className="list">
                 {
                     selectedMembers.map((member, index) => {
@@ -24,23 +24,9 @@ function ForthPanelComponent() {
                     })
                 }
             </ol>
-        </Div>
+        </div>
     );
 
 }
-
-/* CSS */
-
-const Div = styled.div`
-  width: 240px;
-  min-width: 240px;
-  background-color: var(--color-3rd);
-  height: 100%;
-  padding-top: 12px;
-  padding-left: 8px;
-  padding-right: 8px;
-`;
-
-/* CSS */
 
 export default ForthPanelComponent;

@@ -1,0 +1,13 @@
+.span {
+    background: none;
+    border: none;
+    flex-grow: 1;
+    word-wrap: anywhere;
+    max-height: inherit;
+    overflow-y: auto;
+    align-self: center;
+}
+
+.span:focus {
+    outline: none;
+}

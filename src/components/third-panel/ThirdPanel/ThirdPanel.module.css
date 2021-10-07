@@ -1,0 +1,13 @@
+.divContainer {
+    width: 100%;
+    flex-grow: 1;
+    background-color: var(--color-2nd);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.ul {
+    width: 100%;
+}

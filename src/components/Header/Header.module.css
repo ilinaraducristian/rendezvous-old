@@ -1,0 +1,71 @@
+.header {
+    display: flex;
+    align-items: center;
+    height: 48px;
+    min-height: 48px;
+    box-shadow: var(--small-shadow-bar);
+    z-index: 0;
+    background-color: var(--color-2nd);
+}
+
+.button {
+    color: var(--color-11th);
+    font-size: 1rem;
+}
+
+.button:hover {
+    background-color: var(--color-14th);
+    color: var(--color-7th);
+}
+
+.pendingButton {
+    color: var(--color-11th);
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pendingButton:hover {
+    background-color: var(--color-14th);
+    color: var(--color-7th);
+}
+
+.addFriendButton {
+    background-color: var(--color-18th);
+    border: solid var(--color-18th);
+    border-radius: 0.3em;
+    border-width: 0.1em 0.3em;
+}
+
+.badge {
+    background-color: var(--color-19th);
+    border-radius: 50%;
+    border-width: 0.5em;
+    color: white;
+    flex-grow: 1;
+    width: 1em;
+    height: 1em;
+    margin-left: 0.4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.span {
+    flex-grow: 1;
+}
+
+.friendsSpan {
+    color: var(--color-6th);
+}
+
+.divMembers {
+    width: 240px;
+}
+
+.divHeader {
+    flex-grow: 1;
+    display: flex;
+    gap: 1em;
+}
