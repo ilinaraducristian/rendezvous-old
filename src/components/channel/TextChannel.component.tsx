@@ -1,4 +1,4 @@
-import {useCallback} from "react";
+import {DetailedHTMLProps, LiHTMLAttributes, useCallback} from "react";
 import {useDrag} from "react-dnd";
 import config from "config";
 import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
@@ -14,11 +14,11 @@ import {TextChannel} from "dtos/channel.dto";
 import {HeaderTypes, ThirdPanelTypes} from "types/UISelectionModes";
 import {getMessages} from "providers/ReactSocketIO.provider";
 
-type ComponentProps = {
+type ComponentProps = DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement> & {
     channel: TextChannel
 }
 
-function TextChannelComponent({channel}: ComponentProps) {
+function TextChannelComponent({channel, ...props}: ComponentProps) {
 
     const dispatch = useAppDispatch();
 
@@ -46,7 +46,7 @@ function TextChannelComponent({channel}: ComponentProps) {
     }, [channel]);
 
     return (
-        <li ref={drag}>
+        <li ref={drag} {...props}>
             <ChannelButtonComponent
                 onClick={selectChannel}
                 channelType={channel.type}

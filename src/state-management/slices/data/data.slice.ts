@@ -7,6 +7,7 @@ import {Server} from "dtos/server.dto";
 import {FriendRequest, Friendship} from "dtos/friend.dto";
 import {Message} from "dtos/message.dto";
 import {ChannelType, TextChannel} from "dtos/channel.dto";
+import groupReducers from "state-management/slices/data/group.reducers";
 
 export type DataSliceState = {
     isBackendInitialized: boolean,
@@ -102,7 +103,8 @@ const reducers = {
         state.isSettingsShown = false;
     },
     ...serverReducers,
-    ...channelReducers
+    ...channelReducers,
+    ...groupReducers,
 };
 
 export const dataSlice = createSlice<DataSliceState, SliceCaseReducers<DataSliceState>, string>({
@@ -167,6 +169,11 @@ export const {
     addChannelUsers,
     removeChannelUsers,
     setUserIsTalking,
+} = dataSlice.actions;
+
+// group reducers
+export const {
+    moveGroups,
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

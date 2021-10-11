@@ -1,5 +1,5 @@
 import {DataSliceState} from "state-management/slices/data/data.slice";
-import {ChannelType, TextChannel, VoiceChannel} from "../../../dtos/channel.dto";
+import {ChannelType, TextChannel, VoiceChannel} from "dtos/channel.dto";
 import {selectSelectedServer} from "../../selectors/data.selector";
 import {selectJoinedChannelUsers} from "../../selectors/channel.selector";
 

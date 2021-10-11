@@ -1,7 +1,7 @@
 import ChannelSVG from "svg/Channel/Channel.svg";
 import MembersSVG from "svg/Members/Members.svg";
 import styles from "./Header.module.css";
-import {useState} from "react";
+import {DetailedHTMLProps, HTMLAttributes, useState} from "react";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectFriendRequests, selectHeader, selectSelectedChannel} from "state-management/selectors/data.selector";
 import {HeaderTypes, OverlayTypes, ThirdPanelTypes} from "types/UISelectionModes";
@@ -10,7 +10,7 @@ import {ChannelType} from "dtos/channel.dto";
 import FriendSVG from "svg/Friend/Friend.svg";
 import ButtonComponent from "components/ButtonComponent";
 
-function HeaderComponent() {
+function HeaderComponent({className, ...props}: DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>) {
 
     const [isMembersSelected, setIsMembersSelected] = useState(true);
 
@@ -39,7 +39,7 @@ function HeaderComponent() {
     }
 
     return (
-        <header className={styles.header}>
+        <header className={`${styles.header} ${className ?? ""}`} {...props}>
             <div className={styles.divHeader}>
                 {
                     header !== HeaderTypes.friends ||

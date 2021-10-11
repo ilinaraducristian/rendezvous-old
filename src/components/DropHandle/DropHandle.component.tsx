@@ -1,19 +1,22 @@
 import styles from "./DropHandle.module.css";
-import {DetailedHTMLProps, HTMLAttributes} from "react";
+import {DetailedHTMLProps, forwardRef, HTMLAttributes} from "react";
 
-function DropHandleComponent({
-                                 className,
-                                 children,
-                                 hidden,
-                                 ...props
-                             }: DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> & { hidden: boolean }) {
+type ComponentProps =
+    Omit<DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>, "ref">
+    & { hidden: boolean };
 
-    return (
-        <div className={`${styles.div} ${!hidden || styles.hidden} ${className ?? ""}`} {...props}>
-            {children}
-        </div>
-    );
-
-}
+const DropHandleComponent = forwardRef<HTMLDivElement, ComponentProps>(
+    ({
+         className,
+         children,
+         hidden,
+         ...props
+     }, ref) => {
+        return (
+            <div className={`${styles.div} ${!hidden || styles.hidden} ${className ?? ""}`} ref={ref} {...props}>
+                {children}
+            </div>
+        );
+    });
 
 export default DropHandleComponent;

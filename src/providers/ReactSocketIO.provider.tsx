@@ -7,6 +7,8 @@ import {
     JoinVoiceChannelResponse,
     MoveChannelRequest,
     MoveChannelResponse,
+    MoveGroupRequest,
+    MoveGroupResponse,
     NewChannelRequest,
     NewChannelResponse,
 } from "dtos/channel.dto";
@@ -212,6 +214,10 @@ export function resumeConsumer(data: ResumeConsumerRequest) {
 
 export function moveChannel(data: MoveChannelRequest): Promise<MoveChannelResponse> {
     return socket.emitAck("move_channel", data);
+}
+
+export function moveGroup(data: MoveGroupRequest): Promise<MoveGroupResponse> {
+    return socket.emitAck("move_group", data);
 }
 
 export function createGroup(data: NewGroupRequest): Promise<NewGroupResponse> {

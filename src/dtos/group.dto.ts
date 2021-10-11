@@ -1,9 +1,10 @@
-import {Channel} from './channel.dto';
+import {Channel} from "./channel.dto";
 
 export type Group = {
   id: number,
   serverId: number,
   name: string,
+  order: number,
   channels: Channel[] // channels in a group
 }
 
