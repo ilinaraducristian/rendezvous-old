@@ -29,7 +29,6 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const selectChannel = useCallbackDebounced(async () => {
         if (config.offline) return;
         if (joinedChannel !== null) return;
-        console.log({joinedChannel});
         await createProducer();
         const usersInVoiceChannel = await joinVoiceChannel({
             serverId: channel.serverId,

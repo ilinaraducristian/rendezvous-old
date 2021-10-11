@@ -204,7 +204,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             elements={popupList}
         />}
         <footer className={styles.footer}>
-            <ButtonComponent type="button" className="btn--off btn--hover btn__icon">
+            <ButtonComponent className="btn--off btn--hover btn__icon">
                 <PlusSVG/>
             </ButtonComponent>
             <MessageInputComponent
@@ -216,9 +216,9 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             <ButtonComponent className="btn--off btn--hover btn__icon">
                 <GIFSVG/>
             </ButtonComponent>
-            <button type="button" className="btn btn__icon">
-                <div className={styles.divEmoji} style={{backgroundImage: "emojis.png"}}/>
-            </button>
+            <ButtonComponent className="btn__icon">
+                <div className={styles.divEmoji} style={{backgroundImage: "url(emojis.png)"}}/>
+            </ButtonComponent>
         </footer>
     </>;
 

@@ -9,6 +9,7 @@ import config from "config";
 import {Message} from "dtos/message.dto";
 import {deleteMessage, editMessage} from "providers/ReactSocketIO.provider";
 import styles from "./Message.module.css";
+import ButtonComponent from "components/ButtonComponent";
 
 type ComponentProps = {
     message: Message,
@@ -92,9 +93,9 @@ function MessageComponent(
         <div className={styles.divContainer} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
             {!actions ||
             <div className={styles.divActions}>
-                <button type="button" onClick={editMode}>E</button>
-                <button type="button" onClick={() => reply(messageId)}>R</button>
-                <button type="button" onClick={deleteMessageCallback}>D</button>
+                <ButtonComponent onClick={editMode}>E</ButtonComponent>
+                <ButtonComponent onClick={() => reply(messageId)}>R</ButtonComponent>
+                <ButtonComponent onClick={deleteMessageCallback}>D</ButtonComponent>
             </div>
             }
             {
@@ -116,7 +117,7 @@ function MessageComponent(
                           ref={textRef}>{text}</span>
                     {
                         !isEditing ||
-                        <button type="button" onClick={editMessageCallback}>Save</button>
+                        <ButtonComponent onClick={editMessageCallback}>Save</ButtonComponent>
                     }
                     {
                         image === null ||
