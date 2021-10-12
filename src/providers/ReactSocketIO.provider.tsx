@@ -115,7 +115,6 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
         });
 
         initialObject.socket.on("new_member", (payload) => {
-            console.log({payload});
             dispatch(addMember(payload));
         });
 

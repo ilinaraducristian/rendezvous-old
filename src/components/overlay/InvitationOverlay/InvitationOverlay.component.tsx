@@ -45,6 +45,7 @@ function InvitationOverlayComponent({invitation}: ComponentProps) {
                     <div className={styles.inputContainer}>
                         <input
                             value={invitation}
+                            readOnly={true}
                             className={styles.input}
                         />
                         <ButtonComponent

@@ -40,14 +40,19 @@ const serverReducers = {
         else
             state.users[existingUserIndex] = user;
     },
-    addMember(state: DataSliceState, {payload: member}: { payload: Member }) {
-        const members = state.servers.find(server => server.id === member.serverId)?.members;
+    addMember(state: DataSliceState, {payload}: { payload: { member: Member, user: User } }) {
+        const members = state.servers.find(server => server.id === payload.member.serverId)?.members;
+        const userIndex = state.users.findIndex(user => user.id === payload.user.id);
         if (members === undefined) return;
-        const memberIndex = members.findIndex(m1 => m1.id === member.id);
+        const memberIndex = members.findIndex(m1 => m1.id === payload.member.id);
         if (memberIndex === -1)
-            members.push(member);
+            members.push(payload.member);
         else
-            members[memberIndex] = member;
+            members[memberIndex] = payload.member;
+        if (userIndex === -1)
+            state.users.push(payload.user);
+        else
+            state.users[userIndex] = payload.user;
     },
     addChannel(state: DataSliceState, {payload: channel}: { payload: Channel }) {
         const server = state.servers.find(server => server.id === channel.serverId);
