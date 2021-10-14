@@ -10,6 +10,9 @@ import {Message} from "dtos/message.dto";
 import {deleteMessage, editMessage} from "providers/ReactSocketIO.provider";
 import styles from "./Message.module.css";
 import ButtonComponent from "components/ButtonComponent";
+import PencilSVG from "svg/Pencil/Pencil.svg";
+import Arrow2SVG from "svg/Arrow2/Arrow2.svg";
+import TrashcanSVG from "svg/Trashcan/Trashcan.svg";
 
 type ComponentProps = {
     message: Message,
@@ -91,13 +94,6 @@ function MessageComponent(
 
     return (
         <div className={styles.divContainer} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-            {!actions ||
-            <div className={styles.divActions}>
-                <ButtonComponent onClick={editMode}>E</ButtonComponent>
-                <ButtonComponent onClick={() => reply(messageId)}>R</ButtonComponent>
-                <ButtonComponent onClick={deleteMessageCallback}>D</ButtonComponent>
-            </div>
-            }
             {
                 !isReply ||
                 <div>{
@@ -108,6 +104,13 @@ function MessageComponent(
                 }</div>
             }
             <div className={styles.div}>
+                {!actions ||
+                <div className={styles.modifierContainer}>
+                    <ButtonComponent onClick={editMode}><PencilSVG/></ButtonComponent>
+                    <ButtonComponent onClick={() => reply(messageId)}><Arrow2SVG/></ButtonComponent>
+                    <ButtonComponent onClick={deleteMessageCallback}><TrashcanSVG/></ButtonComponent>
+                </div>
+                }
                 <time className={styles.time} dateTime={time.toISOString()}>
                     {time.getHours()} : {time.getMinutes()}
                 </time>
