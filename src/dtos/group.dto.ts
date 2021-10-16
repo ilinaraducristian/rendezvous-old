@@ -13,4 +13,14 @@ export type NewGroupRequest = {
   groupName: string
 }
 
+export type MoveGroupRequest = {
+  serverId: number,
+  groupId: number,
+  order: number
+}
+
+export type MoveGroupResponse = {
+  groups: { id: number, order: number }[]
+}
+
 export type NewGroupResponse = number;

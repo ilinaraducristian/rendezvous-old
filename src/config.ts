@@ -5,7 +5,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
         socketIoUrl: "https://rendezvous.myddns.me:30000",
         keycloak: {
             url: "https://rendezvous.myddns.me:30000/auth",
-            realm: "capp",
+            realm: "rendezvous",
             clientId: "auth-code",
         },
     }
@@ -17,7 +17,7 @@ const config = process.env.REACT_APP_ENVIRONMENT === "production" ? {
         socketIoUrl: "http://localhost:3100",
         keycloak: {
             url: "http://localhost:8080/auth",
-            realm: "capp",
+            realm: "rendezvous",
             clientId: "auth-code",
         },
     };

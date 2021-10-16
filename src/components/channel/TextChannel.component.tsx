@@ -1,7 +1,7 @@
 import {DetailedHTMLProps, LiHTMLAttributes, useCallback} from "react";
 import {useDrag} from "react-dnd";
 import config from "config";
-import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
+import ItemTypes, {ChannelDragObject} from "types/DnDItemTypes";
 import {
     addMessages,
     selectChannel as selectChannelAction,

@@ -8,6 +8,8 @@ import {SecondPanelBodyTypes, SecondPanelHeaderTypes} from "types/UISelectionMod
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {Server} from "dtos/server.dto";
+import {useDrag} from "react-dnd";
+import ItemTypes, {ServerDragObject} from "types/DnDItemTypes";
 
 type ComponentProps = {
     server: Server
@@ -24,8 +26,13 @@ function ServerButtonComponent({server}: ComponentProps) {
         dispatch(selectServerAction(server.id));
     }
 
+    const [, drag] = useDrag<ServerDragObject, any, any>({
+        type: ItemTypes.SERVER,
+        item: {id: server.id, order: server.order},
+    }, [server]);
+
     return (
-        <FirstPanelButtonComponent selected={selectedServer?.id === server.id} onClick={selectServer}>
+        <FirstPanelButtonComponent ref={drag} selected={selectedServer?.id === server.id} onClick={selectServer}>
             <span>{server.name[0]}</span>
         </FirstPanelButtonComponent>
     );

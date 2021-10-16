@@ -60,16 +60,6 @@ export type MoveChannelRequest = {
     order: number
 }
 
-export type MoveGroupRequest = {
-    serverId: number,
-    groupId: number,
-    order: number
-}
-
 export type MoveChannelResponse = {
     channels: { id: number, groupId: number | null, order: number }[]
-}
-
-export type MoveGroupResponse = {
-    groups: { id: number, order: number }[]
 }

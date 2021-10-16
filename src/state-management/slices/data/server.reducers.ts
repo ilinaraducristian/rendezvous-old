@@ -99,6 +99,13 @@ const serverReducers = {
             }
         });
     },
+    moveServers(state: DataSliceState, {payload}: { payload: { id: number, order: number }[] }) {
+        payload.forEach(server => {
+            const found = state.servers.find(sr => sr.id === server.id);
+            if (found === undefined) return;
+            found.order = server.order;
+        });
+    },
 };
 
 export default serverReducers;

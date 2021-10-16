@@ -7,6 +7,7 @@ export type Server = {
   id: number,
   name: string,
   userId: string,
+  order: number,
   invitation: string | null,
   invitationExp: string | null,
   channels: Channel[], // channels without a group
@@ -30,6 +31,15 @@ export type NewInvitationResponse = {
 
 export type JoinServerRequest = {
   invitation: string
+}
+
+export type MoveServerRequest = {
+  serverId: number,
+  order: number
+}
+
+export type MoveServerResponse = {
+  servers: { id: number, order: number }[]
 }
 
 export type JoinServerResponse = UserServersData

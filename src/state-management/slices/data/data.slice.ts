@@ -156,6 +156,7 @@ export const {
     addChannel,
     addGroup,
     setChannelsOrder,
+    moveServers,
 } = dataSlice.actions;
 
 // channel reducers

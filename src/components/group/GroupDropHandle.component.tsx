@@ -1,6 +1,6 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
-import {GroupDragObject, ItemTypes} from "types/DnDItemTypes";
+import ItemTypes, {GroupDragObject} from "types/DnDItemTypes";
 import {moveGroups} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";

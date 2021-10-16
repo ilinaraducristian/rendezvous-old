@@ -7,12 +7,10 @@ import {
     JoinVoiceChannelResponse,
     MoveChannelRequest,
     MoveChannelResponse,
-    MoveGroupRequest,
-    MoveGroupResponse,
     NewChannelRequest,
     NewChannelResponse,
 } from "dtos/channel.dto";
-import {NewGroupRequest, NewGroupResponse} from "dtos/group.dto";
+import {MoveGroupRequest, MoveGroupResponse, NewGroupRequest, NewGroupResponse} from "dtos/group.dto";
 import {
     DeleteMessagesRequest,
     EditMessagesRequest,
@@ -23,6 +21,8 @@ import {
 import {
     JoinServerRequest,
     JoinServerResponse,
+    MoveServerRequest,
+    MoveServerResponse,
     NewInvitationRequest,
     NewInvitationResponse,
     NewServerRequest,
@@ -217,6 +217,10 @@ export function moveChannel(data: MoveChannelRequest): Promise<MoveChannelRespon
 
 export function moveGroup(data: MoveGroupRequest): Promise<MoveGroupResponse> {
     return socket.emitAck("move_group", data);
+}
+
+export function moveServer(data: MoveServerRequest): Promise<MoveServerResponse> {
+    return socket.emitAck("move_server", data);
 }
 
 export function createGroup(data: NewGroupRequest): Promise<NewGroupResponse> {

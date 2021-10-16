@@ -1,53 +1,52 @@
 import {useCallback, useEffect, useState} from "react";
 import {useDrop} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
+import ItemTypes, {ChannelDragObject} from "types/DnDItemTypes";
 import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {moveChannel} from "providers/ReactSocketIO.provider";
 import DropHandleComponent from "components/DropHandle/DropHandle.component";
 
-
 type ComponentProps = {
-  index: number,
-  groupId: number | null
+    index: number,
+    groupId: number | null
 }
 
 function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
 
-  const server = useAppSelector(selectSelectedServer);
-  const [hidden, setHidden] = useState(true);
+    const server = useAppSelector(selectSelectedServer);
+    const [hidden, setHidden] = useState(true);
 
-  const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
 
-  const handleDrop = useCallback(async (item: { id: number, order: number, groupId: number | null }) => {
-    if (server === undefined) return;
-    const dataMoveChannel = await moveChannel({serverId: server.id, channelId: item.id, order: index, groupId});
-    dispatch(moveChannels(dataMoveChannel.channels));
-  }, [groupId, index, server, dispatch]);
+    const handleDrop = useCallback(async (item: ChannelDragObject) => {
+        if (server === undefined) return;
+        const dataMoveChannel = await moveChannel({serverId: server.id, channelId: item.id, order: index, groupId});
+        dispatch(moveChannels(dataMoveChannel.channels));
+    }, [groupId, index, server, dispatch]);
 
-  const handleHover = useCallback(() => {
-    setHidden(false);
-  }, [setHidden]);
+    const handleHover = useCallback(() => {
+        setHidden(false);
+    }, [setHidden]);
 
-  const handleCollect = useCallback((monitor) => {
-    return {
-      isOver: monitor.isOver()
-    };
-  }, []);
+    const handleCollect = useCallback((monitor) => {
+        return {
+            isOver: monitor.isOver(),
+        };
+    }, []);
 
-  const [props, drop] = useDrop<ChannelDragObject, any, any>({
-    accept: ItemTypes.CHANNEL,
-    drop: handleDrop,
-    hover: handleHover,
-    collect: handleCollect
-  }, [handleDrop, handleHover, handleCollect]);
+    const [props, drop] = useDrop<ChannelDragObject, any, any>({
+        accept: ItemTypes.CHANNEL,
+        drop: handleDrop,
+        hover: handleHover,
+        collect: handleCollect,
+    }, [handleDrop, handleHover, handleCollect]);
 
-  useEffect(() => {
-    setHidden(!props.isOver);
-  }, [props]);
+    useEffect(() => {
+        setHidden(!props.isOver);
+    }, [props]);
 
-  return <DropHandleComponent hidden={hidden} ref={drop}/>;
+    return <DropHandleComponent hidden={hidden} ref={drop}/>;
 
 }
 

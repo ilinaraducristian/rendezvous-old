@@ -1,37 +1,37 @@
-import {MouseEventHandler, ReactNode, useEffect, useState} from "react";
+import {DetailedHTMLProps, forwardRef, LiHTMLAttributes, MouseEventHandler, useEffect, useState} from "react";
 import styles from "components/first-panel/FirstPanelButton/FirstPanelButton.module.css";
 import ButtonComponent from "components/ButtonComponent";
 
-type ComponentProps = {
+type ComponentProps = Omit<DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, "ref"> & {
     selected: boolean,
-    children?: ReactNode,
     onClick: MouseEventHandler<HTMLButtonElement>
-}
+};
 
-function FirstPanelButtonComponent({selected, children, onClick}: ComponentProps) {
+const FirstPanelButtonComponent = forwardRef<HTMLLIElement, ComponentProps>(
+    ({selected, children, onClick, ...props}, ref) => {
 
-    const [selectedClass, setSelectedClass] = useState("");
-    const [notchClass, setNotchClass] = useState("");
+        const [selectedClass, setSelectedClass] = useState("");
+        const [notchClass, setNotchClass] = useState("");
 
-    useEffect(() => {
-        if (selected) {
-            setSelectedClass("btn__first-panel--selected");
-            setNotchClass("div__first-panel-notch--selected");
-        } else {
-            setSelectedClass("");
-            setNotchClass("");
-        }
-    }, [selected]);
+        useEffect(() => {
+            if (selected) {
+                setSelectedClass("btn__first-panel--selected");
+                setNotchClass("div__first-panel-notch--selected");
+            } else {
+                setSelectedClass("");
+                setNotchClass("");
+            }
+        }, [selected]);
 
-    return (
-        <li className={styles.li}>
-            <div className={`${styles.div} ${notchClass}`}/>
-            <ButtonComponent className={`${styles.button} ${selectedClass}`} onClick={onClick}>
-                {children}
-            </ButtonComponent>
-        </li>
-    );
+        return (
+            <li className={styles.li} ref={ref} {...props}>
+                <div className={`${styles.div} ${notchClass}`}/>
+                <ButtonComponent className={`${styles.button} ${selectedClass}`} onClick={onClick}>
+                    {children}
+                </ButtonComponent>
+            </li>
+        );
 
-}
+    });
 
 export default FirstPanelButtonComponent;

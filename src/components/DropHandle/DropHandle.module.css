@@ -1,5 +1,6 @@
 .div {
-    height: 0.5em;
+    height: 8px;
+    width: 100%;
     background-color: green;
 }
 

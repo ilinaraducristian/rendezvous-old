@@ -5,6 +5,7 @@ import AddServerButtonComponent from "components/first-panel/AddServerButton/Add
 import ServerButtonComponent from "components/first-panel/ServerButton.component";
 import HomeButtonComponent from "components/first-panel/HomeButton.component";
 import styles from "components/first-panel/FirstPanel/FirstPanel.module.css";
+import ServerDropHandleComponent from "components/first-panel/ServerDropHandle.component";
 
 function FirstPanelComponent() {
     const servers = useAppSelector(selectServers);
@@ -12,9 +13,13 @@ function FirstPanelComponent() {
     return (
         <ol className={`list ${styles.ol}`}>
             <HomeButtonComponent/>
-            {servers.map((server: Server, index) =>
-                <ServerButtonComponent key={`server_${index}`} server={server}/>,
-            )}
+            <ServerDropHandleComponent key={`server_drop-handle_0`} index={0}/>
+            {Array.from(servers).sort((s1, s2) => s1.order - s2.order).map((server: Server, index) =>
+                [
+                    <ServerButtonComponent key={`server_${index}`} server={server}/>,
+                    <ServerDropHandleComponent key={`server_drop-handle_${index + 1}`} index={index + 1}/>,
+                ],
+            ).flat()}
             <AddServerButtonComponent/>
         </ol>
     );

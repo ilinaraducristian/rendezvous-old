@@ -1,17 +1,18 @@
 const ItemTypes = {
-  CHANNEL: "channel",
-  GROUP: "group",
+    CHANNEL: "channel",
+    GROUP: "group",
+    SERVER: "server",
 };
 
-export type ChannelDragObject = {
-  id: number,
-  order: number,
-  groupId: number | null
+export type DragObject = {
+    id: number,
+    order: number
 };
 
-export type GroupDragObject = {
-  id: number,
-  order: number
+export type ServerDragObject = DragObject;
+export type GroupDragObject = DragObject;
+export type ChannelDragObject = DragObject & {
+    groupId: number | null
 };
 
-export {ItemTypes};
+export default ItemTypes;

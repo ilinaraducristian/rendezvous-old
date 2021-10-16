@@ -30,6 +30,8 @@ import AddFriendOverlayComponent from "components/overlay/AddFriendOverlay/AddFr
 import HeaderComponent from "components/Header/Header.component";
 import ThirdPanelComponent from "components/third-panel/ThirdPanel/ThirdPanel.component";
 import ForthPanelComponent from "components/forth-panel/ForthPanel.component";
+import {HTML5Backend} from "react-dnd-html5-backend";
+import {DndProvider} from "react-dnd";
 
 function AppComponent() {
 
@@ -78,8 +80,10 @@ function AppComponent() {
         :
         (
             <>
-                <FirstPanelComponent/>
-                <SecondPanelComponent/>
+                <DndProvider backend={HTML5Backend}>
+                    <FirstPanelComponent/>
+                    <SecondPanelComponent/>
+                </DndProvider>
                 <div className={styles.contentContainer}>
                     <HeaderComponent/>
                     <div className={styles.mainContainer}>

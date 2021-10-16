@@ -7,7 +7,7 @@ import {OverlayTypes} from "types/UISelectionModes";
 import ButtonComponent from "components/ButtonComponent";
 import styles from "./Group.module.css";
 import {useDrag} from "react-dnd";
-import {GroupDragObject, ItemTypes} from "types/DnDItemTypes";
+import ItemTypes, {GroupDragObject} from "types/DnDItemTypes";
 import {Group} from "dtos/group.dto";
 
 type ComponentProps = DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement> & {

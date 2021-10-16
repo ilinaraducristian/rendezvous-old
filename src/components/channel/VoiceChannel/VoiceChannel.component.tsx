@@ -1,5 +1,5 @@
 import {useDrag} from "react-dnd";
-import {ChannelDragObject, ItemTypes} from "types/DnDItemTypes";
+import ItemTypes, {ChannelDragObject} from "types/DnDItemTypes";
 import {addChannelUsers, joinVoiceChannel as joinVoiceChannelAction} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import config from "config";
