@@ -68,7 +68,7 @@ function HeaderComponent({className, ...props}: DetailedHTMLProps<HTMLAttributes
                 {
                     header !== HeaderTypes.channel || selectedChannel === undefined ||
                     <>
-                        <ChannelSVG type={ChannelType.Text} isPrivate={false}/>
+                        <ChannelSVG type={ChannelType.Text} isPrivate={false} className={styles.svg}/>
                         <span className={styles.span}>{selectedChannel.name}</span>
                         <ButtonComponent
                             className={`btn ${isMembersSelected ? "btn--active" : "btn--off"} btn--hover`}

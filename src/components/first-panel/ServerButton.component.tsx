@@ -31,9 +31,17 @@ function ServerButtonComponent({server}: ComponentProps) {
         item: {id: server.id, order: server.order},
     }, [server]);
 
+    const buttonProps = {
+        onClick: selectServer,
+        style: server.image === null ? undefined : {background: `no-repeat center/105% url(${server.image})`},
+    };
+
     return (
-        <FirstPanelButtonComponent ref={drag} selected={selectedServer?.id === server.id} onClick={selectServer}>
-            <span>{server.name[0]}</span>
+        <FirstPanelButtonComponent ref={drag} selected={selectedServer?.id === server.id} buttonProps={buttonProps}>
+            {
+                server.image !== null ||
+                <span>{server.name[0]}</span>
+            }
         </FirstPanelButtonComponent>
     );
 }

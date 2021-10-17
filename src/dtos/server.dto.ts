@@ -8,6 +8,7 @@ export type Server = {
   name: string,
   userId: string,
   order: number,
+  image: string | null,
   invitation: string | null,
   invitationExp: string | null,
   channels: Channel[], // channels without a group
@@ -40,6 +41,11 @@ export type MoveServerRequest = {
 
 export type MoveServerResponse = {
   servers: { id: number, order: number }[]
+}
+
+export type UpdateServerImageRequest = {
+  serverId: string,
+  image: string | null
 }
 
 export type JoinServerResponse = UserServersData

@@ -249,6 +249,7 @@ export const mockServers = new Array(1).fill(0).map(value =>
         name: "Server",
         userId: "97a8ffc2-10cd-47dd-b915-cf8243d5bfc4",
         invitation: null,
+        image: null,
         invitationExp: null,
         channels: mockChannels,
         groups: mockGroups,

@@ -54,6 +54,11 @@
 
 .span {
     flex-grow: 1;
+    color: var(--color-6th);
+}
+
+.svg {
+    color: var(--color-6th);
 }
 
 .friendsSpan {

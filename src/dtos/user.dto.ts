@@ -1,5 +1,5 @@
-import {Server} from './server.dto';
-import {FriendRequest, Friendship} from './friend.dto';
+import {Server} from "./server.dto";
+import {FriendRequest, Friendship} from "./friend.dto";
 
 export type User = {
   id: string,
@@ -16,8 +16,6 @@ export type KeycloakUser = {
   given_name: string,
   family_name: string
 }
-
-export type UserDataResponse = UserServersData;
 
 export type AcceptFriendRequest = {
   friendRequestId: number
@@ -37,9 +35,9 @@ export type UserServersData = {
   users: User[]
 }
 
-export type UserData = {
-  servers: Server[],
+export type UserData = UserServersData & {
   friendships: Friendship[],
   friendRequests: FriendRequest[],
-  users: User[]
 }
+
+export type UserDataResponse = UserServersData;

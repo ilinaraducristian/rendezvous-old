@@ -25,7 +25,7 @@ function SecondPanelFooterComponent() {
 
     useEffect(() => {
         if (!initialized || !keycloak.authenticated) return;
-        setName((keycloak.userInfo as any).name);
+        setName((keycloak.userInfo as any)?.name ?? "user");
     }, [keycloak, initialized]);
 
     const toggleMute = useCallbackDebounced(pauseProducer, []);

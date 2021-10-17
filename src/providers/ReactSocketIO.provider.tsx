@@ -27,6 +27,7 @@ import {
     NewInvitationResponse,
     NewServerRequest,
     NewServerResponse,
+    UpdateServerImageRequest,
 } from "dtos/server.dto";
 import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
 import {useAppDispatch} from "state-management/store";
@@ -225,6 +226,10 @@ export function moveServer(data: MoveServerRequest): Promise<MoveServerResponse>
 
 export function createGroup(data: NewGroupRequest): Promise<NewGroupResponse> {
     return socket.emitAck("create_group", data);
+}
+
+export function updateServerImage(data: UpdateServerImageRequest): Promise<void> {
+    return socket.emitAck("update_server_image", data);
 }
 
 export function sendMessage(data: NewMessageRequest): Promise<Message> {

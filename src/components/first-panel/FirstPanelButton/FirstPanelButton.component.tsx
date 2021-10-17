@@ -1,14 +1,14 @@
-import {DetailedHTMLProps, forwardRef, LiHTMLAttributes, MouseEventHandler, useEffect, useState} from "react";
+import {ButtonHTMLAttributes, DetailedHTMLProps, forwardRef, LiHTMLAttributes, useEffect, useState} from "react";
 import styles from "components/first-panel/FirstPanelButton/FirstPanelButton.module.css";
 import ButtonComponent from "components/ButtonComponent";
 
 type ComponentProps = Omit<DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement>, "ref"> & {
     selected: boolean,
-    onClick: MouseEventHandler<HTMLButtonElement>
+    buttonProps?: DetailedHTMLProps<ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>
 };
 
 const FirstPanelButtonComponent = forwardRef<HTMLLIElement, ComponentProps>(
-    ({selected, children, onClick, ...props}, ref) => {
+    ({selected, children, buttonProps, ...props}, ref) => {
 
         const [selectedClass, setSelectedClass] = useState("");
         const [notchClass, setNotchClass] = useState("");
@@ -26,7 +26,8 @@ const FirstPanelButtonComponent = forwardRef<HTMLLIElement, ComponentProps>(
         return (
             <li className={styles.li} ref={ref} {...props}>
                 <div className={`${styles.div} ${notchClass}`}/>
-                <ButtonComponent className={`${styles.button} ${selectedClass}`} onClick={onClick}>
+                <ButtonComponent
+                    className={`${styles.button} ${selectedClass} ${buttonProps?.className ?? ""}`} {...buttonProps}>
                     {children}
                 </ButtonComponent>
             </li>

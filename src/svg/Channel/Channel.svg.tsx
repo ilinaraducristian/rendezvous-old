@@ -6,10 +6,11 @@ function ChannelSVG({
                         type,
                         isPrivate,
                         className,
+                        viewBox,
                         ...props
                     }: SVGProps<SVGSVGElement> & { type: ChannelType, isPrivate: boolean }) {
     return (
-        <svg viewBox="0 0 24 24" className={`${styles.svg} ${className ?? ""}`} {...props}>
+        <svg viewBox={viewBox ?? "0 0 24 24"} className={`${styles.svg} ${className ?? ""}`} {...props}>
             {type === ChannelType.Text ?
                 <>
                     {isPrivate ?
