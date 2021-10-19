@@ -8,14 +8,9 @@ import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPane
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
 
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
-import {
-    selectIsBackendInitialized,
-    selectIsSettingsShown,
-    selectOverlay,
-} from "state-management/selectors/data.selector";
+import {selectIsBackendInitialized, selectOverlay} from "state-management/selectors/data.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay/ImageInputOverlay.component";
 import {OverlayTypes} from "types/UISelectionModes";
-import SettingsPanelComponent from "components/settings/SettingsPanel.component";
 import LoadingComponent from "components/Loading/Loading.component";
 import {useKeycloak} from "@react-keycloak/web";
 import {getUserData, useSocket} from "providers/ReactSocketIO.provider";
@@ -32,12 +27,13 @@ import ThirdPanelComponent from "components/third-panel/ThirdPanel/ThirdPanel.co
 import ForthPanelComponent from "components/forth-panel/ForthPanel.component";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import {DndProvider} from "react-dnd";
+import ServerSettingsComponent from "components/settings/ServerSettings/ServerSettings.component";
+import UserSettingsComponent from "components/settings/UserSettings/UserSettings.component";
 
 function AppComponent() {
 
     const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
     const overlay = useAppSelector(selectOverlay);
-    const isSettingsShown = useAppSelector(selectIsSettingsShown);
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const {keycloak, initialized} = useKeycloak();
@@ -92,10 +88,6 @@ function AppComponent() {
                     </div>
                 </div>
                 {
-                    !isSettingsShown ||
-                    <SettingsPanelComponent/>
-                }
-                {
                     overlay === null ||
                     overlayToComponent(overlay)
                 }
@@ -121,6 +113,10 @@ function overlayToComponent({type, payload}: { type: number, payload: any }) {
             return <ImageInputOverlayComponent image={payload.image}/>;
         case OverlayTypes.AddFriendOverlayComponent:
             return <AddFriendOverlayComponent/>;
+        case OverlayTypes.ServerSettingsComponent:
+            return <ServerSettingsComponent/>;
+        case OverlayTypes.UserSettingsComponent:
+            return <UserSettingsComponent/>;
     }
 }
 

@@ -44,7 +44,7 @@ export type MoveServerResponse = {
 }
 
 export type UpdateServerImageRequest = {
-  serverId: string,
+  serverId: number,
   image: string | null
 }
 

@@ -6,7 +6,9 @@ export enum OverlayTypes {
     InvitationOverlayComponent,
     JoinServerOverlayComponent,
     ImageInputOverlayComponent,
-    AddFriendOverlayComponent
+    AddFriendOverlayComponent,
+    ServerSettingsComponent,
+    UserSettingsComponent
 }
 
 export enum SecondPanelHeaderTypes {

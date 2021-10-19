@@ -36,31 +36,39 @@ function DropdownComponent({setIsDropdownShown}: any) {
         setIsDropdownShown(false);
     }, [selectedServer, setIsDropdownShown]);
 
+    const showServerSettings = useCallback(() => {
+        dispatch(setOverlay({type: OverlayTypes.ServerSettingsComponent}));
+    }, [dispatch]);
+
     return (
-        <div className={styles.div}>
-            <ul className={`list ${styles.ul}`}>
-                <li className={styles.li}>
-                    <ButtonComponent className={styles.button} onClick={createInvitationCallback}>
+        <div className={styles.dropdownContainer}>
+            <ul className="list">
+                <li>
+                    <ButtonComponent onClick={createInvitationCallback}>
                         Invite people
                     </ButtonComponent>
                 </li>
-                <li className={styles.li}>
-                    <ButtonComponent className={styles.button} onClick={showCreateChannelOverlay}>
+                <li>
+                    <ButtonComponent onClick={showCreateChannelOverlay}>
                         Create channel
                     </ButtonComponent>
                 </li>
-                <li className={styles.li}>
-                    <ButtonComponent className={styles.button} onClick={showCreateGroupOverlay}>
+                <li>
+                    <ButtonComponent onClick={showCreateGroupOverlay}>
                         Create group
                     </ButtonComponent>
                 </li>
-                <li className={styles.li}>
-                    <ButtonComponent className={styles.button} onClick={deleteServerCallback}>
+                <li>
+                    <ButtonComponent onClick={deleteServerCallback}>
                         Delete server
                     </ButtonComponent>
                 </li>
+                <li>
+                    <ButtonComponent onClick={showServerSettings}>
+                        Server Settings
+                    </ButtonComponent>
+                </li>
             </ul>
-
         </div>
     );
 

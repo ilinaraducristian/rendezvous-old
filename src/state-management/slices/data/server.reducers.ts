@@ -106,6 +106,11 @@ const serverReducers = {
             found.order = server.order;
         });
     },
+    updateServerImage(state: DataSliceState, {payload}: { payload: { serverId: number, image: string | null } }) {
+        const server = state.servers.find(server => server.id === payload.serverId);
+        if (server === undefined) return;
+        server.image = payload.image;
+    },
 };
 
 export default serverReducers;

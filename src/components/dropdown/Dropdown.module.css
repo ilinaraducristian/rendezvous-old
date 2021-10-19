@@ -1,8 +1,8 @@
-.div {
+.dropdownContainer {
     padding: 1em;
 }
 
-.ul {
+.dropdownContainer ul {
     background-color: var(--color-10th);
     color: var(--color-11th);
     border-radius: 0.5em;
@@ -10,12 +10,12 @@
     border-width: 0.5em;
 }
 
-.li:hover {
+.dropdownContainer li:hover {
     background-color: var(--color-12th);
     color: white;
 }
 
-.button {
+.dropdownContainer button {
     color: currentColor;
     width: 100%;
     text-align: start;
