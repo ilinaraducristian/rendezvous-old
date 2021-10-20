@@ -46,3 +46,5 @@ export type CreateConsumersResponse = {
 export type ResumeConsumerRequest = {
     id: string
 }
+
+export type RouterCapabilitiesResponse = { routerRtpCapabilities: RtpCapabilities };

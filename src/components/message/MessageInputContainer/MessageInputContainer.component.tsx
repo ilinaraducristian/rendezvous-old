@@ -193,6 +193,10 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         }
     }, []);
 
+    function selectEmoji(index: number) {
+
+    }
+
     return <>
         {popupType !== PopupType.emojisAndMentions ||
         <PopupContainerComponent
@@ -217,8 +221,9 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
                 <GIFSVG/>
             </ButtonComponent>
             <ButtonComponent className="btn__icon">
-                <div className={styles.divEmoji} style={{backgroundImage: "url(emojis.png)"}}/>
+                <div className={styles.divEmoji} style={{backgroundImage: "url(emojis_subset.png)"}}/>
             </ButtonComponent>
+            {/*<EmojiPickerComponent selectEmoji={selectEmoji}/>*/}
         </footer>
     </>;
 

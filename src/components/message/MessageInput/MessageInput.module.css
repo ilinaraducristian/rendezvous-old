@@ -11,3 +11,11 @@
 .span:focus {
     outline: none;
 }
+
+.testImg {
+    /*background-image: url("emojis1.png");*/
+    background-position: -32px 0;
+    background-size: 1344px 1216px;
+    height: 32px;
+    width: 32px;
+}

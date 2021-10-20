@@ -51,8 +51,8 @@ import {
     CreateProducerRequest,
     CreateTransportResponse,
     ResumeConsumerRequest,
+    RouterCapabilitiesResponse,
 } from "dtos/mediasoup.dto";
-import {RtpCapabilities} from "mediasoup-client/src/RtpParameters";
 
 function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
     return new Promise(resolve => {
@@ -168,33 +168,37 @@ function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> })
 
 export const useSocket = () => useContext(SocketIOContext);
 
-export function getRouterCapabilities(): Promise<{ routerRtpCapabilities: RtpCapabilities }> {
-    return socket.emitAck("get_router_capabilities");
+function asyncGeneric<R = void, T = void>(name: string): (data: T) => Promise<R> {
+    return (data: T) => socket.emitAck(name, data);
 }
 
-export function joinVoiceChannel(data: JoinVoiceChannelRequest): Promise<JoinVoiceChannelResponse> {
-    return socket.emitAck("join_voice_channel", data);
-}
-
-export function leaveVoiceChannel(data: JoinVoiceChannelRequest): Promise<{ socketId: string, channelId: number }> {
-    return socket.emitAck("leave_voice_channel", data);
-}
-
-export function createChannel(data: NewChannelRequest): Promise<NewChannelResponse> {
-    return socket.emitAck("create_channel", data);
-}
-
-export function closeProducer(): Promise<void> {
-    return socket.emitAck("close_producer");
-}
-
-export function closeTransports() {
-    return socket.emitAck("close_transports");
-}
-
-export function createTransports(): Promise<CreateTransportResponse> {
-    return socket.emitAck("create_transports");
-}
+export const pauseProducer = asyncGeneric<void, any>("pause_producer");
+export const closeProducer = asyncGeneric("close_producer");
+export const closeTransports = asyncGeneric("close_transports");
+export const getUserData = asyncGeneric<UserDataResponse>("get_user_data");
+export const rejectFriendRequest = asyncGeneric<any, any>("reject_friend_request");
+export const sendMessage = asyncGeneric<Message, NewMessageRequest>("send_message");
+export const editMessage = asyncGeneric<string, EditMessagesRequest>("edit_message");
+export const deleteServer = asyncGeneric<void, { serverId: number }>("delete_server");
+export const getMessages = asyncGeneric<Message[], GetMessagesRequest>("get_messages");
+export const moveGroup = asyncGeneric<MoveGroupResponse, MoveGroupRequest>("move_group");
+export const createGroup = asyncGeneric<NewGroupResponse, NewGroupRequest>("create_group");
+export const deleteMessage = asyncGeneric<string, DeleteMessagesRequest>("delete_message");
+export const resumeConsumer = asyncGeneric<void, ResumeConsumerRequest>("resume_consumer");
+export const createTransports = asyncGeneric<CreateTransportResponse>("create_transports");
+export const moveServer = asyncGeneric<MoveServerResponse, MoveServerRequest>("move_server");
+export const joinServer = asyncGeneric<JoinServerResponse, JoinServerRequest>("join_server");
+export const createServer = asyncGeneric<NewServerResponse, NewServerRequest>("create_server");
+export const moveChannel = asyncGeneric<MoveChannelResponse, MoveChannelRequest>("move_channel");
+export const createChannel = asyncGeneric<NewChannelResponse, NewChannelRequest>("create_channel");
+export const acceptFriendRequest = asyncGeneric<any, AcceptFriendRequest>("accept_friend_request");
+export const updateServerImage = asyncGeneric<void, UpdateServerImageRequest>("update_server_image");
+export const getRouterCapabilities = asyncGeneric<RouterCapabilitiesResponse>("get_router_capabilities");
+export const createConsumers = asyncGeneric<CreateConsumersResponse, CreateConsumerRequest>("create_consumer");
+export const createInvitation = asyncGeneric<NewInvitationResponse, NewInvitationRequest>("create_invitation");
+export const sendFriendRequest = asyncGeneric<SendFriendRequestResponse, SendFriendRequest>("send_friend_request");
+export const joinVoiceChannel = asyncGeneric<JoinVoiceChannelResponse, JoinVoiceChannelRequest>("join_voice_channel");
+export const leaveVoiceChannel = asyncGeneric<JoinVoiceChannelResponse, JoinVoiceChannelRequest>("leave_voice_channel");
 
 export function connectTransport(data: ConnectTransportRequest, callback: Function) {
     socket.emit("connect_transport", data, callback);
@@ -202,86 +206,6 @@ export function connectTransport(data: ConnectTransportRequest, callback: Functi
 
 export function createProducer(data: CreateProducerRequest, callback: Function) {
     socket.emit("create_producer", data, callback);
-}
-
-export function createConsumers(data: CreateConsumerRequest): Promise<CreateConsumersResponse> {
-    return socket.emitAck("create_consumer", data);
-}
-
-export function resumeConsumer(data: ResumeConsumerRequest) {
-    socket.emit("resume_consumer", data);
-}
-
-export function moveChannel(data: MoveChannelRequest): Promise<MoveChannelResponse> {
-    return socket.emitAck("move_channel", data);
-}
-
-export function moveGroup(data: MoveGroupRequest): Promise<MoveGroupResponse> {
-    return socket.emitAck("move_group", data);
-}
-
-export function moveServer(data: MoveServerRequest): Promise<MoveServerResponse> {
-    return socket.emitAck("move_server", data);
-}
-
-export function createGroup(data: NewGroupRequest): Promise<NewGroupResponse> {
-    return socket.emitAck("create_group", data);
-}
-
-export function updateServerImage(data: UpdateServerImageRequest): Promise<void> {
-    return socket.emitAck("update_server_image", data);
-}
-
-export function sendMessage(data: NewMessageRequest): Promise<Message> {
-    return socket.emitAck("send_message", data);
-}
-
-export function getMessages(data: GetMessagesRequest): Promise<Message[]> {
-    return socket.emitAck("get_messages", data);
-}
-
-export function editMessage(data: EditMessagesRequest): Promise<string> {
-    return socket.emitAck("edit_message", data);
-}
-
-export function deleteMessage(data: DeleteMessagesRequest): Promise<string> {
-    return socket.emitAck("delete_message", data);
-}
-
-export function createServer(data: NewServerRequest): Promise<NewServerResponse> {
-    return socket.emitAck("create_server", data);
-}
-
-export function createInvitation(data: NewInvitationRequest): Promise<NewInvitationResponse> {
-    return socket.emitAck("create_invitation", data);
-}
-
-export function joinServer(data: JoinServerRequest): Promise<JoinServerResponse> {
-    return socket.emitAck("join_server", data);
-}
-
-export function sendFriendRequest(data: SendFriendRequest): Promise<SendFriendRequestResponse> {
-    return socket.emitAck("send_friend_request", data);
-}
-
-export function getUserData(): Promise<UserDataResponse> {
-    return socket.emitAck("get_user_data");
-}
-
-export function acceptFriendRequest(data: AcceptFriendRequest): Promise<any> {
-    return socket.emitAck("accept_friend_request", data);
-}
-
-export function rejectFriendRequest(data: any): Promise<any> {
-    return socket.emitAck("reject_friend_request", data);
-}
-
-export function deleteServer(data: { serverId: number }) {
-    return socket.emitAck("delete_server", data);
-}
-
-export function pauseProducer() {
-    return socket.emitAck("pause_producer");
 }
 
 export default ReactSocketIOProvider;

@@ -31,11 +31,7 @@ export type JoinVoiceChannelRequest = {
     channelId: number,
 }
 
-export type JoinVoiceChannelResponse = {
-    channelId: number,
-    socketId: string,
-    userId: string
-}[]
+export type JoinVoiceChannelResponse = { socketId: string, channelId: number };
 
 export type LeaveVoiceChannelRequest = {
     channelId: number
