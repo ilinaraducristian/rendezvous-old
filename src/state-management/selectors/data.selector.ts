@@ -58,3 +58,6 @@ export const selectSecondPanelBody = ({data}: { data: DataSliceState }): number 
 export const selectSecondPanelFooter = ({data}: { data: DataSliceState }): number => data.secondPanelFooter;
 export const selectHeader = ({data}: { data: DataSliceState }): number => data.header;
 export const selectThirdPanel = ({data}: { data: DataSliceState }): number => data.thirdPanel;
+
+export const selectIsSocketIOConnected = ({data}: { data: DataSliceState }): boolean => data.isSocketIOConnected;
+export const selectIsMicrophoneMuted = ({data}: { data: DataSliceState }): boolean => data.isMicrophoneMuted;

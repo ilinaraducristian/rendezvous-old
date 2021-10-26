@@ -2,7 +2,7 @@ import styles from "./ServerOverviewSettings.module.css";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {mockImage} from "mock-data";
-import {updateServerImage} from "providers/ReactSocketIO.provider";
+import {updateServerImage} from "providers/socketio";
 import fileToDataUrl from "util/file-to-data-url";
 import {ChangeEvent} from "react";
 import {updateServerImage as updateServerImageAction} from "state-management/slices/data/data.slice";

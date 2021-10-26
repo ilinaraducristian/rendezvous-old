@@ -24,7 +24,9 @@ export type DataSliceState = {
     header: number,
     thirdPanel: number,
     joinedVoiceChannel: { serverId: number, groupId: number | null, channelId: number } | null,
-    overlay: { type: number, payload: any } | null
+    overlay: { type: number, payload: any } | null,
+    isSocketIOConnected: boolean,
+    isMicrophoneMuted: boolean
 }
 
 const reducers = {
@@ -95,6 +97,18 @@ const reducers = {
                 channel.messages[messageId] = message;
         });
     },
+    socketIOConnected(state: DataSliceState) {
+        state.isSocketIOConnected = true;
+    },
+    socketIODisconnected(state: DataSliceState) {
+        state.isSocketIOConnected = false;
+    },
+    muteMicrophone(state: DataSliceState) {
+        state.isMicrophoneMuted = true;
+    },
+    unmuteMicrophone(state: DataSliceState) {
+        state.isMicrophoneMuted = false;
+    },
     ...serverReducers,
     ...channelReducers,
     ...groupReducers,
@@ -118,6 +132,8 @@ export const dataSlice = createSlice<DataSliceState, SliceCaseReducers<DataSlice
         thirdPanel: 0,
         joinedVoiceChannel: null,
         overlay: null,
+        isSocketIOConnected: false,
+        isMicrophoneMuted: true
     },
     reducers
 });
@@ -135,6 +151,8 @@ export const {
     setThirdPanel,
     addFriendRequest,
     addMessages,
+    socketIOConnected,
+    socketIODisconnected
 } = dataSlice.actions;
 
 // server reducers
@@ -148,6 +166,7 @@ export const {
     setChannelsOrder,
     moveServers,
     updateServerImage,
+    updatePermissions
 } = dataSlice.actions;
 
 // channel reducers

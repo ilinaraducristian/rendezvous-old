@@ -1,6 +1,6 @@
 import styles from "./SettingsPanel.module.css";
 import ButtonComponent from "components/ButtonComponent";
-import {DetailedHTMLProps, HTMLAttributes, ReactNode, useState} from "react";
+import {DetailedHTMLProps, HTMLAttributes, ReactNode, useEffect, useState} from "react";
 import XSVG from "svg/XSVG/X.svg";
 import {useAppDispatch} from "state-management/store";
 import {setOverlay} from "state-management/slices/data/data.slice";
@@ -13,10 +13,16 @@ function SettingsPanelComponent({className, categories, ...props}: ComponentProp
 
     const dispatch = useAppDispatch();
 
-    const [selected, setSelected] = useState((categories ?? []).length > 0 ? {category: 0, child: 0} : {
+    const [selected, setSelected] = useState({
         category: -1,
         child: -1,
     });
+
+    useEffect(() => {
+        if (categories === undefined) return;
+        if (categories.length > 0)
+            setSelected({category: 0, child: 0});
+    }, [categories]);
 
     function closeSettingsPanel() {
         dispatch(setOverlay(null));
@@ -37,7 +43,7 @@ function SettingsPanelComponent({className, categories, ...props}: ComponentProp
                             </li>
                         ),
                         category.children.map((child, childIndex) => (
-                            <li key={`category_child${catIndex * 10 + childIndex}`}>
+                            <li key={`category_child_${catIndex * 10 + childIndex}`}>
                                 <ButtonComponent
                                     className={`${selected.category === catIndex && selected.child === childIndex ? styles.buttonSelected : ""}`}
                                     onClick={() => setSelected({
@@ -45,8 +51,8 @@ function SettingsPanelComponent({className, categories, ...props}: ComponentProp
                                         child: childIndex,
                                     })}>{child.name}</ButtonComponent>
                             </li>
-                        )).flat(),
-                    ])}
+                        )),
+                    ].flat(2))}
                 </ul>
             </div>
             <div className={styles.secondPanel}>

@@ -8,8 +8,6 @@ import {Provider} from "react-redux";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import {ReactKeycloakProvider} from "@react-keycloak/web";
 import keycloak from "./keycloak";
-import ReactMediasoupProvider from "providers/ReactMediasoup.provider";
-import ReactSocketIOProvider from "providers/ReactSocketIO.provider";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
@@ -20,15 +18,11 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <ReactKeycloakProvider authClient={keycloak}>
-                <ReactSocketIOProvider>
-                    <ReactMediasoupProvider>
-                        <AppComponent/>
-                    </ReactMediasoupProvider>
-                </ReactSocketIOProvider>
+                <AppComponent/>
             </ReactKeycloakProvider>
         </Provider>
     </React.StrictMode>,
-    document.getElementById("root")
+    document.getElementById("root"),
 );
 
 

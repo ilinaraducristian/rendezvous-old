@@ -12,7 +12,7 @@ export type Message = {
 }
 
 export type NewMessageRequest =
-    Omit<Message, 'id' | 'serverId' | 'userId' | 'timestamp'> & { image: string | null };
+    Omit<Message, 'id' | 'userId' | 'timestamp'> & { image: string | null };
 
 export type GetMessagesRequest = {
   friendshipId: number | null,

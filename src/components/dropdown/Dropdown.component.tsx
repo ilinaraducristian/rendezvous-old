@@ -3,38 +3,41 @@ import {setInvitation, setOverlay} from "state-management/slices/data/data.slice
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import {OverlayTypes} from "types/UISelectionModes";
-import {createInvitation, deleteServer} from "providers/ReactSocketIO.provider";
+import {createInvitation, deleteServer} from "providers/socketio";
 import styles from "./Dropdown.module.css";
 import ButtonComponent from "components/ButtonComponent";
+import {useKeycloak} from "@react-keycloak/web";
+import checkPermission from "../../util/check-permission";
 
 function DropdownComponent({setIsDropdownShown}: any) {
 
-    const selectedServer = useAppSelector(selectSelectedServer);
     const dispatch = useAppDispatch();
+    const selectedServer = useAppSelector(selectSelectedServer);
+    const {initialized, keycloak} = useKeycloak();
 
     const createInvitationCallback = useCallback(async () => {
-        if (selectedServer === undefined) return;
-        const {invitation} = await createInvitation({serverId: selectedServer.id});
+        if (checkPermission(initialized, keycloak, selectedServer, 'createInvitation') === undefined) return;
+        const {invitation} = await createInvitation({serverId: selectedServer?.id ?? 0});
         dispatch(setInvitation(invitation));
         dispatch(setOverlay({type: OverlayTypes.InvitationOverlayComponent, payload: {invitation}}));
         setIsDropdownShown(false);
-    }, [selectedServer, dispatch, setIsDropdownShown]);
+    }, [selectedServer, dispatch, setIsDropdownShown, initialized, keycloak]);
 
     const showCreateChannelOverlay = useCallback(() => {
-        setIsDropdownShown(false);
+        if (checkPermission(initialized, keycloak, selectedServer, 'createChannels') === undefined) return;
         dispatch(setOverlay({type: OverlayTypes.CreateChannelOverlayComponent, payload: {groupId: null}}));
-    }, [setIsDropdownShown, dispatch]);
+    }, [dispatch, initialized, selectedServer, keycloak]);
 
     const showCreateGroupOverlay = useCallback(() => {
-        setIsDropdownShown(false);
+        if (checkPermission(initialized, keycloak, selectedServer, 'createGroups') === undefined) return;
         dispatch(setOverlay({type: OverlayTypes.CreateGroupOverlayComponent}));
-    }, [setIsDropdownShown, dispatch]);
+    }, [dispatch, initialized, keycloak, selectedServer]);
 
     const deleteServerCallback = useCallback(async () => {
-        if (selectedServer === undefined) return;
-        await deleteServer({serverId: selectedServer.id});
+        if (checkPermission(initialized, keycloak, selectedServer, 'deleteServer') === undefined) return;
+        await deleteServer({serverId: selectedServer?.id ?? -1});
         setIsDropdownShown(false);
-    }, [selectedServer, setIsDropdownShown]);
+    }, [selectedServer, setIsDropdownShown, initialized, keycloak]);
 
     const showServerSettings = useCallback(() => {
         dispatch(setOverlay({type: OverlayTypes.ServerSettingsComponent}));

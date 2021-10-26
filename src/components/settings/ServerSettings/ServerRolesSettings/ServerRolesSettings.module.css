@@ -1,0 +1,95 @@
+.container {
+    display: flex;
+    height: 100%;
+}
+
+.firstPanel {
+    height: 100%;
+    width: 192px;
+    color: var(--color-11th);
+}
+
+.secondPanel {
+    height: 100%;
+    color: white;
+    width: 100%;
+    padding: 0 20px;
+}
+
+.secondPanel li {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr auto;
+    align-items: center;
+}
+
+h5 {
+    margin: 0;
+}
+
+.arrowSvg {
+    transform: rotate(-90deg);
+}
+
+.xSvg {
+    transform: rotate(45deg);
+    width: 20px;
+    aspect-ratio: 1;
+}
+
+.ul {
+    padding: 0 10px 96px 40px;
+    margin-top: 24px;
+}
+
+.separator {
+    width: 1px;
+    margin-top: -60px;
+    height: calc(100% + 140px);
+    background-color: var(--color-32th);
+}
+
+.backButton {
+    display: flex;
+    align-items: center;
+    width: min-content;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+}
+
+.cont {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 22px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.cont input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+#permission1 {
+
+}

@@ -2,13 +2,16 @@ import {DetailedHTMLProps, LiHTMLAttributes, useState} from "react";
 import ChannelsListComponent from "components/channel/ChannelsList.component";
 import {ArrowSVG} from "svg/Arrow/Arrow.svg";
 import {setOverlay} from "state-management/slices/data/data.slice";
-import {useAppDispatch} from "state-management/store";
+import {useAppDispatch, useAppSelector} from "state-management/store";
 import {OverlayTypes} from "types/UISelectionModes";
 import ButtonComponent from "components/ButtonComponent";
 import styles from "./Group.module.css";
 import {useDrag} from "react-dnd";
 import ItemTypes, {GroupDragObject} from "types/DnDItemTypes";
 import {Group} from "dtos/group.dto";
+import {useKeycloak} from "@react-keycloak/web";
+import {selectSelectedServer} from "../../state-management/selectors/data.selector";
+import checkPermission from "../../util/check-permission";
 
 type ComponentProps = DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement> & {
     group: Group
@@ -16,9 +19,10 @@ type ComponentProps = DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIE
 
 function GroupComponent({group, ...props}: ComponentProps) {
 
-    const [isCollapsed, setIsExpanded] = useState(true);
     const dispatch = useAppDispatch();
-
+    const [isCollapsed, setIsExpanded] = useState(true);
+    const {initialized, keycloak} = useKeycloak();
+    const selectedServer = useAppSelector(selectSelectedServer);
 
     function createChannel() {
         dispatch(setOverlay({
@@ -27,10 +31,18 @@ function GroupComponent({group, ...props}: ComponentProps) {
         }));
     }
 
-    const [, drag] = useDrag<GroupDragObject, any, any>({
-        type: ItemTypes.GROUP,
-        item: {id: group.id, order: group.order},
-    }, [group]);
+    const [, drag] = useDrag<GroupDragObject, any, any>(() => {
+        let canDrag = true;
+
+        if (checkPermission(initialized, keycloak, selectedServer, 'moveGroups') === undefined) canDrag = false;
+
+        return {
+            type: ItemTypes.GROUP,
+            canDrag: _ => canDrag,
+            item: {id: group.id, order: group.order},
+        };
+
+    }, [group, initialized, keycloak, selectedServer]);
 
     return (
         <li ref={drag} {...props}>

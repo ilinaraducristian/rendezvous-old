@@ -4,15 +4,21 @@ import {KeyboardEvent, useCallback, useEffect, useRef, useState} from "react";
 import {emojis} from "util/trie";
 import {addMessages} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectSelectedChannel, selectSelectedFriendship, selectUsers} from "state-management/selectors/data.selector";
+import {
+    selectSelectedChannel,
+    selectSelectedFriendship,
+    selectSelectedServer,
+    selectUsers
+} from "state-management/selectors/data.selector";
 import PopupContainerComponent, {PopupContainerRefType} from "components/message/PopupContainer/PopupContainer.component";
 import {stringSimilarity} from "string-similarity-js";
-import {selectSelectedServerMembers} from "state-management/selectors/server.selector";
 import {NewMessageRequest} from "dtos/message.dto";
-import {sendMessage} from "providers/ReactSocketIO.provider";
+import {sendMessage} from "providers/socketio";
 import styles from "components/message/MessageInputContainer/MessageInputContainer.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import MessageInputComponent from "components/message/MessageInput/MessageInput.component";
+import {useKeycloak} from "@react-keycloak/web";
+import checkPermission from "../../../util/check-permission";
 
 type ComponentProps = {
     isReplying: boolean,
@@ -37,17 +43,19 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
 
     const [popupType, setPopupType] = useState<PopupType | null>(null);
     const [popupList, setPopupList] = useState<any[]>([]);
-    const members = useAppSelector(selectSelectedServerMembers);
     const users = useAppSelector(selectUsers);
+    const {initialized, keycloak} = useKeycloak();
+    const selectedServer = useAppSelector(selectSelectedServer);
 
-    const sendMessageCallback = useCallback(async (event: any) => {
+    const sendMessageCallback = useCallback(async (event: KeyboardEvent<HTMLSpanElement>) => {
         event.preventDefault();
         if (selectedChannel === undefined && selectedFriendship === undefined) return;
-        let message = (event.target as any).innerText;
+        let message = event.currentTarget.innerText;
         (event.target as any).innerText = "";
         let payload: NewMessageRequest = {
-            friendshipId: selectedFriendship?.id || null,
-            channelId: selectedChannel?.id || null,
+            friendshipId: selectedFriendship?.id ?? null,
+            channelId: selectedChannel?.id ?? null,
+            serverId: selectedChannel?.serverId ?? null,
             text: message,
             isReply: false,
             replyId: null,
@@ -83,6 +91,10 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const onKeyDown = useCallback((event: KeyboardEvent<HTMLSpanElement>) => {
 
         if (event.key.includes("Enter")) {
+            if (checkPermission(initialized, keycloak, selectedServer, 'writeMessages') === undefined) {
+                event.preventDefault();
+                return;
+            }
             if (popupType === null) {
                 sendMessageCallback(event).then();
                 return;
@@ -98,10 +110,11 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             event.preventDefault();
             popupRef.current.move(event.key === "ArrowUp");
         }
-    }, [popupType, sendMessageCallback, replaceTextWithEmoji]);
+    }, [popupType, sendMessageCallback, replaceTextWithEmoji, keycloak, selectedServer, initialized]);
 
     const displayMentions = useCallback((matchedString: string) => {
-        const usersToDisplay = members
+        if (selectedServer === undefined) return;
+        const usersToDisplay = selectedServer.members
             .map(member => users.find(user => user.id === member.userId))
             .map((user) => ({
                 ...user,
@@ -118,7 +131,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         if (usersToDisplay.length) return setPopupType(null);
         setPopupList(usersToDisplay);
         setPopupType(PopupType.emojisAndMentions);
-    }, [members, users]);
+    }, [selectedServer, users]);
 
     const checkShouldDisplayCommandPallet = useCallback((text: string): boolean => {
         const forwardSlashRegexMatches = text.match(/\//g);
@@ -193,9 +206,9 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         }
     }, []);
 
-    function selectEmoji(index: number) {
-
-    }
+    // function selectEmoji(index: number) {
+    //
+    // }
 
     return <>
         {popupType !== PopupType.emojisAndMentions ||

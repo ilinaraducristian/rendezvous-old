@@ -4,15 +4,17 @@ import {addChannelUsers, joinVoiceChannel as joinVoiceChannelAction} from "state
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import config from "config";
 import ChannelButtonComponent from "components/channel/ChannelButton/ChannelButton.component";
-import {selectJoinedChannel, selectUsers} from "state-management/selectors/data.selector";
+import {selectJoinedChannel, selectSelectedServer, selectUsers} from "state-management/selectors/data.selector";
 import {VoiceChannel} from "dtos/channel.dto";
 import AvatarPlaceholder from "assets/avatar-placeholder.png";
-import {useMediasoup} from "providers/ReactMediasoup.provider";
-import {joinVoiceChannel} from "providers/ReactSocketIO.provider";
+import {createProducer} from "providers/mediasoup";
+import {joinVoiceChannel} from "providers/socketio";
 import styles from "components/channel/VoiceChannel/VoiceChannel.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import {useCallbackDebounced} from "util/debounce";
 import AvatarSVG from "svg/Avatar/Avatar.svg";
+import {useKeycloak} from "@react-keycloak/web";
+import checkPermission from "../../../util/check-permission";
 
 type ComponentProps = {
     channel: VoiceChannel
@@ -23,8 +25,8 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const users = useAppSelector(selectUsers);
     const dispatch = useAppDispatch();
     const joinedChannel = useAppSelector(selectJoinedChannel);
-
-    const {createProducer} = useMediasoup();
+    const {initialized, keycloak} = useKeycloak();
+    const selectedServer = useAppSelector(selectSelectedServer);
 
     const selectChannel = useCallbackDebounced(async () => {
         if (config.offline) return;
@@ -39,9 +41,16 @@ function VoiceChannelComponent({channel}: ComponentProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [channel, joinedChannel]);
 
-    const [, drag] = useDrag<ChannelDragObject, any, any>({
-        type: ItemTypes.CHANNEL,
-        item: {id: channel.id, order: channel.order, groupId: channel.groupId},
+    const [, drag] = useDrag<ChannelDragObject, any, any>(() => {
+        let canDrag = true;
+
+        if (checkPermission(initialized, keycloak, selectedServer, 'moveChannels') === undefined) canDrag = false;
+
+        return {
+            type: ItemTypes.CHANNEL,
+            canDrag: _ => canDrag,
+            item: {id: channel.id, order: channel.order, groupId: channel.groupId},
+        }
     }, [channel.order]);
 
     return (

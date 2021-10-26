@@ -3,7 +3,7 @@ import {useDrop} from "react-dnd";
 import ItemTypes, {ServerDragObject} from "types/DnDItemTypes";
 import {useAppDispatch} from "state-management/store";
 import DropHandleComponent from "components/DropHandle/DropHandle.component";
-import {moveServer} from "providers/ReactSocketIO.provider";
+import {moveServer} from "providers/socketio";
 import {moveServers} from "state-management/slices/data/data.slice";
 
 type ComponentProps = {
@@ -17,7 +17,6 @@ function ServerDropHandleComponent({index}: ComponentProps) {
     const dispatch = useAppDispatch();
 
     const handleDrop = useCallback(async (item: ServerDragObject) => {
-        console.log({serverId: item.id, order: index});
         const dataMoveServer = await moveServer({serverId: item.id, order: index});
         dispatch(moveServers(dataMoveServer.servers));
     }, [index, dispatch]);

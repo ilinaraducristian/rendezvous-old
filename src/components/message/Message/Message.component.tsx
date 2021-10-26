@@ -7,7 +7,7 @@ import {
 
 import config from "config";
 import {Message} from "dtos/message.dto";
-import {deleteMessage, editMessage} from "providers/ReactSocketIO.provider";
+import {deleteMessage, editMessage} from "providers/socketio";
 import styles from "./Message.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import PencilSVG from "svg/Pencil/Pencil.svg";

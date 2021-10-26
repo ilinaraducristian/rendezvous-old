@@ -4,7 +4,7 @@ import ItemTypes, {GroupDragObject} from "types/DnDItemTypes";
 import {moveGroups} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import {moveGroup} from "providers/ReactSocketIO.provider";
+import {moveGroup} from "providers/socketio";
 import DropHandleComponent from "components/DropHandle/DropHandle.component";
 
 type ComponentProps = {

@@ -3,7 +3,7 @@ import {addMessages, setOverlay} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedChannel} from "state-management/selectors/data.selector";
 import {NewMessageRequest} from "dtos/message.dto";
-import {sendMessage} from "providers/ReactSocketIO.provider";
+import {sendMessage} from "providers/socketio";
 import styles from "./ImageInputOverlay.module.css";
 import ButtonComponent from "components/ButtonComponent";
 
@@ -22,6 +22,7 @@ function ImageInputOverlayComponent({image}: ComponentProps) {
         let payload: NewMessageRequest = {
             friendshipId: null,
             channelId: selectedChannel.id,
+            serverId: selectedChannel.serverId,
             text: "",
             isReply: false,
             replyId: null,

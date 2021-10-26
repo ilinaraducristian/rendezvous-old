@@ -6,7 +6,7 @@ import styles from "./AddFriendOverlay.module.css";
 import {useState} from "react";
 import {useAppDispatch} from "state-management/store";
 import {addFriendRequest, setOverlay} from "state-management/slices/data/data.slice";
-import {sendFriendRequest} from "providers/ReactSocketIO.provider";
+import {sendFriendRequest} from "providers/socketio";
 
 function AddFriendOverlayComponent() {
 

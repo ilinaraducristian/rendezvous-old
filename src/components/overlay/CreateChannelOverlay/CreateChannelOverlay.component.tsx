@@ -10,7 +10,7 @@ import {useState} from "react";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
 import config from "config";
-import {createChannel} from "providers/ReactSocketIO.provider";
+import {createChannel} from "providers/socketio";
 import {addChannel, selectChannel, setOverlay} from "state-management/slices/data/data.slice";
 
 type ComponentProps = {

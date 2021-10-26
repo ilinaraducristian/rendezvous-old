@@ -1,7 +1,6 @@
 import config from "config";
 import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
 import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
-import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {
     JoinVoiceChannelRequest,
     JoinVoiceChannelResponse,
@@ -19,6 +18,8 @@ import {
     NewMessageRequest,
 } from "dtos/message.dto";
 import {
+    ChangePermissionsRequest,
+    ChangePermissionsResponse,
     JoinServerRequest,
     JoinServerResponse,
     MoveServerRequest,
@@ -30,8 +31,8 @@ import {
     UpdateServerImageRequest,
 } from "dtos/server.dto";
 import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
-import {useAppDispatch} from "state-management/store";
-import {notificationSound} from "providers/ReactMediasoup.provider";
+import {store} from "state-management/store";
+import mediasoup, {consumers, notificationSound} from "providers/mediasoup";
 import {
     addChannel,
     addChannelUsers,
@@ -43,6 +44,9 @@ import {
     deleteServer as deleteServerAction,
     editMessage as editMessageAction,
     removeChannelUsers,
+    socketIOConnected,
+    socketIODisconnected,
+    updatePermissions,
 } from "state-management/slices/data/data.slice";
 import {
     ConnectTransportRequest,
@@ -67,7 +71,7 @@ class Socket extends socketio_Socket {
     emitAck = emitAck;
 }
 
-const socket: Socket = socketio_io(config.socketIoUrl, {
+const socket = socketio_io(config.socketIoUrl, {
     autoConnect: false,
     transports: ["websocket"],
     path: config.production ? "/api/socket.io" : undefined,
@@ -75,98 +79,78 @@ const socket: Socket = socketio_io(config.socketIoUrl, {
 
 Object.assign(socket, {emitAck, auth: {}});
 
-type InitialObjectProperties = {
-    socket: Socket,
-    connected: boolean,
-};
+socket.on("connect", async () => {
+    await mediasoup.load(await getRouterCapabilities());
+    store.dispatch(socketIOConnected(undefined));
+});
 
-const initialObject: InitialObjectProperties = {
-    socket,
-    connected: false,
-};
+socket.on("disconnect", () => {
+    store.dispatch(socketIODisconnected(undefined));
+});
 
-const SocketIOContext = createContext(initialObject);
-
-function ReactSocketIOProvider({children}: { children: PropsWithChildren<any> }) {
-
-    const [state, setState] = useState(initialObject);
-    const dispatch = useAppDispatch();
-
-    function updateState() {
-        setState({...state});
+socket.on("new_message", (payload) => {
+    store.dispatch(addMessages([payload]));
+    if (document.hidden) {
+        notificationSound.currentTime = 0;
+        notificationSound.play();
     }
+});
 
-    useEffect(() => {
-        initialObject.socket.on("connect", () => {
-            initialObject.connected = true;
-            updateState();
-        });
+socket.on("new_member", (payload) => {
+    store.dispatch(addMember(payload));
+});
 
-        initialObject.socket.on("disconnect", () => {
-            initialObject.connected = false;
-            updateState();
-        });
+socket.on("new_channel", (payload) => {
+    store.dispatch(addChannel(payload));
+});
 
-        initialObject.socket.on("new_message", (payload) => {
-            dispatch(addMessages([payload]));
-            if (document.hidden) {
-                notificationSound.currentTime = 0;
-                notificationSound.play();
-            }
-        });
+socket.on("new_group", (payload) => {
+    store.dispatch(addGroup(payload));
+});
 
-        initialObject.socket.on("new_member", (payload) => {
-            dispatch(addMember(payload));
-        });
+socket.on("user_joined_voice-channel", (payload) => {
+    store.dispatch(addChannelUsers([payload]));
+});
 
-        initialObject.socket.on("new_channel", (payload) => {
-            dispatch(addChannel(payload));
-        });
+socket.on("user_left_voice-channel", (payload) => {
+    store.dispatch(removeChannelUsers([payload]));
+});
 
-        initialObject.socket.on("new_group", (payload) => {
-            dispatch(addGroup(payload));
-        });
+socket.on("message_edited", (payload) => {
+    store.dispatch(editMessageAction(payload));
+});
 
-        initialObject.socket.on("user_joined_voice-channel", (payload) => {
-            dispatch(addChannelUsers([payload]));
-        });
+socket.on("message_deleted", (payload) => {
+    store.dispatch(deleteMessageAction(payload));
+});
 
-        initialObject.socket.on("user_left_voice-channel", (payload) => {
-            dispatch(removeChannelUsers([payload]));
-        });
+socket.on("new_friend_request", (payload) => {
+    store.dispatch(addFriendRequest(payload));
+});
 
-        initialObject.socket.on("message_edited", (payload) => {
-            dispatch(editMessageAction(payload));
-        });
+socket.on("friend_request_accepted", () => {
+    // store.dispatch(add)
+});
 
-        initialObject.socket.on("message_deleted", (payload) => {
-            dispatch(deleteMessageAction(payload));
-        });
+socket.on("server_deleted", (payload) => {
+    store.dispatch(deleteServerAction(payload));
+});
 
-        initialObject.socket.on("new_friend_request", (payload) => {
-            dispatch(addFriendRequest(payload));
-        });
+socket.on("consumer_pause", (payload) => {
+    const found = consumers.find(({consumer}) => consumer.id === payload.consumerId);
+    if (found === undefined) return;
+    found.consumer.pause();
+});
 
-        initialObject.socket.on("friend_request_accepted", () => {
-            // dispatch(add)
-        });
+socket.on("consumer_resume", (payload) => {
+    const found = consumers.find(({consumer}) => consumer.id === payload.consumerId);
+    if (found === undefined) return;
+    found.consumer.resume();
+});
 
-        initialObject.socket.on("server_deleted", (payload) => {
-            dispatch(deleteServerAction(payload));
-        });
-
-        setState(initialObject);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    return (
-        <SocketIOContext.Provider value={state}>
-            {children}
-        </SocketIOContext.Provider>
-    );
-}
-
-export const useSocket = () => useContext(SocketIOContext);
+socket.on("permissions_updated", (payload) => {
+    store.dispatch(updatePermissions({role: payload.role}));
+});
 
 function asyncGeneric<R = void, T = void>(name: string): (data: T) => Promise<R> {
     return (data: T) => socket.emitAck(name, data);
@@ -199,6 +183,7 @@ export const createInvitation = asyncGeneric<NewInvitationResponse, NewInvitatio
 export const sendFriendRequest = asyncGeneric<SendFriendRequestResponse, SendFriendRequest>("send_friend_request");
 export const joinVoiceChannel = asyncGeneric<JoinVoiceChannelResponse, JoinVoiceChannelRequest>("join_voice_channel");
 export const leaveVoiceChannel = asyncGeneric<JoinVoiceChannelResponse, JoinVoiceChannelRequest>("leave_voice_channel");
+export const changePermissions = asyncGeneric<ChangePermissionsResponse, ChangePermissionsRequest>("change_permissions");
 
 export function connectTransport(data: ConnectTransportRequest, callback: Function) {
     socket.emit("connect_transport", data, callback);
@@ -208,4 +193,4 @@ export function createProducer(data: CreateProducerRequest, callback: Function) 
     socket.emit("create_producer", data, callback);
 }
 
-export default ReactSocketIOProvider;
+export default socket;

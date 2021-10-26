@@ -8,12 +8,16 @@ import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPane
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
 
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
-import {selectIsBackendInitialized, selectOverlay} from "state-management/selectors/data.selector";
+import {
+    selectIsBackendInitialized,
+    selectIsSocketIOConnected,
+    selectOverlay,
+} from "state-management/selectors/data.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay/ImageInputOverlay.component";
 import {OverlayTypes} from "types/UISelectionModes";
 import LoadingComponent from "components/Loading/Loading.component";
 import {useKeycloak} from "@react-keycloak/web";
-import {getUserData, useSocket} from "providers/ReactSocketIO.provider";
+import socket, {getUserData} from "providers/socketio";
 import useAsyncEffect from "util/useAsyncEffect";
 import {useLazyLoginQuery} from "state-management/apis/http.api";
 import styles from "components/App/App.module.css";
@@ -37,8 +41,9 @@ function AppComponent() {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
     const {keycloak, initialized} = useKeycloak();
-    const {socket, connected} = useSocket();
+    const connected = useAppSelector(selectIsSocketIOConnected);
     const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
+
 
     useEffect(() => {
         if (config.offline) return;

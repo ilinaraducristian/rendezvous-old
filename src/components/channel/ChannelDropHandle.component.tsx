@@ -4,8 +4,9 @@ import ItemTypes, {ChannelDragObject} from "types/DnDItemTypes";
 import {moveChannels} from "state-management/slices/data/data.slice";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {selectSelectedServer} from "state-management/selectors/data.selector";
-import {moveChannel} from "providers/ReactSocketIO.provider";
+import {moveChannel} from "providers/socketio";
 import DropHandleComponent from "components/DropHandle/DropHandle.component";
+import {DropTargetMonitor} from "react-dnd/dist/types/types";
 
 type ComponentProps = {
     index: number,
@@ -29,9 +30,9 @@ function ChannelDropHandleComponent({index, groupId}: ComponentProps) {
         setHidden(false);
     }, [setHidden]);
 
-    const handleCollect = useCallback((monitor) => {
+    const handleCollect = useCallback((monitor: DropTargetMonitor) => {
         return {
-            isOver: monitor.isOver(),
+            isOver: monitor.isOver()
         };
     }, []);
 

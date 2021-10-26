@@ -2,13 +2,13 @@ import EndCallSVG from "svg/EndCall/EndCall.svg";
 import ScreenSVG from "svg/Screen.svg";
 import styles from "components/second-panel/SecondPanelVoice/SecondPanelVoice.module.css";
 import ButtonComponent from "components/ButtonComponent";
-import {useMediasoup} from "providers/ReactMediasoup.provider";
+import {closeProducer, closeTransports} from "providers/mediasoup";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import {
     leaveVoiceChannel as leaveVoiceChannelAction,
     removeChannelUsers,
 } from "state-management/slices/data/data.slice";
-import {leaveVoiceChannel} from "providers/ReactSocketIO.provider";
+import {leaveVoiceChannel} from "providers/socketio";
 import {selectJoinedChannel} from "state-management/selectors/data.selector";
 
 function Button() {
@@ -20,7 +20,6 @@ function Button() {
 
 function SecondPanelVoiceComponent() {
 
-    const {closeProducer, closeTransports} = useMediasoup();
     const dispatch = useAppDispatch();
     const joinedVoiceChannel = useAppSelector(selectJoinedChannel);
 

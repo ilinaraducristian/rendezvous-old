@@ -4,11 +4,11 @@ import MicrophoneSVG from "svg/Microphone/Microphone.svg";
 import HeadphonesSVG from "svg/Headphones/Headphones.svg";
 import GearSVG from "svg/Gear/Gear.svg";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectSecondPanelFooter} from "state-management/selectors/data.selector";
+import {selectIsMicrophoneMuted, selectSecondPanelFooter} from "state-management/selectors/data.selector";
 import {useEffect, useState} from "react";
 import {useKeycloak} from "@react-keycloak/web";
-import {useMediasoup} from "providers/ReactMediasoup.provider";
-import {pauseProducer} from "providers/ReactSocketIO.provider";
+import {audioContext} from "providers/mediasoup";
+import {pauseProducer} from "providers/socketio";
 import ButtonComponent from "components/ButtonComponent";
 import styles from "components/second-panel/SecondPanelFooter/SecondPanelFooter.module.css";
 import {useCallbackDebounced} from "util/debounce";
@@ -17,7 +17,7 @@ import {setOverlay} from "state-management/slices/data/data.slice";
 function SecondPanelFooterComponent() {
 
     const secondPanelFooter = useAppSelector(selectSecondPanelFooter);
-    const {isMuted: isMicrophoneMuted, audioContext} = useMediasoup();
+    const isMicrophoneMuted = useAppSelector(selectIsMicrophoneMuted)
     const [name, setName] = useState("");
     const dispatch = useAppDispatch();
     const {keycloak, initialized} = useKeycloak();

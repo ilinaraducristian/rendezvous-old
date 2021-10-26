@@ -4,7 +4,7 @@ import {FriendRequest} from "dtos/friend.dto";
 import {useCallback} from "react";
 import CheckSVG from "svg/Check/Check.svg";
 import XSVG from "svg/XSVG/X.svg";
-import {acceptFriendRequest, rejectFriendRequest} from "providers/ReactSocketIO.provider";
+import {acceptFriendRequest, rejectFriendRequest} from "providers/socketio";
 import ButtonComponent from "components/ButtonComponent";
 import styles from "./ThirdPanelFriend.module.css";
 

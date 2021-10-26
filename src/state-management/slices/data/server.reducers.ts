@@ -6,6 +6,7 @@ import {Member} from "dtos/member.dto";
 import {Channel} from "dtos/channel.dto";
 import {Group} from "dtos/group.dto";
 import {HeaderTypes, SecondPanelBodyTypes, SecondPanelHeaderTypes, ThirdPanelTypes} from "types/UISelectionModes";
+import {Role} from "../../../dtos/role.dto";
 
 const serverReducers = {
     deleteServer(state: DataSliceState, action: { payload: any, type: string }) {
@@ -111,6 +112,13 @@ const serverReducers = {
         if (server === undefined) return;
         server.image = payload.image;
     },
+    updatePermissions(state: DataSliceState, {payload}: { payload: { role: Role } }) {
+        const selectedServer = selectSelectedServer({data: state});
+        if (selectedServer === undefined) return;
+        const index = selectedServer.roles.findIndex(role => role.id === payload.role.id)
+        if (index === -1) return;
+        selectedServer.roles[index] = payload.role;
+    }
 };
 
 export default serverReducers;

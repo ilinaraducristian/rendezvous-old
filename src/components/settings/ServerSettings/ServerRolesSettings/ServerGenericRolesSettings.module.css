@@ -1,0 +1,49 @@
+.div {
+    display: flex;
+    flex-direction: column;
+}
+
+.defaultPermissionsButton {
+    background-color: var(--color-3rd);
+    color: var(--color-11th);
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: auto 1fr auto;
+    grid-template-areas:
+            "people-svg title arrow-svg"
+            "people-svg subtitle arrow-svg";
+    height: 72px;
+    padding: 16px 24px 16px 16px;
+    align-items: center;
+    justify-items: start;
+    margin-top: 30px;
+}
+
+.defaultPermissionsButton:hover {
+    background-color: var(--color-14th);
+    color: var(--color-7th);
+}
+
+.peopleSvg {
+    grid-area: people-svg;
+}
+
+.title {
+    grid-area: title;
+    margin: 0 0 0 20px;
+}
+
+.subtitle {
+    grid-area: subtitle;
+    margin: 0 0 0 20px;
+}
+
+.arrowSvg {
+    grid-area: arrow-svg;
+}
+
+.div h3 {
+    color: white;
+    margin: 0;
+    font-family: var(--font-1st);
+}

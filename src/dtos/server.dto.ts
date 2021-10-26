@@ -2,6 +2,7 @@ import {Channel} from "./channel.dto";
 import {Group} from "./group.dto";
 import {Member} from "./member.dto";
 import {UserServersData} from "./user.dto";
+import {Role} from "./role.dto";
 
 export type Server = {
   id: number,
@@ -13,7 +14,8 @@ export type Server = {
   invitationExp: string | null,
   channels: Channel[], // channels without a group
   groups: Group[],
-  members: Member[]
+  members: Member[],
+  roles: Role[]
 }
 
 export type NewServerRequest = {
@@ -47,5 +49,11 @@ export type UpdateServerImageRequest = {
   serverId: number,
   image: string | null
 }
+
+export type ChangePermissionsRequest = {
+  role: Role
+}
+
+export type ChangePermissionsResponse = void
 
 export type JoinServerResponse = UserServersData

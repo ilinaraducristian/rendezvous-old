@@ -47,6 +47,8 @@ const MessageInputComponent = forwardRef<HTMLSpanElement, ComponentProps>(({onKe
 
     return (
         <span
+            ref={ref}
+            contentEditable={true}
             className={styles.span}
             role="textbox"
             onKeyDown={onKeyDown}
@@ -54,12 +56,7 @@ const MessageInputComponent = forwardRef<HTMLSpanElement, ComponentProps>(({onKe
             onCopy={onCopy}
             onClick={onClick}
             onPaste={onPaste}
-        >
-            {/*<EmojiComponent index={3} size={22}/>*/}
-            <span contentEditable
-                  ref={ref}
-            />
-        </span>
+        />
     );
 });
 

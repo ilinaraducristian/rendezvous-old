@@ -5,7 +5,7 @@ import XSVG from "svg/XSVG/X.svg";
 import styles from "./CreateServerOverlay.module.css";
 import {useState} from "react";
 import {useAppDispatch} from "state-management/store";
-import {createServer} from "providers/ReactSocketIO.provider";
+import {createServer} from "providers/socketio";
 import {addServer, addUser, setOverlay} from "state-management/slices/data/data.slice";
 import {OverlayTypes} from "types/UISelectionModes";
 
