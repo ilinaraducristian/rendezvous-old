@@ -17,8 +17,8 @@ import {sendMessage} from "providers/socketio";
 import styles from "components/message/MessageInputContainer/MessageInputContainer.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import MessageInputComponent from "components/message/MessageInput/MessageInput.component";
-import {useKeycloak} from "@react-keycloak/web";
 import checkPermission from "../../../util/check-permission";
+import keycloak from "keycloak";
 
 type ComponentProps = {
     isReplying: boolean,
@@ -44,7 +44,6 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const [popupType, setPopupType] = useState<PopupType | null>(null);
     const [popupList, setPopupList] = useState<any[]>([]);
     const users = useAppSelector(selectUsers);
-    const {initialized, keycloak} = useKeycloak();
     const selectedServer = useAppSelector(selectSelectedServer);
 
     const sendMessageCallback = useCallback(async (event: KeyboardEvent<HTMLSpanElement>) => {
@@ -59,7 +58,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             text: message,
             isReply: false,
             replyId: null,
-            image: null,
+            image: null
         };
         if (isReplying) {
             if (replyId === undefined) return;
@@ -91,7 +90,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const onKeyDown = useCallback((event: KeyboardEvent<HTMLSpanElement>) => {
 
         if (event.key.includes("Enter")) {
-            if (checkPermission(initialized, keycloak, selectedServer, 'writeMessages') === undefined) {
+            if (checkPermission(selectedServer, "writeMessages") === undefined) {
                 event.preventDefault();
                 return;
             }
@@ -110,7 +109,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             event.preventDefault();
             popupRef.current.move(event.key === "ArrowUp");
         }
-    }, [popupType, sendMessageCallback, replaceTextWithEmoji, keycloak, selectedServer, initialized]);
+    }, [popupType, sendMessageCallback, replaceTextWithEmoji, keycloak, selectedServer]);
 
     const displayMentions = useCallback((matchedString: string) => {
         if (selectedServer === undefined) return;
@@ -118,7 +117,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
             .map(member => users.find(user => user.id === member.userId))
             .map((user) => ({
                 ...user,
-                score: stringSimilarity(`${user?.firstName} + ${user?.lastName}`, matchedString),
+                score: stringSimilarity(`${user?.firstName} + ${user?.lastName}`, matchedString)
             }))
             .filter(({score}) => score > 0.15)
             .sort((a, b) => b.score - a.score)
@@ -161,7 +160,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
     const displayEmojisList = useCallback((matchedString: string) => {
         const emojisToDisplay = emojis.map(emoji => ({
             ...emoji,
-            score: stringSimilarity(emoji.shortcut, matchedString),
+            score: stringSimilarity(emoji.shortcut, matchedString)
         }))
             .filter(({score}) => score > 0.15)
             .sort((a, b) => b.score - a.score)
@@ -196,7 +195,7 @@ function MessageInputContainerComponent({isReplying, replyId, messageSent}: Comp
         displayMentions,
         cursorPosition,
         checkShouldDisplayCommandPallet,
-        checkShouldDisplayPopupBasedOnChar,
+        checkShouldDisplayPopupBasedOnChar
     ]);
 
     const updateCursorPosition = useCallback(() => {

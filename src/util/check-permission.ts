@@ -1,9 +1,9 @@
-import Keycloak from "keycloak-js";
-import {Server} from "../dtos/server.dto";
-import {Role} from "../dtos/role.dto";
+import {Server} from "dtos/server.dto";
+import {Role} from "dtos/role.dto";
+import keycloak from "keycloak";
 
-function checkPermission(initialized: boolean, keycloak: Keycloak.KeycloakInstance, selectedServer: Server | undefined, permission: keyof Role) {
-    if (!initialized || !keycloak.authenticated || keycloak.userInfo === undefined || selectedServer === undefined) return;
+function checkPermission(selectedServer: Server | undefined, permission: keyof Role) {
+    if (!keycloak.authenticated || keycloak.userInfo === undefined || selectedServer === undefined) return;
     const userId = (keycloak.userInfo as any).sub;
     const member = selectedServer.members.find(member => member.userId === userId);
     if (member === undefined) return;

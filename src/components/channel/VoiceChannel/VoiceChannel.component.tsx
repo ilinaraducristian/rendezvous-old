@@ -13,7 +13,6 @@ import styles from "components/channel/VoiceChannel/VoiceChannel.module.css";
 import ButtonComponent from "components/ButtonComponent";
 import {useCallbackDebounced} from "util/debounce";
 import AvatarSVG from "svg/Avatar/Avatar.svg";
-import {useKeycloak} from "@react-keycloak/web";
 import checkPermission from "../../../util/check-permission";
 
 type ComponentProps = {
@@ -25,7 +24,6 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const users = useAppSelector(selectUsers);
     const dispatch = useAppDispatch();
     const joinedChannel = useAppSelector(selectJoinedChannel);
-    const {initialized, keycloak} = useKeycloak();
     const selectedServer = useAppSelector(selectSelectedServer);
 
     const selectChannel = useCallbackDebounced(async () => {
@@ -34,7 +32,7 @@ function VoiceChannelComponent({channel}: ComponentProps) {
         await createProducer();
         const usersInVoiceChannel = await joinVoiceChannel({
             serverId: channel.serverId,
-            channelId: channel.id,
+            channelId: channel.id
         });
         dispatch(joinVoiceChannelAction({serverId: channel.serverId, groupId: channel.groupId, channelId: channel.id}));
         dispatch(addChannelUsers(usersInVoiceChannel));
@@ -44,13 +42,13 @@ function VoiceChannelComponent({channel}: ComponentProps) {
     const [, drag] = useDrag<ChannelDragObject, any, any>(() => {
         let canDrag = true;
 
-        if (checkPermission(initialized, keycloak, selectedServer, 'moveChannels') === undefined) canDrag = false;
+        if (checkPermission(selectedServer, "moveChannels") === undefined) canDrag = false;
 
         return {
             type: ItemTypes.CHANNEL,
             canDrag: _ => canDrag,
-            item: {id: channel.id, order: channel.order, groupId: channel.groupId},
-        }
+            item: {id: channel.id, order: channel.order, groupId: channel.groupId}
+        };
     }, [channel.order]);
 
     return (

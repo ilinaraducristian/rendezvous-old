@@ -1,25 +1,16 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useAppDispatch, useAppSelector} from "state-management/store";
 import config from "config";
-import {processedServerData} from "mock-data";
-import {initializeBackend} from "state-management/slices/data/data.slice";
 import FirstPanelComponent from "components/first-panel/FirstPanel/FirstPanel.component";
 import SecondPanelComponent from "components/second-panel/SecondPanel/SecondPanel.component";
 import CreateServerOverlayComponent from "components/overlay/CreateServerOverlay/CreateServerOverlay.component";
 
 import JoinServerOverlayComponent from "components/overlay/JoinServerOverlay/JoinServerOverlay.component";
-import {
-    selectIsBackendInitialized,
-    selectIsSocketIOConnected,
-    selectOverlay,
-} from "state-management/selectors/data.selector";
+import {selectOverlay} from "state-management/selectors/data.selector";
 import ImageInputOverlayComponent from "components/overlay/ImageInputOverlay/ImageInputOverlay.component";
 import {OverlayTypes} from "types/UISelectionModes";
 import LoadingComponent from "components/Loading/Loading.component";
-import {useKeycloak} from "@react-keycloak/web";
-import socket, {getUserData} from "providers/socketio";
 import useAsyncEffect from "util/useAsyncEffect";
-import {useLazyLoginQuery} from "state-management/apis/http.api";
 import styles from "components/App/App.module.css";
 import CreateChannelOverlayComponent from "components/overlay/CreateChannelOverlay/CreateChannelOverlay.component";
 import CreateGroupOverlayComponent from "components/overlay/CreateGroupOverlay/CreateGroupOverlay.component";
@@ -33,48 +24,48 @@ import {HTML5Backend} from "react-dnd-html5-backend";
 import {DndProvider} from "react-dnd";
 import ServerSettingsComponent from "components/settings/ServerSettings/ServerSettings.component";
 import UserSettingsComponent from "components/settings/UserSettings/UserSettings.component";
+import keycloak from "keycloak";
+import socket, {getRouterCapabilities, getUserData} from "providers/socketio";
+import {initializeBackend} from "state-management/slices/data/data.slice";
+import mediasoup from "providers/mediasoup";
 
 function AppComponent() {
 
-    const isBackendInitialized = useAppSelector(selectIsBackendInitialized);
     const overlay = useAppSelector(selectOverlay);
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(true);
-    const {keycloak, initialized} = useKeycloak();
-    const connected = useAppSelector(selectIsSocketIOConnected);
-    const [fetchLogin, {data: loginData, isSuccess: isLoginSuccess}] = useLazyLoginQuery();
-
-
-    useEffect(() => {
-        if (config.offline) return;
-        if (!initialized) return;
-        if (!keycloak.authenticated) {
-            keycloak.login();
-        } else {
-            keycloak.loadUserInfo().then(() => {
-                fetchLogin();
-            });
-        }
-    }, [fetchLogin, keycloak, initialized]);
 
     useAsyncEffect(async () => {
-        if (config.offline) {
-            dispatch(initializeBackend(processedServerData));
-            return;
-        }
-        if (!connected || isBackendInitialized) return;
-        const backendData = await getUserData();
-        dispatch(initializeBackend(backendData));
-        setIsLoading(false);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isBackendInitialized, connected]);
+        if (config.offline) return;
+        try {
+            let authenticated = await keycloak.init({
+                onLoad: "check-sso",
+                silentCheckSsoRedirectUri: `${window.location.origin}/silent-check-sso.html`
+            });
+            if (!authenticated) {
+                authenticated = await keycloak.login();
+                if (!authenticated) return;
+            }
+            await keycloak.loadUserInfo();
 
-    useEffect(() => {
-        if (!isLoginSuccess || loginData === undefined) return;
-        socket.auth = {token: loginData};
-        if (!socket.connected) socket.connect();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isLoginSuccess]);
+            const {token} = await fetch(`${config.backend}/login`, {
+                headers: {
+                    "Authorization": `Bearer ${keycloak.token}`
+                }
+            }).then(res => res.json());
+            socket.auth = {token};
+            await socket.connectAndWait();
+
+            const userData = await getUserData();
+            dispatch(initializeBackend(userData));
+
+            const routerCapabilities = await getRouterCapabilities();
+            await mediasoup.load(routerCapabilities);
+            setIsLoading(false);
+        } catch (e) {
+            console.error(e);
+        }
+    }, []);
 
     return isLoading && !config.offline ?
         <LoadingComponent/>

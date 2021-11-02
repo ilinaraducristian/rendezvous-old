@@ -6,8 +6,6 @@ import AppComponent from "components/App/App.component";
 import {store} from "state-management/store";
 import {Provider} from "react-redux";
 import {setOverlay} from "state-management/slices/data/data.slice";
-import {ReactKeycloakProvider} from "@react-keycloak/web";
-import keycloak from "./keycloak";
 
 document.onkeyup = (event: any) => {
     if (event.code !== "Escape") return false;
@@ -17,12 +15,10 @@ document.onkeyup = (event: any) => {
 ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
-            <ReactKeycloakProvider authClient={keycloak}>
-                <AppComponent/>
-            </ReactKeycloakProvider>
+            <AppComponent/>
         </Provider>
     </React.StrictMode>,
-    document.getElementById("root"),
+    document.getElementById("root")
 );
 
 

@@ -9,9 +9,9 @@ import styles from "./Group.module.css";
 import {useDrag} from "react-dnd";
 import ItemTypes, {GroupDragObject} from "types/DnDItemTypes";
 import {Group} from "dtos/group.dto";
-import {useKeycloak} from "@react-keycloak/web";
-import {selectSelectedServer} from "../../state-management/selectors/data.selector";
+import {selectSelectedServer} from "state-management/selectors/data.selector";
 import checkPermission from "../../util/check-permission";
+import keycloak from "keycloak";
 
 type ComponentProps = DetailedHTMLProps<LiHTMLAttributes<HTMLLIElement>, HTMLLIElement> & {
     group: Group
@@ -21,28 +21,27 @@ function GroupComponent({group, ...props}: ComponentProps) {
 
     const dispatch = useAppDispatch();
     const [isCollapsed, setIsExpanded] = useState(true);
-    const {initialized, keycloak} = useKeycloak();
     const selectedServer = useAppSelector(selectSelectedServer);
 
     function createChannel() {
         dispatch(setOverlay({
             type: OverlayTypes.CreateChannelOverlayComponent,
-            payload: {groupId: group.id, groupName: group.name},
+            payload: {groupId: group.id, groupName: group.name}
         }));
     }
 
     const [, drag] = useDrag<GroupDragObject, any, any>(() => {
         let canDrag = true;
 
-        if (checkPermission(initialized, keycloak, selectedServer, 'moveGroups') === undefined) canDrag = false;
+        if (checkPermission(selectedServer, "moveGroups") === undefined) canDrag = false;
 
         return {
             type: ItemTypes.GROUP,
             canDrag: _ => canDrag,
-            item: {id: group.id, order: group.order},
+            item: {id: group.id, order: group.order}
         };
 
-    }, [group, initialized, keycloak, selectedServer]);
+    }, [group, keycloak, selectedServer]);
 
     return (
         <li ref={drag} {...props}>

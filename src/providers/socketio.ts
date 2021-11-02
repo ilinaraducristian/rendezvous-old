@@ -1,13 +1,12 @@
 import config from "config";
-import {io as socketio_io, Socket as socketio_Socket} from "socket.io-client";
-import {DefaultEventsMap, EventNames, EventParams} from "socket.io-client/build/typed-events";
+import {io, Socket} from "socket.io-client";
 import {
     JoinVoiceChannelRequest,
     JoinVoiceChannelResponse,
     MoveChannelRequest,
     MoveChannelResponse,
     NewChannelRequest,
-    NewChannelResponse,
+    NewChannelResponse
 } from "dtos/channel.dto";
 import {MoveGroupRequest, MoveGroupResponse, NewGroupRequest, NewGroupResponse} from "dtos/group.dto";
 import {
@@ -15,7 +14,7 @@ import {
     EditMessagesRequest,
     GetMessagesRequest,
     Message,
-    NewMessageRequest,
+    NewMessageRequest
 } from "dtos/message.dto";
 import {
     ChangePermissionsRequest,
@@ -28,11 +27,11 @@ import {
     NewInvitationResponse,
     NewServerRequest,
     NewServerResponse,
-    UpdateServerImageRequest,
+    UpdateServerImageRequest
 } from "dtos/server.dto";
 import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
 import {store} from "state-management/store";
-import mediasoup, {consumers, notificationSound} from "providers/mediasoup";
+import {consumers, notificationSound} from "providers/mediasoup";
 import {
     addChannel,
     addChannelUsers,
@@ -44,9 +43,7 @@ import {
     deleteServer as deleteServerAction,
     editMessage as editMessageAction,
     removeChannelUsers,
-    socketIOConnected,
-    socketIODisconnected,
-    updatePermissions,
+    updatePermissions
 } from "state-management/slices/data/data.slice";
 import {
     ConnectTransportRequest,
@@ -55,37 +52,40 @@ import {
     CreateProducerRequest,
     CreateTransportResponse,
     ResumeConsumerRequest,
-    RouterCapabilitiesResponse,
+    RouterCapabilitiesResponse
 } from "dtos/mediasoup.dto";
 
-function emitAck<Ev extends EventNames<DefaultEventsMap>>(ev: Ev, ...args: EventParams<DefaultEventsMap, Ev>): Promise<any> {
+function emitAck<R = any>(this: Socket, ev: string, ...args: any[]): Promise<R> {
     return new Promise(resolve => {
         if (args.length === 0)
-            return socket.emit(ev, 0, resolve);
-        socket.emit(ev, ...args, resolve);
+            return this.emit(ev, 0, resolve);
+        this.emit(ev, ...args, resolve);
     });
 }
 
-class Socket extends socketio_Socket {
-    auth: { token?: string } = {};
-    emitAck = emitAck;
+function connectAndWait(this: Socket): Promise<void> {
+    return new Promise<void>(resolve => {
+
+        function listener(this: Socket) {
+            this.removeListener("connect", listener);
+            resolve();
+        }
+
+        this.on("connect", listener);
+
+        this.connect();
+
+    });
 }
 
-const socket = socketio_io(config.socketIoUrl, {
+const socket = Object.assign(io(config.socketIoUrl, {
     autoConnect: false,
     transports: ["websocket"],
-    path: config.production ? "/api/socket.io" : undefined,
-}) as Socket;
-
-Object.assign(socket, {emitAck, auth: {}});
-
-socket.on("connect", async () => {
-    await mediasoup.load(await getRouterCapabilities());
-    store.dispatch(socketIOConnected(undefined));
-});
-
-socket.on("disconnect", () => {
-    store.dispatch(socketIODisconnected(undefined));
+    path: config.production ? "/api/socket.io" : undefined
+}), {
+    emitAck,
+    connectAndWait,
+    auth: {}
 });
 
 socket.on("new_message", (payload) => {
