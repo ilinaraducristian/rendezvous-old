@@ -26,7 +26,7 @@ function ThirdPanelFriendComponent({user, friendRequest}: ComponentProps) {
     return (
         <li className={styles.li}>
             <div className={`btn ${styles.div}`}>
-                <AvatarWithStatusSVG/>
+                <AvatarWithStatusSVG status={user.status}/>
                 <div className={styles.div2}>
                     <span>{user.firstName} {user.lastName}</span>
                     {

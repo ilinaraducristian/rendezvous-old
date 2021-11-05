@@ -2,7 +2,7 @@ import {createSlice} from "@reduxjs/toolkit";
 import {SliceCaseReducers} from "@reduxjs/toolkit/src/createSlice";
 import channelReducers from "state-management/slices/data/channel.reducers";
 import serverReducers from "state-management/slices/data/server.reducers";
-import {User, UserData} from "dtos/user.dto";
+import {User, UserData, UserStatus} from "dtos/user.dto";
 import {Server} from "dtos/server.dto";
 import {FriendRequest, Friendship} from "dtos/friend.dto";
 import {Message} from "dtos/message.dto";
@@ -109,9 +109,14 @@ const reducers = {
     unmuteMicrophone(state: DataSliceState) {
         state.isMicrophoneMuted = false;
     },
+    setUserStatus(state: DataSliceState, {payload}: { payload: { userId: string, status: UserStatus } }) {
+        const user = state.users.find(user => user.id === payload.userId);
+        if (user === undefined) return;
+        user.status = payload.status;
+    },
     ...serverReducers,
     ...channelReducers,
-    ...groupReducers,
+    ...groupReducers
 };
 
 export const dataSlice = createSlice<DataSliceState, SliceCaseReducers<DataSliceState>, string>({
@@ -152,7 +157,8 @@ export const {
     addFriendRequest,
     addMessages,
     socketIOConnected,
-    socketIODisconnected
+    socketIODisconnected,
+    setUserStatus
 } = dataSlice.actions;
 
 // server reducers

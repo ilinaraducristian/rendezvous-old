@@ -4,7 +4,7 @@ import MicrophoneSVG from "svg/Microphone/Microphone.svg";
 import HeadphonesSVG from "svg/Headphones/Headphones.svg";
 import GearSVG from "svg/Gear/Gear.svg";
 import {useAppDispatch, useAppSelector} from "state-management/store";
-import {selectIsMicrophoneMuted, selectSecondPanelFooter} from "state-management/selectors/data.selector";
+import {selectIsMicrophoneMuted, selectSecondPanelFooter, selectUsers} from "state-management/selectors/data.selector";
 import {useEffect, useState} from "react";
 import {audioContext} from "providers/mediasoup";
 import {pauseProducer} from "providers/socketio";
@@ -13,6 +13,7 @@ import styles from "components/second-panel/SecondPanelFooter/SecondPanelFooter.
 import {useCallbackDebounced} from "util/debounce";
 import {setOverlay} from "state-management/slices/data/data.slice";
 import keycloak from "keycloak";
+import {UserStatus} from "dtos/user.dto";
 
 function SecondPanelFooterComponent() {
 
@@ -21,6 +22,7 @@ function SecondPanelFooterComponent() {
     const [name, setName] = useState("");
     const dispatch = useAppDispatch();
     const [isDeafen, setIsDeafen] = useState(false);
+    const user = useAppSelector(selectUsers).find(user => user.id === keycloak.userInfo.sub);
 
     useEffect(() => {
         if (!keycloak.authenticated) return;
@@ -45,7 +47,7 @@ function SecondPanelFooterComponent() {
             {
                 secondPanelFooter !== SecondPanelFooterTypes.generic ||
                 <>
-                    <AvatarWithStatusSVG/>
+                    <AvatarWithStatusSVG status={user?.status || UserStatus.online}/>
                     <span className={styles.span}> {name} </span>
                     <ButtonComponent className={styles.button} onClick={toggleMute}
                     >

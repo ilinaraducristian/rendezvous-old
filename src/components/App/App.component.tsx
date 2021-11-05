@@ -57,6 +57,7 @@ function AppComponent() {
             await socket.connectAndWait();
 
             const userData = await getUserData();
+            console.log({userData});
             dispatch(initializeBackend(userData));
 
             const routerCapabilities = await getRouterCapabilities();

@@ -1,17 +1,19 @@
 import AvatarWithStatusSVG from "svg/AvatarWithStatus/AvatarWithStatus.svg";
 import ButtonComponent from "components/ButtonComponent";
 import styles from "./Member.module.css";
+import {User} from "dtos/user.dto";
 
 type ComponentProps = {
-    name: string
+    user?: User
 }
 
-function MemberComponent({name}: ComponentProps) {
+function MemberComponent({user}: ComponentProps) {
+    if (user === undefined) return (<></>);
     return (
         <li>
             <ButtonComponent className={styles.button}>
-                <AvatarWithStatusSVG/>
-                <span>{name}</span>
+                <AvatarWithStatusSVG status={user.status}/>
+                <span>{`${user?.firstName} ${user?.lastName}`}</span>
             </ButtonComponent>
         </li>
     );

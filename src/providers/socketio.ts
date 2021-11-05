@@ -29,7 +29,13 @@ import {
     NewServerResponse,
     UpdateServerImageRequest
 } from "dtos/server.dto";
-import {AcceptFriendRequest, SendFriendRequest, SendFriendRequestResponse, UserDataResponse} from "dtos/user.dto";
+import {
+    AcceptFriendRequest,
+    SendFriendRequest,
+    SendFriendRequestResponse,
+    UserDataResponse,
+    UserStatus
+} from "dtos/user.dto";
 import {store} from "state-management/store";
 import {consumers, notificationSound} from "providers/mediasoup";
 import {
@@ -43,6 +49,7 @@ import {
     deleteServer as deleteServerAction,
     editMessage as editMessageAction,
     removeChannelUsers,
+    setUserStatus,
     updatePermissions
 } from "state-management/slices/data/data.slice";
 import {
@@ -150,6 +157,14 @@ socket.on("consumer_resume", (payload) => {
 
 socket.on("permissions_updated", (payload) => {
     store.dispatch(updatePermissions({role: payload.role}));
+});
+
+socket.on("offline", (payload) => {
+    store.dispatch(setUserStatus({userId: payload.userId, status: UserStatus.offline}));
+});
+
+socket.on("online", (payload) => {
+    store.dispatch(setUserStatus({userId: payload.userId, status: UserStatus.online}));
 });
 
 function asyncGeneric<R = void, T = void>(name: string): (data: T) => Promise<R> {

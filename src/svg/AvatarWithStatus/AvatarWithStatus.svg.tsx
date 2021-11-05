@@ -1,8 +1,9 @@
 import AvatarPlaceholder from "assets/avatar-placeholder.png";
 import styles from "svg/AvatarWithStatus/AvatarWithStatus.module.css";
 import {SVGProps} from "react";
+import {UserStatus} from "dtos/user.dto";
 
-function AvatarWithStatusSVG({src, className}: SVGProps<SVGSVGElement> & { src?: string }) {
+function AvatarWithStatusSVG({src, className, status}: SVGProps<SVGSVGElement> & { src?: string, status: UserStatus }) {
     return (
         <svg viewBox="0 0 40 32" className={`${styles.svg} ${className ?? ""}`}>
             <mask id="mask" width="32" height="32">
@@ -21,7 +22,7 @@ function AvatarWithStatusSVG({src, className}: SVGProps<SVGSVGElement> & { src?:
                     <polygon points="-2.16506,-2.5 2.16506,0 -2.16506,2.5" fill="black" className={styles.polygon}/>
                     <circle fill="black" cx="12.5" cy="10" r="0"/>
                 </mask>
-                <rect fill="hsl(139, calc(var(--saturation-factor, 1) * 47.3%), 43.9%)" width="25" height="15"
+                <rect fill={status === UserStatus.online ? "hsl(139, 47.3%, 43.9%)" : "#747f8d"} width="25" height="15"
                       mask="url(#mask2)"/>
             </svg>
             <rect x="22" y="22" width="10" height="10" fill="transparent"/>

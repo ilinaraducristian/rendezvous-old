@@ -1,11 +1,18 @@
 import {Server} from "./server.dto";
 import {FriendRequest, Friendship} from "./friend.dto";
 
+export enum UserStatus {
+  offline,
+  idle,
+  online
+}
+
 export type User = {
   id: string,
   username: string,
   firstName: string,
-  lastName: string
+  lastName: string,
+  status: UserStatus
 }
 
 export type KeycloakUser = {

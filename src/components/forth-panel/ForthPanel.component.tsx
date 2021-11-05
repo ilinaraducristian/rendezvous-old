@@ -18,7 +18,7 @@ function ForthPanelComponent() {
                         return (
                             <MemberComponent
                                 key={`member_${index}`}
-                                name={`${user?.firstName} ${user?.lastName}`}
+                                user={user}
                             />
                         );
                     })

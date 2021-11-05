@@ -2,7 +2,7 @@ import {useAppDispatch} from "state-management/store";
 import {
     addMessages,
     selectFriendship as selectFriendAction,
-    setThirdPanel,
+    setThirdPanel
 } from "state-management/slices/data/data.slice";
 import {ThirdPanelTypes} from "types/UISelectionModes";
 import {User} from "dtos/user.dto";
@@ -30,7 +30,7 @@ function FriendComponent({friendshipId, user}: ComponentProps) {
     return (
         <li className={styles.li}>
             <ButtonComponent className={styles.button} onClick={selectFriend}>
-                <AvatarWithStatusSVG/>
+                <AvatarWithStatusSVG status={user.status}/>
                 {user.firstName} {user.lastName}
             </ButtonComponent>
         </li>
