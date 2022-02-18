@@ -1,0 +1,33 @@
+.forth-panel {
+  display: flex;
+  height: calc(100% - var(--header-height));
+}
+
+.forth-panel ol {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.messages {
+  flex-grow: 1;
+  /* max-height: calc(100vh - 60px); */
+  overflow: auto;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 10px;
+}
+
+.messages li {
+  border: solid red;
+}
+
+.message-input {
+  border: solid 2px red;
+  display: block;
+  min-height: 30px;
+}
+
+.forth-panel,.expanded {
+  grid-column: 1 / span 2;
+}

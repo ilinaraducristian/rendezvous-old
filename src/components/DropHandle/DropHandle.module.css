@@ -1,9 +1,0 @@
-.div {
-    height: 8px;
-    width: 100%;
-    background-color: green;
-}
-
-.hidden {
-    background-color: transparent !important;
-}

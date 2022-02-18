@@ -1,9 +1,0 @@
-.div {
-    width: 240px;
-    min-width: 240px;
-    background-color: var(--color-3rd);
-    height: 100%;
-    padding-top: 12px;
-    padding-left: 8px;
-    padding-right: 8px;
-}

@@ -1,9 +1,0 @@
-.svg {
-    color: var(--color-9th);
-    width: 24px;
-    height: 24px;
-}
-
-.svg:hover, .svgSelected {
-    color: var(--color-6th);
-}

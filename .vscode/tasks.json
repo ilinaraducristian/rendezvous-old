@@ -1,0 +1,16 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "yarn:start",
+      "type": "shell",
+      "command": "yarn start"
+    },
+    {
+      "label": "yarn:build",
+      "type": "shell",
+      "command": "yarn run build",
+      "group": "build"
+    }
+  ]
+}

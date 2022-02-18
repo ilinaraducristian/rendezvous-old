@@ -1,0 +1,11 @@
+.third-panel {
+  flex-grow: 1;
+  background-color: var(--secondary-color);
+}
+
+.third-panel > header {
+  height: var(--header-height);
+  background-color: var(--5th-color);
+  color: var(--primary-color);
+  box-shadow: var(--shadow);
+}

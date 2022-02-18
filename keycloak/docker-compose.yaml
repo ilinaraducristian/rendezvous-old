@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:16.1.1
+    ports:
+      - "8080:8080"
+    environment:
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: admin
+      DB_USER: keycloak
+      DB_PASSWORD: keycloak
+  postgres:
+   image: quay.io/ilinaraducristian/postgres:14.1-alpine3.15
+   ports:
+     - "5432:5432"
+   environment:
+     POSTGRES_USER: keycloak
+     POSTGRES_PASSWORD: keycloak
+     POSTGRES_DB: keycloak

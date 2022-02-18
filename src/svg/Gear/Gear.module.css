@@ -1,9 +1,0 @@
-.svg {
-    color: var(--color-8th);
-    width: 20px;
-    height: 20px;
-}
-
-.svg:hover {
-    color: var(--color-7th);
-}
