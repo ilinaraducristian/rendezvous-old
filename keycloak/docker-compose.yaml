@@ -9,11 +9,7 @@ services:
       KEYCLOAK_PASSWORD: admin
       DB_USER: keycloak
       DB_PASSWORD: keycloak
-  postgres:
-   image: quay.io/ilinaraducristian/postgres:14.1-alpine3.15
-   ports:
-     - "5432:5432"
-   environment:
-     POSTGRES_USER: keycloak
-     POSTGRES_PASSWORD: keycloak
-     POSTGRES_DB: keycloak
+      KEYCLOAK_IMPORT: /tmp/rendezvous.json
+      JAVA_OPTS_APPEND: "-Dkeycloak.profile.feature.upload_scripts=enabled"
+    volumes:
+      - "./rendezvous.json:/tmp/rendezvous.json"
