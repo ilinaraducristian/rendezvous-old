@@ -4,7 +4,7 @@ import Api from "./api";
 import FifthPanelComponent from "./components/FifthPanel/FifthPanel.component";
 import FirstPanelComponent from "./components/FirstPanel/FirstPanel.component";
 import ForthPanelComponent from "./components/ForthPanel/ForthPanel.component";
-import HeaderComponent from "./components/Header.component";
+import HeaderComponent from "./components/Header/Header.component";
 import OverlayPanelComponent from "./components/OverlayPanel.component";
 import SecondPanelComponent from "./components/SecondPanel/SecondPanel.component";
 import keycloak from "./keycloak";
@@ -48,9 +48,11 @@ const App = observer(({ rootState, serversState, friendshipsState }: ComponentPr
     <>
       <FirstPanelComponent rootState={rootState} />
       <SecondPanelComponent rootState={rootState} serversState={serversState} />
-        <HeaderComponent rootState={rootState} />
+      <HeaderComponent rootState={rootState} />
+      <div className="third-panel">
         <ForthPanelComponent rootState={rootState} />
         <FifthPanelComponent rootState={rootState} />
+      </div>
       <OverlayPanelComponent rootState={rootState} />
     </>
   );

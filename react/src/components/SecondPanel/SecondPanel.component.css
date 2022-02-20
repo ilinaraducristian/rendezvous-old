@@ -12,7 +12,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 0px 10px;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-bottom);
 }
 
 .second-panel header span {
@@ -30,8 +30,9 @@
 }
 
 .second-panel footer {
-  min-height: 55px;
+  min-height: var(--header-height);
   display: flex;
   align-items: center;
   padding: 0px 10px;
+  box-shadow: var(--shadow-top);
 }

@@ -1,3 +1,16 @@
 .forth-panel {
- grid-row: 2; 
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.forth-panel ol {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.forth-panel > span {
+  background-color: blue;
+  min-height: 30px;
 }

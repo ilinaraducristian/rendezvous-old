@@ -34,7 +34,7 @@ import { KeycloakAdminService } from "./services/keycloak-admin.service";
       authServerUrl: "http://127.0.0.1:8080/auth",
       realm: "rendezvous",
       clientId: "rendezvous-api",
-      secret: "tjPGlJ5PDi49SaeCO135QhZC6hSSPMNq",
+      secret: "77YUMmyTZWKCTILfAfRwScxLjxyP0H20",
       useNestLogger: false,
       logLevels: ["error"],
     }),

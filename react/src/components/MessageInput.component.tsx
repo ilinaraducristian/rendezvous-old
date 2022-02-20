@@ -20,7 +20,7 @@ const MessageInputComponent = observer(({ rootState }: ComponentProps) => {
     }
   }
 
-  return <span ref={inputRef} contentEditable="true" className="message-input" onKeyDown={onKeyDown} />;
+  return <span ref={inputRef} contentEditable="true" onKeyDown={onKeyDown} />;
 });
 
 export default MessageInputComponent;

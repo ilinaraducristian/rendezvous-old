@@ -1,7 +1,4 @@
 .fifth-panel {
     background-color: var(--4th-color);
-    height: 100%;
-    grid-row: 2;
-    grid-column: 4;
     color: var(--primary-color)
 }
