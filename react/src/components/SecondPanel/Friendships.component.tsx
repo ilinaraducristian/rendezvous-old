@@ -41,7 +41,7 @@ const FriendshipsComponent = observer(({ rootState, friendshipsState }: Componen
           {friendship.status !== FriendshipStatus.accepted || (
             <>
               <button type="button" onClick={() => selectFriendship(friendship)}>
-                {friendship.user2Id}
+                {rootState.users.get(friendship.friendId)?.username ?? friendship.friendId}
               </button>
               <button type="button" onClick={() => deleteFriendship(friendship)}>
                 X
@@ -50,7 +50,7 @@ const FriendshipsComponent = observer(({ rootState, friendshipsState }: Componen
           )}
           {friendship.status !== FriendshipStatus.pending || friendship.user2Id !== keycloak.subject || (
             <div>
-              <span>{friendship.user2Id}</span>
+              <span>{rootState.users.get(friendship.friendId)?.username ?? friendship.friendId}</span>
               <button type="button" onClick={() => acceptFriendship(friendship)}>
                 ✓
               </button>
@@ -61,7 +61,7 @@ const FriendshipsComponent = observer(({ rootState, friendshipsState }: Componen
           )}
           {friendship.status !== FriendshipStatus.pending || friendship.user2Id === keycloak.subject || (
             <div>
-              <span>{friendship.user2Id}</span>
+              <span>{rootState.users.get(friendship.friendId)?.username ?? friendship.friendId}</span>
               <div>pending</div>
             </div>
           )}

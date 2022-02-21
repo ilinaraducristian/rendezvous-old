@@ -4,6 +4,7 @@ import UserDataResponse from "./dtos/getDataResponse";
 import ServerDto from "./dtos/server";
 import Friendship from "./entities/friendship";
 import Server from "./entities/server";
+import User from "./entities/user";
 import keycloak from "./keycloak";
 import OrderedMap from "./ordered-map";
 
@@ -37,6 +38,7 @@ const Api = {
     return {
       servers: new OrderedMap(userDataDto.servers.map((serverDto) => [serverDto.id, new Server(serverDto)])),
       friendships: new OrderedMap(userDataDto.friendships.map((friendshipDto) => [friendshipDto.id, new Friendship(friendshipDto)])),
+      users: new Map(userDataDto.users.map(userDto => [userDto.id, new User(userDto)]))
     };
   },
   async newServer(name: string) {

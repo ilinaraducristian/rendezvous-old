@@ -2,17 +2,27 @@ import { makeAutoObservable } from "mobx";
 import Channel from "../entities/channel";
 import Friendship from "../entities/friendship";
 import Server from "../entities/server";
+import User from "../entities/user";
 import Overlays from "../Overlays";
 
 class RootState {
+  private _users: Map<string, User> = new Map();
   private _selectedServer: Server | null = null;
   private _selectedChannel: Channel | null = null;
   private _selectedFriendship: Friendship | null = null;
-
+  
   private _overlay: [Overlays] | [Overlays, any] | null = null;
-
+  
   constructor() {
     makeAutoObservable(this);
+  }
+  
+  get users(): Map<string, User> {
+    return this._users;
+  }
+
+  set users(value: Map<string, User>) {
+    this._users = value;
   }
 
   get selectedServer() {

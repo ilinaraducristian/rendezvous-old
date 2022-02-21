@@ -1,4 +1,5 @@
 .fifth-panel {
-    background-color: var(--4th-color);
-    color: var(--primary-color)
+  background-color: var(--4th-color);
+  color: var(--primary-color);
+  width: 300px;
 }

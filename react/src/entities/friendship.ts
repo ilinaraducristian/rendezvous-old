@@ -1,8 +1,9 @@
-import { makeObservable, observable } from "mobx";
+import { computed, makeObservable, observable } from "mobx";
 import { fetchApi, fetchJson } from "../api";
 import FriendshipDTO from "../dtos/friendship";
 import FriendshipStatus from "../dtos/friendship-status";
 import { FriendshipMessageDto } from "../dtos/message";
+import keycloak from "../keycloak";
 import { FriendshipMessage } from "./message";
 import MessagesParent from "./messages-parent";
 
@@ -20,7 +21,12 @@ class Friendship extends MessagesParent<FriendshipMessage> {
       user1Id: observable,
       user2Id: observable,
       status: observable,
+      friendId: computed
     });
+  }
+
+  get friendId(): string {
+    return this.user1Id === keycloak.subject ? this.user2Id : this.user1Id;
   }
 
   async apiUpdate(status: Omit<FriendshipStatus, "pending">) {

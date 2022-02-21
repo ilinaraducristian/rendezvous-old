@@ -34,9 +34,10 @@ const App = observer(({ rootState, serversState, friendshipsState }: ComponentPr
       await keycloak.loadUserInfo();
       socketio.auth = { token: keycloak.token };
       socketio.connect();
-      const { friendships, servers } = await Api.getData();
+      const { friendships, servers, users } = await Api.getData();
       friendshipsState.friendships = friendships;
       serversState.servers = servers;
+      rootState.users = users;
       setIsLoading(false);
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps

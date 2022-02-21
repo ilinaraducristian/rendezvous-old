@@ -2,18 +2,18 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "yarn:start all",
-      "dependsOn": ["yarn:start nest", "yarn:start react"]
+      "label": "yarn:start:dev all",
+      "dependsOn": ["yarn:start:dev nest", "yarn:start:dev react"]
     },
     {
-      "label": "yarn:start react",
+      "label": "yarn:start:dev react",
       "type": "shell",
       "command": "yarn --cwd \"react\" start"
     },
     {
-      "label": "yarn:start nest",
+      "label": "yarn:start:dev nest",
       "type": "shell",
-      "command": "yarn --cwd \"nest\" start"
+      "command": "yarn --cwd \"nest\" start:dev"
     },
     {
       "label": "yarn:build",

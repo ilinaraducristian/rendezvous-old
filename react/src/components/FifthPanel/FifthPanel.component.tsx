@@ -9,8 +9,8 @@ const FifthPanelComponent = observer(({ rootState }: ComponentProps) => {
     <>
       {rootState.selectedServer === null || (
         <ul className="fifth-panel">
-          {Array.from(rootState.selectedServer.members).map(([, member]) => (
-            <li key={member.id}>{member.userId}</li>
+          {rootState.selectedServer.members.map(member => (
+            <li key={member.id}>{rootState.users.get(member.userId)?.username ?? member.userId}</li>
           ))}
         </ul>
       )}

@@ -20,14 +20,15 @@ export class UsersController {
 
   @Get(":userId/profile")
   async getUserProfile(@AuthenticatedUser() user: KeycloakUser, @Param("userId") userId: string) {
-    const [areFriends, haveServersInCommon] = await Promise.all([
-      this.friendshipsService.areFriends(userId, user.sub),
-      this.membersService.haveServersInCommon(user.sub, userId),
-    ]);
-    if (!areFriends || !haveServersInCommon) return undefined;
+    // const [areFriends, haveServersInCommon] = await Promise.all([
+    //   this.friendshipsService.areFriends(userId, user.sub),
+    //   this.membersService.haveServersInCommon(user.sub, userId),
+    // ]);
+    // if (!areFriends || !haveServersInCommon) return undefined;
     const kcUser = await this.keycloakAdminService.getUser(userId);
-    if (kcUser === undefined) return undefined;
+    if (kcUser === null) return null;
     return {
+      id: kcUser.id as string,
       username: kcUser.username as string,
       email: kcUser.email as string,
       firstName: kcUser.firstName as string,
@@ -48,10 +49,28 @@ export class UsersController {
   @Get("data")
   async getData(@AuthenticatedUser() user: KeycloakUser) {
     const [friendships, servers] = await Promise.all([this.friendshipsService.getAllByUserId(user.sub), this.membersService.getServers(user.sub)]);
-    return {
+    const response: any = {
       friendships: friendships.map((friendship) => Friendship.toDTO(friendship)),
       servers: servers.map((server) => Server.toDTO(server)),
     };
+    const users = new Set<string>();
+    response.friendships.forEach(friendship => {
+      users.add(friendship.user1Id)
+      users.add(friendship.user2Id)
+    })
+    response.servers.forEach(server => {
+      server.members.forEach(member => {
+        users.add(member.userId);
+      })
+    })
+    response.users = await Promise.all(Array.from(users).map(userId => this.keycloakAdminService.getUser(userId).then(user => ({
+      id: user.id as string,
+      username: user.username as string,
+      email: user.email as string,
+      firstName: user.firstName as string,
+      lastName: user.lastName as string,
+    }))));
+    return response;
   }
 
   @Put("servers/:serverId")
