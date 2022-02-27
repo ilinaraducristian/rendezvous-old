@@ -1,0 +1,33 @@
+@keyframes rotating {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.api-button {
+  display: grid;
+  place-content: center;
+}
+
+.api-button:is(.waiting) {
+  cursor: not-allowed;
+}
+
+.api-button > * {
+  grid-area: 1 / 1;
+  place-self: center;
+}
+
+.api-button > .circle {
+  width: 10px;
+  height: 10px;
+  animation: rotating 1s linear infinite;
+  border: solid;
+  border-color: var(--border-color);
+  border-top-color: rgba(0, 0, 0, 0);
+  border-width: 3px;
+  border-radius: 50%;
+}

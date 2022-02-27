@@ -10,6 +10,7 @@ class RootState {
   private _selectedServer: Server | null = null;
   private _selectedChannel: Channel | null = null;
   private _selectedFriendship: Friendship | null = null;
+  private _isShiftPressed: boolean = false;
   
   private _overlay: [Overlays] | [Overlays, any] | null = null;
   
@@ -17,6 +18,14 @@ class RootState {
     makeAutoObservable(this);
   }
   
+  get isShiftPressed(): boolean {
+    return this._isShiftPressed;
+  }
+
+  set isShiftPressed(value: boolean) {
+    this._isShiftPressed = value;
+  }
+
   get users(): Map<string, User> {
     return this._users;
   }

@@ -1,6 +1,6 @@
 import { observer } from "mobx-react-lite";
 import { UIEvent, useEffect } from "react";
-import RootState from "../state/root-state";
+import RootState from "../../state/root-state";
 import MessageComponent from "./Message.component";
 
 type ComponentProps = { rootState: RootState };

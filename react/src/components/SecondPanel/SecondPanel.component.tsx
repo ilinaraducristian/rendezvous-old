@@ -88,7 +88,7 @@ const SecondPanelComponent = observer(({ rootState, serversState }: ComponentPro
           </>
         )}
       </header>
-      <ol className="friendships-or-groups">
+      <ol>
         {rootState.selectedServer === null || <GroupsComponent server={rootState.selectedServer} />}
         {rootState.selectedServer !== null || <FriendshipsComponent rootState={rootState} friendshipsState={friendshipsState} />}
       </ol>

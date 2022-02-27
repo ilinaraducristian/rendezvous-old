@@ -11,7 +11,7 @@ const HeaderComponent = observer(({ rootState }: ComponentProps) => {
     <header className="header">
       <span>
       {rootState.selectedChannel === null || rootState.selectedChannel.name}
-      {rootState.selectedFriendship === null || rootState.selectedFriendship.user2Id}
+      {rootState.selectedFriendship === null || rootState.users.get(rootState.selectedFriendship.friendId)?.username}
       </span>
     </header>
   );

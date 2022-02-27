@@ -37,7 +37,7 @@ const FriendshipsComponent = observer(({ rootState, friendshipsState }: Componen
   return (
     <>
       {friendshipsState.friendships.map((friendship) => (
-        <li key={friendship.id}>
+        <li key={friendship.id} className={rootState.selectedFriendship?.id === friendship.id ? "selected" : ''}>
           {friendship.status !== FriendshipStatus.accepted || (
             <>
               <button type="button" onClick={() => selectFriendship(friendship)}>

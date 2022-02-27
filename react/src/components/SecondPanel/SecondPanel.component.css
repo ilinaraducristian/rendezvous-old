@@ -24,9 +24,36 @@
   font-size: 25px;
 }
 
-.friendships-or-groups {
+.second-panel ol {
   overflow: auto;
   flex-grow: 1;
+}
+
+.second-panel ol li {
+  margin: 10px;
+  display: flex;
+  border-radius: 10px;
+  border: 0px;
+}
+
+.second-panel ol li:hover {
+  background-color: var(--7th-color);
+}
+
+.second-panel ol li:is(.selected) {
+  background-color: var(--8th-color);
+}
+
+.second-panel ol li button:first-child {
+  flex-grow: 1;
+  text-align: start;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+.second-panel ol li button:not(:first-child) {
+  padding: 0px 10px;
 }
 
 .second-panel footer {

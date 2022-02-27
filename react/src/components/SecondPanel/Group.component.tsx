@@ -3,7 +3,7 @@ import { useCallback, useState } from "react";
 import Group from "../../entities/group";
 import Overlays from "../../Overlays";
 import RootState from "../../state/root-state";
-import ChannelComponent from "../Channel.component";
+import ChannelComponent from "./Channel.component";
 
 type ComponentProps = { rootState: RootState; group: Group };
 

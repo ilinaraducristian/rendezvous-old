@@ -1,7 +1,7 @@
 import { observer } from "mobx-react-lite";
 import RootState from "../../state/root-state";
-import MessageInputComponent from "../MessageInput.component";
-import MessagesComponent from "../Messages.component";
+import MessageInputComponent from "./MessageInput.component";
+import MessagesComponent from "./Messages.component";
 import "./ForthPanel.component.css";
 
 type ComponentProps = { rootState: RootState };

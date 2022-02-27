@@ -1,4 +1,4 @@
-import Message from "../entities/message";
+import Message from "../../entities/message";
 
 type ComponentProps = { message: Message };
 

@@ -23,7 +23,7 @@
   border-radius: 50%;
   font-size: 20px;
   font-weight: 500;
-  transition: 200ms;
+  transition: var(--animation-speed);
 }
 
 .first-panel button:hover {
