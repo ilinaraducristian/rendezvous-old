@@ -1,4 +1,8 @@
 {
-    "private": true,
-    "workspaces": ["react", "nest"]
+  "name": "@rendezvous/root",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
 }

@@ -1,0 +1,41 @@
+"use strict";
+exports.__esModule = true;
+exports.SocketIoServerEvents = exports.FriendshipStatusDto = exports.ChannelTypeDto = void 0;
+var ChannelTypeDto;
+(function (ChannelTypeDto) {
+    ChannelTypeDto[ChannelTypeDto["text"] = 0] = "text";
+    ChannelTypeDto[ChannelTypeDto["voice"] = 1] = "voice";
+})(ChannelTypeDto = exports.ChannelTypeDto || (exports.ChannelTypeDto = {}));
+var FriendshipStatusDto;
+(function (FriendshipStatusDto) {
+    FriendshipStatusDto[FriendshipStatusDto["pending"] = 0] = "pending";
+    FriendshipStatusDto[FriendshipStatusDto["accepted"] = 1] = "accepted";
+    FriendshipStatusDto[FriendshipStatusDto["rejected"] = 2] = "rejected";
+})(FriendshipStatusDto = exports.FriendshipStatusDto || (exports.FriendshipStatusDto = {}));
+var SocketIoServerEvents;
+(function (SocketIoServerEvents) {
+    SocketIoServerEvents["newMember"] = "new-member";
+    SocketIoServerEvents["memberLeft"] = "member-left";
+    SocketIoServerEvents["serverUpdate"] = "server-update";
+    SocketIoServerEvents["serverDeleted"] = "server-deleted";
+    SocketIoServerEvents["newGroup"] = "new-group";
+    SocketIoServerEvents["groupUpdate"] = "group-update";
+    SocketIoServerEvents["groupDeleted"] = "group-deleted";
+    SocketIoServerEvents["newChannel"] = "new-channel";
+    SocketIoServerEvents["newVoiceChannelUser"] = "new-voice-channel-user";
+    SocketIoServerEvents["channelUpdate"] = "channel-update";
+    SocketIoServerEvents["channelDeleted"] = "channel-deleted";
+    SocketIoServerEvents["newChannelMessage"] = "new-channel-message";
+    SocketIoServerEvents["channelMessageDeleted"] = "channel-message-deleted";
+    SocketIoServerEvents["newChannelMessageReaction"] = "new-channel-message-reaction";
+    SocketIoServerEvents["channelMessageReactionDeleted"] = "channel-message-reaction-deleted";
+    SocketIoServerEvents["newFriendshipMessage"] = "new-friendship-message";
+    SocketIoServerEvents["friendshipMessageDeleted"] = "friendship-message-deleted";
+    SocketIoServerEvents["newFriendshipMessageReaction"] = "new-friendship-message-reaction";
+    SocketIoServerEvents["friendshipMessageReactionDeleted"] = "friendship-message-reaction-deleted";
+    SocketIoServerEvents["userOnline"] = "user-online";
+    SocketIoServerEvents["userOffline"] = "user-offline";
+    SocketIoServerEvents["newFriendship"] = "new-friendship";
+    SocketIoServerEvents["friendshipUpdate"] = "friendship-update";
+    SocketIoServerEvents["friendshipDeleted"] = "friendship-deleted";
+})(SocketIoServerEvents = exports.SocketIoServerEvents || (exports.SocketIoServerEvents = {}));

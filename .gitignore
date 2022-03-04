@@ -1,3 +1,13 @@
-/node_modules
-/react/node_modules
-/nest/node_modules
+.DS_Store
+node_modules
+packages/nest/node_modules
+packages/react/node_modules
+
+packages/nest/coverage
+packages/react/coverage
+
+packages/nest/dist
+packages/react/dist
+
+packages/nest/build
+packages/react/build

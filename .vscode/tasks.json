@@ -8,12 +8,12 @@
     {
       "label": "yarn:start:dev react",
       "type": "shell",
-      "command": "yarn --cwd \"react\" start"
+      "command": "yarn workspace @rendezvous/react start"
     },
     {
       "label": "yarn:start:dev nest",
       "type": "shell",
-      "command": "yarn --cwd \"nest\" start:dev"
+      "command": "yarn workspace @rendezvous/nest start:dev"
     },
     {
       "label": "yarn:build",
