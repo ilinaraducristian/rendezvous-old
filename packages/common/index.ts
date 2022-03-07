@@ -131,6 +131,7 @@ export enum SocketIoServerEvents {
   newChannel = "new-channel",
 
   newVoiceChannelUser = "new-voice-channel-user",
+  voiceChannelUserRemoved = "voice-channel-user-removed",
 
   channelUpdate = "channel-update",
   channelDeleted = "channel-deleted",

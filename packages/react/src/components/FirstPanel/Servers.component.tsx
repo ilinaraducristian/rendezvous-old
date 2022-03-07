@@ -16,7 +16,7 @@ const ServersComponent = observer(({ rootState, serversState }: ComponentProps) 
     <>
       {serversState.servers.map((server) => (
         <li key={server.id}>
-          <button type="button" onClick={() => selectServer(server)} className={rootState.selectedServer?.id !== server.id ? '' : 'selected'}>
+          <button type="button" onClick={() => selectServer(server)} className={rootState.selectedServer?.id !== server.id ? "" : "selected"}>
             {server.name[0]}
           </button>
         </li>

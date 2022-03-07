@@ -6,7 +6,6 @@ import keycloak from "../../keycloak";
 import { FriendshipsState } from "../../state/friendships-state";
 import RootState from "../../state/root-state";
 
-
 type ComponentProps = {
   rootState: RootState;
   friendshipsState: FriendshipsState;
@@ -37,7 +36,7 @@ const FriendshipsComponent = observer(({ rootState, friendshipsState }: Componen
   return (
     <>
       {friendshipsState.friendships.map((friendship) => (
-        <li key={friendship.id} className={rootState.selectedFriendship?.id === friendship.id ? "selected" : ''}>
+        <li key={friendship.id} className={rootState.selectedFriendship?.id === friendship.id ? "selected" : ""}>
           {friendship.status !== FriendshipStatusDto.accepted || (
             <>
               <button type="button" onClick={() => selectFriendship(friendship)}>

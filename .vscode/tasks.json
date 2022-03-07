@@ -16,6 +16,20 @@
       "command": "yarn workspace @rendezvous/nest start:dev"
     },
     {
+      "label": "yarn:format all",
+      "dependsOn": ["yarn:format nest", "yarn:format react"]
+    },
+    {
+      "label": "yarn:format react",
+      "type": "shell",
+      "command": "yarn workspace @rendezvous/react run format"
+    },
+    {
+      "label": "yarn:format nest",
+      "type": "shell",
+      "command": "yarn workspace @rendezvous/nest run format"
+    },
+    {
       "label": "yarn:build",
       "type": "shell",
       "command": "yarn run build",

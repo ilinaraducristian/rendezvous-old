@@ -35,11 +35,11 @@ abstract class MessagesParent<M extends Message> {
   }
 
   async apiDelete() {
-    await fetchAuthApi(this.url, {method: "DELETE"});
+    await fetchAuthApi(this.url, { method: "DELETE" });
   }
 
   async apiNewMessage(text: string, files: string[] = []) {
-    await fetchAuthApi(`${this.url}/messages`, {method: "POST", body: { text, files }});
+    await fetchAuthApi(`${this.url}/messages`, { method: "POST", body: { text, files } });
   }
 
   abstract apiGetMessages(offset?: number): Promise<[string, M][]>;

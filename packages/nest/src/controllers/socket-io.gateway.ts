@@ -3,8 +3,9 @@ import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, WebSocketGatew
 import { Keycloak } from "keycloak-connect";
 import { KEYCLOAK_INSTANCE } from "nest-keycloak-connect";
 import { Server as SocketIoServer, Socket } from "socket.io";
-import { UsersService } from "../services/users.service";
+import mediasoup from "src/mediasoup";
 import { SocketIoService } from "../services/socket-io.service";
+import { UsersService } from "../services/users.service";
 
 @WebSocketGateway(3101, { cors: ["*"] })
 class SocketIoGateway implements OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
@@ -44,7 +45,13 @@ class SocketIoGateway implements OnGatewayInit<SocketIoServer>, OnGatewayConnect
     client.join(servers.map((server) => server._id.toString()));
   }
 
-  async handleDisconnect(client: Socket) {}
+  async handleDisconnect(client: Socket) {
+    mediasoup.channels.forEach((channel) => {
+      const index = channel.findIndex((userId) => userId === client.handshake.auth.userId);
+      if (index === -1) return;
+      channel.splice(index, 1);
+    });
+  }
 }
 
 export default SocketIoGateway;

@@ -1,11 +1,11 @@
 .header {
-    height: var(--header-height);
-    background-color: var(--5th-color);
-    color: var(--primary-color);
-    box-shadow: var(--shadow-bottom);
-    display: flex;
-    align-items: center;
-    z-index: 0;
-    padding-left: 10px;
-    cursor: default;
+  height: var(--header-height);
+  background-color: var(--5th-color);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-bottom);
+  display: flex;
+  align-items: center;
+  z-index: 0;
+  padding-left: 10px;
+  cursor: default;
 }

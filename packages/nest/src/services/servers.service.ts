@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { ChannelTypeDto, ServerDto } from "@rendezvous/common";
 import { Model } from "mongoose";
+import { ChannelMessage } from "src/entities/message";
+import UpdateServerRequest from "src/requests/update-server-request";
 import { v4 as uuid } from "uuid";
 import Member from "../entities/member";
 import Server from "../entities/server";
 import { AlreadyMemberException, BadOrExpiredInvitationException, NotAMemberException } from "../exceptions/BadRequestExceptions";
 import { ServerNotFoundException } from "../exceptions/NotFoundExceptions";
-import { UsersService } from "./users.service";
 import { SocketIoService } from "./socket-io.service";
-import { ChannelMessage } from "src/entities/message";
-import { ChannelTypeDto, ServerDto } from "@rendezvous/common";
-import UpdateServerRequest from "src/requests/update-server-request";
+import { UsersService } from "./users.service";
 
 @Injectable()
 export class ServersService {

@@ -64,3 +64,8 @@ button {
   background: none;
   cursor: pointer;
 }
+
+span {
+  color: var(--primary-color);
+  cursor: default;
+}

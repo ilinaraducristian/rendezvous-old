@@ -17,7 +17,7 @@ export class ChannelMessagesService {
   ) {}
 
   async createMessage(userId: string, serverId: string, groupId: string, channelId: string, text: string, files: string[]) {
-    await this.channelsService.getByIdAndType(userId, {serverId, groupId, channelId}, ChannelTypeDto.text);
+    await this.channelsService.getByIdAndType(userId, { serverId, groupId, channelId }, ChannelTypeDto.text);
 
     const newMessage = new this.messageModel({
       channelId,
@@ -44,7 +44,7 @@ export class ChannelMessagesService {
   }
 
   async getMessages(userId: string, serverId: string, groupId: string, channelId: string, offset: number) {
-    await this.channelsService.getByIdAndType(userId, {serverId, groupId, channelId}, ChannelTypeDto.text);
+    await this.channelsService.getByIdAndType(userId, { serverId, groupId, channelId }, ChannelTypeDto.text);
 
     const messages = await this.messageModel
       .find({
@@ -58,7 +58,7 @@ export class ChannelMessagesService {
   }
 
   async deleteMessage(userId: string, serverId: string, groupId: string, channelId: string, messageId: string) {
-    await this.channelsService.getByIdAndType(userId, {serverId, groupId, channelId}, ChannelTypeDto.text);
+    await this.channelsService.getByIdAndType(userId, { serverId, groupId, channelId }, ChannelTypeDto.text);
 
     let message;
 

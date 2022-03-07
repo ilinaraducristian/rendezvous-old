@@ -1,23 +1,23 @@
 import {
-  ChannelDto,
-  ChannelMessageDto,
-  FriendshipDto,
-  FriendshipMessageDto,
-  FriendshipStatusDto,
-  GroupDto,
-  MemberDto,
-  ReactionDto,
-  SocketIoServerEvents,
+    ChannelDto,
+    ChannelMessageDto,
+    FriendshipDto,
+    FriendshipMessageDto,
+    FriendshipStatusDto,
+    GroupDto,
+    MemberDto,
+    ReactionDto,
+    SocketIoServerEvents
 } from "@rendezvous/common";
 import { io } from "socket.io-client";
 import {
-  ChannelIds,
-  ChannelMessageIds,
-  ChannelMessageReactionIds,
-  FriendshipMessageIds,
-  FriendshipMessageReactionIds,
-  GroupIds,
-  MemberIds,
+    ChannelIds,
+    ChannelMessageIds,
+    ChannelMessageReactionIds,
+    FriendshipMessageIds,
+    FriendshipMessageReactionIds,
+    GroupIds,
+    MemberIds
 } from "./common-ids";
 import config from "./config";
 import Channel from "./entities/channel";

@@ -24,7 +24,9 @@ const AddGroupOverlayComponent = observer(({ rootState }: ComponentProps) => {
   return (
     <div>
       <header>
-        <button type="button" onClick={closeOverlay}>X</button>
+        <button type="button" onClick={closeOverlay}>
+          X
+        </button>
         <h2>Create Group</h2>
       </header>
       <form>
@@ -32,9 +34,9 @@ const AddGroupOverlayComponent = observer(({ rootState }: ComponentProps) => {
         <input type="text" ref={nameRef} name="name-ref" />
       </form>
       <footer>
-      <ApiCallButton type="submit" api={addGroup}>
+        <ApiCallButton type="submit" api={addGroup}>
           New Group
-      </ApiCallButton>
+        </ApiCallButton>
       </footer>
     </div>
   );

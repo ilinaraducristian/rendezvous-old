@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { ChannelMessagesService } from "./channel-messages.service";
+import NewReactionRequest from "src/requests/new-reaction-request";
 import { ServerDocument } from "../entities/server";
 import { EmojiNotFoundException, ReactionNotFoundException } from "../exceptions/NotFoundExceptions";
-import NewReactionRequest from "src/requests/new-reaction-request";
+import { ChannelMessagesService } from "./channel-messages.service";
 
 @Injectable()
 export class ReactionsService {

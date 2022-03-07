@@ -22,18 +22,22 @@ const ChannelComponent = observer(({ rootState, channel }: ComponentProps) => {
 
   return (
     <li>
-      <button type="button" onClick={selectChannel}>
-        {channel.name}
-      </button>
-      {!rootState.isShiftPressed || (
-        <button type="button" onClick={deleteChannel}>
-          X
+      <div>
+        <button type="button" onClick={selectChannel}>
+          {channel.name}
         </button>
-      )}
+        {!rootState.isShiftPressed || (
+          <button type="button" onClick={deleteChannel}>
+            X
+          </button>
+        )}
+      </div>
       {channel.users?.length === 0 || (
         <ol>
           {channel.users?.map((userId) => (
-            <li key={Math.random()}>{rootState.users.get(userId)?.username}</li>
+            <li key={Math.random()}>
+              <span>{rootState.users.get(userId)?.username}</span>
+            </li>
           ))}
         </ol>
       )}

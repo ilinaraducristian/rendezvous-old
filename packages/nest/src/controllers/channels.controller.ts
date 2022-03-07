@@ -37,7 +37,17 @@ export class ChannelsController {
     @Param("groupId") groupId: string,
     @Param("channelId") channelId: string
   ) {
-    await this.channelsService.addUserToVoiceChannel(user.sub, {serverId, groupId, channelId})
+    await this.channelsService.addUserToVoiceChannel(user.sub, { serverId, groupId, channelId });
+  }
+
+  @Delete(":channelId/users")
+  async removeUserFromVoiceChannel(
+    @AuthenticatedUser() user: KeycloakUser,
+    @Param("serverId") serverId: string,
+    @Param("groupId") groupId: string,
+    @Param("channelId") channelId: string
+  ) {
+    await this.channelsService.removeUserFromVoiceChannel(user.sub, { serverId, groupId, channelId });
   }
 
   @Delete(":channelId")

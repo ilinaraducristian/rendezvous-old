@@ -5,7 +5,6 @@ import { AnyKeys, AnyObject, Model } from "mongoose";
 import { ServerDocument } from "src/entities/server";
 import mediasoup from "src/mediasoup";
 import Member, { MemberDocument } from "../entities/member";
-import { ChannelsService } from "./channels.service";
 
 @Injectable()
 export class UsersService {

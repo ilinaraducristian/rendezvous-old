@@ -29,11 +29,11 @@ class Group {
   }
 
   async apiDelete() {
-    await fetchAuthApi(`servers/${this.serverId}/groups/${this.id}`, {method: "DELETE"});
+    await fetchAuthApi(`servers/${this.serverId}/groups/${this.id}`, { method: "DELETE" });
   }
 
   async apiNewChannel(name: string, type: ChannelTypeDto) {
-    await fetchAuthApi(`servers/${this.serverId}/groups/${this.id}/channels`, {method: "POST", body: { name, type }});
+    await fetchAuthApi(`servers/${this.serverId}/groups/${this.id}/channels`, { method: "POST", body: { name, type } });
   }
 }
 

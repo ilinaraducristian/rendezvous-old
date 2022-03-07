@@ -1,20 +1,15 @@
 import { Device } from "mediasoup-client";
-import { RtpCapabilities } from "mediasoup-client/lib/RtpParameters";
 import { Transport } from "mediasoup-client/lib/Transport";
-import { fetchAuthMediasoupJson, mediasoup } from "./api";
-import config from "./config";
 
 class MediasoupInstance {
   device?: Device;
   audioContext = new AudioContext();
   localStream?: MediaStream;
-//   routerRtpCapabilities?: RtpCapabilities;
+  //   routerRtpCapabilities?: RtpCapabilities;
   sendWebRtcTransport?: Transport;
   receiveWebRtcTransport?: Transport;
 
-  async joinChannel() {
-
-  }
+  async joinChannel() {}
 
   // async connectToChannel(serverId: string, groupId: string, channelId: string) {
   //   // this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -43,7 +38,7 @@ class MediasoupInstance {
   //       });
   //       cb(id);
   //   });
-    
+
   //   receiveTransport.on("connect", async ({dtlsParameters}, cb) => {
   //     await mediasoup.connectTransport("receive", dtlsParameters);
   //     cb();

@@ -10,7 +10,7 @@ class Channel extends MessagesParent<ChannelMessage> {
   name: string;
   order: number;
   type: ChannelTypeDto;
-  users?: string[]
+  users?: string[];
 
   constructor(channelDto: ChannelDto) {
     super(channelDto.id, `servers/${channelDto.serverId}/groups/${channelDto.groupId}/channels/${channelDto.id}`);
@@ -26,7 +26,7 @@ class Channel extends MessagesParent<ChannelMessage> {
       name: observable,
       order: observable,
       type: observable,
-      users: observable
+      users: observable,
     });
   }
 
@@ -36,10 +36,9 @@ class Channel extends MessagesParent<ChannelMessage> {
   }
 
   async joinChannel() {
-    if(this.type === ChannelTypeDto.text) return;
-    await fetchAuthApi(`servers/${this.serverId}/groups/${this.groupId}/channels/${this.id}/users`, {method: "POST", body: {}});
+    if (this.type === ChannelTypeDto.text) return;
+    await fetchAuthApi(`servers/${this.serverId}/groups/${this.groupId}/channels/${this.id}/users`, { method: "POST", body: {} });
   }
-
 }
 
 export default Channel;

@@ -1,5 +1,4 @@
-import { useCallback } from "react";
-import { ButtonHTMLAttributes, DetailedHTMLProps, useState } from "react";
+import { ButtonHTMLAttributes, DetailedHTMLProps, useCallback, useState } from "react";
 import "./ApiCallButton.component.css";
 
 type ComponentProps = {

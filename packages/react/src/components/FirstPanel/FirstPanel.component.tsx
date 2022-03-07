@@ -3,8 +3,8 @@ import { useCallback } from "react";
 import Overlays from "../../Overlays";
 import RootState from "../../state/root-state";
 import serversState from "../../state/servers-state";
-import ServersComponent from "./Servers.component";
 import "./FirstPanel.component.css";
+import ServersComponent from "./Servers.component";
 
 type ComponentProps = { rootState: RootState };
 
@@ -22,7 +22,7 @@ const FirstPanelComponent = observer(({ rootState }: ComponentProps) => {
   return (
     <ol className="first-panel">
       <li>
-        <button type="button" onClick={selectFriendships} className={rootState.selectedServer !== null ? '' : 'selected'}>
+        <button type="button" onClick={selectFriendships} className={rootState.selectedServer !== null ? "" : "selected"}>
           F
         </button>
       </li>

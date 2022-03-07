@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import Reaction, { ReactionDocument } from "./reaction";
 import { Document, Types } from "mongoose";
+import Reaction, { ReactionDocument } from "./reaction";
 
 @Schema()
 class Message {

@@ -52,11 +52,12 @@ class ReactionNotFoundException extends ResourceNotFoundException {
 export default ResourceNotFoundException;
 
 export {
-  ChannelNotFoundException,
-  GroupNotFoundException,
-  MessageNotFoundException,
-  ServerNotFoundException,
-  FriendshipNotFoundException,
-  EmojiNotFoundException,
-  ReactionNotFoundException,
+    ChannelNotFoundException,
+    GroupNotFoundException,
+    MessageNotFoundException,
+    ServerNotFoundException,
+    FriendshipNotFoundException,
+    EmojiNotFoundException,
+    ReactionNotFoundException,
 };
+

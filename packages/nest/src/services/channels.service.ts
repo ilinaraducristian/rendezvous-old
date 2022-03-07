@@ -1,17 +1,17 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { ChannelIds, ChannelTypeDto } from "@rendezvous/common";
 import { Model } from "mongoose";
+import { ChannelMessage } from "src/entities/message";
+import mediasoup from "src/mediasoup";
+import UpdateChannelRequest from "src/requests/update-channel-request";
 import Channel, { ChannelDocument } from "../entities/channel";
 import { GroupDocument } from "../entities/group";
 import { ServerDocument } from "../entities/server";
 import { ChannelNotFoundException } from "../exceptions/NotFoundExceptions";
+import { changeDocumentOrder, getMaxOrder, sortDocuments } from "../util";
 import { GroupsService } from "./groups.service";
 import { SocketIoService } from "./socket-io.service";
-import { changeDocumentOrder, getMaxOrder, sortDocuments } from "../util";
-import { ChannelMessage } from "src/entities/message";
-import mediasoup from "src/mediasoup";
-import { ChannelIds, ChannelTypeDto } from "@rendezvous/common";
-import UpdateChannelRequest from "src/requests/update-channel-request";
 
 @Injectable()
 export class ChannelsService {
@@ -111,6 +111,16 @@ export class ChannelsService {
     }
     mediasoupChannel.push(userId);
     this.socketIoService.newVoiceChannelUser(channelIds, userId);
+  }
+
+  async removeUserFromVoiceChannel(userId: string, channelIds: ChannelIds) {
+    const channel = await this.getByIdAndType(userId, channelIds, ChannelTypeDto.voice);
+    let mediasoupChannel = mediasoup.channels.get(channel.id);
+    if (mediasoupChannel === undefined) return;
+    const index = mediasoupChannel.findIndex((e) => e === userId);
+    if (index === -1) return;
+    mediasoupChannel.splice(index, 1);
+    this.socketIoService.voiceChannelUserRemoved(channelIds, userId);
   }
 
   async deleteChannel(userId: string, serverId: string, groupId: string, channelId: string) {

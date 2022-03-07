@@ -32,15 +32,19 @@ const GroupComponent = observer(({ rootState, group }: ComponentProps) => {
   return (
     <li>
       <div>
-          <button type="button" onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}>
-            {group.name}
-          </button>
-          <button type="button" onClick={showNewChannelOverlay}>
-            +C
-          </button>
-          <button type="button" onClick={deleteGroup}>
-            -G
-          </button>
+        <button type="button" onClick={() => setIsCollapsed((isCollapsed) => !isCollapsed)}>
+          {group.name}
+        </button>
+        {!rootState.isShiftPressed || (
+          <>
+            <button type="button" onClick={showNewChannelOverlay}>
+              +C
+            </button>
+            <button type="button" onClick={deleteGroup}>
+              -G
+            </button>
+          </>
+        )}
       </div>
       {isCollapsed || (
         <ol>

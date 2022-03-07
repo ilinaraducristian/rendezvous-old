@@ -1,7 +1,19 @@
 import { Injectable } from "@nestjs/common";
-import { ChannelDto, ChannelIds, ChannelMessageIds, FriendshipDto, FriendshipStatusDto, GroupDto, GroupIds, MemberDto, MemberIds, ReactionDto, ServerDto, SocketIoServerEvents } from "@rendezvous/common";
+import {
+    ChannelDto,
+    ChannelIds,
+    ChannelMessageIds,
+    FriendshipDto,
+    FriendshipStatusDto,
+    GroupDto,
+    GroupIds,
+    MemberDto,
+    MemberIds,
+    ReactionDto,
+    ServerDto,
+    SocketIoServerEvents
+} from "@rendezvous/common";
 import { Server as SocketIoServer } from "socket.io";
-import Member from "src/entities/member";
 import { ChannelMessage, FriendshipMessage } from "src/entities/message";
 
 @Injectable()
@@ -88,6 +100,10 @@ export class SocketIoService {
   }
 
   newVoiceChannelUser(channelIds: ChannelIds, userId: string) {
+    this.emitToServer(channelIds.serverId, SocketIoServerEvents.newVoiceChannelUser, channelIds, userId);
+  }
+
+  voiceChannelUserRemoved(channelIds: ChannelIds, userId: string) {
     this.emitToServer(channelIds.serverId, SocketIoServerEvents.newVoiceChannelUser, channelIds, userId);
   }
 

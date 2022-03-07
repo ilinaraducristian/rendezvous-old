@@ -19,7 +19,7 @@ class Friendship extends MessagesParent<FriendshipMessage> {
       user1Id: observable,
       user2Id: observable,
       status: observable,
-      friendId: computed
+      friendId: computed,
     });
   }
 
@@ -28,7 +28,7 @@ class Friendship extends MessagesParent<FriendshipMessage> {
   }
 
   async apiUpdate(status: Omit<FriendshipStatusDto, "pending">) {
-    await fetchAuthApiJson(this.url, {method: "PUT", body: { status }});
+    await fetchAuthApiJson(this.url, { method: "PUT", body: { status } });
   }
 
   async apiGetMessages(offset: number = 0): Promise<[string, FriendshipMessage][]> {

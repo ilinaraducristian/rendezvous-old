@@ -43,7 +43,7 @@ export class FriendshipMessage extends Message {
   }
 
   async apiDelete() {
-    await fetchAuthApi(`friendships/${this.friendshipId}/messages/${this.id}`, {method: "DELETE"});
+    await fetchAuthApi(`friendships/${this.friendshipId}/messages/${this.id}`, { method: "DELETE" });
   }
 
   fromDto(messageDto: any): FriendshipMessage {
@@ -75,7 +75,7 @@ export class ChannelMessage extends Message {
   }
 
   async apiDelete() {
-    await fetchAuthApi(`servers/${this.serverId}/groups/${this.groupId}/channels/${this.channelId}/messages/${this.id}`, {method: "DELETE"});
+    await fetchAuthApi(`servers/${this.serverId}/groups/${this.groupId}/channels/${this.channelId}/messages/${this.id}`, { method: "DELETE" });
   }
 
   fromDto(messageDto: any): ChannelMessage {

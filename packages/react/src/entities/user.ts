@@ -1,5 +1,5 @@
+import { UserDto } from "@rendezvous/common";
 import { makeAutoObservable } from "mobx";
-import {UserDto} from '@rendezvous/common';
 
 class User {
   private _id: string;
@@ -18,8 +18,8 @@ class User {
   }
 
   get id(): string {
-    return this._id
-  };
+    return this._id;
+  }
 
   set id(value: string) {
     this._id = value;

@@ -6,10 +6,10 @@ import { FriendshipMessage } from "src/entities/message";
 import { SocketIoService } from "src/services/socket-io.service";
 import Friendship, { FriendshipDocument } from "../entities/friendship";
 import {
-  AlreadyFriendsException,
-  BadFriendshipStatusException,
-  FriendshipCannotBeUpdatedException,
-  FriendshipNotAccessibleException,
+    AlreadyFriendsException,
+    BadFriendshipStatusException,
+    FriendshipCannotBeUpdatedException,
+    FriendshipNotAccessibleException
 } from "../exceptions/BadRequestExceptions";
 import { FriendshipNotFoundException } from "../exceptions/NotFoundExceptions";
 

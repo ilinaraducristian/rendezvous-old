@@ -1,4 +1,4 @@
-import {  makeAutoObservable } from "mobx";
+import { makeAutoObservable } from "mobx";
 import Channel from "../entities/channel";
 import Friendship from "../entities/friendship";
 import Server from "../entities/server";
@@ -11,9 +11,9 @@ class RootState {
   private _selectedChannel: Channel | null = null;
   private _selectedFriendship: Friendship | null = null;
   private _isShiftPressed: boolean = false;
-  
+
   private _overlay: [Overlays] | [Overlays, any] | null = null;
-  
+
   constructor() {
     makeAutoObservable(this);
   }
@@ -52,8 +52,6 @@ class RootState {
 
   set selectedServer(server: Server | null) {
     this._selectedServer = server;
-    this._selectedChannel = null;
-    this._selectedFriendship = null;
   }
 
   set selectedChannel(channel: Channel | null) {

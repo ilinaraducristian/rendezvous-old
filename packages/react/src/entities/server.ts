@@ -43,19 +43,19 @@ class Server {
   }
 
   async apiDelete() {
-    await fetchAuthApi(`servers/${this.id}`, {method: "DELETE"});
+    await fetchAuthApi(`servers/${this.id}`, { method: "DELETE" });
   }
 
   async apiNewGroup(name: string) {
-    await fetchAuthApi(`servers/${this.id}/groups`, {method: "POST", body: { name }});
+    await fetchAuthApi(`servers/${this.id}/groups`, { method: "POST", body: { name } });
   }
 
   async apiLeave() {
-    await fetchAuthApi(`users/servers/${this.id}`, {method: "DELETE"});
+    await fetchAuthApi(`users/servers/${this.id}`, { method: "DELETE" });
   }
 
   async apiNewInvitation(): Promise<string> {
-    const invitationDto = await fetchAuthApiJson<InvitationDto>(`servers/${this.id}/invitations`, {method: "POST"});
+    const invitationDto = await fetchAuthApiJson<InvitationDto>(`servers/${this.id}/invitations`, { method: "POST" });
     this.invitation = new Invitation(invitationDto);
     return this.invitation.link;
   }

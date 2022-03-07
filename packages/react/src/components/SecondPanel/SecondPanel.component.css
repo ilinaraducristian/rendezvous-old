@@ -24,37 +24,34 @@
   font-size: 25px;
 }
 
-.second-panel ol {
+.second-panel > ol {
   overflow: auto;
   flex-grow: 1;
+  margin: 0px 10px;
+  margin-top: 10px;
 }
 
-.second-panel ol li {
-  margin: 10px;
+.second-panel ol > li {
+  padding-left: 5px;
+  margin: 10px 0px;
+}
+
+.second-panel > ol > li > div {
   display: flex;
-  flex-direction: column;
-  border-radius: 10px;
-  border: 0px;
 }
 
-.second-panel ol ol li:hover {
-  background-color: var(--7th-color);
-}
-
-.second-panel ol ol li:is(.selected) {
-  background-color: var(--8th-color);
-}
-
-.second-panel ol li button:first-child {
+.second-panel > ol > li > div > button:first-child {
   flex-grow: 1;
   text-align: start;
-  padding-top: 10px;
-  padding-left: 10px;
-  padding-bottom: 10px;
 }
 
-.second-panel ol li button:not(:first-child) {
-  padding: 0px 10px;
+.second-panel > ol > li > ol > li > div {
+  display: flex;
+}
+
+.second-panel > ol > li > ol > li > div > button:first-child {
+  flex-grow: 1;
+  text-align: start;
 }
 
 .second-panel footer {

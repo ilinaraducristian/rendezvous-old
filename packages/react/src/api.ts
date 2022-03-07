@@ -1,6 +1,4 @@
-import { ChannelIds, FriendshipDto, ServerDto, UserDataResponse } from "@rendezvous/common";
-import { MediaKind, RtpCapabilities, RtpParameters } from "mediasoup-client/lib/RtpParameters";
-import { DtlsParameters } from "mediasoup-client/lib/Transport";
+import { FriendshipDto, ServerDto, UserDataResponse } from "@rendezvous/common";
 import config from "./config";
 import Friendship from "./entities/friendship";
 import Server from "./entities/server";
@@ -42,9 +40,7 @@ export function fetchAuthMediasoupJson<R = any>(path: string, init?: RequestInit
   return fetchAuthJson<R>(`${config.mediasoupUrl}/${path}`, init);
 }
 
-class Mediasoup {
-
-}
+class Mediasoup {}
 
 class Api {
   async getData() {
