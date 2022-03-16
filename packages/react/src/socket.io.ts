@@ -19,7 +19,6 @@ import {
     GroupIds,
     MemberIds
 } from "./common-ids";
-import config from "./config";
 import Channel from "./entities/channel";
 import Friendship from "./entities/friendship";
 import Group from "./entities/group";
@@ -29,7 +28,7 @@ import Reaction from "./entities/reaction";
 import friendshipsState from "./state/friendships-state";
 import serversState from "./state/servers-state";
 
-const socketio = io(config.socketioURL, { autoConnect: false });
+const socketio = io(process.env.REACT_APP_API_URL || '', { autoConnect: false });
 
 socketio.on(SocketIoServerEvents.newGroup, (serverId: string, groupDto: GroupDto) => {
   serversState.servers.get(serverId)?.addGroup(groupDto.id, new Group(groupDto));

@@ -7,7 +7,7 @@ import mediasoup from "src/mediasoup";
 import { SocketIoService } from "../services/socket-io.service";
 import { UsersService } from "../services/users.service";
 
-@WebSocketGateway(3101, { cors: ["*"] })
+@WebSocketGateway(81, { cors: ["*"] })
 class SocketIoGateway implements OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
   constructor(
     private readonly membersService: UsersService,

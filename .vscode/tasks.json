@@ -30,9 +30,9 @@
       "command": "yarn workspace @rendezvous/nest run format"
     },
     {
-      "label": "yarn:build",
+      "label": "yarn:build react",
       "type": "shell",
-      "command": "yarn run build",
+      "command": "yarn workspace @rendezvous/react run build",
       "group": "build"
     }
   ]

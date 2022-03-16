@@ -29,14 +29,17 @@ import { UsersService } from "./services/users.service";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://user:user@127.0.0.1:27017/rendezvous"),
+    MongooseModule.forRoot("mongodb://mongo/", {
+      auth: { username: process.env.MONGO_USERNAME, password: process.env.MONGO_PASSWORD },
+      dbName: process.env.DB,
+    }),
     KeycloakConnectModule.register({
-      authServerUrl: "http://127.0.0.1:8080/auth",
-      realm: "rendezvous",
-      clientId: "rendezvous-api",
-      secret: "77YUMmyTZWKCTILfAfRwScxLjxyP0H20",
+      authServerUrl: process.env.KEYCLOAK_AUTH_URL,
+      realm: process.env.KEYCLOAK_REALM,
+      clientId: process.env.API_CLIENT_ID,
+      secret: process.env.API_CLIENT_SECRET,
       useNestLogger: false,
-      logLevels: ["error"],
+      logLevels: ['debug'],
     }),
     MongooseModule.forFeature([
       { name: Server.name, schema: ServerSchema },

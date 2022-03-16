@@ -3,15 +3,15 @@ import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Injectable } from "@nestjs/common";
 
 const authOptions: Credentials = {
-  username: "admin",
-  password: "admin",
+  username: process.env.KEYCLOAK_ADMIN_USERNAME || "",
+  password: process.env.KEYCLOAK_ADMIN_PASSWORD || "",
   grantType: "password",
-  clientId: "admin-cli",
+  clientId: process.env.KEYCLOAK_ADMIN_CLIENT_ID || "",
 };
 
 @Injectable()
 export class KeycloakAdminService {
-  private readonly kcAdminClient: KcAdminClient = new KcAdminClient({ realmName: "master" });
+  private readonly kcAdminClient: KcAdminClient = new KcAdminClient({ baseUrl: process.env.KEYCLOAK_AUTH_URL, realmName: "master" });
 
   constructor() {
     this.kcAdminClient.auth(authOptions).catch((e) => console.error(e));

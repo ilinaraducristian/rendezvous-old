@@ -1,5 +1,4 @@
 import { FriendshipDto, ServerDto, UserDataResponse } from "@rendezvous/common";
-import config from "./config";
 import Friendship from "./entities/friendship";
 import Server from "./entities/server";
 import User from "./entities/user";
@@ -25,22 +24,12 @@ export function fetchAuthJson<R = any>(input: RequestInfo, init?: RequestInitial
 }
 
 export function fetchAuthApi(path: string, init?: RequestInitialization) {
-  return fetchAuth(`${config.apiUrl}/${path}`, init);
+  return fetchAuth(`${process.env.REACT_APP_API_URL}/${path}`, init);
 }
 
 export function fetchAuthApiJson<R = any>(path: string, init?: RequestInitialization) {
-  return fetchAuthJson<R>(`${config.apiUrl}/${path}`, init);
+  return fetchAuthJson<R>(`${process.env.REACT_APP_API_URL}/${path}`, init);
 }
-
-export function fetchAuthMediasoup(path: string, init?: RequestInitialization) {
-  return fetchAuth(`${config.mediasoupUrl}/${path}`, init);
-}
-
-export function fetchAuthMediasoupJson<R = any>(path: string, init?: RequestInitialization) {
-  return fetchAuthJson<R>(`${config.mediasoupUrl}/${path}`, init);
-}
-
-class Mediasoup {}
 
 class Api {
   async getData() {
@@ -93,5 +82,4 @@ class Api {
   }
 }
 
-export const mediasoup = new Mediasoup();
 export default new Api();

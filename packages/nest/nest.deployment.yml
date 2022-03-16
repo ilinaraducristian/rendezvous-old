@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nest
+  labels:
+    app: nest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nest
+  template:
+    metadata:
+      labels:
+        app: nest
+    spec:
+      containers:
+      - name: nest
+        image: quay.io/ilinaraducristian/nest:0.1.13
+        ports:
+        - containerPort: 80
+        - containerPort: 81
+        env:
+        - name: MONGO_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: MONGO_INITDB_ROOT_USERNAME
+        - name: MONGO_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: MONGO_INITDB_ROOT_PASSWORD
+        - name: DB_ADDR
+          valueFrom:
+            secretKeyRef:
+              name: nest
+              key: DB_ADDR
+        - name: DB
+          valueFrom:
+            secretKeyRef:
+              name: mongo
+              key: MONGO_INITDB_DATABASE
+        - name: KEYCLOAK_AUTH_URL
+          valueFrom:
+            secretKeyRef:
+              name: nest
+              key: KEYCLOAK_AUTH_URL
+        - name: KEYCLOAK_REALM
+          valueFrom:
+            secretKeyRef:
+              name: nest
+              key: KEYCLOAK_REALM
+        - name: API_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: nest
+              key: API_CLIENT_ID
+        - name: API_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: nest
+              key: API_CLIENT_SECRET
+        - name: KEYCLOAK_ADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: KEYCLOAK_USER
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: keycloak
+              key: KEYCLOAK_PASSWORD
+        - name: KEYCLOAK_ADMIN_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: nest
+              key: KEYCLOAK_ADMIN_CLIENT_ID

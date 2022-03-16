@@ -14,9 +14,9 @@ type KeycloakType = KeycloakInstance & {
 };
 
 const keycloak = Keycloak({
-  clientId: "rendezvous-client",
-  realm: "rendezvous",
-  url: "http://127.0.0.1:8080/auth",
+  clientId: process.env.REACT_APP_KEYCLOAK_CLIENT_ID || '',
+  realm: process.env.REACT_APP_KEYCLOAK_REALM || '',
+  url: process.env.REACT_APP_KEYCLOAK_URL,
 }) as KeycloakType;
 
 keycloak.onTokenExpired = async () => {
