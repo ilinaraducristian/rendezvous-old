@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { MongooseModule } from "@nestjs/mongoose";
 import { AuthGuard, KeycloakConnectModule } from "nest-keycloak-connect";
@@ -29,17 +30,33 @@ import { UsersService } from "./services/users.service";
 
 @Module({
   imports: [
-    MongooseModule.forRoot("mongodb://mongo/", {
-      auth: { username: process.env.MONGO_USERNAME, password: process.env.MONGO_PASSWORD },
-      dbName: process.env.DB,
+    ConfigModule.forRoot({
+      envFilePath: '.env.development',
+      ignoreEnvFile: process.env.NODE_ENV === "prodution"
     }),
-    KeycloakConnectModule.register({
-      authServerUrl: process.env.KEYCLOAK_AUTH_URL,
-      realm: process.env.KEYCLOAK_REALM,
-      clientId: process.env.API_CLIENT_ID,
-      secret: process.env.API_CLIENT_SECRET,
-      useNestLogger: false,
-      logLevels: ['debug'],
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: "mongodb://mongo/",
+        auth: {
+          username: configService.get<string>('MONGO_USERNAME'),
+          password: configService.get<string>('MONGO_PASSWORD'),
+        },
+        dbName: configService.get<string>('DB')
+      }),
+      inject: [ConfigService],
+    }),
+    KeycloakConnectModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        authServerUrl: configService.get<string>('KEYCLOAK_AUTH_URL'),
+        realm: configService.get<string>('KEYCLOAK_REALM'),
+        clientId: configService.get<string>('API_CLIENT_ID'),
+        secret: configService.get<string>('API_CLIENT_SECRET'),
+        useNestLogger: false,
+        logLevels: ['debug'],
+      }),
+      inject: [ConfigService],
     }),
     MongooseModule.forFeature([
       { name: Server.name, schema: ServerSchema },

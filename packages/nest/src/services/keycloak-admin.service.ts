@@ -1,25 +1,30 @@
 import KcAdminClient from "@keycloak/keycloak-admin-client";
 import { Credentials } from "@keycloak/keycloak-admin-client/lib/utils/auth";
 import { Injectable } from "@nestjs/common";
-
-const authOptions: Credentials = {
-  username: process.env.KEYCLOAK_ADMIN_USERNAME || "",
-  password: process.env.KEYCLOAK_ADMIN_PASSWORD || "",
-  grantType: "password",
-  clientId: process.env.KEYCLOAK_ADMIN_CLIENT_ID || "",
-};
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class KeycloakAdminService {
-  private readonly kcAdminClient: KcAdminClient = new KcAdminClient({ baseUrl: process.env.KEYCLOAK_AUTH_URL, realmName: "master" });
+  private readonly kcAdminClient: KcAdminClient;
+  private readonly authOptions: Credentials;
 
-  constructor() {
-    this.kcAdminClient.auth(authOptions).catch((e) => console.error(e));
+  constructor(private readonly configService: ConfigService) {
+    this.kcAdminClient = new KcAdminClient({ baseUrl: configService.get<string>("KEYCLOAK_AUTH_URL"), realmName: "master" });
+    this.authOptions = {
+      username: configService.get<string>("KEYCLOAK_ADMIN_USERNAME"),
+      password: configService.get<string>("KEYCLOAK_ADMIN_PASSWORD"),
+      grantType: "password",
+      clientId: configService.get<string>("KEYCLOAK_ADMIN_CLIENT_ID"),
+    };
+    this.kcAdminClient.auth(this.authOptions).catch((e) => console.error(e));
   }
 
-  getUser(userId: string) {
-    return this.kcAdminClient.users
-      .findOne({ id: userId, realm: "rendezvous" })
-      .catch((e) => this.kcAdminClient.auth(authOptions).then(() => this.kcAdminClient.users.findOne({ id: userId, realm: "rendezvous" })));
+  async getUser(userId: string) {
+    try {
+      return await this.kcAdminClient.users.findOne({ id: userId, realm: this.configService.get<string>("KEYCLOAK_REALM") });
+    } catch {
+      await this.kcAdminClient.auth(this.authOptions);
+      return this.kcAdminClient.users.findOne({ id: userId, realm: this.configService.get<string>("KEYCLOAK_REALM") });
+    }
   }
 }
