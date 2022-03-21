@@ -8,6 +8,7 @@ import HeaderComponent from "./components/Header/Header.component";
 import OverlayPanelComponent from "./components/OverlayPanel.component";
 import SecondPanelComponent from "./components/SecondPanel/SecondPanel.component";
 import keycloak from "./keycloak";
+import Loader from "./Loader";
 import socketio from "./socket.io";
 import { FriendshipsState } from "./state/friendships-state";
 import RootState from "./state/root-state";
@@ -43,7 +44,7 @@ const App = observer(({ rootState, serversState, friendshipsState }: ComponentPr
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <Loader/>;
 
   return (
     <>
