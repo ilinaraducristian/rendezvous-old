@@ -1,73 +1,7 @@
-@import 'bootstrap/dist/css/bootstrap.min.css';
-
 * {
-  box-sizing: content-box;
-}
-
-:root {
-  --header-height: 50px;
-  --animation-speed: 200ms;
-}
-
-.theme-dark {
-  --primary-color: #dcdcdc;
-  --secondary-color: #232323;
-  --3rd-color: #393939;
-  --4th-color: #323237;
-  --5th-color: #373737;
-  --6th-color: #5a64f0;
-  --7th-color: rgba(1, 1, 1, 0.05);
-  --8th-color: rgba(1, 1, 1, 0.1);
-  --9th-color: #424ab3;
-  --shadow-bottom: 0 1px 0 rgba(4, 4, 4, 0.2), 0 1.5px 0 rgba(6, 6, 6, 0.05), 0 2px 0 rgba(4, 4, 4, 0.05);
-  --shadow-top: 0 -1px 0 rgba(4, 4, 4, 0.2), 0 -1.5px 0 rgba(6, 6, 6, 0.05), 0 -2px 0 rgba(4, 4, 4, 0.05);
-}
-
-.theme-light {
-  --primary-color: #dcdcdc;
-  --secondary-color: #dcdcdc;
-  --3rd-color: #dcdcdc;
-  --4th-color: #dcdcdc;
-  --5th-color: #dcdcdc;
-  --6th-color: #dcdcdc;
-}
-
-body {
-  margin: 0;
-  height: 100vh;
-}
-
-ol,
-ul {
-  list-style: none;
   margin: 0;
   padding: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h5 {
-  margin: 0;
-}
-
-#root {
-  height: 100%;
-  display: grid;
-  grid-template: var(--header-height) 1fr / 70px 300px 1fr;
-  background-color: var(--secondary-color);
-}
-
-button {
-  color: var(--primary-color);
-  padding: 0;
-  border: 0;
-  background: none;
-  cursor: pointer;
-}
-
-span {
-  color: var(--primary-color);
-  cursor: default;
+  box-sizing: border-box;
+  font-family: open sans;
+  font-size: 62.5%;
 }
