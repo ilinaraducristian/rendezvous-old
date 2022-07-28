@@ -10,34 +10,31 @@ export const Container = styled.div`
 
 export const ServersWrapper = styled.div(
   ({ style }) => css`
+    height: 100%;
+    border-right: 0.05rem solid #ffffff29;
+    background-color: #402d8528;
+    border-top-right-radius: 1rem;
     ${style.display === "mobile" &&
     css`
       width: 15%;
-      height: 100%;
-      background-color: #c5c1c1;
     `}
     ${style.display === "browser" &&
     css`
       width: 6%;
-      height: 100%;
-      background-color: #c5c1c1;
     `}
   `
 );
 
 export const UsersWrapper = styled.div(
   ({ style }) => css`
+    height: 100%;
     ${style.display === "mobile" &&
     css`
       width: 85%;
-      height: 100%;
-      background-color: #8f8f8f;
     `}
     ${style.display === "browser" &&
     css`
       width: 25%;
-      height: 100%;
-      background-color: #8f8f8f;
     `}
   `
 );

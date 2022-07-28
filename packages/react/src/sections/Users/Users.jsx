@@ -5,6 +5,11 @@ import * as Styled from "./UsersStyled";
 import userIcon from "../../assets/images/sections/users/userIcon.png";
 // LIBRARIES
 
+// REDUX
+
+// COMPONENTS
+import User from "../../components/User/User";
+
 // CONSTANTS & MOCKS
 const usersModel = [
   {
@@ -17,17 +22,53 @@ const usersModel = [
   },
   {
     name: "Alex Marcel",
-    lastMessage: "Nu am mai vz asa ceva in viata...",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
+  },
+  {
+    name: "Alex Marcel",
+    lastMessage: "Nu am mai vz asa viata...",
   },
 ];
 
-// REDUX
-
-// COMPONENTS
-
 const Users = (props) => {
-  const { onClick = () => {}, styleType = "" } = props;
   // PROPS
+  const { onClick = () => {}, styleType = "" } = props;
 
   // CONSTANTS USING LIBRARYS
 
@@ -43,22 +84,21 @@ const Users = (props) => {
 
   return (
     <Styled.Container>
-      {usersModel?.map((user, index) => (
-        <Styled.UserWrapper
-          onClick={() => {
-            onClick(user.name);
-          }}
-          key={`user-${index}`}
-        >
-          <Styled.UserAvatarWrapper style={{ styleType }}>
-            <Styled.UserAvatar src={userIcon} alt="user icon" />
-          </Styled.UserAvatarWrapper>
-          <Styled.UserInfo>
-            <Styled.UserName>{user.name}</Styled.UserName>
-            <Styled.UserLastMessage>{user.lastMessage}</Styled.UserLastMessage>
-          </Styled.UserInfo>
-        </Styled.UserWrapper>
-      ))}
+      <Styled.SearchWrapper>
+        <Styled.Search placeholder="Search 🔍" />
+      </Styled.SearchWrapper>
+      <Styled.UserListWrapper>
+        {usersModel?.map((user, index) => (
+          <User key={`user-${index}`} onClick={onClick} styleType={styleType} icon={userIcon} name={user.name} lastMessage={user.lastMessage} />
+        ))}
+      </Styled.UserListWrapper>
+      <Styled.UserProfile>
+        <Styled.UserIconsWrapper>
+          <Styled.ProfileIcon />
+          <Styled.AddFriendIcon />
+          <Styled.FavoriteContact />
+        </Styled.UserIconsWrapper>
+      </Styled.UserProfile>
     </Styled.Container>
   );
 };

@@ -1,5 +1,5 @@
 // LIBRARIES
-import styled, { css} from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div(
   ({ style }) => css`
@@ -9,13 +9,13 @@ export const Container = styled.div(
     flex-direction: column;
     align-items: center;
     padding-top: 3rem;
-    gap: ${style.styleType === "mobile" ? "0.5rem" : "1.5rem"};
+    gap: ${style.styleType === "mobile" ? "1rem" : "1.5rem"};
   `
 );
 
 export const ServerIconWrapper = styled.div`
-  width: 3.5rem;
-  height: 3.5rem;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
 `;
 export const ServerIcon = styled.img`

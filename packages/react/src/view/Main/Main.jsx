@@ -27,6 +27,14 @@ const Main = () => {
     }
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("resize", () => {
+      window.innerWidth <= 400 ? setDevice("mobile") : setDevice("browser");
+    });
+    return () => {
+      window.removeEventListener("resize", () => {});
+    };
+  }, []);
   // HANDLE FUNCTIONS
   const handleClick = (userName) => {
     setShowChat(!showChat);
@@ -63,7 +71,11 @@ const Main = () => {
               <Users styleType={display} onClick={handleClick} />
             </Styled.UsersWrapper>
             <Styled.ChatWrapper>
-              {defaultChatLayout ? <Styled.ChatDesktopLayout /> : <Chat styleType={display} userName={chatUserName} onClick={handleClick} />}
+              {defaultChatLayout && !isMobile ? (
+                <Styled.ChatDesktopLayout />
+              ) : (
+                <Chat styleType={display} userName={chatUserName} onClick={handleClick} />
+              )}
             </Styled.ChatWrapper>
           </>
         );
