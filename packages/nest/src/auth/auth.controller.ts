@@ -1,7 +1,8 @@
-import { Controller, Request, Post, UseGuards, Body } from "@nestjs/common";
+import { Controller, Request, Post, UseGuards, Body, Res } from "@nestjs/common";
 import { User } from "src/types";
 import { AuthService } from "./auth.service";
 import { LocalAuthGuard } from "./guards/local-auth-guard";
+import { FastifyRequest, FastifyReply } from 'fastify';
 
 @Controller("auth")
 export class AuthController {
@@ -14,8 +15,10 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post("login")
-  login(@Request() req) {
-    return this.authService.login(req.user);
+  async login(@Request() req: FastifyRequest & {user: any}, @Res({ passthrough: true }) res: FastifyReply) {
+    const payload = await this.authService.login(req.user);
+    res.setCookie('access_token', payload.access_token, {httpOnly: true, path: '/'});
+    res.setCookie('refresh_token', payload.refresh_token, {httpOnly: true, path: '/'});
   }
 
 }

@@ -1,3 +1,22 @@
+export type ConversationHolder = { id: string; name: string; lastMessage?: string };
+
+export type UserData = {
+  friends: ConversationHolder[];
+  groups: ConversationHolder[];
+  servers: {
+    id: string;
+    name: string;
+    members: { id: string; name: string }[];
+    groups: { id: string; name?: string; channels: { id: string; name: string }[] }[];
+  }[];
+};
+
+
+
+
+
+
+
 export type User = {
   id: string;
   name: string;
@@ -29,9 +48,3 @@ export type Server = {
   groups: ServerGroup[];
   members: PublicUser[];
 };
-
-export type UserData = {
-  friends: PublicUser[];
-  groups: Group[];
-  servers: Server[];
-}

@@ -2,23 +2,18 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Friendship, FriendshipDocument } from "src/entities/friendship.schema";
-import { Message, MessageDocument } from "src/entities/message.schema";
+import { UserData } from "src/types";
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>, @InjectModel(Message.name) private readonly messageModel: Model<MessageDocument>) {}
+  constructor(@InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>) {}
 
-  createFriendship(user1Id: string, user2Id: string) {
-    return new this.friendshipModel({ user1Id, user2Id });
+  async getUserData(id: string): Promise<UserData> {
+    const friendship = await this.friendshipModel.find({ $or: [{ user1Id: id, user2Id: id }] });
+    return {
+      friends: [],
+      groups: [],
+      servers: [],
+    };
   }
-
-  deleteFriendship(id: string) {
-    return this.friendshipModel.findByIdAndDelete(id);
-  }
-
-  async createMessage(userId: string, id: string, text: string) {
-    const friend = await this.friendshipModel.findById(id);
-    friend.messages.push(new this.messageModel({userId, text}));
-  }
-
 }
