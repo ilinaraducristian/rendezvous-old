@@ -85,7 +85,7 @@ const Users = (props) => {
   return (
     <Styled.Container>
       <Styled.SearchWrapper>
-        <Styled.Search placeholder="Search 🔍" />
+        <Styled.Search placeholder="🔍 Search" />
       </Styled.SearchWrapper>
       <Styled.UserListWrapper>
         {usersModel?.map((user, index) => (

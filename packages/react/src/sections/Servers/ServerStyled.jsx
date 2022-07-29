@@ -8,7 +8,7 @@ export const Container = styled.div(
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 3rem;
+    padding: 3rem 1rem 0rem 1rem;
     gap: ${style.styleType === "mobile" ? "1rem" : "1.5rem"};
   `
 );

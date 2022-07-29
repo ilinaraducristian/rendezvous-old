@@ -6,8 +6,8 @@ export const UserWrapper = styled.div`
   display: flex;
   padding: 1.1rem;
   border-radius: 0.5rem;
-  background-color: #6044c43e;
-  box-shadow: 0rem 0.1rem 0.15rem 0.01rem #8d868678;
+  background-color: #4b494c65;
+  box-shadow: 0rem 0.1rem 0.15rem 0.01rem #8d868670;
   cursor: pointer;
 `;
 export const UserAvatarWrapper = styled.div(
@@ -26,6 +26,7 @@ export const UserInfo = styled.div`
   width: 80%;
   display: flex;
   flex-direction: column;
+  padding-left: 0.5rem;
 `;
 export const UserName = styled.span`
   font-size: 1.6rem;
@@ -36,5 +37,5 @@ export const UserLastMessage = styled.span`
   font-size: 1.4rem;
   color: #ffffff;
   opacity: 80%;
-  font-weight: 600;
+  font-weight: 400;
 `;

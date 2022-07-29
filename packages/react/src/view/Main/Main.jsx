@@ -57,7 +57,7 @@ const Main = () => {
             </Styled.UsersWrapper>
           </>
         ) : (
-          <Styled.ChatWrapper>
+          <Styled.ChatWrapper style={{ display }}>
             <Chat styleType={display} userName={chatUserName} onClick={handleClick} />
           </Styled.ChatWrapper>
         );
@@ -70,9 +70,11 @@ const Main = () => {
             <Styled.UsersWrapper style={{ display }}>
               <Users styleType={display} onClick={handleClick} />
             </Styled.UsersWrapper>
-            <Styled.ChatWrapper>
-              {defaultChatLayout && !isMobile ? (
-                <Styled.ChatDesktopLayout />
+            <Styled.ChatWrapper style={{ display }}>
+              {defaultChatLayout ? (
+                <Styled.ChatDesktopLayout>
+                  <Styled.LayoutIcon />
+                </Styled.ChatDesktopLayout>
               ) : (
                 <Chat styleType={display} userName={chatUserName} onClick={handleClick} />
               )}

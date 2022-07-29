@@ -18,7 +18,6 @@ export const UserListWrapper = styled.div`
   flex-direction: column;
   gap: 0.5rem;
   margin-bottom: 2rem;
-  /* background-color: red; */
   overflow-y: scroll;
   &::-webkit-scrollbar {
     display: none;
@@ -28,7 +27,7 @@ export const UserListWrapper = styled.div`
 export const SearchWrapper = styled.div`
   width: 100%;
   height: 5%;
-  margin: 3rem 0 1.5rem 0;
+  margin: 2.5rem 0 1.5rem 0;
 `;
 export const Search = styled.input`
   width: 100%;
@@ -37,7 +36,7 @@ export const Search = styled.input`
   outline: none;
   border: 0.1rem solid #ffffff5e;
   border-radius: 0.5rem;
-  font-size: 1.6rem;
+  font-size: 1.4rem;
   color: white;
   padding-left: 1.5rem;
   &::placeholder {
@@ -53,7 +52,7 @@ export const UserProfile = styled.div`
   width: 100%;
   margin: auto;
   height: 7%;
-  background-color: #402d8528;
+  background-color: #22222250;
   border-top-right-radius: 0.5rem;
   border-top-left-radius: 0.5rem;
   border-top: 0.05rem solid #ffffff29;
