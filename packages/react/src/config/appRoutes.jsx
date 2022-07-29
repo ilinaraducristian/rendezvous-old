@@ -9,7 +9,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Authentication />} />
-      <Route path="/main" element={<Main />} />
+      <Route path="/app" element={<Main />} />
     </Routes>
   );
 };

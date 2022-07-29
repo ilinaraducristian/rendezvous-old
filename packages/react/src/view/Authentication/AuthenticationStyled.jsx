@@ -32,7 +32,7 @@ export const AuthenticationInfo = styled.div`
 export const AuthenticationContent = styled.div`
   width: 40%;
   height: 100%;
-  background: rgba(255, 255, 255, 0.904);
+  background: #1a1829;
   border-top-right-radius: 1.6rem;
   border-bottom-right-radius: 1.6rem;
 `;

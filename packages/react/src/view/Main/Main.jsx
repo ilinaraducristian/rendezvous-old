@@ -29,7 +29,7 @@ const Main = () => {
 
   useEffect(() => {
     window.addEventListener("resize", () => {
-      window.innerWidth <= 400 ? setDevice("mobile") : setDevice("browser");
+      window.innerWidth <= 576 ? setDevice("mobile") : setDevice("browser");
     });
     return () => {
       window.removeEventListener("resize", () => {});

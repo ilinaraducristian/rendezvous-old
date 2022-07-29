@@ -31,7 +31,9 @@ const Authentication = () => {
     <>
       <Styled.Container>
         <Styled.AuthenticationWrapper>
-          <Styled.AuthenticationInfo>{/* <Styled.AuthenticationInfoBackground src={background} /> */}</Styled.AuthenticationInfo>
+          <Styled.AuthenticationInfo>
+            <Styled.AuthenticationInfoBackground src={background} />
+          </Styled.AuthenticationInfo>
           <Styled.AuthenticationContent></Styled.AuthenticationContent>
         </Styled.AuthenticationWrapper>
       </Styled.Container>
