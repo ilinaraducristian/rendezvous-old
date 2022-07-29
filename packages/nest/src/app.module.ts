@@ -1,98 +1,43 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
 import { MongooseModule } from "@nestjs/mongoose";
-import { AuthGuard, KeycloakConnectModule } from "nest-keycloak-connect";
-import { ChannelMessagesController } from "./controllers/channel-messages.controller";
-import { ChannelsController } from "./controllers/channels.controller";
-import { FriendshipMessagesController } from "./controllers/friendship-messages.controller";
-import { FriendshipsController } from "./controllers/friendships.controller";
-import { GroupsController } from "./controllers/groups.controller";
-import { ReactionsController } from "./controllers/reactions.controller";
-import { ServersController } from "./controllers/servers.controller";
-import SocketIoGateway from "./controllers/socket-io.gateway";
-import { UsersController } from "./controllers/users.controller";
-import Friendship, { FriendshipSchema } from "./entities/friendship";
-import Member, { MemberSchema } from "./entities/member";
-import { ChannelMessage, ChannelMessageSchema, FriendshipMessage, FriendshipMessageSchema } from "./entities/message";
-import Server, { ServerSchema } from "./entities/server";
-import { ChannelMessagesService } from "./services/channel-messages.service";
-import { ChannelsService } from "./services/channels.service";
-import { EmojisService } from "./services/emojis.service";
-import { FriendshipMessagesService } from "./services/friendship-messages.service";
-import { FriendshipsService } from "./services/friendships.service";
-import { GroupsService } from "./services/groups.service";
-import { KeycloakAdminService } from "./services/keycloak-admin.service";
-import { ReactionsService } from "./services/reactions.service";
-import { ServersService } from "./services/servers.service";
-import { SocketIoService } from "./services/socket-io.service";
-import { UsersService } from "./services/users.service";
+import { AppController } from "./app.controller";
+import { AppService } from "./app.service";
+import { ServerController } from './server/server.controller';
+import { ServerService } from './server/server.service';
+import { AuthController } from './auth/auth.controller';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
+import { AuthService } from './auth/auth.service';
+import { PassportModule } from '@nestjs/passport';
+import { JwtModule } from "@nestjs/jwt";
+import { User, UserSchema } from "./entities/user.schema";
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env.development',
-      ignoreEnvFile: process.env.NODE_ENV === "prodution"
+      isGlobal: true,
+      ignoreEnvFile: process.env.NODE_ENV === "production",
     }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: "mongodb://mongo/",
-        auth: {
-          username: configService.get<string>('MONGO_USERNAME'),
-          password: configService.get<string>('MONGO_PASSWORD'),
-        },
-        dbName: configService.get<string>('DB')
-      }),
       inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>("MONGODB_URI"),
+      }),
     }),
-    KeycloakConnectModule.registerAsync({
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    PassportModule,
+    JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        authServerUrl: configService.get<string>('KEYCLOAK_AUTH_URL'),
-        realm: configService.get<string>('KEYCLOAK_REALM'),
-        clientId: configService.get<string>('API_CLIENT_ID'),
-        secret: configService.get<string>('API_CLIENT_SECRET'),
-        useNestLogger: false,
-        logLevels: ['debug'],
-      }),
       inject: [ConfigService],
-    }),
-    MongooseModule.forFeature([
-      { name: Server.name, schema: ServerSchema },
-      { name: ChannelMessage.name, schema: ChannelMessageSchema },
-      { name: Member.name, schema: MemberSchema },
-      { name: Friendship.name, schema: FriendshipSchema },
-      { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
-    ]),
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+        signOptions: { expiresIn: '60s' },
+      }),
+    })
   ],
-  controllers: [
-    UsersController,
-    ServersController,
-    GroupsController,
-    ChannelsController,
-    ChannelMessagesController,
-    ReactionsController,
-    FriendshipsController,
-    FriendshipMessagesController,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    ServersService,
-    GroupsService,
-    EmojisService,
-    ChannelsService,
-    ChannelMessagesService,
-    ReactionsService,
-    FriendshipMessagesService,
-    UsersService,
-    SocketIoGateway,
-    SocketIoService,
-    FriendshipsService,
-    KeycloakAdminService,
-  ],
+  controllers: [/*AppController, ServerController, UserController, */AuthController],
+  providers: [/*AppService, ServerService, UserService, */LocalStrategy, AuthService],
 })
 export class AppModule {}
