@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 // STYLE
-import * as Styled from "./MainStyled";
+import * as Styled from "./AppStyled";
 
 // LIBRARIES
 import { isMobile, isBrowser } from "react-device-detect";
@@ -18,7 +18,7 @@ const Main = () => {
   const [chatUserName, setChatUserName] = useState("");
   const [defaultChatLayout, setDefaultChatLayout] = useState(true);
 
-  // Handle UseEffect
+  // HANDLE USE EFFECT
   useEffect(() => {
     if (isMobile) {
       setDevice("mobile");
@@ -26,7 +26,6 @@ const Main = () => {
       setDevice("browser");
     }
   }, []);
-
   useEffect(() => {
     window.addEventListener("resize", () => {
       window.innerWidth <= 576 ? setDevice("mobile") : setDevice("browser");
@@ -35,6 +34,7 @@ const Main = () => {
       window.removeEventListener("resize", () => {});
     };
   }, []);
+  
   // HANDLE FUNCTIONS
   const handleClick = (userName) => {
     setShowChat(!showChat);

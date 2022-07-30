@@ -28,18 +28,13 @@ const Particle = () => {
 
   return (
     <div id="particle-container">
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
-      <div class="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
+      <div className="particle"></div>
     </div>
   );
 };

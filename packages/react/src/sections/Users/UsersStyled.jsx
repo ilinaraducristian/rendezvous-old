@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import StarRateIcon from "@mui/icons-material/StarRate";
+import MessageIcon from "@mui/icons-material/Message";
 
 export const Container = styled.div`
   width: 100%;
@@ -10,10 +11,11 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0rem 1.1rem 0rem 1.1rem;
+  justify-content: flex-end;
 `;
 
 export const UserListWrapper = styled.div`
-  height: 100%;
+  height: 83%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
@@ -50,7 +52,6 @@ export const Search = styled.input`
 `;
 export const UserProfile = styled.div`
   width: 100%;
-  margin: auto;
   height: 7%;
   background-color: #22222250;
   border-top-right-radius: 0.5rem;
@@ -70,17 +71,20 @@ export const ProfileIcon = styled(PersonIcon)`
   &.MuiSvgIcon-root {
     color: white;
     font-size: 2.5rem;
+    cursor: pointer;
   }
 `;
 export const AddFriendIcon = styled(PersonAddIcon)`
   &.MuiSvgIcon-root {
     color: white;
     font-size: 2.5rem;
+    cursor: pointer;
   }
 `;
-export const FavoriteContact = styled(StarRateIcon)`
+export const MessageContact = styled(MessageIcon)`
   &.MuiSvgIcon-root {
     color: white;
     font-size: 2.5rem;
+    cursor: pointer;
   }
 `;

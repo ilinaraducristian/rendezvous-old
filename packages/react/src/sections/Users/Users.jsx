@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 // STYLES
 import * as Styled from "./UsersStyled";
@@ -73,7 +73,7 @@ const Users = (props) => {
   // CONSTANTS USING LIBRARYS
 
   // CONSTANTS USING HOOKS
-
+  const [showUserList, setShowUserList] = useState(false);
   // GENERAL CONSTANTS
 
   // USE EFFECT FUNCTION
@@ -84,19 +84,23 @@ const Users = (props) => {
 
   return (
     <Styled.Container>
-      <Styled.SearchWrapper>
-        <Styled.Search placeholder="🔍 Search" />
-      </Styled.SearchWrapper>
-      <Styled.UserListWrapper>
-        {usersModel?.map((user, index) => (
-          <User key={`user-${index}`} onClick={onClick} styleType={styleType} icon={userIcon} name={user.name} lastMessage={user.lastMessage} />
-        ))}
-      </Styled.UserListWrapper>
+      {showUserList && (
+        <>
+          <Styled.SearchWrapper>
+            <Styled.Search placeholder="🔍 Search" />
+          </Styled.SearchWrapper>
+          <Styled.UserListWrapper>
+            {usersModel?.map((user, index) => (
+              <User key={`user-${index}`} onClick={onClick} styleType={styleType} icon={userIcon} name={user.name} lastMessage={user.lastMessage} />
+            ))}
+          </Styled.UserListWrapper>
+        </>
+      )}
       <Styled.UserProfile>
         <Styled.UserIconsWrapper>
           <Styled.ProfileIcon />
           <Styled.AddFriendIcon />
-          <Styled.FavoriteContact />
+          <Styled.MessageContact onClick={() => setShowUserList(!showUserList)} />
         </Styled.UserIconsWrapper>
       </Styled.UserProfile>
     </Styled.Container>

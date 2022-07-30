@@ -11,7 +11,7 @@
   border-radius: 50%;
 }
 
-@for $i from 1 through 12 {
+@for $i from 1 through 7 {
   @keyframes particle-animation-#{$i} {
     100% {
       transform: translate3d((random(90) * 1vw), (random(90) * 1vh), (random(100) * 1px));
@@ -21,12 +21,12 @@
   .particle:nth-child(#{$i}) {
     animation: particle-animation-#{$i} 18s infinite;
     animation-direction: alternate;
-    $size: random(200) + 5 + px;
+    $size: random(250) + 5 + px;
     opacity: random(100) / 100;
     height: $size;
     width: $size;
     animation-delay: -$i * 0.2s;
     transform: translate3d((random(90) * 1vw), (random(90) * 1vh), (random(100) * 1px));
-    background: #7b27dbb0;
+    background: #7b27dbb9;
   }
 }
