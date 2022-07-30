@@ -1,15 +1,16 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import * as mongoose from "mongoose";
+import { User } from "./user.schema";
 
-export type FriendshipDocument = Friendship & Document;
+export type FriendshipDocument = Friendship & mongoose.Document;
 
 @Schema()
 export class Friendship {
-  @Prop({required: true})
-  user1Id: string;
+  @Prop({ required: true, type: mongoose.Types.ObjectId, ref: "User" })
+  user1: User;
 
-  @Prop({required: true})
-  user2Id: string;
+  @Prop({ required: true, type: mongoose.Types.ObjectId, ref: "User" })
+  user2: User;
 }
 
 export const FriendshipSchema = SchemaFactory.createForClass(Friendship);

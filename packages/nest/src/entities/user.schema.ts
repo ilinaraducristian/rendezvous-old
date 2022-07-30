@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import * as mongoose from 'mongoose';
+import { Friendship, FriendshipDocument } from "./friendship.schema";
+import { Group } from "./group.schema";
 
-export type UserDocument = User & Document;
+export type UserDocument = User & mongoose.Document;
 
 @Schema()
 export class User {
@@ -13,6 +15,12 @@ export class User {
 
   @Prop({ required: true })
   password: string;
+
+  @Prop({ default: [], type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Friendship'}] })
+  friendships: (Friendship | FriendshipDocument)[];
+
+  @Prop({ default: [], type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Group'}] })
+  groups: Group[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
