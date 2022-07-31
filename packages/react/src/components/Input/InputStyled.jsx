@@ -10,8 +10,9 @@ export const Input = styled.input(
     outline: none;
     padding-bottom: 0.2rem;
     padding-left: 0.5rem;
+    border-color: white;
     &::placeholder {
-      color: #ffffff9d;
+      color: #ffffff;
     }
     &:focus::placeholder {
       color: transparent;

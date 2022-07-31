@@ -54,7 +54,7 @@ export const AuthenticationContent = styled.div(
   ({ style }) => css`
     width: 40%;
     height: 100%;
-    background: #24213a;
+    background: #3c2b50;
     border-top-right-radius: 1.6rem;
     border-bottom-right-radius: 1.6rem;
     padding: 3rem;
@@ -109,7 +109,7 @@ export const FormTitle = styled.span(
     font-size: ${style.isMobile ? "2rem" : "3rem"};
     font-weight: 800;
     color: white;
-    opacity: 80%;
+    /* opacity: 80%; */
   `
 );
 
