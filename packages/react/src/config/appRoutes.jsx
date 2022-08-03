@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 
 // COMPONENTS
-import Main from "../view/App/App";
-import Authentication from "../../src/view/Authentication/Authentication";
+import App from "../views/App/App";
+import Login from "../views/Login/Login";
+
+// FUNCTIONS
+import enableElementsOutline from "../helpers/globalConfig";
 
 const AppRoutes = () => {
+  // HANDLE FUNCTIONS
+  useEffect(() => {
+    enableElementsOutline(false);
+  }, []);
+
   return (
     <Routes>
-      <Route path="/" element={<Authentication path="WELCOME" />} />
-      <Route path="/login" element={<Authentication path="LOGIN" />} />
-      <Route path="/register" element={<Authentication path="REGISTER" />} />
-      <Route path="/app" element={<Main />} />
+      <Route path="/" element={<Login />} />
+      <Route path="/app" element={<App />} />
     </Routes>
   );
 };
