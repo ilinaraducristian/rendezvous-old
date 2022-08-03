@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 const Button = (props) => {
   // PROPS
-  const { onClick = () => {}, text = "" } = props;
+  const { onClick = () => {}, text = "", style = "" } = props;
 
   // CONSTANTS USING LIBRARYS
 
@@ -32,7 +32,9 @@ const Button = (props) => {
 };
 
 Button.propTypes = {
-  data: PropTypes.object,
+  onClick: PropTypes.func,
+  text: PropTypes.string,
+  style: PropTypes.string,
 };
 
 export default Button;
