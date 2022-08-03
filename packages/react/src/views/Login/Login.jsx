@@ -2,6 +2,7 @@ import React from "react";
 
 // STYLES
 import styles from "./Login.module.scss";
+
 // LIBRARIES
 
 // CONSTANTS & MOCKS
@@ -25,7 +26,18 @@ const Login = () => {
 
   // HANDLERS FUNCTIONS
 
-  return <div>Test</div>;
+  return (
+    <div>
+      <div className={styles.card}>
+        <div>
+          <div>
+            <img src="" alt="" />
+          </div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+  );
 };
 
 export default Login;

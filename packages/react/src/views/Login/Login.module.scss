@@ -1,3 +1,7 @@
-.bgColor{
-    background-color: red;
+@import "../../utils/Styles/variables.scss";
+
+.card{
+    background-color: $loginCardBackground;
+    width: 60rem;
+    height: 40rem;
 }
