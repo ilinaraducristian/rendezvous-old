@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 const Input = (props) => {
   // PROPS
-  const { handleChange = () => {}, label = "", type = "" } = props;
+  const { name = "", handleChange = () => {}, label = "", type = "", value = "" } = props;
 
   // CONSTANTS USING LIBRARYS
 
@@ -31,12 +31,13 @@ const Input = (props) => {
   return (
     <div className="textInput-container">
       <label>{label}</label>
-      <input onChange={(event) => handleChange(event)} type={type} />
+      <input name={name} onChange={(event) => handleChange(event)} type={type} value={value} />
     </div>
   );
 };
 
 Input.propTypes = {
+  name: PropTypes.string,
   label: PropTypes.string,
   type: PropTypes.string,
   handleChange: PropTypes.func,
