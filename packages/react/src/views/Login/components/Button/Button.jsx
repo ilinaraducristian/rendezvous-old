@@ -1,7 +1,7 @@
 import React from "react";
 
 // STYLES
-import styles from "./Button.module.scss";
+import "./Button.scss";
 
 // LIBRARIES
 import PropTypes from "prop-types";
@@ -14,7 +14,7 @@ import PropTypes from "prop-types";
 
 const Button = (props) => {
   // PROPS
-  const { onClick = () => {}, text = "", style = "" } = props;
+  const { handleClick = () => {}, text = "", style = "" } = props;
 
   // CONSTANTS USING LIBRARYS
 
@@ -27,8 +27,11 @@ const Button = (props) => {
   // REQUEST API FUNCTIONS
 
   // HANDLERS FUNCTIONS
-
-  return <div className="component--container"></div>;
+  return (
+    <button className={style} onClick={() => handleClick()}>
+      {text}
+    </button>
+  );
 };
 
 Button.propTypes = {

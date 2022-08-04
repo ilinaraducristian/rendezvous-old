@@ -1,0 +1,16 @@
+@import "../../../../utils/Styles//variables.scss";
+
+.basic {
+  width: 100%;
+  background-color: #692eaf;
+  border-radius: 0.5rem;
+  color: rgb(255, 255, 255);
+  border-width: 0;
+  padding: 1rem;
+  font-weight: $regular;
+  font-size: 1.6rem;
+  &:hover {
+    background-color: #682eafbe;
+    transition-duration: 0.3s;
+  }
+}

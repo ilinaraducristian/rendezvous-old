@@ -13,8 +13,8 @@
     height: 77.3rem;
     border-radius: 1rem;
     @media (min-width: 486px) {
-      width: 72rem;
-      height: 40rem;
+      width: 80rem;
+      height: 48rem;
     }
     form {
       display: flex;
@@ -22,8 +22,8 @@
       width: 100%;
       flex-direction: column;
       @media (min-width: 600px) {
-        width: 72rem;
-        height: 40rem;
+        width: 80rem;
+        height: 48rem;
         flex-direction: row;
       }
       .logoContainer {
@@ -37,17 +37,17 @@
         border-top-right-radius: 0rem;
         border-bottom-left-radius: 1rem;
         display: unset;
-        @media (min-width: 486px ) and (max-width: 600px ) {
+        @media (min-width: 486px) and (max-width: 600px) {
           display: none;
         }
         @media (min-width: 480px) {
-           border-top-left-radius: 1rem;
-           border-top-right-radius: 1rem;
+          border-top-left-radius: 1rem;
+          border-top-right-radius: 1rem;
         }
         @media (min-width: 600px) {
-            width: 40%;
-            border-top-right-radius: 0rem;
-         }
+          width: 40%;
+          border-top-right-radius: 0rem;
+        }
         .logoWrapper {
           width: 100%;
           height: 100%;
@@ -64,16 +64,17 @@
       .credentialsContainer {
         width: 100%;
         height: 100%;
-        padding: 3.2rem;
+        padding: 2rem;
         background-color: $loginCardBackground;
-        border-bottom-left-radius: 1rem;
-        border-bottom-right-radius: 1rem;
+        border-radius: 1rem;
         @media (min-width: 600px) {
           width: 60%;
           border-top-right-radius: 1rem;
           border-bottom-right-radius: 1rem;
           border-bottom-left-radius: 0rem;
+          border-top-left-radius: 0rem;
         }
+
         .titleWrapper {
           width: 100%;
           text-align: center;
@@ -85,18 +86,73 @@
           }
         }
         .authenticationWrapper {
-          background-color: red;
-          padding: 2.5rem;
+          padding: 0rem 2.5rem;
           display: flex;
+          flex-direction: column;
           align-items: center;
-          justify-content: center;
+          justify-content: space-between;
           width: 100%;
           height: 90%;
+          .inputsWrapper {
+            padding-top: 3rem;
+            width: 100%;
+            height: 100%;
+            .forgotPasswordWrapepr {
+              width: 100%;
+              padding-top: 0.5rem;
+              span {
+                color: $forgotTextColor;
+                cursor: pointer;
+              }
+            }
+            .errorContainer {
+              width: 100%;
+              height: 3.5rem;
+              overflow: hidden;
+              margin-top: 0.5rem;
+              .errorMessageWrapper {
+                position: relative;
+                background: #af2824;
+                text-align: right;
+                padding: 0.5rem 1rem;
+                border-radius: 6px;
+                border: 1px solid #af2824;
+                float: right;
+                right: 20px;
+                // animation: ${showErrorAniamtion} 0.25s linear forwards;
+                &::before {
+                  content: "";
+                  position: absolute;
+                  visibility: visible;
+                  top: -0.1rem;
+                  right: -1rem;
+                  border: 0.9rem solid transparent;
+                  border-top: 0.4rem solid #af2824;
+                }
+
+                &::after {
+                  content: "";
+                  position: absolute;
+                  visibility: visible;
+                  top: 0rem;
+                  right: -0.8rem;
+                  border: 1rem solid transparent;
+                  border-top: 1rem solid #af2824;
+                  clear: both;
+                }
+                span {
+                  font-size: 1.4rem;
+                  color: $whiteColor;
+                }
+              }
+            }
+          }
           .buttonWrapper {
             display: flex;
             flex-direction: column;
             width: 100%;
-            background-color: blue;
+            gap: 1.2rem;
+            padding: 1rem 0rem;
           }
         }
       }
