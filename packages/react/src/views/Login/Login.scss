@@ -27,13 +27,15 @@
     border-radius: 1rem;
     position: fixed;
     padding: 0rem 9rem;
+    margin-top: 5rem;
     @media (min-width: 486px) {
       width: 80rem;
       height: 48rem;
       position: relative;
-      padding: 0rem 0rem;
+      padding: 0rem;
+      margin-top: 0;
     }
-    @media (min-width: 486px) and (max-width:600px) {
+    @media (min-width: 486px) and (max-width: 600px) {
       width: 45rem;
     }
     form {
