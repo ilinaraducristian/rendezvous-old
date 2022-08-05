@@ -1,16 +1,20 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { User, UserDocument } from "src/entities/user.schema";
 import { JwtService } from "@nestjs/jwt";
-import { User as UserDto } from "src/types";
+import { User, UserDocument } from "../entities/user.schema";
+import { User as UserDto } from '../types';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>, private jwtService: JwtService) {}
+  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>, private jwtService: JwtService) { }
 
-  register(newUser: Omit<UserDto, "id">) {
-    return new this.userModel(newUser).save();
+  async register(newUser: Omit<UserDto, "id">) {
+    const createdUser = await new this.userModel(newUser).save();
+    const payload = { sub: createdUser.id, email: createdUser.email };
+    return {
+      user: createdUser, accessToken: this.jwtService.sign(payload)
+    };
   }
 
   async validateUser(email: string, password: string): Promise<UserDocument> {
@@ -24,15 +28,7 @@ export class AuthService {
   async login(user: UserDocument) {
     const payload = { sub: user.id, email: user.email };
     return {
-      access_token: this.jwtService.sign(payload),
-      refresh_token: this.jwtService.sign(payload, {expiresIn: '3m'}),
-    };
-  }
-
-  async refresh(user: UserDocument) {
-    const payload = { sub: user.id, email: user.email };
-    return {
-      access_token: this.jwtService.sign(payload)
+      accessToken: this.jwtService.sign(payload)
     };
   }
 

@@ -16,6 +16,7 @@ import { FriendshipMessage, FriendshipMessageSchema } from "./entities/friendshi
 import { Group, GroupSchema } from "./entities/group.schema";
 import { GroupMessage, GroupMessageSchema } from "./entities/group-message.schema";
 import { Friendship, FriendshipSchema } from "./entities/friendship.schema";
+import { FriendshipService } from "./friendship/friendship.service";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -56,6 +57,7 @@ export class AppModule {
       JwtStrategy,
       AuthService,
       UserService,
+      FriendshipService,
       {
         provide: APP_GUARD,
         useClass: JwtAuthGuard,
