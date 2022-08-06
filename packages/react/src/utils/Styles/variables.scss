@@ -1,0 +1,38 @@
+// COLORS
+$backgroundColor: #120e18 !default;
+$loginCardBackground: #36393f !default;
+$whiteColor: #fefefe !default;
+$labelColor: #a19a9a !default;
+$inputBackgroundColor: #120e189f !default;
+$forgotTextColor: #928ddb !default;
+
+// FONT-WEIGHT
+$lighter: 300;
+$regular: 400;
+$medium: 500;
+$semi-bold: 600;
+$bold: 800;
+
+// FONT-FAMILY
+$poppins: "Poppins", sans-serif;
+
+// BORDER
+
+// DEVICE
+$mobile: 599px;
+$tabletLow: 600px;
+$tabletHigh: 1279px;
+$desktop: 1280px;
+$mobileAndTablet: 1030px;
+
+// @media (max-width: $mobile) {
+//   //mobile
+// }
+
+// @media (min-width: $tabletLow) and (max-width: $tabletHigh) {
+//   //tablet
+// }
+
+// @media (min-width: $desktop) {
+//   //desktop
+// }

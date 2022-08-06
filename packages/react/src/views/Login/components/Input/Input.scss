@@ -1,0 +1,21 @@
+@import "../../../../utils/Styles/variables.scss";
+
+.textInput-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  //   background-color: red;
+  label {
+    font-size: 1.6rem;
+    font-weight: $regular;
+    color: $labelColor;
+  }
+  input {
+    background-color: $inputBackgroundColor;
+    color: $whiteColor;
+    font-size: 1.6rem;
+    outline: none;
+    border-width: 0;
+    padding: 0.3rem;
+  }
+}
