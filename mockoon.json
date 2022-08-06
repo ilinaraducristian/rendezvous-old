@@ -32,6 +32,21 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true
+        },
+        {
+          "uuid": "75f6c98e-06cf-4955-9b95-c57e722ddf3f",
+          "body": "{\n    \"statusCode\": 400,\n    \"message\": [\n        \"name should not be empty\",\n        \"name must be a string\",\n        \"email should not be empty\",\n        \"email must be a string\",\n        \"password should not be empty\",\n        \"password must be a string\"\n    ],\n    \"error\": \"Bad Request\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "No body is specified",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
