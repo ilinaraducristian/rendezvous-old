@@ -1,0 +1,300 @@
+{
+	"info": {
+		"_postman_id": "64304805-c56e-4d73-95d2-a7e5fd3ac5dc",
+		"name": "Rendezvous",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@email.com\",\n    \"password\": \"john.doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/register",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@email.com\",\n    \"password\": \"john.doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/login",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Friendships",
+			"item": [
+				{
+					"name": "Messages",
+					"item": [
+						{
+							"name": "Send a message",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set the message id\", function() {",
+											"    pm.response.to.have.jsonSchema({id: 'string'});",
+											"    const {id} = pm.response.toJSON();",
+											"    pm.collectionVariables.set(\"friendshipMessageId\", id);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"message\": \"a new text message\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/friendships/{{friendshipId}}/messages",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{friendshipId}}",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get friendship messages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/friendships/{{friendshipId}}/messages?offset=0&limit=100",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{friendshipId}}",
+										"messages"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a message",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/friendships/{{friendshipId}}/messages/{{friendshipMessageId}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{friendshipId}}",
+										"messages",
+										"{{friendshipMessageId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Send friend request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set the friendship id\", function() {",
+									"    pm.response.to.have.jsonSchema({id: 'string'});",
+									"    const {id} = pm.response.toJSON();",
+									"    pm.collectionVariables.set(\"friendshipId\", id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"62eced8024612411ea53512c\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/friendships",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"friendships"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Accept friend request",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/friendships/{{friendshipId}}/accept",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"friendships",
+								"{{friendshipId}}",
+								"accept"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get friendships",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/friendships",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"friendships"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete friendship",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/friendships/{{friendshipId}}",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"friendships",
+								"{{friendshipId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api",
+			"value": "http://localhost:3100",
+			"type": "default"
+		},
+		{
+			"key": "friendshipId",
+			"value": ""
+		},
+		{
+			"key": "friendshipMessageId",
+			"value": ""
+		}
+	]
+}

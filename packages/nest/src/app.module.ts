@@ -1,98 +1,68 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
-import { APP_GUARD } from "@nestjs/core";
 import { MongooseModule } from "@nestjs/mongoose";
-import { AuthGuard, KeycloakConnectModule } from "nest-keycloak-connect";
-import { ChannelMessagesController } from "./controllers/channel-messages.controller";
-import { ChannelsController } from "./controllers/channels.controller";
-import { FriendshipMessagesController } from "./controllers/friendship-messages.controller";
-import { FriendshipsController } from "./controllers/friendships.controller";
-import { GroupsController } from "./controllers/groups.controller";
-import { ReactionsController } from "./controllers/reactions.controller";
-import { ServersController } from "./controllers/servers.controller";
-import SocketIoGateway from "./controllers/socket-io.gateway";
-import { UsersController } from "./controllers/users.controller";
-import Friendship, { FriendshipSchema } from "./entities/friendship";
-import Member, { MemberSchema } from "./entities/member";
-import { ChannelMessage, ChannelMessageSchema, FriendshipMessage, FriendshipMessageSchema } from "./entities/message";
-import Server, { ServerSchema } from "./entities/server";
-import { ChannelMessagesService } from "./services/channel-messages.service";
-import { ChannelsService } from "./services/channels.service";
-import { EmojisService } from "./services/emojis.service";
-import { FriendshipMessagesService } from "./services/friendship-messages.service";
-import { FriendshipsService } from "./services/friendships.service";
-import { GroupsService } from "./services/groups.service";
-import { KeycloakAdminService } from "./services/keycloak-admin.service";
-import { ReactionsService } from "./services/reactions.service";
-import { ServersService } from "./services/servers.service";
-import { SocketIoService } from "./services/socket-io.service";
-import { UsersService } from "./services/users.service";
+import { AuthController } from "./auth/auth.controller";
+import { UserController } from "./user/user.controller";
+import { UserService } from "./user/user.service";
+import { AuthService } from "./auth/auth.service";
+import { PassportModule } from "@nestjs/passport";
+import { JwtModule } from "@nestjs/jwt";
+import { User, UserSchema } from "./entities/user.schema";
+import { LocalStrategy } from "./auth/strategies/local-strategy";
+import { JwtStrategy } from "./auth/strategies/jwt-strategy";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "./auth/guards/jwt-auth-guard";
+import { FriendshipMessage, FriendshipMessageSchema } from "./entities/friendship-message.schema";
+import { Group, GroupSchema } from "./entities/group.schema";
+import { GroupMessage, GroupMessageSchema } from "./entities/group-message.schema";
+import { Friendship, FriendshipSchema } from "./entities/friendship.schema";
+import { FriendshipService } from "./friendship/friendship.service";
 
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      envFilePath: '.env.development',
-      ignoreEnvFile: process.env.NODE_ENV === "prodution"
-    }),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: "mongodb://mongo/",
-        auth: {
-          username: configService.get<string>('MONGO_USERNAME'),
-          password: configService.get<string>('MONGO_PASSWORD'),
-        },
-        dbName: configService.get<string>('DB')
+@Module(AppModule.MODULE_METADATA)
+export class AppModule {
+
+  static MODULE_METADATA = {
+    imports: [
+      ConfigModule.forRoot({
+        isGlobal: true,
+        ignoreEnvFile: process.env.NODE_ENV === "production",
       }),
-      inject: [ConfigService],
-    }),
-    KeycloakConnectModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        authServerUrl: configService.get<string>('KEYCLOAK_AUTH_URL'),
-        realm: configService.get<string>('KEYCLOAK_REALM'),
-        clientId: configService.get<string>('API_CLIENT_ID'),
-        secret: configService.get<string>('API_CLIENT_SECRET'),
-        useNestLogger: false,
-        logLevels: ['debug'],
+      MongooseModule.forRootAsync({
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          uri: configService.get<string>("MONGODB_URI"),
+        }),
       }),
-      inject: [ConfigService],
-    }),
-    MongooseModule.forFeature([
-      { name: Server.name, schema: ServerSchema },
-      { name: ChannelMessage.name, schema: ChannelMessageSchema },
-      { name: Member.name, schema: MemberSchema },
-      { name: Friendship.name, schema: FriendshipSchema },
-      { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
-    ]),
-  ],
-  controllers: [
-    UsersController,
-    ServersController,
-    GroupsController,
-    ChannelsController,
-    ChannelMessagesController,
-    ReactionsController,
-    FriendshipsController,
-    FriendshipMessagesController,
-  ],
-  providers: [
-    {
-      provide: APP_GUARD,
-      useClass: AuthGuard,
-    },
-    ServersService,
-    GroupsService,
-    EmojisService,
-    ChannelsService,
-    ChannelMessagesService,
-    ReactionsService,
-    FriendshipMessagesService,
-    UsersService,
-    SocketIoGateway,
-    SocketIoService,
-    FriendshipsService,
-    KeycloakAdminService,
-  ],
-})
-export class AppModule {}
+      MongooseModule.forFeature([
+        { name: User.name, schema: UserSchema },
+        { name: Friendship.name, schema: FriendshipSchema },
+        { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
+        { name: Group.name, schema: GroupSchema },
+        { name: GroupMessage.name, schema: GroupMessageSchema },
+      ]),
+      PassportModule,
+      JwtModule.registerAsync({
+        imports: [ConfigModule],
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          secret: configService.get<string>("JWT_SECRET"),
+          signOptions: { expiresIn: "90d" },
+        }),
+      }),
+    ],
+    controllers: [AuthController, UserController],
+    providers: [
+      LocalStrategy,
+      JwtStrategy,
+      AuthService,
+      UserService,
+      FriendshipService,
+      {
+        provide: APP_GUARD,
+        useClass: JwtAuthGuard,
+      },
+    ],
+  };
+
+}

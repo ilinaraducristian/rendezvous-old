@@ -1,8 +1,0 @@
-use('rendezvous');
-db.dropDatabase();
-
-use('rendezvous');
-db.friendships.findOneAndUpdate({"user1Id": "681dd7e2-d6fb-4425-9d07-c7eb9144f4a2"}, {$inc: {status: -1}});
-
-use('rendezvous');
-db.friendshipmessages.deleteMany({userId: "7bd54dee-ef45-4446-a9f1-07b9dad2573a"});

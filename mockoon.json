@@ -1,0 +1,308 @@
+{
+  "uuid": "e2f2cbbe-06a7-49c3-a6b8-88b08cee43c7",
+  "lastMigration": 22,
+  "name": "Rendezvous",
+  "endpointPrefix": "",
+  "latency": 0,
+  "port": 3100,
+  "hostname": "0.0.0.0",
+  "routes": [
+    {
+      "uuid": "0d80a6ec-6ef7-4aca-aae3-5d16c1e5d8f3",
+      "documentation": "Register a new user",
+      "method": "post",
+      "endpoint": "auth/register",
+      "responses": [
+        {
+          "uuid": "e25c0cff-e25a-43ad-b404-eca7bf3c9910",
+          "body": "{\n  \"id\": \"{{objectId}}\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "User created successfully",
+          "headers": [
+            {
+              "key": "Set-Cookie",
+              "value": "access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MmVkMDE0YmJlMTgzNjBjNjEzNDE0MTYiLCJlbWFpbCI6ImpvaG4uZG9lMkBlbWFpbC5jb20iLCJpYXQiOjE2NTk2OTk1MzEsImV4cCI6MTY2NzQ3NTUzMX0.0k5YnMlQKBc7Ihl17OMXNfs-kMznhIsS5ZWFXz3bsrs; Path=/; HttpOnly; Secure; SameSite=None"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "75f6c98e-06cf-4955-9b95-c57e722ddf3f",
+          "body": "{\n    \"statusCode\": 400,\n    \"message\": [\n        \"name should not be empty\",\n        \"name must be a string\",\n        \"email should not be empty\",\n        \"email must be a string\",\n        \"password should not be empty\",\n        \"password must be a string\"\n    ],\n    \"error\": \"Bad Request\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "No body is specified",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "9c618d35-ff7b-441e-8972-d9a323d36b0c",
+      "documentation": "Authenticating a user",
+      "method": "post",
+      "endpoint": "auth/login",
+      "responses": [
+        {
+          "uuid": "59499cbe-70d0-48ce-9ec6-fee774fd0008",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "User authenticated successfully",
+          "headers": [
+            {
+              "key": "Set-Cookie",
+              "value": "access_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI2MmVkMDE0YmJlMTgzNjBjNjEzNDE0MTYiLCJlbWFpbCI6ImpvaG4uZG9lMkBlbWFpbC5jb20iLCJpYXQiOjE2NTk2OTk1MzEsImV4cCI6MTY2NzQ3NTUzMX0.0k5YnMlQKBc7Ihl17OMXNfs-kMznhIsS5ZWFXz3bsrs; Path=/; HttpOnly; Secure; SameSite=None"
+            }
+          ],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "c797b3c1-04e9-49b6-a0cc-e73bdaedeb11",
+      "documentation": "Send a friend request",
+      "method": "post",
+      "endpoint": "friendships",
+      "responses": [
+        {
+          "uuid": "e65ce610-6bb4-48f4-85ff-169024c8684f",
+          "body": "{\n  \"id\": \"{{objectId}}\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Friend request sent successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "fc687513-57e3-4afc-aa5c-2ac896074311",
+      "documentation": "Get user friendships",
+      "method": "get",
+      "endpoint": "friendships",
+      "responses": [
+        {
+          "uuid": "89876523-8c1e-4336-8c00-b6b6702f99c9",
+          "body": "{\n  \"friendships\": [\n    {{#repeat 5 comma=true}}\n    {\n      \"id\": \"{{objectId}}\",\n      \"userId\": \"{{objectId}}\"\n    }\n    {{/repeat}}\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Friendships retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "57a0c7dc-9133-4a6c-8ff4-901ad3c05240",
+      "documentation": "Accept a friend request",
+      "method": "patch",
+      "endpoint": "friendships/:friendshipId/accept",
+      "responses": [
+        {
+          "uuid": "3192400b-e24b-485a-889e-f797bdf80134",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "Friend request successfully accepted",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "8ef534ec-3e4c-4ac1-a749-eb9a66ab27e2",
+      "documentation": "Delete a friendship",
+      "method": "delete",
+      "endpoint": "friendships/:friendshipId",
+      "responses": [
+        {
+          "uuid": "40408977-bbe2-4c12-becd-a0fa316511f3",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "Friendship successfully deleted",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "0f8b4331-0485-4f88-9ed1-97f506324326",
+      "documentation": "Send a message to a friend",
+      "method": "post",
+      "endpoint": "friendships/:friendshipId/messages",
+      "responses": [
+        {
+          "uuid": "f677e206-cc82-477d-af56-d3974b43261e",
+          "body": "{\n  \"id\": \"{{objectId}}\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Message created successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "5febffb4-0830-466f-874b-1fde257006a2",
+      "documentation": "Get friendship messages",
+      "method": "get",
+      "endpoint": "friendships/:friendshipId/messages",
+      "responses": [
+        {
+          "uuid": "65084340-e809-49fb-904f-5d8d9fbeee4d",
+          "body": "{\n  \n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Messages retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "7e4c19c6-f793-427a-9da7-4ebaef417c21",
+      "documentation": "Delete a friendship message",
+      "method": "delete",
+      "endpoint": "friendships/:friendshipId/messages/:messageId",
+      "responses": [
+        {
+          "uuid": "d05795ea-8ef6-4aaa-a608-5e7a7d81dfc8",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "Message deleted successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    }
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {
+      "key": "Content-Type",
+      "value": "application/json"
+    },
+    {
+      "key": "Access-Control-Allow-Origin",
+      "value": "http://localhost:3000"
+    },
+    {
+      "key": "Access-Control-Allow-Methods",
+      "value": "GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS"
+    },
+    {
+      "key": "Access-Control-Allow-Headers",
+      "value": "Content-Type, Origin, Accept, Authorization, Content-Length, X-Requested-With"
+    },
+    {
+      "key": "Access-Control-Allow-Credentials",
+      "value": "true"
+    }
+  ],
+  "proxyReqHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ],
+  "proxyResHeaders": [
+    {
+      "key": "",
+      "value": ""
+    }
+  ]
+}

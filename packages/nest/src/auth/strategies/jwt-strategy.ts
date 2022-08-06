@@ -1,0 +1,18 @@
+import { Strategy } from "passport-jwt";
+import { PassportStrategy } from "@nestjs/passport";
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(private readonly configService: ConfigService) {
+    super({
+      jwtFromRequest: ({cookies}) => cookies.access_token,
+      secretOrKey: configService.get<string>("JWT_SECRET"),
+    });
+  }
+
+  async validate(payload: {sub: string, email: string}) {
+    return { id: payload.sub, email: payload.email };
+  }
+}
