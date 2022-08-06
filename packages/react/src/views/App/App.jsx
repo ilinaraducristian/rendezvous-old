@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import getData from "../../config/axiosConfig";
 
 // USE REDUX
 // import { useSelector, useDispatch } from "react-redux";
@@ -6,10 +8,27 @@ import React from "react";
 
 // STYLES
 import styles from "./App.module.scss";
-
 const App = () => {
+  const navigate = useNavigate();
   //   const dispatch = useDispatch();
   //   const value = useSelector((state) => state.basic.value);
+  useEffect(() => {
+    getData("/user/data");
+    // const test = (async) => {
+    //   getData("/user/data");
+    // }
+    // console.log(test);
+    // console.log(getData("/user/data"));
+    // (async () => {
+    //   const response = await fetch(process.env.REACT_APP_API_USER_DATA, { credentials: "include" });
+    //   console.log(response.status);
+    //   if (response.status !== 200) {
+    //     navigate("/login");
+    //   }
+    //   // console.log(await response.json());
+    //   console.log(await response.json());
+    // })();
+  }, []);
   return (
     <div
       style={{
