@@ -1,4 +1,4 @@
-import { Controller, Request, Post, UseGuards, Body, Res } from "@nestjs/common";
+import { Controller, Request, Post, UseGuards, Body, Res, HttpCode } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { LocalAuthGuard } from "./guards/local-auth-guard";
 import { FastifyRequest, FastifyReply } from 'fastify';
@@ -21,6 +21,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @IgnoreJwt()
   @Post("login")
+  @HttpCode(204)
   async login(@Request() req: FastifyRequest & {user: UserDocument}, @Res({ passthrough: true }) res: FastifyReply) {
     const {accessToken} = await this.authService.login(req.user);
     res.setCookie('access_token', accessToken, {httpOnly: true, path: '/', sameSite: 'none', secure: true});
