@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import getData from "../../config/axiosConfig";
+import {getData} from "../../config/axiosConfig";
 
 // USE REDUX
 // import { useSelector, useDispatch } from "react-redux";
@@ -8,26 +8,35 @@ import getData from "../../config/axiosConfig";
 
 // STYLES
 import styles from "./App.module.scss";
+let loaded = false;
 const App = () => {
   const navigate = useNavigate();
   //   const dispatch = useDispatch();
   //   const value = useSelector((state) => state.basic.value);
   useEffect(() => {
-    getData("/user/data");
     // const test = (async) => {
     //   getData("/user/data");
     // }
     // console.log(test);
     // console.log(getData("/user/data"));
-    // (async () => {
-    //   const response = await fetch(process.env.REACT_APP_API_USER_DATA, { credentials: "include" });
-    //   console.log(response.status);
-    //   if (response.status !== 200) {
-    //     navigate("/login");
-    //   }
-    //   // console.log(await response.json());
-    //   console.log(await response.json());
-    // })();
+    if (loaded) {
+      return;
+    }
+    loaded = true;
+    (async () => {
+      const response = await getData("/friendships");
+      // console.log(response);
+      if (response.status !== 200) {
+        navigate("/login");
+      }
+      //   const response = await fetch(process.env.REACT_APP_API_USER_DATA, { credentials: "include" });
+      //   console.log(response.status);
+      //   if (response.status !== 200) {
+      //     navigate("/login");
+      //   }
+      //   // console.log(await response.json());
+      //   console.log(await response.json());
+    })();
   }, []);
   return (
     <div

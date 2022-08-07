@@ -9,6 +9,9 @@ import logo from "../../assets/login/logo.png";
 
 // CONSTANTS & MOCKS
 
+// AXIOS
+import { postData } from "../../config/axiosConfig";
+
 // REDUX
 
 // COMPONENTS
@@ -39,10 +42,6 @@ const Login = (props) => {
   });
 
   // GENERAL CONSTANTS
-  const credentials = {
-    email: "chat-app@build.com",
-    password: "parola123",
-  };
   const title = () => {
     switch (path) {
       case "/":
@@ -68,6 +67,20 @@ const Login = (props) => {
         type={input.type}
       />
     ));
+  };
+
+  // REQUEST FUNCTIONS
+  const postRequest = async (address, data) => {
+    const response = await postData(address, data);
+    if (path === "login" && response.status !== 200) {
+      setError("Invalid E-mail or Password");
+      handleError();
+    } else if (path === "register" && response.status !== 201) {
+      setError("User already exist");
+      handleError();
+    } else {
+      navigate("/app");
+    }
   };
 
   // USE EFFECT FUNCTION
@@ -138,10 +151,11 @@ const Login = (props) => {
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+
   const handleClick = (address, type) => {
     if (path === "login" && type === "firstButton") {
-      if (credentials.email === loginData.email && credentials.password === loginData.password) {
-        navigate("/app");
+      if (loginData.email !== "" && loginData.password !== "") {
+        postRequest("/auth/login", loginData);
       } else {
         setError("Invalid E-mail or Password");
         handleError();
@@ -149,14 +163,19 @@ const Login = (props) => {
     } else if (path === "register" && type === "firstButton") {
       if (registerData.userName === "" && registerData.email === "" && registerData.password === "") {
         setError("Please complete all fields");
+        handleError();
       } else if (registerData.userName === "") {
         setError("Invalid Name");
-      } else if (!registerData.email.includes("@")) {
+        handleError();
+      } else if (registerData.email === "") {
         setError("Invalid E-mail");
+        handleError();
       } else if (registerData.password === "") {
         setError("Invalid Password");
+        handleError();
+      } else {
+        postRequest("/auth/register", registerData);
       }
-      handleError();
     } else if (
       (path === "login" && type === "secondButton") ||
       (path === "register" && type === "secondButton") ||

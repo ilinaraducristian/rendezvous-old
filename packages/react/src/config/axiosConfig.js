@@ -1,19 +1,5 @@
 import axios from "axios";
 
-const getData = (path) => {
-  axios
-    .get(process.env.REACT_APP_API_KEY + path, { withCredentials: true })
-    .then((response) => {
-      console.log(response.status);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
-};
-
-// const postData = () => {
-
-// }
-
-export default getData;
-// export default postData;
+export const getData = (path) => axios.get(process.env.REACT_APP_API_URL + path, { withCredentials: true }).catch(({ response }) => response);
+export const postData = (path, data) =>
+  axios.post(process.env.REACT_APP_API_URL + path, { data }, { withCredentials: true }).catch(({ response }) => response);
