@@ -47,6 +47,21 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false
+        },
+        {
+          "uuid": "d2b781ee-a7da-4c8a-9d44-4c9e7d2377ce",
+          "body": "{\n    \"statusCode\": 400,\n    \"message\": \"user with this email address already exists\"\n}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "User with email address already exists",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
@@ -60,9 +75,9 @@
       "responses": [
         {
           "uuid": "59499cbe-70d0-48ce-9ec6-fee774fd0008",
-          "body": "{\n  \"id\":\"123depulasamaiei\",\n  \"name\":\"Gigel Mirel\"\n}",
+          "body": "",
           "latency": 0,
-          "statusCode": 200,
+          "statusCode": 204,
           "label": "User authenticated successfully",
           "headers": [
             {
@@ -79,11 +94,11 @@
           "default": true
         },
         {
-          "uuid": "7e2fd6bf-ab5e-4561-9c4d-e87d732ba24e",
-          "body": "{\n    \"statusCode\": 401,\n    \"message\": \"Unauthorized\"\n}",
+          "uuid": "4b9195f9-300a-4f73-b72a-b36f3fb36fe5",
+          "body": "{\n  \"statusCode\": 401,\n  \"message\": \"Unauthorized\"\n}",
           "latency": 0,
           "statusCode": 401,
-          "label": "",
+          "label": "Bad email and password combination",
           "headers": [],
           "filePath": "",
           "sendFileAsBody": false,
@@ -230,7 +245,7 @@
       "responses": [
         {
           "uuid": "65084340-e809-49fb-904f-5d8d9fbeee4d",
-          "body": "{\n  \n}",
+          "body": "{\n  \"messages\": [\n    {{#repeat 5 comma=true}}\n    {\n      \"id\": \"{{objectId}}\",\n      \"friendshipId\": \"{{objectId}}\",\n      \"userId\": \"{{objectId}}\",\n      \"timestamp\": \"{{now 'yyyy-MM-dd'}}T{{now 'HH:mm:ss.SSS'}}Z\",\n      \"text\": \"{{lorem 15}}\"\n    }\n    {{/repeat}}\n  ]\n}\n",
           "latency": 0,
           "statusCode": 200,
           "label": "Messages retrieved successfully",
@@ -242,6 +257,36 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true
+        },
+        {
+          "uuid": "37055b7a-8e59-4ce5-9134-2ea7091f5248",
+          "body": "{\n    \"statusCode\": 404,\n    \"message\": \"friendship doesn't exist\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Friendship doesn't exist",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        },
+        {
+          "uuid": "a5a9ec90-b6fb-4aa2-9001-fcf45f8e1a83",
+          "body": "{\n    \"statusCode\": 403,\n    \"message\": \"user doesn't belong to the friendship\"\n}",
+          "latency": 0,
+          "statusCode": 403,
+          "label": "User doesn't belong to the friendship",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
