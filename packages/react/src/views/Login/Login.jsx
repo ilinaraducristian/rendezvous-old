@@ -167,7 +167,7 @@ const Login = (props) => {
       } else if (registerData.userName === "") {
         setError("Invalid Name");
         handleError();
-      } else if (registerData.email === "") {
+      } else if (!registerData.email.includes("@")) {
         setError("Invalid E-mail");
         handleError();
       } else if (registerData.password === "") {
@@ -185,6 +185,7 @@ const Login = (props) => {
       navigate(address);
     }
   };
+
   const handleChange = (event) => {
     if (path === "login") {
       setLoginData({
@@ -199,6 +200,7 @@ const Login = (props) => {
       });
     }
   };
+
   const handleError = () => {
     setShowError(true);
     setTimeout(() => {
@@ -211,7 +213,7 @@ const Login = (props) => {
       <Particle />
       <div className="loginContainer">
         <div className="card">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={(event) => event.preventDefault()}>
             <div className="logoContainer">
               <div className="logoWrapper">
                 <img src={logo} alt="logo" />

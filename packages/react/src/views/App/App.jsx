@@ -1,62 +1,34 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {getData} from "../../config/axiosConfig";
+import { getData } from "../../config/axiosConfig";
 
 // USE REDUX
 // import { useSelector, useDispatch } from "react-redux";
 // import { basicSlice } from "../slices/slices";
 
 // STYLES
-import styles from "./App.module.scss";
-let loaded = false;
+import "./App.scss";
+
 const App = () => {
   const navigate = useNavigate();
+  let loaded = false;
   //   const dispatch = useDispatch();
   //   const value = useSelector((state) => state.basic.value);
   useEffect(() => {
-    // const test = (async) => {
-    //   getData("/user/data");
-    // }
-    // console.log(test);
-    // console.log(getData("/user/data"));
     if (loaded) {
       return;
     }
     loaded = true;
     (async () => {
       const response = await getData("/friendships");
-      // console.log(response);
       if (response.status !== 200) {
         navigate("/login");
       }
-      //   const response = await fetch(process.env.REACT_APP_API_USER_DATA, { credentials: "include" });
-      //   console.log(response.status);
-      //   if (response.status !== 200) {
-      //     navigate("/login");
-      //   }
-      //   // console.log(await response.json());
-      //   console.log(await response.json());
     })();
   }, []);
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <h1
-        style={{
-          color: "white",
-          fontSize: "8rem",
-        }}
-        // onClick={() => dispatch(basicSlice(10))}
-      >
-        BALINT-TEMPLATE
-      </h1>
+    <div className="app-container">
+      
     </div>
   );
 };
