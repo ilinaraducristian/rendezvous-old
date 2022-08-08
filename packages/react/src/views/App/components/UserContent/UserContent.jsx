@@ -1,7 +1,7 @@
 import React from "react";
 
 // STYLES
-import "./Chat.scss";
+import "./UserContent.scss";
 
 // LIBRARIES
 
@@ -11,7 +11,7 @@ import "./Chat.scss";
 
 // COMPONENTS
 
-const Chat = () => {
+const UserContent = () => {
   // PROPS
 
   // CONSTANTS USING LIBRARYS
@@ -29,4 +29,4 @@ const Chat = () => {
   return <div className="component--container"></div>;
 };
 
-export default Chat;
+export default UserContent;

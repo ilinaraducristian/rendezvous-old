@@ -1,0 +1,42 @@
+@import "../../utils/Styles/variables.scss";
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  padding: 4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .app-content {
+    width: 40rem;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    border-right: 0.01rem solid $appBorder;
+    .user-Wrapper {
+      width: 100%;
+      height: 6rem;
+      background-color: $userBackgroundColor;
+    }
+    .channels {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      .servers {
+        height: 100%;
+        width: 7rem;
+        background-color: $serversBackgroundColor;
+      }
+      .user-content {
+        width: 100%;
+        height: 100%;
+        background-color: $userContentBackgroundColor;
+      }
+    }
+  }
+  .chat-container {
+    height: 100%;
+    width: 70%;
+    background-color: $chatBackgroundColor;
+  }
+}
