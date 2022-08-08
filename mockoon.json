@@ -341,6 +341,81 @@
       ],
       "enabled": true,
       "responseMode": null
+    },
+    {
+      "uuid": "7de4e0d5-0b2d-4408-b753-e295a09c0345",
+      "documentation": "Create a new group",
+      "method": "post",
+      "endpoint": "groups",
+      "responses": [
+        {
+          "uuid": "c5187975-4b15-4859-b39b-0bb14f3b01d7",
+          "body": "{\n  \"id\": \"{{objectId}}\"\n}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Group successfully created",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "0036036c-1127-496c-8971-99ff5d7dfcb4",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "groups",
+      "responses": [
+        {
+          "uuid": "560b6ac9-5aaa-4afb-b620-cc580b9e7186",
+          "body": "{\n  \"groups\": [\n    {{#repeat 5 comma=true}}\n    {\n      \"id\": \"{{objectId}}\",\n      \"name\": \"{{objectId}}\",\n      \"members\": [\n        {{#repeat 5 comma=true}}\n        \"{{objectId}}\"\n        {{/repeat}}\n      ]\n    }\n    {{/repeat}}\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Groups retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "f1b9eb85-5de0-4e58-b311-35acbe773ec1",
+      "documentation": "Delete a group",
+      "method": "delete",
+      "endpoint": "groups/:id",
+      "responses": [
+        {
+          "uuid": "a2eaa780-61d4-4429-9bfc-8617faa2e2ce",
+          "body": "",
+          "latency": 0,
+          "statusCode": 204,
+          "label": "Group deleted successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
     }
   ],
   "proxyMode": false,
