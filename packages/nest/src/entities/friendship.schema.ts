@@ -1,16 +1,19 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import * as mongoose from "mongoose";
-import { User } from "./user.schema";
+import { Document, Types } from "mongoose";
+import { UserDocument } from "./user.schema";
 
-export type FriendshipDocument = Friendship & mongoose.Document;
+export type FriendshipDocument = Friendship & Document;
 
 @Schema()
 export class Friendship {
-  @Prop({ required: true, type: mongoose.Types.ObjectId, ref: "User" })
-  user1: User;
+  @Prop({ required: true, type: Types.ObjectId, ref: "User" })
+  user1: UserDocument;
 
-  @Prop({ required: true, type: mongoose.Types.ObjectId, ref: "User" })
-  user2: User;
+  @Prop({ required: true, type: Types.ObjectId, ref: "User" })
+  user2: UserDocument;
+
+  @Prop({ default: 'pending' })
+  status: string;
 }
 
 export const FriendshipSchema = SchemaFactory.createForClass(Friendship);

@@ -5,6 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import { User, UserDocument } from "../entities/user.schema";
 import { User as UserDto } from '../types';
 import * as bcrypt from 'bcrypt';
+import DuplicateEmailError from "./errors/duplicate-email.error";
 
 @Injectable()
 export class AuthService {
@@ -14,11 +15,16 @@ export class AuthService {
 
   async register(newUser: Omit<UserDto, "id">) {
     const password = await bcrypt.hash(newUser.password, 10);
-    const createdUser = await new this.userModel({...newUser, password}).save();
-    const payload = { sub: createdUser.id, email: createdUser.email };
-    return {
-      user: createdUser, accessToken: this.jwtService.sign(payload)
-    };
+    try {
+      const createdUser = await new this.userModel({ ...newUser, password }).save();
+      const payload = { sub: createdUser.id, email: createdUser.email };
+      return {
+        user: createdUser, accessToken: this.jwtService.sign(payload)
+      };
+    } catch (error) {
+      if (error.code === 11000) throw new DuplicateEmailError();
+      throw error;
+    }
   }
 
   async validateUser(email: string, password: string): Promise<UserDocument> {
