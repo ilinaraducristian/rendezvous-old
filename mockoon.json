@@ -316,6 +316,31 @@
       ],
       "enabled": true,
       "responseMode": null
+    },
+    {
+      "uuid": "30f3bf95-afb2-4f23-b453-0b3c3c3c2b1f",
+      "documentation": "Get conversations that were started with friends and groups",
+      "method": "get",
+      "endpoint": "conversations",
+      "responses": [
+        {
+          "uuid": "b32b1033-366f-48b5-a2d9-0dcbaf0a0648",
+          "body": "{\n  \"friendshipsMessages\": [\n    {{#repeat 5 comma=true}}\n    {\n      \"id\": \"{{objectId}}\",\n      \"friendshipId\": \"{{objectId}}\",\n      \"userId\": \"{{objectId}}\",\n      \"timestamp\": \"2022-08-08T09:08:25.868Z\",\n      \"text\": \"text message 1\"\n    }\n    {{/repeat}}\n  ],\n  \"groups\": []\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Conversations retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
     }
   ],
   "proxyMode": false,
