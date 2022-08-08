@@ -12,7 +12,7 @@ import { LocalStrategy } from "./auth/strategies/local-strategy";
 import { JwtStrategy } from "./auth/strategies/jwt-strategy";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./auth/guards/jwt-auth-guard";
-import { FriendshipMessage, FriendshipMessageSchema } from "./entities/friendship-message.schema";
+import { FriendshipMessage, FriendshipMessageSchema } from "./friendship/entities/friendship-message.schema";
 import { Group, GroupSchema } from "./entities/group.schema";
 import { GroupMessage, GroupMessageSchema } from "./entities/group-message.schema";
 import { Friendship, FriendshipSchema } from "./entities/friendship.schema";
