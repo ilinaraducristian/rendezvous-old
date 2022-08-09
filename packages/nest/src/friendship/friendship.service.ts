@@ -4,6 +4,11 @@ import { Model } from "mongoose";
 import { Friendship, FriendshipDocument } from "../entities/friendship.schema";
 import { User, UserDocument } from "../entities/user.schema";
 import { FriendshipMessage, FriendshipMessageDocument } from "./entities/friendship-message.schema";
+import FriendshipAcceptedHttpException from "./exceptions/friendship-accepted.httpexception";
+import FriendshipNotFoundHttpException from "./exceptions/friendship-doesnt-exists.httpexception";
+import FriendshipExistsHttpException from "./exceptions/friendship-exists.httpexception";
+import UserLacksPermissionForFriendshipHttpException from "./exceptions/friendship-no-permission.httpexception";
+import UserNotFoundHttpException from "./exceptions/user-not-found.httpexception";
 
 @Injectable()
 export class FriendshipService {
@@ -13,39 +18,38 @@ export class FriendshipService {
     @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
   ) { }
 
-  async createFriendship(user1Id: string, user2Id: string) {
-    const users = await this.userModel.find({ _id: { $in: [user1Id, user2Id] } });
-    if (users.length < 2) throw new Error("users not found");
-    const [user1, user2] = users;
-    const [exisingFriendship] = await this.friendshipModel.find({ user1: { $in: [user1._id, user2._id] }, user2: { $in: [user1._id, user2._id] } });
-    if (exisingFriendship !== undefined) throw new Error("friendship already exists");
-    const newFriendship = await new this.friendshipModel({ user1, user2 }).save();
-    user1.friendships.push(newFriendship.id);
-    user2.friendships.push(newFriendship.id);
-    await Promise.all([user1.save(), user2.save()]);
+  async createFriendship(user: UserDocument, friendUserId: string) {
+    const friendUser = await this.userModel.findById(friendUserId);
+    if (friendUser === null) throw new UserNotFoundHttpException();
+    const exisingFriendship = await this.friendshipModel.findOne({ user1: { $in: [user._id, friendUser._id] }, user2: { $in: [user._id, friendUser._id] } });
+    if (exisingFriendship !== null) throw new FriendshipExistsHttpException();
+    const newFriendship = await new this.friendshipModel({ user1: user, user2: friendUser }).save();
+    user.friendships.push(newFriendship.id);
+    friendUser.friendships.push(newFriendship.id);
+    await Promise.all([user.save(), friendUser.save()]);
     return newFriendship;
   }
 
-  getFriendship(id: string) {
-    return this.friendshipModel.findById(id);
+  getFriendships(user: UserDocument) {
+    return this.friendshipModel.find({_id: {$in: user.friendships}});
   }
 
-  acceptFriendshipRequest(userId: string, id: string) {
-    return this.changeFriendshipStatus(userId, id, 'accepted');
-  }
-
-  private async changeFriendshipStatus(userId: string, id: string, status: string) {
+  async acceptFriendshipRequest(user: UserDocument, id: string) {
     const friendship = await this.friendshipModel.findById(id);
-    if (friendship === null) throw new Error("friendship doesn't exist");
-    if (friendship.user2._id.toString() !== userId) throw new Error("user doesn't have permission to change this friendship");
-    if (friendship.status === 'accepted') throw new Error('friendship already accepted');
-    friendship.status = status;
+    if (friendship === null) throw new FriendshipNotFoundHttpException();
+    if (friendship.user2.id !== user.id) throw new UserLacksPermissionForFriendshipHttpException();
+    if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
+    friendship.status = 'accepted';
     return friendship.save();
   }
 
-  async deleteFriendship(userId: string, id: string) {
-    const user = await this.userModel.findById(userId);
-    return this.friendshipModel.deleteOne({ id, $or: [{ user1: user._id, user2: user._id }] });
+  async deleteFriendship(user: UserDocument, id: string) {
+    const deleteFriendship = await this.friendshipModel.deleteOne({ id, $or: [{ user1: user._id }, { user2: user._id }] });
+    if (deleteFriendship.deletedCount === 0) throw new FriendshipNotFoundHttpException();
+    const friendshipIndex = user.friendships.findIndex(friendship => friendship.id === id);
+    user.friendships.splice(friendshipIndex, 1);
+    await user.save();
+    return deleteFriendship;
   }
 
   async createFriendshipMessage(userId: string, id: string, text: string) {
@@ -60,7 +64,7 @@ export class FriendshipService {
 
   async getFriendshipMessages(userId: string, id: string, offset: number, limit: number) {
     const friendship = await this.friendshipModel.findById(id);
-    return this.friendshipMessageModel.find({friendshipId: friendship._id}).sort({timestamp: -1}).skip(offset).limit(limit)
+    return this.friendshipMessageModel.find({ friendshipId: friendship._id }).sort({ timestamp: -1 }).skip(offset).limit(limit)
   }
 
   async getFriendshipMessage() {

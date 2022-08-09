@@ -11,11 +11,6 @@ export type UserData = {
   }[];
 };
 
-export type AuthenticatedUser = {
-  id: string;
-  email: string;
-};
-
 export type User = {
   id: string;
   name: string;
