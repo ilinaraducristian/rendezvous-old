@@ -506,6 +506,71 @@
       ],
       "enabled": true,
       "responseMode": null
+    },
+    {
+      "uuid": "3236597e-a789-4649-8a60-06097572150a",
+      "documentation": "Get user details",
+      "method": "get",
+      "endpoint": "users/:id",
+      "responses": [
+        {
+          "uuid": "70719a18-e56c-4ce9-a2a4-48359e8c315c",
+          "body": "{\n  \"name\": \"{{firstName}} {{lastName}}\"\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "User details retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "a356f327-1f6e-4c0f-9fba-3519d6f5c310",
+          "body": "{\n    \"statusCode\": 404,\n    \"message\": \"user not found\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "User not found",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "17790157-1029-4c56-a536-567e32a52c72",
+      "documentation": "",
+      "method": "get",
+      "endpoint": "users",
+      "responses": [
+        {
+          "uuid": "01fce051-5483-4931-a904-e84946bd342f",
+          "body": "{\n  \"users\": [\n    {{#repeat 5 comma=true}}\n    {\n      \"name\": \"{{firstName}} {{lastName}}\"\n    }\n    {{/repeat}}\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Users retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
     }
   ],
   "proxyMode": false,

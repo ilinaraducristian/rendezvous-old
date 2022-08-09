@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { FriendshipMessage, FriendshipMessageDocument } from "src/entities/friendship-message.schema";
-import { Friendship, FriendshipDocument } from "src/entities/friendship.schema";
-import { User, UserDocument } from "src/entities/user.schema";
-import { UserData } from "src/types";
+import { FriendshipMessage, FriendshipMessageDocument } from "../friendship/entities/friendship-message.schema";
+import { Friendship, FriendshipDocument } from "../entities/friendship.schema";
+import { User, UserDocument } from "../entities/user.schema";
+import { UserData } from "../types";
+import UserNotFoundHttpException from "../friendship/exceptions/user-not-found.httpexception";
 
 @Injectable()
 export class UserService {
@@ -14,34 +15,26 @@ export class UserService {
     @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
   ) {}
 
-  async getUserData(id: string): Promise<UserData> {
+  async getUser(id: string) {
     const user = await this.userModel.findById(id);
-    const friendshipsMessages = await this.friendshipMessageModel.find({friendshipId: {$in: user.friendships.map((f: FriendshipDocument) => f.id)}});
+    if(user === null) throw new UserNotFoundHttpException();
+    return user;
+  }
+
+  async getUsers(ids: string[]) {
+    const users = await this.userModel.find({id: {$in: ids}})
+    return users;
+  }
+
+  async getData(id: string): Promise<UserData> {
+    const user = await this.userModel.findById(id);
+    const friendshipsMessages = await this.friendshipMessageModel.find({friendshipId: {$in: user.friendships}}).limit(1);
+    console.log(user.friendships)
     return {
       friends: [],
       groups: [],
       servers: [],
     };
   }
-
-  async createFriendship(user1Id: string, user2Id: string) {
-    const [user1, user2] = await this.userModel.find({ id: { $in: [user1Id, user2Id] } });
-    const newFriendship = await new this.friendshipModel({ user1, user2 }).save();
-    user1.friendships.push(newFriendship.id);
-    user2.friendships.push(newFriendship.id);
-    await Promise.all([user1.save(), user2.save()]);
-    return newFriendship;
-  }
-
-  async getFriendships(userId: string) {
-    return (await this.userModel.findById(userId)).friendships;
-  }
-
-  async createFriendshipMessage(userId: string, friendshipId: string, text: string) {
-    return new this.friendshipMessageModel({ userId, friendshipId, text }).save();
-  }
-
-  getFriedshipMessages(userId: string, friendshipId: string) {
-    return this.friendshipMessageModel.find({ friendshipId });
-  }
+  
 }

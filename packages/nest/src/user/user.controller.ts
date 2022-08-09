@@ -1,31 +1,26 @@
-import { Body, Controller, Get, Param, Post } from "@nestjs/common";
-import { AuthenticatedUser } from "src/types";
-import { ExtractAuthenticatedUser } from "src/util";
+import { Body, Controller, Get, Param } from "@nestjs/common";
+import { UserDocument } from "../entities/user.schema";
+import { ExtractAuthenticatedUser } from "../util";
 import { UserService } from "./user.service";
 
-@Controller("user")
+@Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post("friendships")
-  createFriendship(@ExtractAuthenticatedUser() user: AuthenticatedUser, @Body() friend: { id: string }) {
-    if(user.id === friend.id) throw new Error('');
-    return this.userService.createFriendship(user.id, friend.id);
+  @Get(":id")
+  async getUser(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string) {
+    const retrievedUser = await this.userService.getUser(id);
+    return {
+      name: retrievedUser.name
+    }
   }
 
-  @Get("friendships")
-  getFriendships(@ExtractAuthenticatedUser() user: AuthenticatedUser) {
-    return this.userService.getFriendships(user.id);
-  }
-
-  @Post("friendships/:id/messages")
-  createFriedshipMessage(@ExtractAuthenticatedUser() user: AuthenticatedUser, @Param('id') id: string, @Body() newMessage: {text: string}) {
-    return this.userService.createFriendshipMessage(user.id, id, newMessage.text);
-  }
-
-  @Get("friendships/:id/messages")
-  getFriedshipMessages(@ExtractAuthenticatedUser() user: AuthenticatedUser, @Param('id') id: string) {
-    return this.userService.getFriedshipMessages(user.id, id);
+  @Get("")
+  async getUsers(@ExtractAuthenticatedUser() user: UserDocument, @Body() {users}: {users: string[]}) {
+    const retrievedUsers = await this.userService.getUsers(users);
+    return retrievedUsers.map(retrievedUser => ({
+      name: retrievedUser.name
+    }));
   }
 
 }
