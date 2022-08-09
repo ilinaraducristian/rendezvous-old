@@ -1,0 +1,73 @@
+@import "../../../../../../utils/Styles/variables.scss";
+
+.friendships-container {
+  height: 95%;
+  overflow-y: auto;
+  .search-container {
+    width: 100%;
+    height: 3.5rem;
+    margin-bottom: 3rem;
+    input {
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      outline: none;
+      border: 0.1rem solid #ffffff5e;
+      font-size: 1.4rem;
+      color: white;
+      padding-left: 1.5rem;
+      padding-top: 0.4rem;
+      &::placeholder {
+        font-size: 1.6rem;
+        color: white;
+        opacity: 80%;
+      }
+      &:focus::placeholder {
+        color: transparent;
+      }
+    }
+  }
+  .friendships-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    .user-wrapper {
+      width: 100%;
+      height: 4.5rem;
+      display: flex;
+      background-color: $userBackgroundColor;
+      padding: 3.5rem 0rem;
+      cursor: pointer;
+      .user-avatar-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding-left: 1rem;
+        img {
+          width: 5rem;
+          height: 5rem;
+        }
+      }
+      .user-info {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding-left: 2rem;
+        text-overflow: ellipsis;
+        .user-name {
+          width: 100%;
+          color: $whiteColor;
+          font-size: 1.8rem;
+          font-weight: $semi-bold;
+          opacity: 80%;
+        }
+        .user-last-message {
+          width: 100%;
+          color: $whiteColor;
+          opacity: 60%;
+        }
+      }
+    }
+  }
+}

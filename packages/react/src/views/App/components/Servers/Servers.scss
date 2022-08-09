@@ -1,13 +1,32 @@
 @import "../../../../utils/Styles/variables.scss";
+
+.servers-container::-webkit-scrollbar {
+  display: none;
+}
+
 .servers-container {
   width: 100%;
   height: 100%;
-  background-color: red;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3rem;
-  overflow-y: scroll;
+  padding: 2rem 0;
+  gap: 2rem;
+  overflow-y: auto;
+
   .server-image-wrapper {
+    img {
+      width: 4rem;
+      height: 4rem;
+    }
   }
+  //   gap: 3rem;
+  //   overflow-y: scroll;
+  //   .server-image-wrapper {
+  //     width: 100%;
+  //     img {
+  //       width: 4rem;
+  //       height: 4renm;
+  //     }
+  //   }
 }

@@ -13,9 +13,9 @@
     display: flex;
     flex-direction: column;
     border-right: 0.01rem solid $appBorder;
+    overflow: hidden;
     .user-Wrapper {
       width: 100%;
-      height: 6rem;
       background-color: $userBackgroundColor;
     }
     .channels {
@@ -31,6 +31,7 @@
         width: 100%;
         height: 100%;
         background-color: $userContentBackgroundColor;
+        padding: 2.5rem;
       }
     }
   }
@@ -38,5 +39,16 @@
     height: 100%;
     width: 70%;
     background-color: $chatBackgroundColor;
+    .app-logo-wrapper {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      img {
+        width: 20rem;
+        height: 20rem;
+      }
+    }
   }
 }

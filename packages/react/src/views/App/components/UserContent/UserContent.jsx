@@ -10,9 +10,14 @@ import "./UserContent.scss";
 // REDUX
 
 // COMPONENTS
+import Profile from "./components/Profile/Profile";
+import AddFriend from "./components/AddFriend/AddFriend";
+import Friendships from "./components/Friendships/Friendships";
+import DirectMessage from "./components/DirectMessage/DirectMessage";
 
-const UserContent = () => {
+const UserContent = (props) => {
   // PROPS
+  const { content = "", onClick = () => {} } = props;
 
   // CONSTANTS USING LIBRARYS
 
@@ -25,8 +30,18 @@ const UserContent = () => {
   // REQUEST API FUNCTIONS
 
   // HANDLERS FUNCTIONS
-
-  return <div className="component--container"></div>;
+  switch (content) {
+    case "direct-message":
+      return <DirectMessage />;
+    case "profile":
+      return <Profile />;
+    case "friendships":
+      return <Friendships onClick={onClick} />;
+    case "add-friend":
+      return <AddFriend />;
+    default:
+      break;
+  }
 };
 
 export default UserContent;

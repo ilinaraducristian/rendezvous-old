@@ -14,9 +14,9 @@ import MessageIcon from "@mui/icons-material/Message";
 
 // COMPONENTS
 
-const User = () => {
+const User = (props) => {
   // PROPS
-
+  const { onClick = () => {} } = props;
   // CONSTANTS USING LIBRARYS
 
   // CONSTANTS USING HOOKS
@@ -32,9 +32,27 @@ const User = () => {
   return (
     <div className="user-container">
       <div className="icons-wrapper">
-        <PersonIcon />
-        <PersonAddAlt1Icon />
-        <MessageIcon />
+        <div
+          onClick={() => {
+            onClick("profile");
+          }}
+        >
+          <PersonIcon />
+        </div>
+        <div
+          onClick={() => {
+            onClick("add-friend");
+          }}
+        >
+          <PersonAddAlt1Icon />
+        </div>
+        <div
+          onClick={() => {
+            onClick("friendships");
+          }}
+        >
+          <MessageIcon />
+        </div>
       </div>
     </div>
   );
