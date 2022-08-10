@@ -322,6 +322,21 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true
+        },
+        {
+          "uuid": "d54ffc88-ffc7-4ee5-bd2c-bf7da26d62f5",
+          "body": "{\n    \"statusCode\": 404,\n    \"message\": \"friendship not found\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Friendship not found",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
@@ -377,6 +392,21 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": false
+        },
+        {
+          "uuid": "eb04c853-f4b6-4a0d-ae0d-3f4ed9e451e6",
+          "body": "{\n    \"statusCode\": 404,\n    \"message\": \"friendship not found\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Friendship not found",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
@@ -402,6 +432,21 @@
           "disableTemplating": false,
           "fallbackTo404": false,
           "default": true
+        },
+        {
+          "uuid": "4df005cf-124f-415b-8612-aa7738da5176",
+          "body": "{\n    \"statusCode\": 404,\n    \"message\": \"friendship not found\"\n}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Friendship not found",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": false
         }
       ],
       "enabled": true,
