@@ -38,7 +38,7 @@ const UserContent = (props) => {
     case "friendships":
       return <Friendships onClick={onClick} />;
     case "add-friend":
-      return <AddFriend />;
+      return <AddFriend onClick={onClick} />;
     default:
       break;
   }

@@ -1,0 +1,59 @@
+@import "../../../../../../utils/Styles/variables.scss";
+
+.addfriend-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  .addfriend-text-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 4rem;
+    span {
+      font-size: 2rem;
+      color: $whiteColor;
+      font-weight: $semi-bold;
+    }
+  }
+  .addfriend-content {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    input {
+      width: 100%;
+      height: 4rem;
+      background-color: $inputBackgroundColor;
+      border-width: 0;
+      color: $whiteColor;
+      outline: none;
+      font-size: 1.6rem;
+      padding: 1rem;
+      &::placeholder {
+        color: $whiteColor;
+      }
+    }
+    .addfriend-buttons-wrapper {
+      width: 100%;
+      padding: 3rem 0 4rem 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      .request {
+        height: 4rem;
+        font-size: 1.6rem;
+        font-weight: $semi-bold;
+      }
+      .close {
+        height: 4rem;
+        font-size: 1.6rem;
+        font-weight: $semi-bold;
+      }
+    }
+  }
+}

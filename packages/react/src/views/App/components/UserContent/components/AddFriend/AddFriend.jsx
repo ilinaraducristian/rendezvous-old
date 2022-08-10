@@ -11,9 +11,9 @@ import "./AddFriend.scss";
 
 // COMPONENTS
 
-const AddFriend = () => {
+const AddFriend = (props) => {
   // PROPS
-
+  const { onClick = () => {} } = props;
   // CONSTANTS USING LIBRARYS
 
   // CONSTANTS USING HOOKS
@@ -26,7 +26,20 @@ const AddFriend = () => {
 
   // HANDLERS FUNCTIONS
 
-  return <div className="addfriend-container">sunt in add friend</div>;
+  return (
+    <div className="addfriend-container">
+      <div className="addfriend-text-wrapper">
+        <span>Enter the friend ID</span>
+      </div>
+      <div className="addfriend-content">
+        <input placeholder="Friend ID" />
+        <div className="addfriend-buttons-wrapper">
+          <button className="request">SEND REQUEST</button>
+          <button className="close" onClick = {() => {onClick("direct-message")}}>CLOSE</button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default AddFriend;
