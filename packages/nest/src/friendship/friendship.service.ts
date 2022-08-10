@@ -11,13 +11,16 @@ import FriendshipExistsHttpException from "./exceptions/friendship-exists.httpex
 import UserLacksPermissionForFriendshipHttpException from "./exceptions/friendship-no-permission.httpexception";
 import UserNotFoundHttpException from "./exceptions/user-not-found.httpexception";
 import FriendshipMessageNotFoundHttpException from "./exceptions/friendship-message-not-found.httpexception";
+import { SseService } from "../sse.service";
+import SseEvents from "../sse-events";
 
 @Injectable()
 export class FriendshipService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>,
-    @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
+    @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>,
+    private readonly sseService: SseService
   ) { }
 
   async createFriendship(user: UserDocument, friendUserId: string) {
@@ -29,6 +32,7 @@ export class FriendshipService {
     user.friendships.push(newFriendship.id);
     friendUser.friendships.push(newFriendship.id);
     await Promise.all([user.save(), friendUser.save()]);
+    this.sseService.next({type: SseEvents.friendRequest, userId: friendUser.id, friendship: newFriendship});
     return newFriendship;
   }
 
@@ -49,7 +53,9 @@ export class FriendshipService {
     if (friendship.user2.id !== user.id) throw new UserLacksPermissionForFriendshipHttpException();
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
-    return friendship.save();
+    const savedFriendship = await friendship.save();
+    this.sseService.next({type: SseEvents.friendRequestAccepted, userId: friendship.user1.id})
+    return savedFriendship;
   }
 
   async deleteFriendship(user: UserDocument, id: string) {

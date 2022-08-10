@@ -18,6 +18,7 @@ import { GroupMessage, GroupMessageSchema } from "./entities/group-message.schem
 import { Friendship, FriendshipSchema } from "./entities/friendship.schema";
 import { FriendshipService } from "./friendship/friendship.service";
 import { ConversationService } from "./conversations/conversation.service";
+import { SseService } from "./sse.service";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -57,6 +58,7 @@ export class AppModule {
       LocalStrategy,
       JwtStrategy,
       AuthService,
+      SseService,
       UserService,
       FriendshipService,
       ConversationService,
