@@ -8,13 +8,12 @@ import { FriendshipMessage, FriendshipMessageDocument } from "../friendship/enti
 @Injectable()
 export class ConversationService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>,
     @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
   ) { }
 
-  async getConversations(userId: string) {
-    const friendships = await this.friendshipModel.find({ $or: [{ user1: new Types.ObjectId(userId) }, { user2: new Types.ObjectId(userId) }] });
+  async getConversations(user: UserDocument) {
+    const friendships = await this.friendshipModel.find({ $or: [{ user1: user._id }, { user2: user._id }] });
     const friendshipsMessages = await Promise.all(friendships.map(friendship => this.friendshipMessageModel.find({ friendshipId: friendship._id }).sort({ timestamp: -1 }).limit(1)));
     const friendshipsWithAMessage = friendshipsMessages.flat().map(friendshipMessage => {
       const friendship: any = friendships.find(friendship => friendship._id.toString() === friendshipMessage.friendshipId.toString());

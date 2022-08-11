@@ -10,7 +10,7 @@ export class ConversationController {
 
   @Get()
   getConversations(@ExtractAuthenticatedUser() user: UserDocument) {
-    return this.conversationService.getConversations(user.id);
+    return this.conversationService.getConversations(user);
   }
 
 }
