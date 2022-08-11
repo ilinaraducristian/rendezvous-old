@@ -36,13 +36,40 @@
 					"response": []
 				},
 				{
+					"name": "Register 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"John Doe 2\",\n    \"email\": \"john.doe2@email.com\",\n    \"password\": \"john.doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/register",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Login",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"john.doe@email.com\",\n    \"password\": \"john.doe\"\n}",
+							"raw": "{\n    \"username\": \"john.doe@email.com\",\n    \"password\": \"john.doe\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -186,7 +213,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"62eced8024612411ea53512c\"\n}",
+							"raw": "{\n    \"id\": \"62f4997fe3c201ab89b20931\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -260,6 +287,48 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "Conversations",
+			"item": [
+				{
+					"name": "Get all conversations",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/conversations",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"conversations"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Sse",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3100/users/sse",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3100",
+					"path": [
+						"users",
+						"sse"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
