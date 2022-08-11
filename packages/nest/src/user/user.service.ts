@@ -1,40 +1,45 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { FriendshipMessage, FriendshipMessageDocument } from "../friendship/entities/friendship-message.schema";
-import { Friendship, FriendshipDocument } from "../entities/friendship.schema";
 import { User, UserDocument } from "../entities/user.schema";
-import { UserData } from "../types";
 import UserNotFoundHttpException from "../friendship/exceptions/user-not-found.httpexception";
+import { FriendshipService } from "../friendship/friendship.service";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    @InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>,
-    @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
-  ) {}
+    private readonly friendshipService: FriendshipService
+  ) { }
 
   async getUser(id: string) {
     const user = await this.userModel.findById(id);
-    if(user === null) throw new UserNotFoundHttpException();
+    if (user === null) throw new UserNotFoundHttpException();
     return user;
   }
 
   async getUsers(ids: string[]) {
-    const users = await this.userModel.find({id: {$in: ids}})
+    const users = await this.userModel.find({ id: { $in: ids } })
     return users;
   }
 
-  async getData(id: string): Promise<UserData> {
-    const user = await this.userModel.findById(id);
-    const friendshipsMessages = await this.friendshipMessageModel.find({friendshipId: {$in: user.friendships}}).limit(1);
-    console.log(user.friendships)
+  async getUserData(user: UserDocument) {
+    const friendships = (await this.friendshipService.getFriendships(user)).map(friendship => ({
+      id: friendship.id,
+      userId: friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString(),
+      status: friendship.status
+    }));
+    const users = await this.userModel.find({ _id: { $in: friendships.map(friendship => friendship.userId) } });
     return {
-      friends: [],
-      groups: [],
-      servers: [],
-    };
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      friendships,
+      users: users.map(user => ({
+        id: user.id,
+        name: user.name
+      }))
+    }
   }
-  
+
 }

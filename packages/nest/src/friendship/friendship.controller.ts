@@ -20,8 +20,7 @@ export class FriendshipController {
   async getFriendships(@ExtractAuthenticatedUser() user: UserDocument) {
     return {friendships: (await this.friendshipService.getFriendships(user)).map(friendship => ({
       id: friendship.id,
-      user1Id: friendship.user1.toString(),
-      user2Id: friendship.user1.toString(),
+      userId: friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString(),
       status: friendship.status
     }))};
   }

@@ -8,7 +8,7 @@ import { UserService } from "./user.service";
 @Controller("users")
 export class UserController {
   constructor(private readonly userService: UserService,
-    private readonly sseService: SseService) {}
+    private readonly sseService: SseService) { }
 
   @Get(":id")
   async getUser(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string) {
@@ -19,16 +19,21 @@ export class UserController {
   }
 
   @Get()
-  async getUsers(@ExtractAuthenticatedUser() user: UserDocument, @Body() {users}: {users: string[]}) {
+  async getUsers(@ExtractAuthenticatedUser() user: UserDocument, @Body() { users }: { users: string[] }) {
     const retrievedUsers = await this.userService.getUsers(users);
     return retrievedUsers.map(retrievedUser => ({
       name: retrievedUser.name
     }));
   }
 
+  @Get('data')
+  getUserData(@ExtractAuthenticatedUser() user: UserDocument) {
+    return this.userService.getUserData(user);
+  }
+
   @Sse('sse')
   sse(@ExtractAuthenticatedUser() user: UserDocument): Observable<any> {
-    return this.sseService.sse.pipe(filter(r => r.userId === user._id.toString()));
+    return this.sseService.sse.pipe(filter(r => r.data.userId === user._id.toString()));
   }
 
 }

@@ -553,6 +553,31 @@
       "responseMode": null
     },
     {
+      "uuid": "0549cf1d-5554-419b-9e56-c918641cd7d6",
+      "documentation": "Get user data",
+      "method": "get",
+      "endpoint": "users/data",
+      "responses": [
+        {
+          "uuid": "a8d50d33-5061-4f25-aa73-132ea54bf03b",
+          "body": "{\n  \"id\": \"{{objectId}}\",\n  \"name\": \"{{firstName}} {{lastName}}\",\n  \"email\": \"{{email}}\",\n  \"friendships\": [\n    {\n      \"id\": \"{{objectId}}\",\n      \"userId\": \"{{objectId}}\",\n      \"status\": \"pending\"\n    }\n  ],\n  \"users\": [\n    {\n      \"id\": \"{{objectId}}\",\n      \"name\": \"{{firstName}} {{lastName}}\"\n    }\n  ]\n}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "User data retrieved successfully",
+          "headers": [],
+          "filePath": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
       "uuid": "3236597e-a789-4649-8a60-06097572150a",
       "documentation": "Get user details",
       "method": "get",
@@ -594,7 +619,7 @@
     },
     {
       "uuid": "17790157-1029-4c56-a536-567e32a52c72",
-      "documentation": "",
+      "documentation": "Get users details",
       "method": "get",
       "endpoint": "users",
       "responses": [
