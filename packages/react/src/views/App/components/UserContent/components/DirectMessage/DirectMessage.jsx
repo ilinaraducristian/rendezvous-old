@@ -26,7 +26,11 @@ const DirectMessage = () => {
 
   // HANDLERS FUNCTIONS
 
-  return <div className="component--container">sunt in direct message</div>;
+  return (
+    <div className="component--container">
+      <span style={{ fontSize: "4rem" }}>sunt in direct message</span>
+    </div>
+  );
 };
 
 export default DirectMessage;

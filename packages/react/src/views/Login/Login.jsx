@@ -32,11 +32,11 @@ const Login = (props) => {
   const [buttonModel, setButtonModel] = useState([]);
   const [inputModel, setInputModel] = useState([]);
   const [loginData, setLoginData] = useState({
-    email: "",
+    username: "",
     password: "",
   });
   const [registerData, setRegisterData] = useState({
-    userName: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -71,8 +71,9 @@ const Login = (props) => {
 
   // REQUEST FUNCTIONS
   const postRequest = async (address, data) => {
+    console.log(data);
     const response = await postData(address, data);
-    if (path === "login" && response.status !== 200) {
+    if (path === "login" && response.status !== 204) {
       setError("Invalid E-mail or Password");
       handleError();
     } else if (path === "register" && response.status !== 201) {
@@ -101,7 +102,7 @@ const Login = (props) => {
       {
         data: [
           {
-            name: "email",
+            name: "username",
             label: "EMAIL",
             type: "text",
           },
@@ -115,7 +116,7 @@ const Login = (props) => {
       {
         data: [
           {
-            name: "userName",
+            name: "name",
             label: "NAME",
             type: "text",
           },
@@ -133,11 +134,11 @@ const Login = (props) => {
       },
     ];
     setLoginData({
-      email: "",
+      username: "",
       password: "",
     });
     setRegisterData({
-      userName: "",
+      name: "",
       email: "",
       password: "",
     });
@@ -154,17 +155,17 @@ const Login = (props) => {
 
   const handleClick = (address, type) => {
     if (path === "login" && type === "firstButton") {
-      if (loginData.email !== "" && loginData.password !== "") {
+      if (loginData.username !== "" && loginData.password !== "") {
         postRequest("/auth/login", loginData);
       } else {
         setError("Invalid E-mail or Password");
         handleError();
       }
     } else if (path === "register" && type === "firstButton") {
-      if (registerData.userName === "" && registerData.email === "" && registerData.password === "") {
+      if (registerData.name === "" && registerData.email === "" && registerData.password === "") {
         setError("Please complete all fields");
         handleError();
-      } else if (registerData.userName === "") {
+      } else if (registerData.name === "") {
         setError("Invalid Name");
         handleError();
       } else if (!registerData.email.includes("@")) {

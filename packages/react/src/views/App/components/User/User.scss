@@ -18,3 +18,9 @@
     }
   }
 }
+
+@media only screen and (max-width: 600px) {
+  .user-container {
+    justify-content: center;
+  }
+}

@@ -1,13 +1,12 @@
 @import "../../../../../../utils/Styles/variables.scss";
 
 .friendships-container {
-  height: 95%;
-  overflow-y: auto;
-
+  height: 100%;
+  overflow: hidden;
   .search-container {
     width: 100%;
     height: 3.5rem;
-    margin-bottom: 3rem;
+    margin-bottom: 1.5rem;
     input {
       width: 100%;
       height: 100%;
@@ -29,9 +28,11 @@
     }
   }
   .friendships-content {
+    height: 100%; 
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    overflow-y: auto;
     .user-wrapper {
       width: 100%;
       height: 4.5rem;
@@ -72,6 +73,6 @@
     }
   }
 }
-.friendships-container::-webkit-scrollbar {
+.friendships-content::-webkit-scrollbar {
   display: none;
 }

@@ -20,6 +20,7 @@
       height: 4rem;
     }
   }
+
   //   gap: 3rem;
   //   overflow-y: scroll;
   //   .server-image-wrapper {
@@ -29,4 +30,13 @@
   //       height: 4renm;
   //     }
   //   }
+}
+
+@media only screen and (max-width: 600px) {
+  .servers-container {
+    flex-direction: row;
+    overflow-y: none;
+    overflow-x: auto;
+    padding: 0 2rem;
+  }
 }

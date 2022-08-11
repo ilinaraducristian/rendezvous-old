@@ -87,12 +87,12 @@ const Friendships = (props) => {
         <input placeholder="🔍 Search" />
       </div>
       <div className="friendships-content">
-        {usersModel?.map((user, index) => (
+    `    {usersModel?.map((user, index) => (
           <div
             key={`user-${index}`}
             className="user-wrapper"
             onClick={() => {
-              onClick("direct-message");
+              onClick("friendship-user");
             }}
           >
             <div className="user-avatar-wrapper">
@@ -104,6 +104,28 @@ const Friendships = (props) => {
           </div>
         ))}
       </div>
+
+      {/* <div className="search-container">
+        <input placeholder="🔍 Search" />
+      </div>
+      <div className="friendships-content">
+        {usersModel?.map((user, index) => (
+          <div
+            key={`user-${index}`}
+            className="user-wrapper"
+            onClick={() => {
+              onClick("friendship-user");
+            }}
+          >
+            <div className="user-avatar-wrapper">
+              <img src={userIcon} alt="user icon" />
+            </div>
+            <div className="user-info">
+              <span className="user-name">{user.name}</span>
+            </div>
+          </div>
+        ))}
+      </div> */}
     </div>
   );
 };

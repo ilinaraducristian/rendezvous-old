@@ -42,7 +42,8 @@ const App = () => {
   const [device, setDevice] = useState("");
   const [userContentType, setUserContentType] = useState("direct-message");
   const [showConversation, setShowConversation] = useState(false);
-
+  const [nameClass, setNameClass] = useState("");
+  console.log(nameClass);
   // GENERAL CONSTANTS
 
   // HANDLE UseEffect
@@ -67,47 +68,77 @@ const App = () => {
       case "friendships":
         setUserContentType("friendships");
         break;
+      case "friendship-user":
+        setNameClass("active");
+        // setUserContentType("direct-message");
+        break;
       default:
-        setUserContentType("direct-message");
         break;
     }
   };
 
-  const displayDeviceInterface = (device) => {
-    switch (device) {
-      case "desktop":
-        return (
-          <div className="app-container">
-            <div className="app-content">
-              <div className="user-Wrapper">
-                <User onClick={handleUserAction} />
-              </div>
-              <div className="channels">
-                <div className="servers">
-                  <Servers />
-                </div>
-                <div className="user-content">
-                  <UserContent content={userContentType} onClick={handleUserAction} />
-                </div>
-              </div>
+  // const displayDeviceInterface = (device) => {
+  //   switch (device) {
+  //     case "desktop":
+  //       return (
+  //         <div className={`app-container ${nameClass}`}>
+  //           <div className="app-content">
+  //             <div className="user-Wrapper">
+  //               <User onClick={handleUserAction} />
+  //             </div>
+  //             <div className="channels">
+  //               <div className="servers">
+  //                 <Servers />
+  //               </div>
+  //               <div className="user-content">
+  //                 <UserContent content={userContentType} onClick={handleUserAction} />
+  //               </div>
+  //             </div>
+  //           </div>
+  //           <div className="chat-container">
+  //             {nameClass === "active" ? (
+  //               <Chat />
+  //             ) : (
+  //               <div className="app-logo-wrapper">
+  //                 <img src={logo} alt="app-logo" />
+  //               </div>
+  //             )}
+  //           </div>
+  //         </div>
+  //       );
+
+  //     default:
+  //       break;
+  //   }
+  // };
+  return (
+    <Div100vh>
+      <div className="app-container">
+        <div className={`app-content ${nameClass}`}>
+          <div className={`user-Wrapper ${nameClass}`}>
+            <User onClick={handleUserAction} />
+          </div>
+          <div className={`channels ${nameClass}`}>
+            <div className="servers">
+              <Servers />
             </div>
-            <div className="chat-container">
-              {showConversation ? (
-                <Chat />
-              ) : (
-                <div className="app-logo-wrapper">
-                  <img src={logo} alt="app-logo" />
-                </div>
-              )}
+            <div className="user-content">
+              <UserContent content={userContentType} onClick={handleUserAction} />
             </div>
           </div>
-        );
-
-      default:
-        break;
-    }
-  };
-  return <Div100vh>{displayDeviceInterface(device)}</Div100vh>;
+        </div>
+        <div className={`chat-container ${nameClass}`}>
+          {nameClass === "active" ? (
+            <Chat />
+          ) : (
+            <div className="app-logo-wrapper">
+              <img src={logo} alt="app-logo" />
+            </div>
+          )}
+        </div>
+      </div>
+    </Div100vh>
+  );
 };
 
 export default App;
