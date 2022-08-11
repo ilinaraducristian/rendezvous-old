@@ -10,7 +10,7 @@ import CreateUserDto from "./entities/create-user.dto";
 @Injectable()
 export class AuthService {
 
-  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>, private jwtService: JwtService) { }
+  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>, private readonly jwtService: JwtService) { }
 
 
   async register(newUser: CreateUserDto) {

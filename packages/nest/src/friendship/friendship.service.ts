@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Type } from "class-transformer";
 import { Model, Types } from "mongoose";
 import { Friendship, FriendshipDocument } from "../entities/friendship.schema";
 import { User, UserDocument } from "../entities/user.schema";
@@ -32,7 +31,7 @@ export class FriendshipService {
     user.friendships.push(newFriendship.id);
     friendUser.friendships.push(newFriendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.next({type: SseEvents.friendRequest, userId: friendUser.id, friendship: newFriendship});
+    this.sseService.next({ type: SseEvents.friendRequest, data: { userId: friendUser.id, friendship: newFriendship } });
     return newFriendship;
   }
 
@@ -54,7 +53,7 @@ export class FriendshipService {
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
     const savedFriendship = await friendship.save();
-    this.sseService.next({type: SseEvents.friendRequestAccepted, userId: friendship.user1.id})
+    this.sseService.next({ type: SseEvents.friendRequestAccepted, data: { userId: friendship.user1.id } })
     return savedFriendship;
   }
 
@@ -84,15 +83,15 @@ export class FriendshipService {
 
   async getFriendshipMessage(user: UserDocument, id: string, messageId: string) {
     const friendship = await this.getFriendship(user, id);
-    const message = await this.friendshipMessageModel.findOne({_id: new Types.ObjectId(messageId), friendshipId: friendship._id});
-    if(message === null) throw new FriendshipMessageNotFoundHttpException();
+    const message = await this.friendshipMessageModel.findOne({ _id: new Types.ObjectId(messageId), friendshipId: friendship._id });
+    if (message === null) throw new FriendshipMessageNotFoundHttpException();
     return message;
   }
 
   async deleteFriendshipMessage(user: UserDocument, id: string, messageId: string) {
     const friendship = await this.getFriendship(user, id);
-    const message = await this.friendshipMessageModel.deleteOne({_id: new Types.ObjectId(messageId), friendshipId: friendship._id});
-    if(message.deletedCount === 0) throw new FriendshipMessageNotFoundHttpException();
+    const message = await this.friendshipMessageModel.deleteOne({ _id: new Types.ObjectId(messageId), friendshipId: friendship._id });
+    if (message.deletedCount === 0) throw new FriendshipMessageNotFoundHttpException();
   }
 
 

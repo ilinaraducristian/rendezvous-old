@@ -9,8 +9,8 @@ export class FriendshipController {
   constructor(private readonly friendshipService: FriendshipService) { }
 
   @Post()
-  async createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { friendUserId }: { friendUserId: string }) {
-    const newFriendship = await this.friendshipService.createFriendship(user, friendUserId);
+  async createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { id }: { id: string }) {
+    const newFriendship = await this.friendshipService.createFriendship(user, id);
     return {
       id: newFriendship.id
     }
@@ -18,7 +18,12 @@ export class FriendshipController {
 
   @Get()
   async getFriendships(@ExtractAuthenticatedUser() user: UserDocument) {
-    return this.friendshipService.getFriendships(user);
+    return {friendships: (await this.friendshipService.getFriendships(user)).map(friendship => ({
+      id: friendship.id,
+      user1Id: friendship.user1.toString(),
+      user2Id: friendship.user1.toString(),
+      status: friendship.status
+    }))};
   }
 
   @Patch(":id/accept")

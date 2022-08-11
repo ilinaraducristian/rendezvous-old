@@ -13,12 +13,11 @@ import { JwtStrategy } from "./auth/strategies/jwt-strategy";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./auth/guards/jwt-auth-guard";
 import { FriendshipMessage, FriendshipMessageSchema } from "./friendship/entities/friendship-message.schema";
-import { Group, GroupSchema } from "./entities/group.schema";
-import { GroupMessage, GroupMessageSchema } from "./entities/group-message.schema";
 import { Friendship, FriendshipSchema } from "./entities/friendship.schema";
 import { FriendshipService } from "./friendship/friendship.service";
 import { ConversationService } from "./conversations/conversation.service";
 import { SseService } from "./sse.service";
+import { FriendshipController } from "./friendship/friendship.controller";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -39,9 +38,7 @@ export class AppModule {
       MongooseModule.forFeature([
         { name: User.name, schema: UserSchema },
         { name: Friendship.name, schema: FriendshipSchema },
-        { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
-        { name: Group.name, schema: GroupSchema },
-        { name: GroupMessage.name, schema: GroupMessageSchema },
+        { name: FriendshipMessage.name, schema: FriendshipMessageSchema }
       ]),
       PassportModule,
       JwtModule.registerAsync({
@@ -53,7 +50,7 @@ export class AppModule {
         }),
       }),
     ],
-    controllers: [AuthController, UserController],
+    controllers: [AuthController, UserController, FriendshipController],
     providers: [
       LocalStrategy,
       JwtStrategy,
