@@ -6,29 +6,12 @@ import "./Button.scss";
 // LIBRARIES
 import PropTypes from "prop-types";
 
-// CONSTANTS & MOCKS
-
-// REDUX
-
-// COMPONENTS
-
 const Button = (props) => {
   // PROPS
-  const { handleClick = () => {}, text = "", style = "" } = props;
+  const { handleClick = () => {}, text = "" } = props;
 
-  // CONSTANTS USING LIBRARYS
-
-  // CONSTANTS USING HOOKS
-
-  // GENERAL CONSTANTS
-
-  // USE EFFECT FUNCTION
-
-  // REQUEST API FUNCTIONS
-
-  // HANDLERS FUNCTIONS
   return (
-    <button className={style} onClick={() => handleClick()}>
+    <button className="basic" onClick={() => handleClick()}>
       {text}
     </button>
   );

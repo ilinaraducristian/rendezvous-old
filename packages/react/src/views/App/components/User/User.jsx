@@ -17,7 +17,7 @@ import MessageIcon from "@mui/icons-material/Message";
 const User = (props) => {
   // PROPS
   const { onClick = () => {} } = props;
-  // CONSTANTS USING LIBRARYS
+  // CONSTANTS USING LIBRARIES
 
   // CONSTANTS USING HOOKS
 

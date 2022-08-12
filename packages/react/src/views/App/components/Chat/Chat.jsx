@@ -26,12 +26,7 @@ const Chat = () => {
 
   // HANDLERS FUNCTIONS
 
-  return (
-    <div className="component--container" style={{ width: "100%", height: "100%", backgroundColor: "red" }}>
-      {" "}
-      SA IMI SUG PULA SINGUR
-    </div>
-  );
+  return <div className="component--container" style={{ width: "100%", height: "100%", backgroundColor: "red" }}></div>;
 };
 
 export default Chat;

@@ -5,14 +5,8 @@ import { useNavigate } from "react-router-dom";
 import "./Login.scss";
 import logo from "../../assets/login/logo.png";
 
-// LIBRARIES
-
-// CONSTANTS & MOCKS
-
 // AXIOS
 import { postData } from "../../config/axiosConfig";
-
-// REDUX
 
 // COMPONENTS
 import Particle from "./components/Particle/Particle";
@@ -22,8 +16,6 @@ import Input from "./components/Input/Input";
 const Login = (props) => {
   // PROPS
   const { path = "" } = props;
-
-  // CONSTANTS USING LIBRARYS
 
   // CONSTANTS USING HOOKS
   const navigate = useNavigate();
@@ -54,22 +46,8 @@ const Login = (props) => {
         break;
     }
   };
-  const displayInput = (type) => {
-    return inputModel[type]?.data?.map((input, index) => (
-      <Input
-        key={`input-${index}`}
-        name={input.name}
-        handleChange={(event) => {
-          handleChange(event);
-        }}
-        value={path === "login" ? loginData[input.name] : registerData[input.name]}
-        label={input.label}
-        type={input.type}
-      />
-    ));
-  };
 
-  // REQUEST FUNCTIONS
+  // REQUEST API FUNCTIONS
   const postRequest = async (address, data) => {
     console.log(data);
     const response = await postData(address, data);
@@ -144,15 +122,10 @@ const Login = (props) => {
     });
     setInputModel(input);
     setButtonModel(button);
+    // eslint-disable-next-line
   }, [navigate]);
 
-  // REQUEST API FUNCTIONS
-
   // HANDLERS FUNCTIONS
-  const handleSubmit = (event) => {
-    event.preventDefault();
-  };
-
   const handleClick = (address, type) => {
     if (path === "login" && type === "firstButton") {
       if (loginData.username !== "" && loginData.password !== "") {
@@ -185,6 +158,21 @@ const Login = (props) => {
       setShowError(false);
       navigate(address);
     }
+  };
+
+  const handleDisplayInput = (type) => {
+    return inputModel[type]?.data?.map((input, index) => (
+      <Input
+        key={`input-${index}`}
+        name={input.name}
+        handleChange={(event) => {
+          handleChange(event);
+        }}
+        value={path === "login" ? loginData[input.name] : registerData[input.name]}
+        label={input.label}
+        type={input.type}
+      />
+    ));
   };
 
   const handleChange = (event) => {
@@ -227,8 +215,8 @@ const Login = (props) => {
               <div className={path === "/" ? "introAuthenticationWrapper" : "authenticationWrapper"}>
                 {path !== "/" && (
                   <div className="inputsWrapper">
-                    {displayInput(path === "login" ? 0 : 1)}
-                    <div className="forgotPasswordWrapepr">{path === "login" && <span>Forgot your password?</span>}</div>
+                    {handleDisplayInput(path === "login" ? 0 : 1)}
+                    <div className="forgotPasswordWrapper">{path === "login" && <span>Forgot your password?</span>}</div>
                     <div className="errorContainer">
                       {showError && (
                         <div className="errorMessageWrapper">
@@ -240,7 +228,7 @@ const Login = (props) => {
                 )}
                 <div className="buttonWrapper">
                   {buttonModel.map((button, index) => (
-                    <Button key={`button-${index}`} style="basic" text={button.text} handleClick={() => handleClick(button.path, button.type)} />
+                    <Button key={`button-${index}`} text={button.text} handleClick={() => handleClick(button.path, button.type)} />
                   ))}
                 </div>
               </div>

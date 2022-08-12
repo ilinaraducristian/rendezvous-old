@@ -6,27 +6,9 @@ import "./Input.scss";
 // LIBRARIES
 import PropTypes from "prop-types";
 
-// CONSTANTS & MOCKS
-
-// REDUX
-
-// COMPONENTS
-
 const Input = (props) => {
   // PROPS
   const { name = "", handleChange = () => {}, label = "", type = "", value = "" } = props;
-
-  // CONSTANTS USING LIBRARYS
-
-  // CONSTANTS USING HOOKS
-
-  // GENERAL CONSTANTS
-
-  // USE EFFECT FUNCTION
-
-  // REQUEST API FUNCTIONS
-
-  // HANDLERS FUNCTIONS
 
   return (
     <div className="textInput-container">
