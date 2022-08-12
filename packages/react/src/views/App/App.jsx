@@ -43,6 +43,7 @@ const App = () => {
   // GENERAL CONSTANTS
 
   const handleUserAction = (action) => {
+    console.log(action);
     switch (action) {
       case "profile":
         setUserContentType("profile");
@@ -55,6 +56,10 @@ const App = () => {
         break;
       case "friendship-user":
         setNameClass("active");
+        break;
+      case "chat":
+        setUserContentType("direct-message");
+        setNameClass("");
         break;
       default:
         break;
@@ -79,7 +84,7 @@ const App = () => {
         </div>
         <div className={`chat-container ${nameClass}`}>
           {nameClass === "active" ? (
-            <Chat />
+            <Chat styleType={nameClass} onClick={handleUserAction} />
           ) : (
             <div className="app-logo-wrapper">
               <img src={logo} alt="app-logo" />

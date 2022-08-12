@@ -1,0 +1,62 @@
+@import "../../../../utils/Styles/variables.scss";
+
+.chat-container {
+  display: flex;
+  flex-wrap: wrap;
+  flex-grow: 1;
+  //   flex-direction: column;
+  .chat-header {
+    width: 100%;
+    height: 7rem;
+    display: flex;
+    align-items: center;
+    background-color: #4b494c65;
+    .back-arrow {
+      &.MuiSvgIcon-root {
+        font-size: 4rem;
+        color: $whiteColor;
+        margin-left: 5rem;
+        cursor: pointer;
+        // display: none;
+      }
+    }
+    span {
+      font-size: 2rem;
+      color: $whiteColor;
+      font-weight: $semi-bold;
+      padding-left: 5rem;
+    }
+  }
+  .chat-message-wrapper {
+    width: 100%;
+    height: 15rem;
+    display: flex;
+    align-self: flex-end;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background-color: #21212265;
+    textarea {
+      width: 90%;
+      height: 100%;
+      border-width: 0;
+      outline: none;
+      background-color: #4b494c65;
+      border-radius: 1rem;
+      font-size: 1.6rem;
+      color: white;
+      padding: 1rem;
+      resize: none;
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .send-message-icon {
+      &.MuiSvgIcon-root {
+        font-size: 4rem;
+        color: $whiteColor;
+        margin: 0rem 3rem;
+      }
+    }
+  }
+}

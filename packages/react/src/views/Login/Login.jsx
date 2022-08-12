@@ -204,9 +204,7 @@ const Login = (props) => {
         <div className="card">
           <form onSubmit={(event) => event.preventDefault()}>
             <div className="logoContainer">
-              <div className="logoWrapper">
-                <img src={logo} alt="logo" />
-              </div>
+              <img src={logo} alt="logo" />
             </div>
             <div className="credentialsContainer">
               <div className="titleWrapper">

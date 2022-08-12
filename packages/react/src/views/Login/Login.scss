@@ -58,7 +58,12 @@
         border-top-left-radius: 1rem;
         border-top-right-radius: 0rem;
         border-bottom-left-radius: 1rem;
-        display: unset;
+        display: grid;
+        place-content: center;
+        img {
+          width: 15rem;
+          height: 15rem;
+        }
         @media (min-width: 486px) and (max-width: 600px) {
           display: none;
         }
@@ -70,18 +75,6 @@
           width: 40%;
           height: 100%;
           border-top-right-radius: 0rem;
-        }
-        .logoWrapper {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          img {
-            width: 15rem;
-            height: 15rem;
-          }
         }
       }
       .credentialsContainer {

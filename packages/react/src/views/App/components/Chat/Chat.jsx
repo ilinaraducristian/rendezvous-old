@@ -2,6 +2,8 @@ import React from "react";
 
 // STYLES
 import "./Chat.scss";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import SendIcon from "@mui/icons-material/Send";
 
 // LIBRARIES
 
@@ -11,7 +13,7 @@ import "./Chat.scss";
 
 // COMPONENTS
 
-const Chat = () => {
+const Chat = ({ styleType = "", onClick = () => {} }) => {
   // PROPS
 
   // CONSTANTS USING LIBRARYS
@@ -26,7 +28,23 @@ const Chat = () => {
 
   // HANDLERS FUNCTIONS
 
-  return <div className="component--container" style={{ width: "100%", height: "100%", backgroundColor: "red" }}></div>;
+  return (
+    <div className={`chat-container ${styleType}`}>
+      <div className="chat-header">
+        <KeyboardBackspaceIcon
+          className="back-arrow"
+          onClick={() => {
+            onClick("chat");
+          }}
+        />
+        <span>Gigel Mirel</span>
+      </div>
+      <div className="chat-message-wrapper">
+        <textarea></textarea>
+        <SendIcon className="send-message-icon"/>
+      </div>
+    </div>
+  );
 };
 
 export default Chat;
