@@ -44,7 +44,7 @@
 								"exec": [
 									"pm.test(\"Set the friend user id\", function() {",
 									"    pm.response.to.have.jsonSchema({id: 'string'});",
-									"    const {id} = pm.response.toJSON();",
+									"    const {id} = pm.response.json();",
 									"    pm.collectionVariables.set(\"friendUserId\", id);",
 									"});"
 								],
@@ -121,7 +121,7 @@
 										"exec": [
 											"pm.test(\"Set the message id\", function() {",
 											"    pm.response.to.have.jsonSchema({id: 'string'});",
-											"    const {id} = pm.response.toJSON();",
+											"    const {id} = pm.response.json();",
 											"    pm.collectionVariables.set(\"friendshipMessageId\", id);",
 											"});"
 										],
@@ -215,7 +215,7 @@
 								"exec": [
 									"pm.test(\"Set the friendship id\", function() {",
 									"    pm.response.to.have.jsonSchema({id: 'string'});",
-									"    const {id} = pm.response.toJSON();",
+									"    const {id} = pm.response.json();",
 									"    pm.collectionVariables.set(\"friendshipId\", id);",
 									"});"
 								],
@@ -326,6 +326,102 @@
 			]
 		},
 		{
+			"name": "Groups",
+			"item": [
+				{
+					"name": "Members",
+					"item": [
+						{
+							"name": "Create a member",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"{{friendUserId}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/groups/{{groupId}}/members",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"groups",
+										"{{groupId}}",
+										"members"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Create a group",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set the group id\", function() {",
+									"    pm.response.to.have.jsonSchema({id: 'string'});",
+									"    const {id} = pm.response.json();",
+									"    pm.collectionVariables.set(\"groupId\", id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"a new group\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/groups",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get groups",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api}}/groups",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"groups"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Sse",
 			"request": {
 				"method": "GET",
@@ -405,8 +501,11 @@
 		{
 			"key": "api",
 			"value": "http://localhost:3100",
-			"type": "default",
-			"disabled": true
+			"type": "default"
+		},
+		{
+			"key": "groupId",
+			"value": ""
 		}
 	]
 }

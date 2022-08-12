@@ -1,16 +1,16 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import * as mongoose from "mongoose";
-import { User } from "./user.schema";
+import { Document, Types } from "mongoose";
+import { UserDocument } from "./user.schema";
 
-export type GroupDocument = Group & mongoose.Document;
+export type GroupDocument = Group & Document;
 
 @Schema()
 export class Group {
   @Prop({ required: true })
   name: string;
 
-  @Prop({ default: [], type: [{type: mongoose.Types.ObjectId, ref: 'User'}] })
-  members: User[];
+  @Prop({ default: [], type: [{type: Types.ObjectId, ref: 'User'}] })
+  members: UserDocument[];
 
 }
 

@@ -21,6 +21,7 @@ import { FriendshipController } from "./friendship/friendship.controller";
 import { GroupController } from "./group/group.controller";
 import { GroupService } from "./group/group.service";
 import { ConversationController } from "./conversations/conversation.controller";
+import { Group, GroupSchema } from "./entities/group.schema";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -41,7 +42,8 @@ export class AppModule {
       MongooseModule.forFeature([
         { name: User.name, schema: UserSchema },
         { name: Friendship.name, schema: FriendshipSchema },
-        { name: FriendshipMessage.name, schema: FriendshipMessageSchema }
+        { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
+        { name: Group.name, schema: GroupSchema },
       ]),
       PassportModule,
       JwtModule.registerAsync({
