@@ -37,6 +37,21 @@
 				},
 				{
 					"name": "Register 2",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set the friend user id\", function() {",
+									"    pm.response.to.have.jsonSchema({id: 'string'});",
+									"    const {id} = pm.response.toJSON();",
+									"    pm.collectionVariables.set(\"friendUserId\", id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -213,7 +228,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"62f4997fe3c201ab89b20931\"\n}",
+							"raw": "{\n    \"id\": \"{{friendUserId}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -329,6 +344,24 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get user data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/users/data",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"users",
+						"data"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
@@ -354,7 +387,7 @@
 	"variable": [
 		{
 			"key": "api",
-			"value": "http://localhost:3100",
+			"value": "https://rendezvous-nest.herokuapp.com",
 			"type": "default"
 		},
 		{
@@ -364,6 +397,16 @@
 		{
 			"key": "friendshipMessageId",
 			"value": ""
+		},
+		{
+			"key": "friendUserId",
+			"value": "62f4a9a0c3261fdc5fcace0f"
+		},
+		{
+			"key": "api",
+			"value": "http://localhost:3100",
+			"type": "default",
+			"disabled": true
 		}
 	]
 }

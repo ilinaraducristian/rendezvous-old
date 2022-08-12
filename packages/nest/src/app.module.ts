@@ -18,6 +18,9 @@ import { FriendshipService } from "./friendship/friendship.service";
 import { ConversationService } from "./conversations/conversation.service";
 import { SseService } from "./sse.service";
 import { FriendshipController } from "./friendship/friendship.controller";
+import { GroupController } from "./group/group.controller";
+import { GroupService } from "./group/group.service";
+import { ConversationController } from "./conversations/conversation.controller";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -50,7 +53,7 @@ export class AppModule {
         }),
       }),
     ],
-    controllers: [AuthController, UserController, FriendshipController],
+    controllers: [AuthController, UserController, FriendshipController, GroupController, ConversationController],
     providers: [
       LocalStrategy,
       JwtStrategy,
@@ -58,6 +61,7 @@ export class AppModule {
       SseService,
       UserService,
       FriendshipService,
+      GroupService,
       ConversationService,
       {
         provide: APP_GUARD,
