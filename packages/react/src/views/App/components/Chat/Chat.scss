@@ -17,7 +17,10 @@
         color: $whiteColor;
         margin-left: 5rem;
         cursor: pointer;
-        // display: none;
+        display: none;
+        @media only screen and (max-width: 600px) {
+          display: unset;
+        }
       }
     }
     span {

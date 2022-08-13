@@ -70,10 +70,10 @@ const App = () => {
     <Div100vh>
       <div className="app-container">
         <div className={`app-content ${nameClass}`}>
-          <div className={`user-Wrapper ${nameClass}`}>
+          <div className="user-Wrapper">
             <User onClick={handleUserAction} />
           </div>
-          <div className={`channels ${nameClass}`}>
+          <div className="channels">
             <div className="servers">
               <Servers />
             </div>

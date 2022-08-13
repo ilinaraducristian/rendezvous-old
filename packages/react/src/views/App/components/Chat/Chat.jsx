@@ -41,7 +41,7 @@ const Chat = ({ styleType = "", onClick = () => {} }) => {
       </div>
       <div className="chat-message-wrapper">
         <textarea></textarea>
-        <SendIcon className="send-message-icon"/>
+        <SendIcon className="send-message-icon" />
       </div>
     </div>
   );

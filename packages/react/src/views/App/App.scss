@@ -56,6 +56,9 @@
 @media only screen and (max-width: 600px) {
   .app-container {
     padding: 0rem;
+    .app-content.active {
+      display: none;
+    }
     .app-content {
       flex-direction: column-reverse;
       width: 100%;
@@ -66,25 +69,9 @@
           width: 100%;
         }
       }
-      .app-content:not(.active) {
-        display: none;
-      }
     }
   }
   .chat-container:not(.active) {
     display: none;
   }
-  // body > div {
-  //   flex-direction: column;
-  // }
-  // .messages:not(.active) {
-  //   display: none;
-  // }
-  // .conversations:not(.active) {
-  //   flex-grow: 1;
-  // }
-  // .servers.active,
-  // .conversations.active {
-  //   display: none;
-  // }
 }
