@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
+import { ConversationService } from "../conversations/conversation.service";
 import { User, UserDocument } from "../entities/user.schema";
 import UserNotFoundHttpException from "../friendship/exceptions/user-not-found.httpexception";
 import { FriendshipService } from "../friendship/friendship.service";
@@ -9,7 +10,8 @@ import { FriendshipService } from "../friendship/friendship.service";
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    private readonly friendshipService: FriendshipService
+    private readonly friendshipService: FriendshipService,
+    private readonly conversationService: ConversationService
   ) { }
 
   async getUser(id: string) {
@@ -24,17 +26,15 @@ export class UserService {
   }
 
   async getUserData(user: UserDocument) {
-    const friendships = (await this.friendshipService.getFriendships(user)).map(friendship => ({
-      id: friendship.id,
-      userId: friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString(),
-      status: friendship.status
-    }));
-    const users = await this.userModel.find({ _id: { $in: friendships.map(friendship => friendship.userId) } });
+    const { friendships, friendsIds } = await this.friendshipService.getFriendships(user);
+    const conversations = await this.conversationService.getConversations(user);
+    const users = await this.userModel.find({ _id: { $in: friendsIds } });
     return {
       id: user.id,
       name: user.name,
       email: user.email,
       friendships,
+      conversations,
       users: users.map(user => ({
         id: user.id,
         name: user.name

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Put, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from "@nestjs/common";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import FriendshipMessagesDto from "./entities/friendship-messages.dto";
@@ -18,11 +18,8 @@ export class FriendshipController {
 
   @Get()
   async getFriendships(@ExtractAuthenticatedUser() user: UserDocument) {
-    return {friendships: (await this.friendshipService.getFriendships(user)).map(friendship => ({
-      id: friendship.id,
-      userId: friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString(),
-      status: friendship.status
-    }))};
+    const { friendships } = await this.friendshipService.getFriendships(user);
+    return { friendships };
   }
 
   @Patch(":id/accept")

@@ -35,21 +35,52 @@ export class FriendshipService {
     return newFriendship;
   }
 
-  async getFriendship(user: UserDocument, id) {
+  async getFriendship(user: UserDocument, id: string) {
     const userFriendship = user.friendships.find(friendshipId => friendshipId.toString() === id);
     if (userFriendship === null) throw new FriendshipNotFoundHttpException();
-    const friendship = await this.friendshipModel.findById(userFriendship.id);
+    const friendship = await this.friendshipModel.findById(userFriendship);
     return friendship;
   }
 
-  getFriendships(user: UserDocument) {
-    return this.friendshipModel.find({ _id: { $in: user.friendships } });
+  async getFriendships(user: UserDocument) {
+    const friendshipsDocuments = await this.friendshipModel.find({ _id: { $in: user.friendships } });
+    const friendships = {
+      incoming: [],
+      outgoing: []
+    };
+    const friendsIds = [];
+    friendshipsDocuments.forEach(friendship => {
+      let userObjectId;
+      if (friendship.user1.toString() === user.id) {
+        userObjectId = friendship.user2;
+        friendships.outgoing.push({
+          id: friendship.id,
+          userId: friendship.user2.toString(),
+          status: friendship.status
+        });
+      } else {
+        userObjectId = friendship.user1;
+        friendships.incoming.push({
+          id: friendship.id,
+          userId: friendship.user1.toString(),
+          status: friendship.status
+        });
+      }
+      friendsIds.push(userObjectId);
+    });
+    return {
+      friendships,
+      friendsIds
+    }
   }
 
   async acceptFriendshipRequest(user: UserDocument, id: string) {
-    const friendship = await this.friendshipModel.findById(id);
-    if (friendship === null) throw new FriendshipNotFoundHttpException();
-    if (friendship.user2.id !== user.id) throw new UserLacksPermissionForFriendshipHttpException();
+    let friendship;
+    try {
+      friendship = await this.friendshipModel.findById(id);
+    }catch{}
+    if (friendship === null || friendship === undefined) throw new FriendshipNotFoundHttpException();
+    if (friendship.user1._id.toString() === user.id) throw new UserLacksPermissionForFriendshipHttpException();
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
     const savedFriendship = await friendship.save();

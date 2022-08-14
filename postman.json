@@ -9,7 +9,7 @@
 			"name": "Auth",
 			"item": [
 				{
-					"name": "Register",
+					"name": "Register John Doe",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -36,7 +36,7 @@
 					"response": []
 				},
 				{
-					"name": "Register 2",
+					"name": "Register John Doe 2",
 					"event": [
 						{
 							"listen": "test",
@@ -78,13 +78,40 @@
 					"response": []
 				},
 				{
-					"name": "Login",
+					"name": "Login John Doe",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
 							"raw": "{\n    \"username\": \"john.doe@email.com\",\n    \"password\": \"john.doe\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/auth/login",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login John Doe 2",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"john.doe2@email.com\",\n    \"password\": \"john.doe\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -134,7 +161,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"message\": \"a new text message\"\n}",
+									"raw": "{\n    \"text\": \"a new text message\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -496,7 +523,7 @@
 		},
 		{
 			"key": "friendUserId",
-			"value": "62f4a9a0c3261fdc5fcace0f"
+			"value": ""
 		},
 		{
 			"key": "api",
