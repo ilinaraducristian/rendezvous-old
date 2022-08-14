@@ -356,39 +356,6 @@
 			"name": "Groups",
 			"item": [
 				{
-					"name": "Members",
-					"item": [
-						{
-							"name": "Create a member",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"id\": \"{{friendUserId}}\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "{{api}}/groups/{{groupId}}/members",
-									"host": [
-										"{{api}}"
-									],
-									"path": [
-										"groups",
-										"{{groupId}}",
-										"members"
-									]
-								}
-							},
-							"response": []
-						}
-					]
-				},
-				{
 					"name": "Create a group",
 					"event": [
 						{
@@ -441,6 +408,62 @@
 							],
 							"path": [
 								"groups"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"a new message\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/groups/{{groupId}}/messages",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"groups",
+								"{{groupId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"{{friendUserId}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/groups/{{groupId}}/members",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"groups",
+								"{{groupId}}",
+								"members"
 							]
 						}
 					},

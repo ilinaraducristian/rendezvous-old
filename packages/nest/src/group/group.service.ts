@@ -4,13 +4,16 @@ import { Model } from "mongoose";
 import { Group, GroupDocument } from "../entities/group.schema";
 import { User, UserDocument } from "../entities/user.schema";
 import UserNotFoundHttpException from "../friendship/exceptions/user-not-found.httpexception";
+import { GroupMessage, GroupMessageDocument } from "./entities/group-message.schema";
+import UserNotMemberOfGroupHttpException from "./exceptions/group-not-found.httpexception";
 import GroupNotFoundHttpException from "./exceptions/group-not-found.httpexception";
 
 @Injectable()
 export class GroupService {
   constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Group.name) private readonly groupModel: Model<GroupDocument>,
-    @InjectModel(User.name) private readonly userModel: Model<UserDocument>
+    @InjectModel(GroupMessage.name) private readonly groupMessageModel: Model<GroupMessageDocument>
   ) { }
 
   async createGroup(user: UserDocument, name: string) {
@@ -21,7 +24,11 @@ export class GroupService {
   }
 
   async getGroups(user: UserDocument) {
-    return this.groupModel.find({ _id: { $in: user.groups } });
+    return (await this.groupModel.find({ _id: { $in: user.groups } })).map(group => ({
+      id: group.id,
+      name: group.name,
+      members: group.members
+    }));
   }
 
   async deleteGroup(user: UserDocument, id: string) {
@@ -34,13 +41,24 @@ export class GroupService {
   }
 
   async createGroupMember(user: UserDocument, id: string, userId: string) {
-    const group = await this.groupModel.findById(id);
+    const groupId = user.groups.find(groupId => groupId.toString() === id);
+    if (groupId === undefined) throw new UserNotMemberOfGroupHttpException();
+    const group = await this.groupModel.findOne({ _id: groupId });
     if (group === null) throw new GroupNotFoundHttpException();
     const newMember = await this.userModel.findById(userId);
     if (newMember === null) throw new UserNotFoundHttpException();
     group.members.push(newMember._id);
     newMember.groups.push(group._id);
     await Promise.all([group.save(), newMember.save()]);
+  }
+
+  async createGroupMessage(user: UserDocument, id: string, text: string) {
+    const groupId = user.groups.find(groupId => groupId.toString() === id);
+    if (groupId === undefined) throw new UserNotMemberOfGroupHttpException();
+    const group = await this.groupModel.findOne({ _id: groupId });
+    if (group === null) throw new GroupNotFoundHttpException();
+    const newGroupMessage = await new this.groupMessageModel({ groupId: group._id, userId: user._id, timestamp: new Date(), text }).save();
+    return newGroupMessage;
   }
 
 }

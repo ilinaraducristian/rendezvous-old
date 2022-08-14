@@ -22,6 +22,7 @@ import { GroupController } from "./group/group.controller";
 import { GroupService } from "./group/group.service";
 import { ConversationController } from "./conversations/conversation.controller";
 import { Group, GroupSchema } from "./entities/group.schema";
+import { GroupMessage, GroupMessageSchema } from "./group/entities/group-message.schema";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -44,6 +45,7 @@ export class AppModule {
         { name: Friendship.name, schema: FriendshipSchema },
         { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
         { name: Group.name, schema: GroupSchema },
+        { name: GroupMessage.name, schema: GroupMessageSchema },
       ]),
       PassportModule,
       JwtModule.registerAsync({

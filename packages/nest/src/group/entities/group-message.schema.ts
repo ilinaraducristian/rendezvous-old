@@ -1,13 +1,19 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Document, Types } from "mongoose";
 
 export type GroupMessageDocument = GroupMessage & Document;
 
 @Schema()
 export class GroupMessage {
 
+  @Prop({required: true, type: Types.ObjectId, ref: 'Friendship'})
+  groupId: string;
+
   @Prop({required: true})
   userId: string;
+
+  @Prop({required: true})
+  timestamp: Date;
 
   @Prop({required: true})
   text: string;

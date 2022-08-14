@@ -17,11 +17,7 @@ export class GroupController {
 
   @Get()
   async getGroups(@ExtractAuthenticatedUser() user: UserDocument) {
-    return (await this.groupService.getGroups(user)).map(group => ({
-      id: group.id,
-      name: group.name,
-      members: group.members
-    }));
+    return this.groupService.getGroups(user);
   }
 
   @Delete(":id")
@@ -33,6 +29,14 @@ export class GroupController {
   @Post(":id/members")
   createGroupMember(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { id: string }) {
     return this.groupService.createGroupMember(user, id, body.id);
+  }
+
+  @Post(":id/messages")
+  async createGroupMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { text: string }) {
+    const group = await this.groupService.createGroupMessage(user, id, body.text);
+    return {
+      id: group.id
+    };
   }
 
 }
