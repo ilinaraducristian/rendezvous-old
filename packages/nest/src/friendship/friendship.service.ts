@@ -4,14 +4,17 @@ import { Model, Types } from "mongoose";
 import { Friendship, FriendshipDocument } from "../entities/friendship.schema";
 import { User, UserDocument } from "../entities/user.schema";
 import { FriendshipMessage, FriendshipMessageDocument } from "./entities/friendship-message.schema";
-import FriendshipAcceptedHttpException from "./exceptions/friendship-accepted.httpexception";
-import FriendshipNotFoundHttpException from "./exceptions/friendship-not-found.httpexception";
-import FriendshipExistsHttpException from "./exceptions/friendship-exists.httpexception";
-import UserLacksPermissionForFriendshipHttpException from "./exceptions/friendship-no-permission.httpexception";
-import UserNotFoundHttpException from "./exceptions/user-not-found.httpexception";
-import FriendshipMessageNotFoundHttpException from "./exceptions/friendship-message-not-found.httpexception";
+import {
+  FriendshipAcceptedHttpException,
+  FriendshipNotFoundHttpException,
+  FriendshipExistsHttpException,
+  UserLacksPermissionForFriendshipHttpException,
+  FriendshipMessageNotFoundHttpException,
+  CannotBeFriendWithYourselfHttpException
+} from "./exceptions";
 import { SseService } from "../sse.service";
 import SseEvents from "../sse-events";
+import { UserNotFoundHttpException } from "../exceptions";
 
 @Injectable()
 export class FriendshipService {
@@ -23,6 +26,7 @@ export class FriendshipService {
   ) { }
 
   async createFriendship(user: UserDocument, friendUserId: string) {
+    if (user.id === friendUserId) throw new CannotBeFriendWithYourselfHttpException();
     const friendUser = await this.userModel.findById(friendUserId);
     if (friendUser === null) throw new UserNotFoundHttpException();
     const exisingFriendship = await this.friendshipModel.findOne({ user1: { $in: [user._id, friendUser._id] }, user2: { $in: [user._id, friendUser._id] } });
@@ -31,7 +35,7 @@ export class FriendshipService {
     user.friendships.push(newFriendship.id);
     friendUser.friendships.push(newFriendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.next({ type: SseEvents.friendRequest, data: { userId: friendUser.id, friendship: newFriendship } });
+    this.sseService.next({ type: SseEvents.friendRequest, data: { userId: friendUser.id, payload: {id: newFriendship.id} } });
     return newFriendship;
   }
 
@@ -78,22 +82,24 @@ export class FriendshipService {
     let friendship;
     try {
       friendship = await this.friendshipModel.findById(id);
-    }catch{}
+    } catch { }
     if (friendship === null || friendship === undefined) throw new FriendshipNotFoundHttpException();
     if (friendship.user1._id.toString() === user.id) throw new UserLacksPermissionForFriendshipHttpException();
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
     const savedFriendship = await friendship.save();
-    this.sseService.next({ type: SseEvents.friendRequestAccepted, data: { userId: friendship.user1.id } })
+    this.sseService.next({ type: SseEvents.friendRequestAccepted, data: { userId: friendship.user1._id.toString(), payload: {id} } })
     return savedFriendship;
   }
 
   async deleteFriendship(user: UserDocument, id: string) {
-    const deleteFriendship = await this.friendshipModel.deleteOne({ id, $or: [{ user1: user._id }, { user2: user._id }] });
-    if (deleteFriendship.deletedCount === 0) throw new FriendshipNotFoundHttpException();
+    const deleteFriendship = await this.friendshipModel.findOneAndRemove({ id, $or: [{ user1: user._id }, { user2: user._id }] });
+    if (deleteFriendship === null) throw new FriendshipNotFoundHttpException();
     const friendshipIndex = user.friendships.findIndex(friendship => friendship.id === id);
     user.friendships.splice(friendshipIndex, 1);
     await user.save();
+    const otherId = user.id === deleteFriendship.user1.toString() ? deleteFriendship.user2.toString() : user.id;
+    this.sseService.next({ type: SseEvents.friendshipDeleted, data: { userId: otherId, payload: {id} } })
     return deleteFriendship;
   }
 

@@ -5,7 +5,7 @@ import { ConfigService } from "@nestjs/config";
 import { User, UserDocument } from "../../entities/user.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import UserNotFoundHttpException from "../../friendship/exceptions/user-not-found.httpexception";
+import { UserNotFoundHttpException } from "../../exceptions";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {

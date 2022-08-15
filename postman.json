@@ -508,6 +508,53 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Get users info",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"users\": []\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{api}}/users",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{api}}/users/userId",
+					"host": [
+						"{{api}}"
+					],
+					"path": [
+						"users",
+						"userId"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

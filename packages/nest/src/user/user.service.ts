@@ -3,7 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { ConversationService } from "../conversations/conversation.service";
 import { User, UserDocument } from "../entities/user.schema";
-import UserNotFoundHttpException from "../friendship/exceptions/user-not-found.httpexception";
+import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship/friendship.service";
 import { GroupService } from "../group/group.service";
 

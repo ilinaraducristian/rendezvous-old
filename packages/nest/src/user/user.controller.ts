@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Sse } from "@nestjs/common";
-import { filter, Observable } from "rxjs";
+import { filter, map, Observable } from "rxjs";
 import { UserDocument } from "../entities/user.schema";
 import { SseService } from "../sse.service";
 import { ExtractAuthenticatedUser } from "../util";
@@ -33,7 +33,7 @@ export class UserController {
 
   @Sse('sse')
   sse(@ExtractAuthenticatedUser() user: UserDocument): Observable<any> {
-    return this.sseService.sse.pipe(filter(r => r.data.userId === user._id.toString()));
+    return this.sseService.sse.pipe(filter(({data}) => data.userId === user._id.toString()), map(({data}) => data.payload));
   }
 
 }

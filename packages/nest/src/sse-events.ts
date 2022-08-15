@@ -1,6 +1,7 @@
 enum SseEvents {
   friendRequest = 'friendRequest',
-  friendRequestAccepted = 'friendRequestAccepted'
+  friendRequestAccepted = 'friendRequestAccepted',
+  friendshipDeleted = 'friendshipDeleted',
 };
 
 export default SseEvents;
