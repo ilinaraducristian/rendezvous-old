@@ -6,13 +6,13 @@ import MessageEvent from "./message-event";
 
 @Injectable()
 export class SseService {
-  private readonly sse$ = new Subject<MessageEvent>();
+  private readonly sse$ = new Subject<MessageEvent & {userId: string}>();
 
   get sse() {
     return this.sse$.asObservable();
   }
 
-  next(value: MessageEvent) {
+  next(value: MessageEvent & {userId: string}) {
     this.sse$.next(value);
   }
 

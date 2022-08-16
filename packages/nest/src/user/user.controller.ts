@@ -4,6 +4,7 @@ import { UserDocument } from "../entities/user.schema";
 import { SseService } from "../sse.service";
 import { ExtractAuthenticatedUser } from "../util";
 import { UserService } from "./user.service";
+import MessageEvent from "../message-event";
 
 @Controller("users")
 export class UserController {
@@ -32,8 +33,8 @@ export class UserController {
   }
 
   @Sse('sse')
-  sse(@ExtractAuthenticatedUser() user: UserDocument): Observable<any> {
-    return this.sseService.sse.pipe(filter(({data}) => data.userId === user._id.toString()), map(({data}) => data.payload));
+  sse(@ExtractAuthenticatedUser() user: UserDocument): Observable<MessageEvent> {
+    return this.sseService.sse.pipe(filter(({ userId }) => userId === user.id), map(({ type, data }) => ({ type, data })));
   }
 
 }

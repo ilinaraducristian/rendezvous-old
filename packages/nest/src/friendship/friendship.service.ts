@@ -35,7 +35,7 @@ export class FriendshipService {
     user.friendships.push(newFriendship.id);
     friendUser.friendships.push(newFriendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.next({ type: SseEvents.friendRequest, data: { userId: friendUser.id, payload: {id: newFriendship.id} } });
+    this.sseService.next({ type: SseEvents.friendRequest, userId: friendUser.id, data: {id: newFriendship.id} });
     return newFriendship;
   }
 
@@ -54,22 +54,19 @@ export class FriendshipService {
     };
     const friendsIds = [];
     friendshipsDocuments.forEach(friendship => {
-      let userObjectId;
+      let userObjectId, type;
       if (friendship.user1.toString() === user.id) {
         userObjectId = friendship.user2;
-        friendships.outgoing.push({
-          id: friendship.id,
-          userId: friendship.user2.toString(),
-          status: friendship.status
-        });
+        type = 'outgoing';
       } else {
         userObjectId = friendship.user1;
-        friendships.incoming.push({
-          id: friendship.id,
-          userId: friendship.user1.toString(),
-          status: friendship.status
-        });
+        type = 'incoming';
       }
+      friendships[type].push({
+        id: friendship.id,
+        userId: userObjectId.toString(),
+        status: friendship.status
+      });
       friendsIds.push(userObjectId);
     });
     return {
@@ -88,7 +85,7 @@ export class FriendshipService {
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
     const savedFriendship = await friendship.save();
-    this.sseService.next({ type: SseEvents.friendRequestAccepted, data: { userId: friendship.user1._id.toString(), payload: {id} } })
+    this.sseService.next({ type: SseEvents.friendRequestAccepted, userId: friendship.user1._id.toString(), data: {id} })
     return savedFriendship;
   }
 
@@ -99,7 +96,7 @@ export class FriendshipService {
     user.friendships.splice(friendshipIndex, 1);
     await user.save();
     const otherId = user.id === deleteFriendship.user1.toString() ? deleteFriendship.user2.toString() : user.id;
-    this.sseService.next({ type: SseEvents.friendshipDeleted, data: { userId: otherId, payload: {id} } })
+    this.sseService.next({ type: SseEvents.friendshipDeleted, userId: otherId, data: {id} })
     return deleteFriendship;
   }
 
