@@ -1,38 +1,23 @@
 import { Body, Controller, Delete, Param, Post } from "@nestjs/common";
+import { UserDocument } from "../entities/user.schema";
+import { ExtractAuthenticatedUser } from "../util";
 import { ServerService } from "./server.service";
 
 @Controller("servers")
 export class ServerController {
-  constructor(private readonly serverService: ServerService) {}
+  constructor(private readonly serverService: ServerService) { }
 
   @Post()
-  createServer(@Body() newServer: { name: string }) {
-    return this.serverService.createServer(newServer.name);
+  async createServer(@ExtractAuthenticatedUser() user: UserDocument, @Body() body: { name: string }) {
+    const server = await this.serverService.createServer(user, body.name);
+    return {
+      id: server.id
+    }
   }
 
-  @Delete(":id")
-  deleteServer(@Param('id') id: string) {
-    return this.serverService.deleteServer(id);
-  }
-
-  @Post(':serverId/groups')
-  createGroup(@Param('serverId') serverId: string, @Body() newGroup: { name: string }) {
-    return this.serverService.createGroup(serverId, newGroup.name);
-  }
-
-  @Delete(':serverId/groups/:id')
-  deleteGroup(@Param('serverId') serverId: string, @Param('id') id: string) {
-    return this.serverService.deleteGroup(serverId, id);
-  }
-
-  @Post(':serverId/groups/:groupId/channels')
-  createChannel(@Param('serverId') serverId: string, @Param('groupId') groupId: string, @Body() newChannel: { name: string }) {
-    return this.serverService.createChannel(serverId, groupId, newChannel.name);
-  }
-
-  @Delete(':serverId/groups/:groupId/channels/:id')
-  deleteChannel(@Param('serverId') serverId: string, @Param('groupId') groupId: string, @Param('id') id: string) {
-    return this.serverService.deleteChannel(serverId, groupId, id);
+  @Post(':id/groups')
+  createGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param('id') id: string, @Body() body: { name: string }) {
+    return this.serverService.createGroup(user, id, body.name);
   }
 
 }

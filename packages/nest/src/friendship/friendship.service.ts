@@ -35,7 +35,7 @@ export class FriendshipService {
     user.friendships.push(newFriendship.id);
     friendUser.friendships.push(newFriendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.next({ type: SseEvents.friendRequest, userId: friendUser.id, data: {id: newFriendship.id} });
+    this.sseService.next({ type: SseEvents.friendRequest, userId: friendUser.id, data: { id: newFriendship.id } });
     return newFriendship;
   }
 
@@ -85,7 +85,7 @@ export class FriendshipService {
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
     const savedFriendship = await friendship.save();
-    this.sseService.next({ type: SseEvents.friendRequestAccepted, userId: friendship.user1._id.toString(), data: {id} })
+    this.sseService.next({ type: SseEvents.friendRequestAccepted, userId: friendship.user1._id.toString(), data: { id } })
     return savedFriendship;
   }
 
@@ -95,8 +95,8 @@ export class FriendshipService {
     const friendshipIndex = user.friendships.findIndex(friendship => friendship.id === id);
     user.friendships.splice(friendshipIndex, 1);
     await user.save();
-    const otherId = user.id === deleteFriendship.user1.toString() ? deleteFriendship.user2.toString() : user.id;
-    this.sseService.next({ type: SseEvents.friendshipDeleted, userId: otherId, data: {id} })
+    const otherId = user.id === deleteFriendship.user1.toString() ? deleteFriendship.user2.toString() : deleteFriendship.user1.toString();
+    this.sseService.next({ type: SseEvents.friendshipDeleted, userId: otherId, data: { id } });
     return deleteFriendship;
   }
 

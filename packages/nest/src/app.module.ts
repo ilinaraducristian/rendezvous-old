@@ -23,6 +23,11 @@ import { GroupService } from "./group/group.service";
 import { ConversationController } from "./conversations/conversation.controller";
 import { Group, GroupSchema } from "./entities/group.schema";
 import { GroupMessage, GroupMessageSchema } from "./group/entities/group-message.schema";
+import { Server, ServerSchema } from "./entities/server.schema";
+import { ServerController } from "./server/server.controller";
+import { ServerService } from "./server/server.service";
+import { ServerGroup, ServerGroupSchema } from "./entities/server-group.schema";
+import { Channel, ChannelSchema } from "./entities/channel.schema";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -46,6 +51,9 @@ export class AppModule {
         { name: FriendshipMessage.name, schema: FriendshipMessageSchema },
         { name: Group.name, schema: GroupSchema },
         { name: GroupMessage.name, schema: GroupMessageSchema },
+        { name: Server.name, schema: ServerSchema },
+        { name: ServerGroup.name, schema: ServerGroupSchema },
+        { name: Channel.name, schema: ChannelSchema },
       ]),
       PassportModule,
       JwtModule.registerAsync({
@@ -57,7 +65,7 @@ export class AppModule {
         }),
       }),
     ],
-    controllers: [AuthController, UserController, FriendshipController, GroupController, ConversationController],
+    controllers: [AuthController, UserController, FriendshipController, GroupController, ConversationController, ServerController],
     providers: [
       LocalStrategy,
       JwtStrategy,
@@ -67,6 +75,7 @@ export class AppModule {
       FriendshipService,
       GroupService,
       ConversationService,
+      ServerService,
       {
         provide: APP_GUARD,
         useClass: JwtAuthGuard,
