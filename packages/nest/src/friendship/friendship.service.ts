@@ -35,7 +35,14 @@ export class FriendshipService {
     user.friendships.push(newFriendship.id);
     friendUser.friendships.push(newFriendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.next({ type: SseEvents.friendRequest, userId: friendUser.id, data: { id: newFriendship.id } });
+    this.sseService.next({
+      type: SseEvents.friendRequest, userId: friendUser.id, data: {
+        friendshipId: newFriendship.id, user: {
+          id: friendUser.id,
+          name: friendUser.name
+        }
+      }
+    });
     return newFriendship;
   }
 
