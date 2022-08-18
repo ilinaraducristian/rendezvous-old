@@ -1,25 +1,98 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  // value: 0,
-  user: {
-    id: "123",
-    name: "Alex Jmekerul",
-    friendship: [{ id: "69", userId: "124", status: "pending" }],
-  },
+  user: {},
 };
 
-const test = [{ name:""}, {age: " "}]
 export const slice = createSlice({
-  name: "basic",
+  name: "userData",
   initialState,
   reducers: {
-    basicSlice: (state, action) => {
-      console.log(action.payload);
+    userModel: (state, action) => {
+      state.user = action.payload;
+    },
+    outgoingFriendship: (state, action) => {
+      state.user = {
+        ...state.user,
+        friendships: {
+          ...state.user.friendships,
+          outgoing: [
+            ...state.user.friendships.outgoing,
+            action.payload,
+          ],
+        },
+      };
+    },
+    incomingFriendship: (state, action) => {
+      state.user = {
+        ...state.user,
+        friendships: {
+          ...state.user.friendships,
+          incoming: [
+            ...state.user.friendships.incoming,
+            action.payload,
+          ],
+        },
+      };
+    },
+    getUsersData: (state, action) => {
+      state.user = {
+        ...state.user,
+        users: action.payload,
+      };
+    },
+    deleteIncomingFriendship: (state, action) => {
+      state.user = {
+        ...state.user,
+        friendships: {
+          ...state.user.friendships,
+          incoming: state.user.friendships.incoming.filter(
+            (friendship) => {
+              return friendship.id !== action.payload;
+            }
+          ),
+        },
+      };
+    },
+    deleteOutgoingFriendship: (state, action) => {
+      state.user = {
+        ...state.user,
+        friendships: {
+          ...state.user.friendships,
+          outgoing: state.user.friendships.outgoing.filter(
+            (friendship) => {
+              return friendship.id !== action.payload;
+            }
+          ),
+        },
+      };
+    },
+    acceptIncomingFriendshipRequest: (state, action) => {
+      state.user.friendships.incoming.forEach((friendship) => {
+        if (friendship.id === action.payload) {
+          friendship.status = "accepted";
+        }
+      });
+    },
+    acceptOutgoingFriendshipRequest: (state, action) => {
+      state.user.friendships.outgoing.forEach((friendship) => {
+        if (friendship.id === action.payload) {
+          friendship.status = "accepted";
+        }
+      });
     },
   },
 });
 
-export const { basicSlice } = slice.actions;
+export const {
+  userModel,
+  outgoingFriendship,
+  incomingFriendship,
+  getUsersData,
+  deleteIncomingFriendship,
+  deleteOutgoingFriendship,
+  acceptIncomingFriendshipRequest,
+  acceptOutgoingFriendshipRequest,
+} = slice.actions;
 
 export default slice.reducer;

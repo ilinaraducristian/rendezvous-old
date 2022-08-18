@@ -12,11 +12,11 @@ import AppRoutes from "./config/appRoutes";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
-    </Provider>
-  </React.StrictMode>
+  // <React.StrictMode>
+  <Provider store={store}>
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  </Provider>
+  // </React.StrictMode>
 );

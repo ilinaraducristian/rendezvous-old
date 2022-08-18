@@ -38,6 +38,49 @@
         color: $whiteColor;
       }
     }
+    .errorContainer {
+      width: 100%;
+      height: 4.5rem;
+      overflow: hidden;
+      margin-top: 0.5rem;
+      // background-color: red;
+      .errorMessageWrapper {
+        position: relative;
+        background: #af2824;
+        text-align: right;
+        padding: 0.5rem 1rem;
+        border-radius: 6px;
+        border: 1px solid #af2824;
+        float: right;
+        right: 20px;
+        margin-top: 0.8rem;
+        animation: showError 0.25s linear forwards;
+        &::before {
+          content: "";
+          position: absolute;
+          visibility: visible;
+          top: -0.1rem;
+          right: -1rem;
+          border: 0.9rem solid transparent;
+          border-top: 0.4rem solid #af2824;
+        }
+
+        &::after {
+          content: "";
+          position: absolute;
+          visibility: visible;
+          top: 0rem;
+          right: -0.8rem;
+          border: 1rem solid transparent;
+          border-top: 1rem solid #af2824;
+          clear: both;
+        }
+        span {
+          font-size: 1.4rem;
+          color: $whiteColor;
+        }
+      }
+    }
     .addfriend-buttons-wrapper {
       width: 100%;
       padding: 3rem 0 4rem 0;

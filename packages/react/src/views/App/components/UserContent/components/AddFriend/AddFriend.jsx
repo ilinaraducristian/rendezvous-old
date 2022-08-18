@@ -1,30 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 
 // STYLES
 import "./AddFriend.scss";
 
 // LIBRARIES
 
+// AXIOS
+import {
+  postData,
+  getData,
+} from "../../../../../../config/axiosConfig";
+
 // CONSTANTS & MOCKS
 
 // REDUX
+import {
+  outgoingFriendship,
+  getUsersData,
+} from "../../../../../../slices/slices";
+import { useDispatch } from "react-redux";
 
 // COMPONENTS
 
 const AddFriend = (props) => {
   // PROPS
   const { onClick = () => {} } = props;
-  // CONSTANTS USING LIBRARYS
+
+  // CONSTANTS USING LIBRARIES
+  const dispatch = useDispatch();
 
   // CONSTANTS USING HOOKS
+  const [userId, setUserId] = useState("");
+  const [showError, setShowError] = useState(false);
 
   // GENERAL CONSTANTS
 
   // USE EFFECT FUNCTION
 
   // REQUEST API FUNCTIONS
+  const usersData = async () => {
+    const response = await getData(`/users/data`);
+    dispatch(getUsersData(response.data.users));
+  };
 
-  // HANDLERS FUNCTIONS
+  const postRequest = async () => {
+    const response = await postData("/friendships", { id: userId });
+    if (response.status === 201) {
+      const friendshipRequestModel = {
+        id: response.data.id,
+        userId,
+        status: "pending",
+      };
+      dispatch(outgoingFriendship(friendshipRequestModel));
+      usersData();
+    } else {
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 1000);
+    }
+  };
 
   return (
     <div className="addfriend-container">
@@ -32,10 +67,36 @@ const AddFriend = (props) => {
         <span>Enter the friend ID</span>
       </div>
       <div className="addfriend-content">
-        <input placeholder="Friend ID" />
+        <input
+          placeholder="Friend ID"
+          onChange={(event) => {
+            setUserId(event.target.value);
+          }}
+        />
+        <div className="errorContainer">
+          {showError && (
+            <div className="errorMessageWrapper">
+              <span>Wrong ID</span>
+            </div>
+          )}
+        </div>
         <div className="addfriend-buttons-wrapper">
-          <button className="request">SEND REQUEST</button>
-          <button className="close" onClick = {() => {onClick("direct-message")}}>CLOSE</button>
+          <button
+            className="request"
+            onClick={() => {
+              postRequest();
+            }}
+          >
+            SEND REQUEST
+          </button>
+          <button
+            className="close"
+            onClick={() => {
+              onClick("direct-message");
+            }}
+          >
+            CLOSE
+          </button>
         </div>
       </div>
     </div>

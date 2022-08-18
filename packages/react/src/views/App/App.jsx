@@ -1,12 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 // USE REDUX
-// import { useSelector, useDispatch } from "react-redux";
-// import { basicSlice } from "../slices/slices";
+import { useDispatch } from "react-redux";
+import { userModel } from "../../slices/slices";
 
 // STYLES
 import "./App.scss";
 import logo from "../../assets/login/logo.png";
+
+// AXIOS
+import { getData } from "../../config/axiosConfig";
+
+// REDUX
+import {
+  deleteOutgoingFriendship,
+  getUsersData,
+  incomingFriendship,
+  acceptOutgoingFriendshipRequest
+} from "../../slices/slices";
 
 // LIBRARIES
 import Div100vh from "react-div-100vh";
@@ -16,6 +27,7 @@ import Servers from "./components/Servers/Servers";
 import User from "./components/User/User";
 import UserContent from "./components/UserContent/UserContent";
 import Chat from "./components/Chat/Chat";
+let loaded = false;
 
 const App = () => {
   // *** NEEDED ***
@@ -35,15 +47,57 @@ const App = () => {
   //     }
   //   })();
   // }, []);
+  const dispatch = useDispatch();
 
   //CONSTANTS USING HOOKS
-  const [userContentType, setUserContentType] = useState("direct-message");
+  const [userContentType, setUserContentType] =
+    useState("direct-message");
   const [nameClass, setNameClass] = useState("");
 
-  // GENERAL CONSTANTS
+  // REQUEST CONSTANTS
+  const getUserData = async () => {
+    const response = await getData("/users/data");
+    dispatch(userModel(response.data));
+  };
+  const getUsers = async () => {
+    const response = await getData(`/users/data`);
+    dispatch(getUsersData(response.data.users));
+  };
+
+  // HANDLE functions
+  useEffect(() => {
+    if (loaded) {
+      return;
+    }
+    loaded = true;
+    getUserData();
+    const evtSource = new EventSource(
+      "https://rendezvous-nest.herokuapp.com/users/sse",
+      { withCredentials: true }
+    );
+    evtSource.addEventListener("friendRequest", (event) => {
+      const request = JSON.parse(event.data);
+      dispatch(
+        incomingFriendship({
+          id: request.friendshipId,
+          userId: request.user.id,
+          status: "pending",
+        })
+      );
+      getUsers();
+    });
+    evtSource.addEventListener("friendshipDeleted", (event) => {
+      const request = JSON.parse(event.data).id;
+      dispatch(deleteOutgoingFriendship(request));
+    });
+    evtSource.addEventListener("friendRequestAccepted", (event) => {
+      const request = JSON.parse(event.data).id;
+      dispatch(acceptOutgoingFriendshipRequest(request));
+    });
+    // eslint-disable-next-line
+  }, []);
 
   const handleUserAction = (action) => {
-    console.log(action);
     switch (action) {
       case "profile":
         setUserContentType("profile");
@@ -78,7 +132,10 @@ const App = () => {
               <Servers />
             </div>
             <div className="user-content">
-              <UserContent content={userContentType} onClick={handleUserAction} />
+              <UserContent
+                content={userContentType}
+                onClick={handleUserAction}
+              />
             </div>
           </div>
         </div>

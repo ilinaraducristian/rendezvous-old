@@ -49,7 +49,6 @@ const Login = (props) => {
 
   // REQUEST API FUNCTIONS
   const postRequest = async (address, data) => {
-    console.log(data);
     const response = await postData(address, data);
     if (path === "login" && response.status !== 204) {
       setError("Invalid E-mail or Password");
