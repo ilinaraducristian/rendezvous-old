@@ -6,7 +6,7 @@ export type GroupMessageDocument = GroupMessage & Document;
 @Schema()
 export class GroupMessage {
 
-  @Prop({required: true, type: Types.ObjectId, ref: 'Friendship'})
+  @Prop({required: true, type: Types.ObjectId, ref: 'Group'})
   groupId: string;
 
   @Prop({required: true})

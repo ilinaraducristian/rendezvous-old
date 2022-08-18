@@ -26,8 +26,7 @@ import { GroupMessage, GroupMessageSchema } from "./group/entities/group-message
 import { Server, ServerSchema } from "./entities/server.schema";
 import { ServerController } from "./server/server.controller";
 import { ServerService } from "./server/server.service";
-import { ServerGroup, ServerGroupSchema } from "./entities/server-group.schema";
-import { Channel, ChannelSchema } from "./entities/channel.schema";
+import { ChannelMessage, ChannelMessageSchema } from "./server/entities/channel-message.schema";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -52,8 +51,7 @@ export class AppModule {
         { name: Group.name, schema: GroupSchema },
         { name: GroupMessage.name, schema: GroupMessageSchema },
         { name: Server.name, schema: ServerSchema },
-        { name: ServerGroup.name, schema: ServerGroupSchema },
-        { name: Channel.name, schema: ChannelSchema },
+        { name: ChannelMessage.name, schema: ChannelMessageSchema, collection: null },
       ]),
       PassportModule,
       JwtModule.registerAsync({

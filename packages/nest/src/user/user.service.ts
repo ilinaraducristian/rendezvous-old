@@ -6,6 +6,7 @@ import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship/friendship.service";
 import { GroupService } from "../group/group.service";
+import { ServerService } from "../server/server.service";
 
 @Injectable()
 export class UserService {
@@ -13,7 +14,8 @@ export class UserService {
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     private readonly friendshipService: FriendshipService,
     private readonly groupService: GroupService,
-    private readonly conversationService: ConversationService
+    private readonly conversationService: ConversationService,
+    private readonly serverService: ServerService,
   ) { }
 
   async getUser(id: string) {
@@ -28,12 +30,16 @@ export class UserService {
   }
 
   async getUserData(user: UserDocument) {
-    const { friendships, friendsIds } = await this.friendshipService.getFriendships(user);
-    const groups = await this.groupService.getGroups(user);
+    const [{ friendships, friendsIds }, groups, servers, conversations] = await Promise.all([
+      this.friendshipService.getFriendships(user),
+      this.groupService.getGroups(user),
+      this.serverService.getServers(user),
+      this.conversationService.getConversations(user)
+    ]);
     const userIds = new Map<string, any>();
     friendsIds.forEach(friendId => userIds.set(friendId.toString(), friendId));
     groups.map(group => group.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
-    const conversations = await this.conversationService.getConversations(user);
+    servers.map(server => server.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
     userIds.delete(user.id);
     const users = await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } });
     return {
@@ -43,6 +49,7 @@ export class UserService {
       friendships,
       conversations,
       groups,
+      servers,
       users: users.map(user => ({
         id: user.id,
         name: user.name

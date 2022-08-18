@@ -472,6 +472,52 @@
 			]
 		},
 		{
+			"name": "Servers",
+			"item": [
+				{
+					"name": "Create a server",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set the server id\", function() {",
+									"    pm.response.to.have.jsonSchema({id: 'string'});",
+									"    const {id} = pm.response.json();",
+									"    pm.collectionVariables.set(\"serverId\", id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"A new server\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/servers",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"servers"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Sse",
 			"request": {
 				"method": "GET",
@@ -602,6 +648,10 @@
 		},
 		{
 			"key": "groupId",
+			"value": ""
+		},
+		{
+			"key": "serverId",
 			"value": ""
 		}
 	]

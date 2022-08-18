@@ -38,8 +38,8 @@ export class FriendshipService {
     this.sseService.next({
       type: SseEvents.friendRequest, userId: friendUser.id, data: {
         friendshipId: newFriendship.id, user: {
-          id: friendUser.id,
-          name: friendUser.name
+          id: user.id,
+          name: user.name
         }
       }
     });

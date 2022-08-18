@@ -5,22 +5,32 @@ import { Server, ServerDocument } from '../entities/server.schema';
 import { UserDocument } from '../entities/user.schema';
 import { ServerNotFoundHttpException, UserAlreadyInServerHttpException, UserNotInServerHttpException } from './exceptions';
 import { v4 as uuid } from 'uuid';
-import { ServerGroup, ServerGroupDocument } from '../entities/server-group.schema';
+import { ServerGroup } from '../entities/server-group.schema';
 
 @Injectable()
 export class ServerService {
 
   constructor(
-    @InjectModel(Server.name) private readonly serverModel: Model<ServerDocument>,
-    @InjectModel(ServerGroup.name) private readonly groupModel: Model<ServerGroupDocument>
+    @InjectModel(Server.name) private readonly serverModel: Model<ServerDocument>
   ) { }
 
   async createServer(user: UserDocument, name: string) {
-    const server = await new this.serverModel({ name, groups: [new this.groupModel({ name: 'default' })], members: [user._id] }).save();
+    const group = new ServerGroup();
+    const server = await new this.serverModel({ name, groups: [group], members: [user._id] }).save();
     user.servers.push(server._id);
-    console.log(server);
     await user.save();
     return server;
+  }
+
+  async getServers(user: UserDocument) {
+    const servers = await this.serverModel.find({_id: {$in: user.servers}});
+    return servers.map(server => ({
+      id: server.id,
+      name: server.name,
+      invitation: server.invitation,
+      groups: server.groups,
+      members: server.members
+    }))
   }
 
   async createServerInvitation(user: UserDocument, id: string) {
@@ -57,7 +67,7 @@ export class ServerService {
     if (serverId === undefined) throw new UserNotInServerHttpException();
     const server = await this.serverModel.findById(id);
     if (server === null) throw new ServerNotFoundHttpException();
-    const group = new this.groupModel({ name });
+    const group = new ServerGroup(name);
     server.groups.push(group);
     await server.save();
     return group;

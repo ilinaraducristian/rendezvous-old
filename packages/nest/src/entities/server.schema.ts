@@ -1,6 +1,6 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { ServerGroupDocument } from "./server-group.schema";
+import { ServerGroup } from "./server-group.schema";
 import { UserDocument } from "./user.schema";
 
 export type ServerDocument = Server & Document;
@@ -13,8 +13,8 @@ export class Server {
   @Prop({default: null})
   invitation: string | null;
 
-  @Prop({ default: [] })
-  groups: ServerGroupDocument[];
+  @Prop({ default: [], type: ServerGroup })
+  groups: ServerGroup[];
 
   @Prop({ default: [], type: [{type: Types.ObjectId, ref: 'User'}] })
   members: UserDocument[];
