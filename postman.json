@@ -483,8 +483,11 @@
 								"exec": [
 									"pm.test(\"Set the server id\", function() {",
 									"    pm.response.to.have.jsonSchema({id: 'string'});",
-									"    const {id} = pm.response.json();",
-									"    pm.collectionVariables.set(\"serverId\", id);",
+									"    const body = pm.response.json();",
+									"    pm.collectionVariables.set(\"serverId\", body._id);",
+									"    const group = body.groups.find(group => group.name);",
+									"    pm.collectionVariables.set(\"serverGroupId\", group._id);",
+									"    pm.collectionVariables.set(\"channelId\", group.channels[0]._id);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -510,6 +513,38 @@
 							],
 							"path": [
 								"servers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a message",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"A new message\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/servers/{{serverId}}/groups/{{serverGroupId}}/channels/{{channelId}}/messages",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"servers",
+								"{{serverId}}",
+								"groups",
+								"{{serverGroupId}}",
+								"channels",
+								"{{channelId}}",
+								"messages"
 							]
 						}
 					},
@@ -652,6 +687,14 @@
 		},
 		{
 			"key": "serverId",
+			"value": ""
+		},
+		{
+			"key": "serverGroupId",
+			"value": ""
+		},
+		{
+			"key": "channelId",
 			"value": ""
 		}
 	]

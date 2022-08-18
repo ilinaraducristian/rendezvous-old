@@ -9,7 +9,7 @@ export class ChannelMessage {
   @Prop({required: true, type: Types.ObjectId, ref: 'Channel'})
   channelId: string;
 
-  @Prop({required: true})
+  @Prop({required: true, type: Types.ObjectId, ref: 'User'})
   userId: string;
 
   @Prop({required: true})
