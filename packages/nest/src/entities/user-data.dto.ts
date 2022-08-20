@@ -85,6 +85,8 @@ export class ConversationDto extends MessageDto {
   friendshipId?: string;
   groupId?: string;
 
+  constructor(message: FriendshipMessageDocument);
+  constructor(message: GroupMessageDocument);
   constructor(message: FriendshipMessageDocument | GroupMessageDocument) {
     super(message);
     this.friendshipId = (message as FriendshipMessageDocument).friendshipId?.toString();

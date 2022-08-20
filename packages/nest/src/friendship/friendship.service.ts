@@ -15,7 +15,7 @@ import {
 import { SseService } from "../sse.service";
 import SseEvents from "../sse-events";
 import { UserNotFoundHttpException } from "../exceptions";
-import { FriendshipDto } from "../entities/user-data.dto";
+import { ConversationDto, FriendshipDto } from "../entities/user-data.dto";
 
 @Injectable()
 export class FriendshipService {
@@ -30,21 +30,17 @@ export class FriendshipService {
     if (user.id === friendUserId) throw new CannotBeFriendWithYourselfHttpException();
     const friendUser = await this.userModel.findById(friendUserId);
     if (friendUser === null) throw new UserNotFoundHttpException();
-    const exisingFriendship = await this.friendshipModel.findOne({ $or: [{user1: user._id, user2: friendUser._id}, {user1: friendUser._id, user2: user._id}]});
+    const exisingFriendship = await this.friendshipModel.findOne({ $or: [{ user1: user._id, user2: friendUser._id }, { user1: friendUser._id, user2: user._id }] });
     if (exisingFriendship !== null) throw new FriendshipExistsHttpException();
     const friendship = await new this.friendshipModel({ user1: user, user2: friendUser }).save();
     user.friendships.push(friendship.id);
     friendUser.friendships.push(friendship.id);
     await Promise.all([user.save(), friendUser.save()]);
+    const friendshipDto = new FriendshipDto(user, friendship);
     this.sseService.next({
-      type: SseEvents.friendRequest, userId: friendUser.id, data: {
-        friendshipId: friendship.id, user: {
-          id: user.id,
-          name: user.name
-        }
-      }
+      type: SseEvents.friendRequest, userId: friendUser.id, data: friendshipDto
     });
-    return new FriendshipDto(user, friendship);
+    return friendshipDto;
   }
 
   async getFriendship(user: UserDocument, id: string) {
@@ -68,33 +64,45 @@ export class FriendshipService {
     if (friendship.user1._id.toString() === user.id) throw new UserLacksPermissionForFriendshipHttpException();
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = 'accepted';
-    await friendship.save();
+    user.friendships.push(friendship._id);
+    await Promise.all([user.save(), friendship.save()]);
     this.sseService.next({ type: SseEvents.friendRequestAccepted, userId: friendship.user1._id.toString(), data: { id } })
   }
 
   async deleteFriendship(user: UserDocument, id: string): Promise<void> {
-    const deleteFriendship = await this.friendshipModel.findOneAndRemove({ id, $or: [{ user1: user._id }, { user2: user._id }] });
-    if (deleteFriendship === null) throw new FriendshipNotFoundHttpException();
-    const friendshipIndex = user.friendships.findIndex(friendshipId => friendshipId.toString() === id);
-    user.friendships.splice(friendshipIndex, 1);
-    await user.save();
-    const otherId = user.id === deleteFriendship.user1.toString() ? deleteFriendship.user2.toString() : deleteFriendship.user1.toString();
+    const deletedFriendship = await this.friendshipModel.findOneAndRemove({ id, $or: [{ user1: user._id }, { user2: user._id }] });
+    if (deletedFriendship === null) throw new FriendshipNotFoundHttpException();
+    const otherId = user.id === deletedFriendship.user1.toString() ? deletedFriendship.user2.toString() : deletedFriendship.user1.toString();
+    const friendUser = await this.userModel.findById(otherId);
+    const friendshipIndex1 = user.friendships.findIndex(friendshipId => friendshipId.toString() === id);
+    const friendshipIndex2 = friendUser.friendships.findIndex(friendshipId => friendshipId.toString() === id);
+    user.friendships.splice(friendshipIndex1, 1);
+    friendUser.friendships.splice(friendshipIndex2, 1);
+    await Promise.all([user.save(), friendUser.save()]);
     this.sseService.next({ type: SseEvents.friendshipDeleted, userId: otherId, data: { id } });
   }
 
-  async createFriendshipMessage(user: UserDocument, id: string, text: string) {
+  async createFriendshipMessage(user: UserDocument, id: string, text: string): Promise<ConversationDto> {
     const friendship = await this.getFriendship(user, id);
-    return new this.friendshipMessageModel({
+
+    const newMessage = await new this.friendshipMessageModel({
       friendshipId: friendship._id,
       userId: user._id,
       timestamp: new Date(),
       text
     }).save();
+    const otherId = friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString();
+    const message = new ConversationDto(newMessage);
+    this.sseService.next({
+      type: SseEvents.friendshipMessage, userId: otherId, data: message
+    });
+    return message;
   }
 
-  async getFriendshipMessages(user: UserDocument, id: string, offset: number, limit: number) {
+  async getFriendshipMessages(user: UserDocument, id: string, offset: number, limit: number): Promise<ConversationDto[]> {
     const friendship = await this.getFriendship(user, id);
-    return this.friendshipMessageModel.find({ friendshipId: friendship._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
+    const messages = await this.friendshipMessageModel.find({ friendshipId: friendship._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
+    return messages.map(message => new ConversationDto(message));
   }
 
   async getFriendshipMessage(user: UserDocument, id: string, messageId: string) {
@@ -106,8 +114,10 @@ export class FriendshipService {
 
   async deleteFriendshipMessage(user: UserDocument, id: string, messageId: string) {
     const friendship = await this.getFriendship(user, id);
-    const message = await this.friendshipMessageModel.deleteOne({ _id: new Types.ObjectId(messageId), friendshipId: friendship._id });
-    if (message.deletedCount === 0) throw new FriendshipMessageNotFoundHttpException();
+    const message = await this.friendshipMessageModel.findOneAndRemove({ _id: new Types.ObjectId(messageId), friendshipId: friendship._id });
+    if (message === null) throw new FriendshipMessageNotFoundHttpException();
+    const otherId = user.id === friendship.user1.toString() ? friendship.user2.toString() : friendship.user1.toString();
+    this.sseService.next({ type: SseEvents.friendshipMessageDeleted, userId: otherId, data: { friendshipId: id, id: messageId } });
   }
 
 
