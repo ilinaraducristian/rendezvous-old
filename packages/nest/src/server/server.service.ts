@@ -10,6 +10,7 @@ import GroupNotFoundHttpException from '../group/exceptions/group-not-found.http
 import { Channel } from '../entities/channel.schema';
 import ChannelNotFoundHttpException from '../group/exceptions/channel-not-found.httpexception copy';
 import { ChannelMessage, ChannelMessageDocument } from './entities/channel-message.schema';
+import { ServerDto } from '../entities/user-data.dto';
 
 @Injectable()
 export class ServerService {
@@ -19,25 +20,18 @@ export class ServerService {
     @InjectModel(ChannelMessage.name) private readonly channelMessageModel: Model<ChannelMessageDocument>
   ) { }
 
-  async createServer(user: UserDocument, name: string) {
+  async createServer(user: UserDocument, name: string): Promise<ServerDto> {
     const group = new ServerGroup();
     const textChannelsGroup = new ServerGroup('Text Channels');
     textChannelsGroup.channels.push(new Channel('general'));
     const server = await new this.serverModel({ name, groups: [group, textChannelsGroup], members: [user._id] }).save();
     user.servers.push(server._id);
     await user.save();
-    return server;
+    return new ServerDto(server);
   }
 
-  async getServers(user: UserDocument) {
-    const servers = await this.serverModel.find({_id: {$in: user.servers}});
-    return servers.map(server => ({
-      id: server.id,
-      name: server.name,
-      invitation: server.invitation,
-      groups: server.groups,
-      members: server.members
-    }))
+  async getServers(user: UserDocument): Promise<ServerDto[]> {
+    return (await this.serverModel.find({_id: {$in: user.servers}})).map(server => new ServerDto(server));
   }
 
   async createServerInvitation(user: UserDocument, id: string) {

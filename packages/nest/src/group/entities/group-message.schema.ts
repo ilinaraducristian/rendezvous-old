@@ -7,10 +7,10 @@ export type GroupMessageDocument = GroupMessage & Document;
 export class GroupMessage {
 
   @Prop({required: true, type: Types.ObjectId, ref: 'Group'})
-  groupId: string;
+  groupId: Types.ObjectId;
 
   @Prop({required: true, type: Types.ObjectId, ref: 'User'})
-  userId: string;
+  userId: Types.ObjectId;
 
   @Prop({required: true})
   timestamp: Date;

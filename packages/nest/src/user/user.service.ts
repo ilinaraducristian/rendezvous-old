@@ -1,7 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Model } from "mongoose";
+import { Model, Types } from "mongoose";
 import { ConversationService } from "../conversations/conversation.service";
+import { MyUserDto, UserDataDto, UserDto } from "../entities/user-data.dto";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship/friendship.service";
@@ -29,31 +30,28 @@ export class UserService {
     return users;
   }
 
-  async getUserData(user: UserDocument) {
-    const [{ friendships, friendsIds }, groups, servers, conversations] = await Promise.all([
+  async getUserData(user: UserDocument): Promise<UserDataDto> {
+    const [friendships, groups, servers, conversations] = await Promise.all([
       this.friendshipService.getFriendships(user),
       this.groupService.getGroups(user),
       this.serverService.getServers(user),
       this.conversationService.getConversations(user)
     ]);
-    const userIds = new Map<string, any>();
-    friendsIds.forEach(friendId => userIds.set(friendId.toString(), friendId));
-    groups.map(group => group.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
-    servers.map(server => server.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
+    const userIds = new Map<string, Types.ObjectId>();
+    friendships.forEach(friendship => {
+      userIds.set(friendship.userId, new Types.ObjectId(friendship.userId));
+    })
+    groups.map(group => group.members).flat().forEach(userId => userIds.set(userId, new Types.ObjectId(userId)));
+    servers.map(server => server.members).flat().forEach(userId => userIds.set(userId, new Types.ObjectId(userId)));
     userIds.delete(user.id);
-    const users = await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } });
+    const users = (await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } })).map(user => new UserDto(user));
     return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
+      user: new MyUserDto(user),
       friendships,
       conversations,
       groups,
       servers,
-      users: users.map(user => ({
-        id: user.id,
-        name: user.name
-      }))
+      users
     }
   }
 

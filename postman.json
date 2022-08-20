@@ -356,6 +356,103 @@
 			"name": "Groups",
 			"item": [
 				{
+					"name": "Messages",
+					"item": [
+						{
+							"name": "Send a message",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Set the message id\", function() {",
+											"    pm.response.to.have.jsonSchema({id: 'string'});",
+											"    const {id} = pm.response.json();",
+											"    pm.collectionVariables.set(\"groupMessageId\", id);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"a new text message\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/friendships/{{groupId}}/messages",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{groupId}}",
+										"messages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get friendship messages",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/friendships/{{groupId}}/messages?offset=0&limit=100",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{groupId}}",
+										"messages"
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "100"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete a message",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/friendships/{{groupId}}/messages/{{groupMessageId}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{groupId}}",
+										"messages",
+										"{{groupMessageId}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
 					"name": "Create a group",
 					"event": [
 						{
@@ -408,34 +505,6 @@
 							],
 							"path": [
 								"groups"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Create a message",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"text\": \"a new message\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{api}}/groups/{{groupId}}/messages",
-							"host": [
-								"{{api}}"
-							],
-							"path": [
-								"groups",
-								"{{groupId}}",
-								"messages"
 							]
 						}
 					},
@@ -665,37 +734,9 @@
 			"type": "default"
 		},
 		{
-			"key": "friendshipId",
-			"value": ""
-		},
-		{
-			"key": "friendshipMessageId",
-			"value": ""
-		},
-		{
-			"key": "friendUserId",
-			"value": ""
-		},
-		{
 			"key": "api",
 			"value": "http://localhost:3100",
 			"type": "default"
-		},
-		{
-			"key": "groupId",
-			"value": ""
-		},
-		{
-			"key": "serverId",
-			"value": ""
-		},
-		{
-			"key": "serverGroupId",
-			"value": ""
-		},
-		{
-			"key": "channelId",
-			"value": ""
 		}
 	]
 }

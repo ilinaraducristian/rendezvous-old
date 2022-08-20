@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post } from "@nestjs/common";
+import { GroupDto } from "../entities/user-data.dto";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import { GroupService } from "./group.service";
@@ -8,26 +9,23 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) { }
 
   @Post()
-  async createGroup(@ExtractAuthenticatedUser() user: UserDocument, @Body() { name }: { name: string }) {
-    const newGroup = await this.groupService.createGroup(user, name);
-    return {
-      id: newGroup.id
-    }
+  createGroup(@ExtractAuthenticatedUser() user: UserDocument, @Body() { name }: { name: string }): Promise<GroupDto> {
+    return this.groupService.createGroup(user, name);
   }
 
   @Get()
-  async getGroups(@ExtractAuthenticatedUser() user: UserDocument) {
+  getGroups(@ExtractAuthenticatedUser() user: UserDocument): Promise<GroupDto[]> {
     return this.groupService.getGroups(user);
   }
 
   @Delete(":id")
   @HttpCode(204)
-  async deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string) {
+  async deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string): Promise<void> {
     await this.groupService.deleteGroup(user, id);
   }
 
   @Post(":id/members")
-  createGroupMember(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { id: string }) {
+  createGroupMember(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { id: string }): Promise<void> {
     return this.groupService.createGroupMember(user, id, body.id);
   }
 

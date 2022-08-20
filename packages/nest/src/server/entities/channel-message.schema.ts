@@ -7,10 +7,10 @@ export type ChannelMessageDocument = ChannelMessage & Document;
 export class ChannelMessage {
 
   @Prop({required: true, type: Types.ObjectId, ref: 'Channel'})
-  channelId: string;
+  channelId: Types.ObjectId;
 
   @Prop({required: true, type: Types.ObjectId, ref: 'User'})
-  userId: string;
+  userId: Types.ObjectId;
 
   @Prop({required: true})
   timestamp: Date;

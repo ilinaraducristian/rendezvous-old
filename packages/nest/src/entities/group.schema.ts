@@ -1,6 +1,5 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document, Types } from "mongoose";
-import { UserDocument } from "./user.schema";
 
 export type GroupDocument = Group & Document;
 
@@ -10,7 +9,7 @@ export class Group {
   name: string;
 
   @Prop({ default: [], type: [{type: Types.ObjectId, ref: 'User'}] })
-  members: UserDocument[];
+  members: Types.ObjectId[];
 
 }
 
