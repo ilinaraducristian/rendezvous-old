@@ -6,11 +6,10 @@ import { UserDocument } from '../entities/user.schema';
 import { ServerNotFoundHttpException, UserAlreadyInServerHttpException, UserNotInServerHttpException } from './exceptions';
 import { v4 as uuid } from 'uuid';
 import { ServerGroup } from '../entities/server-group.schema';
-import GroupNotFoundHttpException from '../group/exceptions/group-not-found.httpexception';
 import { Channel } from '../entities/channel.schema';
-import ChannelNotFoundHttpException from '../group/exceptions/channel-not-found.httpexception copy';
-import { ChannelMessage, ChannelMessageDocument } from './entities/channel-message.schema';
+import { ChannelMessage, ChannelMessageDocument } from '../entities/channel-message.schema';
 import { ServerDto } from '../entities/user-data.dto';
+import { ChannelNotFoundHttpException, GroupNotFoundHttpException } from '../group/exceptions';
 
 @Injectable()
 export class ServerService {

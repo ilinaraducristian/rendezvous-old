@@ -5,9 +5,8 @@ import { Group, GroupDocument } from "../entities/group.schema";
 import { GroupDto } from "../entities/user-data.dto";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
-import { GroupMessage, GroupMessageDocument } from "./entities/group-message.schema";
-import UserNotMemberOfGroupHttpException from "./exceptions/group-not-found.httpexception";
-import GroupNotFoundHttpException from "./exceptions/group-not-found.httpexception";
+import { GroupMessage, GroupMessageDocument } from "../entities/group-message.schema";
+import { GroupNotFoundHttpException, UserNotMemberOfGroupHttpException } from "./exceptions";
 
 @Injectable()
 export class GroupService {

@@ -3,8 +3,8 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { ConversationDto } from "../entities/user-data.dto";
 import { UserDocument } from "../entities/user.schema";
-import { FriendshipMessage, FriendshipMessageDocument } from "../friendship/entities/friendship-message.schema";
-import { GroupMessage, GroupMessageDocument } from "../group/entities/group-message.schema";
+import { FriendshipMessage, FriendshipMessageDocument } from "../entities/friendship-message.schema";
+import { GroupMessage, GroupMessageDocument } from "../entities/group-message.schema";
 
 @Injectable()
 export class ConversationService {

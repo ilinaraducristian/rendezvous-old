@@ -12,7 +12,7 @@ import { LocalStrategy } from "./auth/strategies/local-strategy";
 import { JwtStrategy } from "./auth/strategies/jwt-strategy";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtAuthGuard } from "./auth/guards/jwt-auth-guard";
-import { FriendshipMessage, FriendshipMessageSchema } from "./friendship/entities/friendship-message.schema";
+import { FriendshipMessage, FriendshipMessageSchema } from "./entities/friendship-message.schema";
 import { Friendship, FriendshipSchema } from "./entities/friendship.schema";
 import { FriendshipService } from "./friendship/friendship.service";
 import { ConversationService } from "./conversations/conversation.service";
@@ -22,11 +22,11 @@ import { GroupController } from "./group/group.controller";
 import { GroupService } from "./group/group.service";
 import { ConversationController } from "./conversations/conversation.controller";
 import { Group, GroupSchema } from "./entities/group.schema";
-import { GroupMessage, GroupMessageSchema } from "./group/entities/group-message.schema";
+import { GroupMessage, GroupMessageSchema } from "./entities/group-message.schema";
 import { Server, ServerSchema } from "./entities/server.schema";
 import { ServerController } from "./server/server.controller";
 import { ServerService } from "./server/server.service";
-import { ChannelMessage, ChannelMessageSchema } from "./server/entities/channel-message.schema";
+import { ChannelMessage, ChannelMessageSchema } from "./entities/channel-message.schema";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {

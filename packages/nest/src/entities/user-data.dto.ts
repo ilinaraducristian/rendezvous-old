@@ -1,5 +1,5 @@
-import { FriendshipMessageDocument } from "../friendship/entities/friendship-message.schema";
-import { GroupMessageDocument } from "../group/entities/group-message.schema";
+import { FriendshipMessageDocument } from "./friendship-message.schema";
+import { GroupMessageDocument } from "./group-message.schema";
 import { Channel } from "./channel.schema";
 import { FriendshipDocument } from "./friendship.schema";
 import { GroupDocument } from "./group.schema";
