@@ -50,4 +50,9 @@ export class FriendshipController {
     return this.friendshipService.deleteFriendshipMessage(user, id, messageId);
   }
 
+  @Delete(":id/messages")
+  async deleteFriendshipMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string) {
+    return this.friendshipService.deleteFriendshipMessages(user, id);
+  }
+
 }

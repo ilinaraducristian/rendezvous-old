@@ -115,5 +115,11 @@ export class FriendshipService {
     this.sseService.deleteFriendshipMessage(otherId, id, messageId);
   }
 
+  async deleteFriendshipMessages(user: UserDocument, id: string) {
+    const friendship = await this.getFriendship(user, id);
+    const messages = await this.friendshipMessageModel.deleteMany({ friendshipId: friendship._id });
+    if (messages.deletedCount === 0) throw new FriendshipMessageNotFoundHttpException();
+    const otherId = user.id === friendship.user1.toString() ? friendship.user2.toString() : friendship.user1.toString();
+  }
 
 }
