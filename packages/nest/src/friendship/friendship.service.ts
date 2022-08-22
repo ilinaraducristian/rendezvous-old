@@ -31,13 +31,12 @@ export class FriendshipService {
     if (friendUser === null) throw new UserNotFoundHttpException();
     const exisingFriendship = await this.friendshipModel.findOne({ $or: [{ user1: user._id, user2: friendUser._id }, { user1: friendUser._id, user2: user._id }] });
     if (exisingFriendship !== null) throw new FriendshipExistsHttpException();
-    const friendship = await new this.friendshipModel({ user1: user, user2: friendUser }).save();
+    const friendship = await new this.friendshipModel({ user1: user._id, user2: friendUser._id }).save();
     user.friendships.push(friendship.id);
     friendUser.friendships.push(friendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    const friendshipDto = new FriendshipDto(user, friendship);
-    this.sseService.friendRequest(friendUser.id, friendshipDto);
-    return friendshipDto;
+    this.sseService.friendRequest(friendUser.id, new FriendshipDto(friendUser, user, friendship));
+    return new FriendshipDto(user, friendUser, friendship);
   }
 
   async getFriendship(user: UserDocument, id: string) {
@@ -49,7 +48,7 @@ export class FriendshipService {
 
   async getFriendships(user: UserDocument): Promise<FriendshipDto[]> {
     const friendshipsDocuments = await this.friendshipModel.find({ _id: { $in: user.friendships } });
-    return friendshipsDocuments.map(friendshipDocument => new FriendshipDto(user, friendshipDocument));
+    return friendshipsDocuments.map(friendshipDocument => new FriendshipDto(user, undefined, friendshipDocument));
   }
 
   async acceptFriendshipRequest(user: UserDocument, id: string): Promise<void> {
@@ -88,6 +87,7 @@ export class FriendshipService {
       timestamp: new Date(),
       text
     }).save();
+
     const otherId = friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString();
     const message = new ConversationDto(newMessage);
     this.sseService.friendshipMessage(otherId, message);

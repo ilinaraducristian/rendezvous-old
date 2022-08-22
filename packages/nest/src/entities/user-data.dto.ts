@@ -38,17 +38,20 @@ export class FriendshipDto {
   userId: string;
   status: FriendshipStatus;
   incoming: boolean;
+  user: UserDto | undefined;
 
-  constructor(user: UserDocument, friendshipDocument: FriendshipDocument) {
+  constructor(user: UserDocument, friendUser: UserDocument | undefined, friendshipDocument: FriendshipDocument) {
     let userObjectId = friendshipDocument.user1, incoming = true;
+    this.user = new UserDto(user);
     if (friendshipDocument.user1.toString() === user.id) {
       userObjectId = friendshipDocument.user2;
       incoming = false;
+      this.user = friendUser === undefined ? undefined : new UserDto(friendUser);
     }
-    this.id = friendshipDocument.id,
-      this.userId = userObjectId.toString(),
-      this.status = friendshipDocument.status,
-      this.incoming = incoming;
+    this.id = friendshipDocument.id;
+    this.userId = userObjectId.toString();
+    this.status = friendshipDocument.status;
+    this.incoming = incoming;
   }
 
 };
