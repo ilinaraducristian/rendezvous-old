@@ -27,7 +27,6 @@ import { Server, ServerSchema } from "./entities/server.schema";
 import { ServerController } from "./server/server.controller";
 import { ServerService } from "./server/server.service";
 import { ChannelMessage, ChannelMessageSchema } from "./entities/channel-message.schema";
-import { MinioService } from "./minio.service";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -75,7 +74,6 @@ export class AppModule {
       GroupService,
       ConversationService,
       ServerService,
-      MinioService,
       {
         provide: APP_GUARD,
         useClass: JwtAuthGuard,

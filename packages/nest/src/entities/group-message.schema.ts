@@ -6,16 +6,16 @@ export type GroupMessageDocument = GroupMessage & Document;
 @Schema()
 export class GroupMessage {
 
-  @Prop({required: true, type: Types.ObjectId, ref: 'Group'})
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Group' })
   groupId: Types.ObjectId;
 
-  @Prop({required: true, type: Types.ObjectId, ref: 'User'})
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   timestamp: Date;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   text: string;
 }
 

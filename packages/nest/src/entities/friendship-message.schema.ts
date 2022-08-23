@@ -5,16 +5,16 @@ export type FriendshipMessageDocument = FriendshipMessage & Document;
 
 @Schema()
 export class FriendshipMessage {
-  @Prop({required: true, type: Types.ObjectId, ref: 'Friendship'})
+  @Prop({ required: true, type: Types.ObjectId, ref: 'Friendship' })
   friendshipId: Types.ObjectId;
 
-  @Prop({required: true, type: Types.ObjectId, ref: 'User'})
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
   userId: Types.ObjectId;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   timestamp: Date;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   text: string;
 }
 

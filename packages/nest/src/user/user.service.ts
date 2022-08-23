@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { ConversationService } from "../conversations/conversation.service";
-import { MyUserDto, UserDataDto, UserDto } from "../entities/user-data.dto";
+import { MyUserDto, UserDataDto, UserDto } from "../entities/dtos";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship/friendship.service";
@@ -46,7 +46,7 @@ export class UserService {
     userIds.delete(user.id);
     const users = (await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } })).map(user => new UserDto(user));
     return {
-      user: new MyUserDto(user),
+      ...new MyUserDto(user),
       friendships,
       conversations,
       groups,

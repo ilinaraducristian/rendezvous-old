@@ -6,10 +6,10 @@ export type MessageDocument = Message & Document;
 @Schema()
 export class Message {
 
-  @Prop({required: true})
+  @Prop({ required: true })
   userId: string;
 
-  @Prop({required: true})
+  @Prop({ required: true })
   text: string;
 }
 

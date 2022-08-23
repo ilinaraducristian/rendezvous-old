@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Group, GroupDocument } from "../entities/group.schema";
-import { GroupDto } from "../entities/user-data.dto";
+import { GroupDto } from "../entities/dtos";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { GroupMessage, GroupMessageDocument } from "../entities/group-message.schema";

@@ -8,7 +8,7 @@ import { v4 as uuid } from 'uuid';
 import { ServerGroup } from '../entities/server-group.schema';
 import { Channel } from '../entities/channel.schema';
 import { ChannelMessage, ChannelMessageDocument } from '../entities/channel-message.schema';
-import { ServerDto } from '../entities/user-data.dto';
+import { ServerDto } from '../entities/dtos';
 import { ChannelNotFoundHttpException, GroupNotFoundHttpException } from '../group/exceptions';
 
 @Injectable()

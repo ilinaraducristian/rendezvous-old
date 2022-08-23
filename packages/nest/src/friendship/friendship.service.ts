@@ -14,7 +14,7 @@ import {
 } from "./exceptions";
 import { SseService } from "../sse.service";
 import { UserNotFoundHttpException } from "../exceptions";
-import { ConversationDto, FriendshipDto } from "../entities/user-data.dto";
+import { ConversationDto, FriendshipDto } from "../entities/dtos";
 
 @Injectable()
 export class FriendshipService {
@@ -35,8 +35,8 @@ export class FriendshipService {
     user.friendships.push(friendship.id);
     friendUser.friendships.push(friendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.friendRequest(friendUser.id, new FriendshipDto(friendUser, user, friendship));
-    return new FriendshipDto(user, friendUser, friendship);
+    this.sseService.friendRequest(friendUser.id, new FriendshipDto(friendUser, friendship));
+    return new FriendshipDto(user, friendship);
   }
 
   async getFriendship(user: UserDocument, id: string) {
@@ -48,7 +48,7 @@ export class FriendshipService {
 
   async getFriendships(user: UserDocument): Promise<FriendshipDto[]> {
     const friendshipsDocuments = await this.friendshipModel.find({ _id: { $in: user.friendships } });
-    return friendshipsDocuments.map(friendshipDocument => new FriendshipDto(user, undefined, friendshipDocument));
+    return friendshipsDocuments.map(friendshipDocument => new FriendshipDto(user, friendshipDocument));
   }
 
   async acceptFriendshipRequest(user: UserDocument, id: string): Promise<void> {

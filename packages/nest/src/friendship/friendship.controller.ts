@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from "@nestjs/common";
-import { ConversationDto, FriendshipDto } from "../entities/user-data.dto";
+import { ConversationDto, FriendshipDto } from "../entities/dtos";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import { FriendshipService } from "./friendship.service";

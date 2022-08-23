@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post } from "@nestjs/common";
-import { GroupDto } from "../entities/user-data.dto";
+import { GroupDto } from "../entities/dtos";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import { GroupService } from "./group.service";
