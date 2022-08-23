@@ -230,6 +230,25 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Delete all messages",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{api}}/friendships/{{friendshipId}}/messages",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{friendshipId}}",
+										"messages"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -388,12 +407,12 @@
 									}
 								},
 								"url": {
-									"raw": "{{api}}/friendships/{{groupId}}/messages",
+									"raw": "{{api}}/groups/{{groupId}}/messages",
 									"host": [
 										"{{api}}"
 									],
 									"path": [
-										"friendships",
+										"groups",
 										"{{groupId}}",
 										"messages"
 									]
@@ -402,17 +421,17 @@
 							"response": []
 						},
 						{
-							"name": "Get friendship messages",
+							"name": "Get group messages",
 							"request": {
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "{{api}}/friendships/{{groupId}}/messages?offset=0&limit=100",
+									"raw": "{{api}}/groups/{{groupId}}/messages?offset=0&limit=100",
 									"host": [
 										"{{api}}"
 									],
 									"path": [
-										"friendships",
+										"groups",
 										"{{groupId}}",
 										"messages"
 									],
@@ -461,8 +480,9 @@
 								"exec": [
 									"pm.test(\"Set the group id\", function() {",
 									"    pm.response.to.have.jsonSchema({id: 'string'});",
-									"    const {id} = pm.response.json();",
+									"    const {id, invitation} = pm.response.json();",
 									"    pm.collectionVariables.set(\"groupId\", id);",
+									"    pm.collectionVariables.set(\"groupInvitation\", invitation);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -511,13 +531,13 @@
 					"response": []
 				},
 				{
-					"name": "Create a member",
+					"name": "Join a group",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{friendUserId}}\"\n}",
+							"raw": "{\n    \"invitation\": \"{{groupInvitation}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -525,13 +545,12 @@
 							}
 						},
 						"url": {
-							"raw": "{{api}}/groups/{{groupId}}/members",
+							"raw": "{{api}}/groups/members",
 							"host": [
 								"{{api}}"
 							],
 							"path": [
 								"groups",
-								"{{groupId}}",
 								"members"
 							]
 						}
@@ -553,10 +572,11 @@
 									"pm.test(\"Set the server id\", function() {",
 									"    pm.response.to.have.jsonSchema({id: 'string'});",
 									"    const body = pm.response.json();",
-									"    pm.collectionVariables.set(\"serverId\", body._id);",
-									"    const group = body.groups.find(group => group.name);",
-									"    pm.collectionVariables.set(\"serverGroupId\", group._id);",
-									"    pm.collectionVariables.set(\"channelId\", group.channels[0]._id);",
+									"    pm.collectionVariables.set(\"serverId\", body.id);",
+									"    pm.collectionVariables.set(\"serverInvitation\", body.invitation);",
+									"    const group = body.groups.find(group => group.name !== null);",
+									"    pm.collectionVariables.set(\"serverGroupId\", group.id);",
+									"    pm.collectionVariables.set(\"channelId\", group.channels[0].id);",
 									"});"
 								],
 								"type": "text/javascript"
@@ -594,13 +614,63 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"text\": \"A new message\"\n}",
+							"raw": "{\n    \"text\": \"a new message\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
 								}
 							}
 						},
+						"url": {
+							"raw": "{{api}}/servers/{{serverId}}/groups/{{serverGroupId}}/channels/{{channelId}}/messages",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"servers",
+								"{{serverId}}",
+								"groups",
+								"{{serverGroupId}}",
+								"channels",
+								"{{channelId}}",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Join a server",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"invitation\": \"{{serverInvitation}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api}}/servers/members",
+							"host": [
+								"{{api}}"
+							],
+							"path": [
+								"servers",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get messages",
+					"request": {
+						"method": "GET",
+						"header": [],
 						"url": {
 							"raw": "{{api}}/servers/{{serverId}}/groups/{{serverGroupId}}/channels/{{channelId}}/messages",
 							"host": [
@@ -736,6 +806,48 @@
 		{
 			"key": "api",
 			"value": "http://localhost:3100",
+			"type": "default"
+		},
+		{
+			"key": "friendUserId",
+			"value": ""
+		},
+		{
+			"key": "friendshipId",
+			"value": ""
+		},
+		{
+			"key": "friendshipMessageId",
+			"value": ""
+		},
+		{
+			"key": "groupId",
+			"value": ""
+		},
+		{
+			"key": "groupInvitation",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "groupMessageId",
+			"value": ""
+		},
+		{
+			"key": "serverId",
+			"value": ""
+		},
+		{
+			"key": "serverGroupId",
+			"value": ""
+		},
+		{
+			"key": "channelId",
+			"value": ""
+		},
+		{
+			"key": "serverInvitation",
+			"value": "",
 			"type": "default"
 		}
 	]
