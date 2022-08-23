@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Param, Post } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import { ServerService } from "./server.service";
@@ -11,6 +11,11 @@ export class ServerController {
   async createServer(@ExtractAuthenticatedUser() user: UserDocument, @Body() body: { name: string }) {
     const server = await this.serverService.createServer(user, body.name);
     return server;
+  }
+
+  @Post('members')
+  createMemberSelf(@ExtractAuthenticatedUser() user: UserDocument, @Body() body: { invitation: string }) {
+    return this.serverService.createMemberSelf(user, body.invitation);
   }
 
   @Post(':id/groups')
@@ -26,6 +31,11 @@ export class ServerController {
   @Post(':id/groups/:groupId/channels/:channelId/messages')
   createChannelMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param('id') id: string, @Param('groupId') groupId: string, @Param('channelId') channelId: string, @Body() body: { text: string }) {
     return this.serverService.createChannelMessage(user, id, groupId, channelId, body.text);
+  }
+
+  @Get(':id/groups/:groupId/channels/:channelId/messages')
+  getChannelMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param('id') id: string, @Param('groupId') groupId: string, @Param('channelId') channelId: string, @Query("offset") offset: number = 0, @Query("limit") limit: number = 100) {
+    return this.serverService.getChannelMessages(user, id, groupId, channelId, offset, limit);
   }
 
 }

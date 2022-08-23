@@ -4,11 +4,10 @@ import { Model } from 'mongoose';
 import { Server, ServerDocument } from '../entities/server.schema';
 import { UserDocument } from '../entities/user.schema';
 import { ServerNotFoundHttpException, UserAlreadyInServerHttpException, UserNotInServerHttpException } from './exceptions';
-import { v4 as uuid } from 'uuid';
 import { ServerGroup } from '../entities/server-group.schema';
 import { Channel } from '../entities/channel.schema';
 import { ChannelMessage, ChannelMessageDocument } from '../entities/channel-message.schema';
-import { ServerDto } from '../entities/dtos';
+import { ConversationDto, ServerDto } from '../entities/dtos';
 import { ChannelNotFoundHttpException, GroupNotFoundHttpException } from '../group/exceptions';
 
 @Injectable()
@@ -33,16 +32,6 @@ export class ServerService {
     return (await this.serverModel.find({_id: {$in: user.servers}})).map(server => new ServerDto(server));
   }
 
-  async createServerInvitation(user: UserDocument, id: string) {
-    const serverId = user.servers.find(serverId => serverId.toString() === id);
-    if (serverId === undefined) throw new UserNotInServerHttpException();
-    const server = await this.serverModel.findById(id);
-    if (server === null) throw new ServerNotFoundHttpException();
-    server.invitation = uuid();
-    await server.save();
-    return server.invitation;
-  }
-
   async deleteServerInvitation(user: UserDocument, id: string) {
     const serverId = user.servers.find(serverId => serverId.toString() === id);
     if (serverId === undefined) throw new UserNotInServerHttpException();
@@ -60,6 +49,7 @@ export class ServerService {
     server.members.push(user._id);
     user.servers.push(server._id);
     await Promise.all([server.save(), user.save()]);
+    return new ServerDto(server);
   }
 
   async createGroup(user: UserDocument, id: string, name: string) {
@@ -100,7 +90,20 @@ export class ServerService {
       userId: user._id,
       timestamp: new Date(),
       text}).save();
-    return message;
+    return new ConversationDto(message);
+  }
+
+  async getChannelMessages(user: UserDocument, id: string, groupId: string, channelId: string, offset: number, limit: number) {
+    const serverId = user.servers.find(serverId => serverId.toString() === id);
+    if (serverId === undefined) throw new UserNotInServerHttpException();
+    const server = await this.serverModel.findById(id);
+    if (server === null) throw new ServerNotFoundHttpException();
+    const group = server.groups.find(group => group._id.toString() === groupId);
+    if(group === undefined) throw new GroupNotFoundHttpException();
+    const channel = group.channels.find(channel => channel._id.toString() === channelId);
+    if(channel === undefined) throw new ChannelNotFoundHttpException();
+    const messages = await this.channelMessageModel.find({channelId: channel._id}).sort({ timestamp: -1 }).skip(offset).limit(limit);
+    return messages.map(message => new ConversationDto(message));
   }
 
 }

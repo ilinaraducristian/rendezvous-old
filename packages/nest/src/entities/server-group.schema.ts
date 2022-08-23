@@ -4,7 +4,7 @@ import { Channel } from "./channel.schema";
 export class ServerGroup {
 
   _id: Types.ObjectId = new Types.ObjectId();
-  name?: string;
+  name: string = null;
   channels: Channel[] = [];
 
   constructor(name?: string) {

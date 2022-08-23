@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Group, GroupDocument } from "../entities/group.schema";
-import { GroupDto } from "../entities/dtos";
+import { ConversationDto, GroupDto } from "../entities/dtos";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { GroupMessage, GroupMessageDocument } from "../entities/group-message.schema";
-import { GroupNotFoundHttpException, UserNotMemberOfGroupHttpException } from "./exceptions";
+import { GroupNotFoundHttpException, UserAlreadyInServerHttpException, UserNotMemberOfGroupHttpException } from "./exceptions";
 
 @Injectable()
 export class GroupService {
@@ -23,6 +23,13 @@ export class GroupService {
     return new GroupDto(newGroup);
   }
 
+  async getGroup(user: UserDocument, id: string) {
+    const userGroup = user.groups.find(groupId => groupId.toString() === id);
+    if (userGroup === null) throw new GroupNotFoundHttpException();
+    const group = await this.groupModel.findById(userGroup);
+    return group;
+  }
+
   async getGroups(user: UserDocument): Promise<GroupDto[]> {
     return (await this.groupModel.find({ _id: { $in: user.groups } })).map(group => new GroupDto(group));
   }
@@ -35,16 +42,15 @@ export class GroupService {
     await user.save();
   }
 
-  async createGroupMember(user: UserDocument, id: string, userId: string): Promise<void> {
-    const groupId = user.groups.find(groupId => groupId.toString() === id);
-    if (groupId === undefined) throw new UserNotMemberOfGroupHttpException();
-    const group = await this.groupModel.findOne({ _id: groupId });
+  async createMemberSelf(user: UserDocument, invitation: string) {
+    const group = await this.groupModel.findOne({ invitation });
     if (group === null) throw new GroupNotFoundHttpException();
-    const newMember = await this.userModel.findById(userId);
-    if (newMember === null) throw new UserNotFoundHttpException();
-    group.members.push(newMember._id);
-    newMember.groups.push(group._id);
-    await Promise.all([group.save(), newMember.save()]);
+    const groupId = user.groups.find(groupId => groupId.toString() === group.id);
+    if (groupId !== undefined) throw new UserAlreadyInServerHttpException();
+    group.members.push(user._id);
+    user.groups.push(group._id);
+    await Promise.all([group.save(), user.save()]);
+    return new GroupDto(group);
   }
 
   async createGroupMessage(user: UserDocument, id: string, text: string) {
@@ -53,7 +59,13 @@ export class GroupService {
     const group = await this.groupModel.findOne({ _id: groupId });
     if (group === null) throw new GroupNotFoundHttpException();
     const newGroupMessage = await new this.groupMessageModel({ groupId: group._id, userId: user._id, timestamp: new Date(), text }).save();
-    return newGroupMessage;
+    return new ConversationDto(newGroupMessage);
+  }
+
+  async getGroupMessages(user: UserDocument, id: string, offset: number, limit: number): Promise<ConversationDto[]> {
+    const group = await this.getGroup(user, id);
+    const messages = await this.groupMessageModel.find({ groupId: group._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
+    return messages.map(message => new ConversationDto(message));
   }
 
 }

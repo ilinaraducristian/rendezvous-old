@@ -17,3 +17,9 @@ export class UserNotMemberOfGroupHttpException extends HttpException{
     super('user not a member of this group', HttpStatus.FORBIDDEN);
   }
 }
+
+export class UserAlreadyInServerHttpException extends HttpException{
+  constructor() {
+    super('user is already a member of this group', HttpStatus.BAD_REQUEST);
+  }
+}

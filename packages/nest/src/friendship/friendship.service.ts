@@ -14,7 +14,7 @@ import {
 } from "./exceptions";
 import { SseService } from "../sse.service";
 import { UserNotFoundHttpException } from "../exceptions";
-import { ConversationDto, FriendshipDto } from "../entities/dtos";
+import { ConversationDto, FriendshipDto, FriendshipStatus } from "../entities/dtos";
 
 @Injectable()
 export class FriendshipService {
@@ -52,14 +52,11 @@ export class FriendshipService {
   }
 
   async acceptFriendshipRequest(user: UserDocument, id: string): Promise<void> {
-    let friendship;
-    try {
-      friendship = await this.friendshipModel.findById(id);
-    } catch { }
+    const friendship = await this.friendshipModel.findById(id);
     if (friendship === null || friendship === undefined) throw new FriendshipNotFoundHttpException();
     if (friendship.user1._id.toString() === user.id) throw new UserLacksPermissionForFriendshipHttpException();
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
-    friendship.status = 'accepted';
+    friendship.status = FriendshipStatus.accepted;
     user.friendships.push(friendship._id);
     await Promise.all([user.save(), friendship.save()]);
     this.sseService.acceptFriendshipRequest(friendship.user1._id.toString(), id);

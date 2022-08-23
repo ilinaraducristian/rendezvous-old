@@ -6,6 +6,7 @@ import { GroupDocument } from "./group.schema";
 import { ServerGroup } from "./server-group.schema";
 import { ServerDocument } from "./server.schema";
 import { UserDocument } from "./user.schema";
+import { ChannelMessageDocument } from "./channel-message.schema";
 
 export class UserDto {
   id: string;
@@ -56,11 +57,13 @@ export class FriendshipDto {
 export class GroupDto {
   id: string;
   name: string;
+  invitation: string;
   members: string[];
 
   constructor(groupDocument: GroupDocument) {
     this.id = groupDocument.id;
     this.name = groupDocument.name;
+    this.invitation = groupDocument.invitation;
     this.members = groupDocument.members.map(memberId => memberId.toString());
   }
 
@@ -84,13 +87,16 @@ export class MessageDto {
 export class ConversationDto extends MessageDto {
   friendshipId?: string;
   groupId?: string;
+  channelId?: string;
 
   constructor(message: FriendshipMessageDocument);
   constructor(message: GroupMessageDocument);
-  constructor(message: FriendshipMessageDocument | GroupMessageDocument) {
+  constructor(message: ChannelMessageDocument);
+  constructor(message: any) {
     super(message);
     this.friendshipId = (message as FriendshipMessageDocument).friendshipId?.toString();
     this.groupId = (message as GroupMessageDocument).groupId?.toString();
+    this.channelId = (message as ChannelMessageDocument).channelId?.toString();
   }
 
 };
@@ -122,12 +128,14 @@ export class ServerGroupDto {
 export class ServerDto {
   id: string;
   name: string;
+  invitation: string;
   groups: ServerGroupDto[];
   members: string[];
 
   constructor(serverDocument: ServerDocument) {
     this.id = serverDocument.id;
     this.name = serverDocument.name;
+    this.invitation = serverDocument.invitation;
     this.groups = serverDocument.groups.map(group => new ServerGroupDto(group));
     this.members = serverDocument.members.map(memberId => memberId.toString());
   }
