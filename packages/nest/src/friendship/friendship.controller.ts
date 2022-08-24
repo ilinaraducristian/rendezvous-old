@@ -1,5 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Patch, Post, Query } from "@nestjs/common";
-import { ConversationDto, FriendshipDto } from "../entities/dtos";
+import { NewFriendshipDto } from "../dtos/friendship.dto";
+import { FriendshipMessageDto } from "../dtos/message.dto";
+import { FriendshipDto } from "../dtos/user-dtos";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import { FriendshipService } from "./friendship.service";
@@ -9,7 +11,7 @@ export class FriendshipController {
   constructor(private readonly friendshipService: FriendshipService) { }
 
   @Post()
-  createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { id }: { id: string }): Promise<FriendshipDto> {
+  createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { id }: NewFriendshipDto): Promise<FriendshipDto> {
     return this.friendshipService.createFriendship(user, id);
   }
 
@@ -31,23 +33,23 @@ export class FriendshipController {
   }
 
   @Post(":id/messages")
-  createFriendshipMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { text: string }): Promise<ConversationDto> {
+  createFriendshipMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { text: string }): Promise<FriendshipMessageDto> {
     return this.friendshipService.createFriendshipMessage(user, id, body.text);
   }
 
   @Get(':id/messages')
-  getFriendshipMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Query("offset") offset: number = 0, @Query("limit") limit: number = 100): Promise<ConversationDto[]> {
+  getFriendshipMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Query("offset") offset: number = 0, @Query("limit") limit: number = 100): Promise<FriendshipMessageDto[]> {
     return this.friendshipService.getFriendshipMessages(user, id, offset, limit);
   }
 
-  @Get(':id/messages/:messageId')
-  async getFriendshipMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Param("messageId") messageId: string) {
-    return this.friendshipService.getFriendshipMessage(user, id, messageId);
+  @Get(':friendshipId/messages/:id')
+  async getFriendshipMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("friendshipId") friendshipId: string, @Param("id") id: string) {
+    return this.friendshipService.getFriendshipMessage(user, friendshipId, id);
   }
 
-  @Delete(":id/messages/:messageId")
-  async deleteFriendshipMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Param("messageId") messageId: string) {
-    return this.friendshipService.deleteFriendshipMessage(user, id, messageId);
+  @Delete(":friendshipId/messages/:id")
+  async deleteFriendshipMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("friendshipId") friendshipId: string, @Param("id") id: string) {
+    return this.friendshipService.deleteFriendshipMessage(user, friendshipId, id);
   }
 
   @Delete(":id/messages")

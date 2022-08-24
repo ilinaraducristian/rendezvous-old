@@ -1,5 +1,6 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
-import { ConversationDto, GroupDto } from "../entities/dtos";
+import { GroupMessageDto } from "../dtos/message.dto";
+import { GroupDto } from "../dtos/user-dtos";
 import { UserDocument } from "../entities/user.schema";
 import { ExtractAuthenticatedUser } from "../util";
 import { GroupService } from "./group.service";
@@ -20,8 +21,8 @@ export class GroupController {
 
   @Delete(":id")
   @HttpCode(204)
-  async deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string): Promise<void> {
-    await this.groupService.deleteGroup(user, id);
+  deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string) {
+    return this.groupService.deleteGroup(user, id);
   }
 
   @Post('members')
@@ -30,12 +31,12 @@ export class GroupController {
   }
 
   @Post(":id/messages")
-  createGroupMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { text: string }): Promise<ConversationDto> {
+  createGroupMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { text: string }): Promise<GroupMessageDto> {
     return this.groupService.createGroupMessage(user, id, body.text);
   }
 
   @Get(':id/messages')
-  getFriendshipMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Query("offset") offset: number = 0, @Query("limit") limit: number = 100): Promise<ConversationDto[]> {
+  getGroupMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Query("offset") offset: number = 0, @Query("limit") limit: number = 100): Promise<GroupMessageDto[]> {
     return this.groupService.getGroupMessages(user, id, offset, limit);
   }
 

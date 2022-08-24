@@ -1,10 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
-import { ConversationDto } from "../entities/dtos";
 import { UserDocument } from "../entities/user.schema";
 import { FriendshipMessage, FriendshipMessageDocument } from "../entities/friendship-message.schema";
 import { GroupMessage, GroupMessageDocument } from "../entities/group-message.schema";
+import { ConversationsDto } from "../dtos/user-dtos";
+import { FriendshipMessageDto, GroupMessageDto, MessageDto } from "../dtos/message.dto";
 
 @Injectable()
 export class ConversationService {
@@ -13,7 +14,7 @@ export class ConversationService {
     @InjectModel(GroupMessage.name) private readonly groupMessageModel: Model<GroupMessageDocument>
   ) { }
 
-  async getConversations(user: UserDocument): Promise<ConversationDto[]> {
+  async getConversations(user: UserDocument): Promise<ConversationsDto> {
     const [friendshipMessagesResult, groupMessagesResult] = await Promise.all([
       this.friendshipMessageModel.aggregate([
         {
@@ -56,9 +57,9 @@ export class ConversationService {
         }
       ])
     ]);
-    const friendshipMessages = friendshipMessagesResult.map(result => result.message);
-    const groupMessages = groupMessagesResult.map(result => result.message);
-    return friendshipMessages.concat(groupMessages).sort((message1, message2) => message2.timestamp.getTime() - message1.timestamp.getTime()).map(conversation => new ConversationDto(conversation));
+    const friendshipMessages = friendshipMessagesResult.map(result => result.message).map(friendshipMessage => new FriendshipMessageDto(friendshipMessage));
+    const groupMessages = groupMessagesResult.map(result => result.message).map(groupMessage => new GroupMessageDto(groupMessage));
+    return (friendshipMessages as MessageDto[]).concat(groupMessages).sort((message1, message2) => message2.timestamp - message1.timestamp);
   }
 
 }

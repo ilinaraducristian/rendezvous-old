@@ -1,16 +1,14 @@
-import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
-import { Document } from "mongoose";
+import { Prop } from "@nestjs/mongoose";
+import { Types } from "mongoose";
 
-export type MessageDocument = Message & Document;
+export default class Message {
 
-@Schema()
-export class Message {
+  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
+  userId: Types.ObjectId;
 
   @Prop({ required: true })
-  userId: string;
+  timestamp: number;
 
   @Prop({ required: true })
   text: string;
 }
-
-export const MessageSchema = SchemaFactory.createForClass(Message);

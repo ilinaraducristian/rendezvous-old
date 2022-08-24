@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Subject } from "rxjs";
-import { ConversationDto, FriendshipDto } from "./entities/dtos";
+import { FriendshipMessageDto } from "./dtos/message.dto";
+import { FriendshipDto } from "./dtos/user-dtos";
 import MessageEvent from "./message-event";
 import SseEvents from "./sse-events";
 
@@ -30,7 +31,7 @@ export class SseService {
     return this.next({ type: SseEvents.friendshipDeleted, userId, data: { id } });
   }
 
-  friendshipMessage(userId: string, message: ConversationDto) {
+  friendshipMessage(userId: string, message: FriendshipMessageDto) {
     return this.next({
       type: SseEvents.friendshipMessage, userId, data: message
     });

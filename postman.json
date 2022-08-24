@@ -574,7 +574,7 @@
 									"    const body = pm.response.json();",
 									"    pm.collectionVariables.set(\"serverId\", body.id);",
 									"    pm.collectionVariables.set(\"serverInvitation\", body.invitation);",
-									"    const group = body.groups.find(group => group.name !== null);",
+									"    const group = body.groups.find(group => group.name);",
 									"    pm.collectionVariables.set(\"serverGroupId\", group.id);",
 									"    pm.collectionVariables.set(\"channelId\", group.channels[0].id);",
 									"});"
@@ -806,48 +806,6 @@
 		{
 			"key": "api",
 			"value": "http://localhost:3100",
-			"type": "default"
-		},
-		{
-			"key": "friendUserId",
-			"value": ""
-		},
-		{
-			"key": "friendshipId",
-			"value": ""
-		},
-		{
-			"key": "friendshipMessageId",
-			"value": ""
-		},
-		{
-			"key": "groupId",
-			"value": ""
-		},
-		{
-			"key": "groupInvitation",
-			"value": "",
-			"type": "default"
-		},
-		{
-			"key": "groupMessageId",
-			"value": ""
-		},
-		{
-			"key": "serverId",
-			"value": ""
-		},
-		{
-			"key": "serverGroupId",
-			"value": ""
-		},
-		{
-			"key": "channelId",
-			"value": ""
-		},
-		{
-			"key": "serverInvitation",
-			"value": "",
 			"type": "default"
 		}
 	]

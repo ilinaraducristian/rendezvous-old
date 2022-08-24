@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { ConversationService } from "../conversations/conversation.service";
-import { MyUserDto, UserDataDto, UserDto } from "../entities/dtos";
+import { MyUserDto, UserDataDto, UserDto } from "../dtos/user-dtos";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship/friendship.service";

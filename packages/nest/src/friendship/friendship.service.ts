@@ -14,7 +14,8 @@ import {
 } from "./exceptions";
 import { SseService } from "../sse.service";
 import { UserNotFoundHttpException } from "../exceptions";
-import { ConversationDto, FriendshipDto, FriendshipStatus } from "../entities/dtos";
+import { FriendshipDto, FriendshipStatus } from "../dtos/user-dtos";
+import { FriendshipMessageDto } from "../dtos/message.dto";
 
 @Injectable()
 export class FriendshipService {
@@ -52,8 +53,7 @@ export class FriendshipService {
   }
 
   async acceptFriendshipRequest(user: UserDocument, id: string): Promise<void> {
-    const friendship = await this.friendshipModel.findById(id);
-    if (friendship === null || friendship === undefined) throw new FriendshipNotFoundHttpException();
+    const friendship = await this.getFriendship(user, id);
     if (friendship.user1._id.toString() === user.id) throw new UserLacksPermissionForFriendshipHttpException();
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = FriendshipStatus.accepted;
@@ -75,41 +75,41 @@ export class FriendshipService {
     this.sseService.deleteFriendship(otherId, id);
   }
 
-  async createFriendshipMessage(user: UserDocument, id: string, text: string): Promise<ConversationDto> {
+  async createFriendshipMessage(user: UserDocument, id: string, text: string): Promise<FriendshipMessageDto> {
     const friendship = await this.getFriendship(user, id);
 
     const newMessage = await new this.friendshipMessageModel({
       friendshipId: friendship._id,
       userId: user._id,
-      timestamp: new Date(),
+      timestamp: new Date().getTime(),
       text
     }).save();
 
     const otherId = friendship.user1.toString() === user.id ? friendship.user2.toString() : friendship.user1.toString();
-    const message = new ConversationDto(newMessage);
+    const message = new FriendshipMessageDto(newMessage);
     this.sseService.friendshipMessage(otherId, message);
     return message;
   }
 
-  async getFriendshipMessages(user: UserDocument, id: string, offset: number, limit: number): Promise<ConversationDto[]> {
+  async getFriendshipMessages(user: UserDocument, id: string, offset: number, limit: number): Promise<FriendshipMessageDto[]> {
     const friendship = await this.getFriendship(user, id);
     const messages = await this.friendshipMessageModel.find({ friendshipId: friendship._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
-    return messages.map(message => new ConversationDto(message));
+    return messages.map(message => new FriendshipMessageDto(message));
   }
 
-  async getFriendshipMessage(user: UserDocument, id: string, messageId: string) {
-    const friendship = await this.getFriendship(user, id);
-    const message = await this.friendshipMessageModel.findOne({ _id: new Types.ObjectId(messageId), friendshipId: friendship._id });
+  async getFriendshipMessage(user: UserDocument, friendshipId: string, id: string) {
+    const friendship = await this.getFriendship(user, friendshipId);
+    const message = await this.friendshipMessageModel.findOne({ _id: new Types.ObjectId(id), friendshipId: friendship._id });
     if (message === null) throw new FriendshipMessageNotFoundHttpException();
     return message;
   }
 
-  async deleteFriendshipMessage(user: UserDocument, id: string, messageId: string) {
-    const friendship = await this.getFriendship(user, id);
-    const message = await this.friendshipMessageModel.findOneAndRemove({ _id: new Types.ObjectId(messageId), friendshipId: friendship._id });
+  async deleteFriendshipMessage(user: UserDocument, friendshipId: string, id: string) {
+    const friendship = await this.getFriendship(user, friendshipId);
+    const message = await this.friendshipMessageModel.findOneAndRemove({ _id: new Types.ObjectId(id), friendshipId: friendship._id });
     if (message === null) throw new FriendshipMessageNotFoundHttpException();
     const otherId = user.id === friendship.user1.toString() ? friendship.user2.toString() : friendship.user1.toString();
-    this.sseService.deleteFriendshipMessage(otherId, id, messageId);
+    this.sseService.deleteFriendshipMessage(otherId, friendshipId, id);
   }
 
   async deleteFriendshipMessages(user: UserDocument, id: string) {

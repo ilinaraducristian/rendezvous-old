@@ -2,11 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { Group, GroupDocument } from "../entities/group.schema";
-import { ConversationDto, GroupDto } from "../entities/dtos";
+import { GroupDto } from "../dtos/user-dtos";
 import { User, UserDocument } from "../entities/user.schema";
-import { UserNotFoundHttpException } from "../exceptions";
 import { GroupMessage, GroupMessageDocument } from "../entities/group-message.schema";
 import { GroupNotFoundHttpException, UserAlreadyInServerHttpException, UserNotMemberOfGroupHttpException } from "./exceptions";
+import { GroupMessageDto } from "../dtos/message.dto";
 
 @Injectable()
 export class GroupService {
@@ -25,8 +25,9 @@ export class GroupService {
 
   async getGroup(user: UserDocument, id: string) {
     const userGroup = user.groups.find(groupId => groupId.toString() === id);
-    if (userGroup === null) throw new GroupNotFoundHttpException();
+    if (userGroup === undefined) throw new UserNotMemberOfGroupHttpException();
     const group = await this.groupModel.findById(userGroup);
+    if (group === null) throw new GroupNotFoundHttpException();
     return group;
   }
 
@@ -54,18 +55,15 @@ export class GroupService {
   }
 
   async createGroupMessage(user: UserDocument, id: string, text: string) {
-    const groupId = user.groups.find(groupId => groupId.toString() === id);
-    if (groupId === undefined) throw new UserNotMemberOfGroupHttpException();
-    const group = await this.groupModel.findOne({ _id: groupId });
-    if (group === null) throw new GroupNotFoundHttpException();
-    const newGroupMessage = await new this.groupMessageModel({ groupId: group._id, userId: user._id, timestamp: new Date(), text }).save();
-    return new ConversationDto(newGroupMessage);
+    const group = await this.getGroup(user, id);
+    const newGroupMessage = await new this.groupMessageModel({ groupId: group._id, userId: user._id, timestamp: new Date().getTime(), text }).save();
+    return new GroupMessageDto(newGroupMessage);
   }
 
-  async getGroupMessages(user: UserDocument, id: string, offset: number, limit: number): Promise<ConversationDto[]> {
+  async getGroupMessages(user: UserDocument, id: string, offset: number, limit: number): Promise<GroupMessageDto[]> {
     const group = await this.getGroup(user, id);
     const messages = await this.groupMessageModel.find({ groupId: group._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
-    return messages.map(message => new ConversationDto(message));
+    return messages.map(message => new GroupMessageDto(message));
   }
 
 }
