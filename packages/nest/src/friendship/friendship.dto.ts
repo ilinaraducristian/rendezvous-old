@@ -1,11 +1,23 @@
 import { IsNotEmpty, IsString } from "class-validator";
+import { Types } from "mongoose";
 import { FriendshipDocument } from "../entities/friendship.schema";
-import { UserDocument } from "../entities/user.schema";
 
 export class NewFriendshipDto {
   @IsString()
   @IsNotEmpty()
   id: string;
+}
+
+export class NewFriendshipMessageDto {
+  @IsString()
+  @IsNotEmpty()
+  text: string
+}
+
+export class NewFriendshipMessageReactionDto {
+  @IsString()
+  @IsNotEmpty()
+  text: string
 }
 
 export enum FriendshipStatus {
@@ -19,28 +31,11 @@ export class FriendshipDto {
   status: FriendshipStatus;
   incoming: boolean;
 
-  constructor(user: UserDocument, friendshipDocument: FriendshipDocument) {
-    let userObjectId = friendshipDocument.user1, incoming = true;
-    if (friendshipDocument.user1.toString() === user.id) {
-      userObjectId = friendshipDocument.user2;
-      incoming = false;
-    }
+  constructor(userId: Types.ObjectId, friendshipDocument: FriendshipDocument) {
     this.id = friendshipDocument.id;
-    this.userId = userObjectId.toString();
+    this.userId = userId.toString();
     this.status = friendshipDocument.status;
-    this.incoming = incoming;
+    this.incoming = userId.toString() === friendshipDocument.user2.toString();
   }
 
 };
-
-export class NewFriendshipMessageDto {
-  @IsString()
-  @IsNotEmpty()
-  text: string
-}
-
-export class NewFriendshipMessageReactionDto {
-  @IsString()
-  @IsNotEmpty()
-  text: string
-}

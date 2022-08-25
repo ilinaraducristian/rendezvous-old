@@ -10,16 +10,14 @@ import {
   UserLacksPermissionForFriendshipHttpException,
   CannotBeFriendWithYourselfHttpException,
 } from "./exceptions";
-import { SseService } from "../sse.service";
 import { UserNotFoundHttpException } from "../exceptions";
-import { FriendshipDto, FriendshipStatus } from "./friendship.dto";
+import { FriendshipStatus } from "./friendship.dto";
 
 @Injectable()
 export class FriendshipService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    @InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>,
-    private readonly sseService: SseService
+    @InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>
   ) { }
 
   async createFriendship(user: UserDocument, friendUserId: string) {
@@ -32,7 +30,6 @@ export class FriendshipService {
     user.friendships.push(friendship.id);
     friendUser.friendships.push(friendship.id);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.friendRequest(friendUser.id, new FriendshipDto(friendUser, friendship));
     return friendship;
   }
 
@@ -54,7 +51,6 @@ export class FriendshipService {
     if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
     friendship.status = FriendshipStatus.accepted;
     await Promise.all([user.save(), friendship.save()]);
-    this.sseService.acceptFriendshipRequest(friendship.user1._id.toString(), id);
     return friendship;
   }
 
@@ -68,7 +64,6 @@ export class FriendshipService {
     user.friendships.splice(friendshipIndex1, 1);
     friendUser.friendships.splice(friendshipIndex2, 1);
     await Promise.all([user.save(), friendUser.save()]);
-    this.sseService.deleteFriendship(otherId, id);
     return deletedFriendship;
   }
 

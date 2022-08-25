@@ -37,7 +37,7 @@ export class UserController {
     const userData = await this.userService.getUserData(user);
     return {
       ...new MyUserDto(userData.user),
-      friendships: userData.friendships.map(friendship => new FriendshipDto(user, friendship)),
+      friendships: userData.friendships.map(friendship => new FriendshipDto(user._id, friendship)),
       conversations: userData.conversations.map(conversation => {
         if (conversation.friendshipId !== undefined)
           return new FriendshipMessageDto(conversation)

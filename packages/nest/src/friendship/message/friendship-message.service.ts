@@ -32,6 +32,7 @@ export class FriendshipMessageService {
 
     const otherId = (friendship.user1.toString() === user.id ? friendship.user2 : friendship.user1).toString();
     this.sseService.friendshipMessage(otherId, new FriendshipMessageDto(message));
+    message.friendship = friendship;
     return message;
   }
   
@@ -54,6 +55,8 @@ export class FriendshipMessageService {
     if (message === null) throw new FriendshipMessageNotFoundHttpException();
     const otherId = user.id === friendship.user1.toString() ? friendship.user2.toString() : friendship.user1.toString();
     this.sseService.deleteFriendshipMessage(otherId, friendshipId, id);
+    message.friendship = friendship;
+    return message;
   }
 
   async deleteFriendshipMessages(user: UserDocument, id: string) {

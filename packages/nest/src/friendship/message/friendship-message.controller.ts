@@ -2,13 +2,17 @@ import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/commo
 import { FriendshipMessageDto } from "../../dtos/message.dto";
 import { UserDocument } from "../../entities/user.schema";
 import { ObjectIdPipe } from "../../object-id.pipe";
-import { ExtractAuthenticatedUser } from "../../util";
+import { SseService } from "../../sse.service";
+import { ExtractAuthenticatedUser, extractOtherId } from "../../util";
 import { NewFriendshipMessageDto } from "../friendship.dto";
 import { FriendshipMessageService } from "./friendship-message.service";
 
 @Controller("friendships/:friendshipId")
 export class FriendshipMessageController {
-  constructor(private readonly friendshipMessageService: FriendshipMessageService) { }
+  constructor(
+    private readonly friendshipMessageService: FriendshipMessageService,
+    private readonly sseService: SseService
+  ) { }
 
   @Post("messages")
   async createFriendshipMessage(
@@ -17,7 +21,10 @@ export class FriendshipMessageController {
     @Body() { text }: NewFriendshipMessageDto
   ): Promise<FriendshipMessageDto> {
     const friendshipMessage = await this.friendshipMessageService.createFriendshipMessage(user, friendshipId, text);
-    return new FriendshipMessageDto(friendshipMessage);
+    const friendshipMessageDto = new FriendshipMessageDto(friendshipMessage);
+    const otherId = extractOtherId(user, friendshipMessage.friendship);
+    this.sseService.friendshipMessage(otherId.toString(), friendshipMessageDto);
+    return friendshipMessageDto;
   }
 
   @Get('messages')
@@ -42,7 +49,9 @@ export class FriendshipMessageController {
     @Param("friendshipId", new ObjectIdPipe()) friendshipId: string,
     @Param("id", new ObjectIdPipe()) id: string
   ): Promise<void> {
-    await this.friendshipMessageService.deleteFriendshipMessage(user, friendshipId, id);
+    const message = await this.friendshipMessageService.deleteFriendshipMessage(user, friendshipId, id);
+    const otherId = extractOtherId(user, message.friendship);
+    this.sseService.deleteFriendshipMessage(otherId.toString(), friendshipId, id);
   }
 
   @Delete("messages")
