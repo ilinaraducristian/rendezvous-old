@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
-import { FriendshipMessageDto, FriendshipMessageReactionDto } from "../../dtos/message.dto";
+import { FriendshipMessageReactionDto } from "../../dtos/message.dto";
 import { FriendshipMessage, FriendshipMessageDocument } from "../../entities/friendship-message.schema";
 import Reaction from "../../entities/reaction.schema";
 import { UserDocument } from "../../entities/user.schema";
-import { SseService } from "../../sse.service";
+import { extractOtherId } from "../../util";
 import { FriendshipMessageNotFoundHttpException, ReplyMessageDoesntExistHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship.service";
 
@@ -13,8 +13,7 @@ import { FriendshipService } from "../friendship.service";
 export class FriendshipMessageService {
   constructor(
     private readonly friendshipService: FriendshipService,
-    @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>,
-    private readonly sseService: SseService
+    @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
   ) { }
 
   async createFriendshipMessage(user: UserDocument, id: string, text: string, replyId: string = null) {
@@ -30,8 +29,6 @@ export class FriendshipMessageService {
       // replyId: replyMesage?._id
     }).save();
 
-    const otherId = (friendship.user1.toString() === user.id ? friendship.user2 : friendship.user1).toString();
-    this.sseService.friendshipMessage(otherId, new FriendshipMessageDto(message));
     message.friendship = friendship;
     return message;
   }
@@ -53,8 +50,6 @@ export class FriendshipMessageService {
     const friendship = await this.friendshipService.getFriendship(user, friendshipId);
     const message = await this.friendshipMessageModel.findOneAndRemove({ _id: new Types.ObjectId(id), friendshipId: friendship._id });
     if (message === null) throw new FriendshipMessageNotFoundHttpException();
-    const otherId = user.id === friendship.user1.toString() ? friendship.user2.toString() : friendship.user1.toString();
-    this.sseService.deleteFriendshipMessage(otherId, friendshipId, id);
     message.friendship = friendship;
     return message;
   }
@@ -63,7 +58,7 @@ export class FriendshipMessageService {
     const friendship = await this.friendshipService.getFriendship(user, id);
     const messages = await this.friendshipMessageModel.deleteMany({ friendshipId: friendship._id });
     if (messages.deletedCount === 0) throw new FriendshipMessageNotFoundHttpException();
-    const otherId = user.id === friendship.user1.toString() ? friendship.user2.toString() : friendship.user1.toString();
+    const otherId = extractOtherId(user, friendship);
   }
 
   async createFriendshipMessageReaction(user: UserDocument, friendshipId: string, id: string, text: string) {

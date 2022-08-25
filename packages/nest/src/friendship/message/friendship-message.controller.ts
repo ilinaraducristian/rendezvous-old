@@ -23,7 +23,7 @@ export class FriendshipMessageController {
     const friendshipMessage = await this.friendshipMessageService.createFriendshipMessage(user, friendshipId, text);
     const friendshipMessageDto = new FriendshipMessageDto(friendshipMessage);
     const otherId = extractOtherId(user, friendshipMessage.friendship);
-    this.sseService.friendshipMessage(otherId.toString(), friendshipMessageDto);
+    this.sseService.friendshipMessage(otherId, friendshipMessageDto);
     return friendshipMessageDto;
   }
 
@@ -51,7 +51,7 @@ export class FriendshipMessageController {
   ): Promise<void> {
     const message = await this.friendshipMessageService.deleteFriendshipMessage(user, friendshipId, id);
     const otherId = extractOtherId(user, message.friendship);
-    this.sseService.deleteFriendshipMessage(otherId.toString(), friendshipId, id);
+    this.sseService.deleteFriendshipMessage(otherId, friendshipId, id);
   }
 
   @Delete("messages")

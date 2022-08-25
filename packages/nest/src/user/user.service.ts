@@ -2,12 +2,12 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model, Types } from "mongoose";
 import { ConversationService } from "../conversations/conversation.service";
-import { MyUserDto, UserDataDto, UserDto } from "../dtos/user-dtos";
 import { User, UserDocument } from "../entities/user.schema";
 import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship/friendship.service";
 import { GroupService } from "../group/group.service";
 import { ServerService } from "../server/server.service";
+import { extractOtherId } from "../util";
 
 @Injectable()
 export class UserService {
@@ -39,7 +39,7 @@ export class UserService {
     ]);
     const userIds = new Map<string, Types.ObjectId>();
     friendships.forEach(friendship => {
-      const otherId = user.id === friendship.user1.toString() ? friendship.user2 : friendship.user1;
+      const otherId = extractOtherId(user, friendship);
       userIds.set(otherId.toString(), otherId);
     })
     groups.map(group => group.members).flat().forEach(userId => userIds.set(userId.toString(), userId));

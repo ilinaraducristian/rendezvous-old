@@ -1,44 +1,52 @@
 import { Injectable } from "@nestjs/common";
+import { Types } from "mongoose";
 import { Subject } from "rxjs";
-import { FriendshipMessageDto } from "./dtos/message.dto";
+import { FriendshipMessageDto, GroupMessageDto } from "./dtos/message.dto";
 import { FriendshipDto } from "./friendship/friendship.dto";
 import MessageEvent from "./message-event";
 import SseEvents from "./sse-events";
 
+type MessageType = MessageEvent & { userId?: Types.ObjectId, groupId?: Types.ObjectId, serverId?: Types.ObjectId };
+
 @Injectable()
 export class SseService {
-  private readonly sse$ = new Subject<MessageEvent & { userId: string }>();
 
-  get sse() {
-    return this.sse$.asObservable();
+  private readonly sse = new Subject<MessageType>();
+
+  get sse$() {
+    return this.sse.asObservable();
   }
 
-  private next(value: MessageEvent & { userId: string }) {
-    this.sse$.next(value);
+  private next(value: MessageType) {
+    this.sse.next(value);
   }
 
-  friendRequest(userId: string, friendshipDto: FriendshipDto) {
+  friendRequest(userId: Types.ObjectId, data: FriendshipDto) {
     return this.next({
-      type: SseEvents.friendRequest, userId: userId, data: friendshipDto
+      type: SseEvents.friendRequest, userId, data
     });
   }
 
-  acceptFriendshipRequest(userId: string, id: string) {
+  acceptFriendshipRequest(userId: Types.ObjectId, id: string) {
     return this.next({ type: SseEvents.friendRequestAccepted, userId, data: { id } })
   }
 
-  deleteFriendship(userId: string, id: string) {
+  deleteFriendship(userId: Types.ObjectId, id: string) {
     return this.next({ type: SseEvents.friendshipDeleted, userId, data: { id } });
   }
 
-  friendshipMessage(userId: string, message: FriendshipMessageDto) {
+  friendshipMessage(userId: Types.ObjectId, data: FriendshipMessageDto) {
     return this.next({
-      type: SseEvents.friendshipMessage, userId, data: message
+      type: SseEvents.friendshipMessage, userId, data
     });
   }
 
-  deleteFriendshipMessage(userId: string, friendshipId: string, id: string) {
+  deleteFriendshipMessage(userId: Types.ObjectId, friendshipId: string, id: string) {
     return this.next({ type: SseEvents.friendshipMessageDeleted, userId, data: { friendshipId, id } });
+  }
+
+  groupMessage(groupId: Types.ObjectId, data: GroupMessageDto) {
+    return this.next({ type: SseEvents.groupMessage, groupId, data });
   }
 
 }

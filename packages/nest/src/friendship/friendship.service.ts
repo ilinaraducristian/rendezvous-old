@@ -12,6 +12,7 @@ import {
 } from "./exceptions";
 import { UserNotFoundHttpException } from "../exceptions";
 import { FriendshipStatus } from "./friendship.dto";
+import { extractOtherId } from "../util";
 
 @Injectable()
 export class FriendshipService {
@@ -57,7 +58,7 @@ export class FriendshipService {
   async deleteFriendship(user: UserDocument, id: string) {
     const deletedFriendship = await this.friendshipModel.findOneAndRemove({ id, $or: [{ user1: user._id }, { user2: user._id }] });
     if (deletedFriendship === null) throw new FriendshipNotFoundHttpException();
-    const otherId = user.id === deletedFriendship.user1.toString() ? deletedFriendship.user2.toString() : deletedFriendship.user1.toString();
+    const otherId = extractOtherId(user, deletedFriendship);
     const friendUser = await this.userModel.findById(otherId);
     const friendshipIndex1 = user.friendships.findIndex(friendshipId => friendshipId.toString() === id);
     const friendshipIndex2 = friendUser.friendships.findIndex(friendshipId => friendshipId.toString() === id);

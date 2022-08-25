@@ -17,7 +17,7 @@ export class FriendshipController {
   async createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { id }: NewFriendshipDto): Promise<FriendshipDto> {
     const friendship = await this.friendshipService.createFriendship(user, id);
     const otherId = extractOtherId(user, friendship);
-    this.sseService.friendRequest(otherId.toString(), new FriendshipDto(user._id, friendship));
+    this.sseService.friendRequest(otherId, new FriendshipDto(user._id, friendship));
     return new FriendshipDto(otherId, friendship);
   }
 
@@ -35,7 +35,7 @@ export class FriendshipController {
   async acceptFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Param("id", new ObjectIdPipe()) id: string): Promise<void> {
     const friendship = await this.friendshipService.acceptFriendshipRequest(user, id);
     const otherId = extractOtherId(user, friendship);
-    this.sseService.acceptFriendshipRequest(otherId.toString(), id);
+    this.sseService.acceptFriendshipRequest(otherId, id);
   }
 
   @Delete(":id")
@@ -43,7 +43,7 @@ export class FriendshipController {
   async deleteFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Param("id", new ObjectIdPipe()) id: string): Promise<void> {
     const friendship = await this.friendshipService.deleteFriendship(user, id);
     const otherId = extractOtherId(user, friendship);
-    this.sseService.deleteFriendship(otherId.toString(), id);
+    this.sseService.deleteFriendship(otherId, id);
   }
 
 }

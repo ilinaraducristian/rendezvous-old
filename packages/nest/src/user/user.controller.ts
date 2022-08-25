@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Param, Sse } from "@nestjs/common";
-import { filter, map, Observable } from "rxjs";
+import { filter, from, map, Observable, switchMap, tap } from "rxjs";
 import { UserDocument } from "../entities/user.schema";
 import { SseService } from "../sse.service";
 import { ExtractAuthenticatedUser, extractOtherId } from "../util";
@@ -8,7 +8,7 @@ import MessageEvent from "../message-event";
 import { MyUserDto, UserDataDto, UserDto } from "../dtos/user-dtos";
 import { FriendshipDto } from "../friendship/friendship.dto";
 import { ServerDto } from "../dtos/server.dto";
-import { FriendshipMessageDto, GroupMessageDto, MessageDto } from "../dtos/message.dto";
+import { FriendshipMessageDto, GroupMessageDto } from "../dtos/message.dto";
 import { GroupDto } from "../group/group.dto";
 
 @Controller("users")
@@ -54,7 +54,20 @@ export class UserController {
 
   @Sse('sse')
   sse(@ExtractAuthenticatedUser() user: UserDocument): Observable<MessageEvent> {
-    return this.sseService.sse.pipe(filter(({ userId }) => userId === user.id), map(({ type, data }) => ({ type, data })));
+    return this.sseService.sse$.pipe(
+      switchMap(value =>
+        from(this.userService.getUser(user.id).then(user => ({ value, user })))
+      ),
+      filter(({ value, user }) => {
+        if (value.groupId !== undefined) {
+          return user.groups.find(groupId => value.groupId.toString() === groupId.toString()) !== undefined;
+        } else if (value.serverId) {
+          return user.servers.find(serverId => value.serverId.toString() === serverId.toString()) !== undefined;
+        }
+        return user.id === value.userId.toString();
+      }),
+      map(({ value: { type, data } }) => ({ type, data }))
+    );
   }
 
 }
