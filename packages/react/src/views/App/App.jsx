@@ -13,12 +13,13 @@ import { getData } from "../../config/axiosConfig";
 
 // REDUX
 import {
-  deleteOutgoingFriendship,
-  getUsersData,
-  incomingFriendship,
-  acceptOutgoingFriendshipRequest
+  deleteFriendship,
+  addUser,
+  addFriendship,
+  acceptFriendship,
+  setConversation,
 } from "../../slices/slices";
-
+import { addMessages } from "../../slices/messages";
 // LIBRARIES
 import Div100vh from "react-div-100vh";
 
@@ -53,17 +54,18 @@ const App = () => {
   const [userContentType, setUserContentType] =
     useState("direct-message");
   const [nameClass, setNameClass] = useState("");
+  const [userMessageData, setUserMessageData] = useState({});
 
   // REQUEST CONSTANTS
   const getUserData = async () => {
     const response = await getData("/users/data");
     dispatch(userModel(response.data));
   };
-  const getUsers = async () => {
-    const response = await getData(`/users/data`);
-    dispatch(getUsersData(response.data.users));
-  };
 
+  const getUsersData = async (userId) => {
+    const response = await getData(`/users/${userId}`);
+    dispatch(addUser({ id: userId, name: response.data.name }));
+  };
   // HANDLE functions
   useEffect(() => {
     if (loaded) {
@@ -77,27 +79,30 @@ const App = () => {
     );
     evtSource.addEventListener("friendRequest", (event) => {
       const request = JSON.parse(event.data);
-      dispatch(
-        incomingFriendship({
-          id: request.friendshipId,
-          userId: request.user.id,
-          status: "pending",
-        })
-      );
-      getUsers();
+      console.log(request);
+      dispatch(addFriendship(request));
+      getUsersData(request.userId);
     });
     evtSource.addEventListener("friendshipDeleted", (event) => {
       const request = JSON.parse(event.data).id;
-      dispatch(deleteOutgoingFriendship(request));
+      dispatch(deleteFriendship(request));
+      console.log(request);
     });
     evtSource.addEventListener("friendRequestAccepted", (event) => {
       const request = JSON.parse(event.data).id;
-      dispatch(acceptOutgoingFriendshipRequest(request));
+      dispatch(acceptFriendship(request));
+      console.log(request);
+    });
+    evtSource.addEventListener("friendshipMessage", (event) => {
+      const request = JSON.parse(event.data);
+      console.log("request", request);
+      dispatch(addMessages(request));
+      dispatch(setConversation(request));
     });
     // eslint-disable-next-line
   }, []);
 
-  const handleUserAction = (action) => {
+  const handleUserAction = (action, value) => {
     switch (action) {
       case "profile":
         setUserContentType("profile");
@@ -110,16 +115,20 @@ const App = () => {
         break;
       case "friendship-user":
         setNameClass("active");
+        setUserMessageData(value);
         break;
       case "chat":
         setUserContentType("direct-message");
         setNameClass("");
         break;
+      case "direct-message":
+        setNameClass("active");
+        setUserMessageData(value);
+        break;
       default:
         break;
     }
   };
-
   return (
     <Div100vh>
       <div className="app-container">
@@ -141,7 +150,11 @@ const App = () => {
         </div>
         <div className={`chat-container ${nameClass}`}>
           {nameClass === "active" ? (
-            <Chat styleType={nameClass} onClick={handleUserAction} />
+            <Chat
+              styleType={nameClass}
+              onClick={handleUserAction}
+              userData={userMessageData}
+            />
           ) : (
             <div className="app-logo-wrapper">
               <img src={logo} alt="app-logo" />

@@ -11,12 +11,10 @@ import {
   getData,
 } from "../../../../../../config/axiosConfig";
 
-// CONSTANTS & MOCKS
-
 // REDUX
 import {
-  outgoingFriendship,
-  getUsersData,
+  addUser,
+  addFriendship,
 } from "../../../../../../slices/slices";
 import { useDispatch } from "react-redux";
 
@@ -33,26 +31,25 @@ const AddFriend = (props) => {
   const [userId, setUserId] = useState("");
   const [showError, setShowError] = useState(false);
 
-  // GENERAL CONSTANTS
-
-  // USE EFFECT FUNCTION
-
   // REQUEST API FUNCTIONS
-  const usersData = async () => {
-    const response = await getData(`/users/data`);
-    dispatch(getUsersData(response.data.users));
+  const addUsersData = async () => {
+    const response = await getData(`/users/${userId}`);
+    dispatch(addUser({ id: userId, name: response.data.name }));
   };
 
   const postRequest = async () => {
     const response = await postData("/friendships", { id: userId });
+    console.log(response.data);
     if (response.status === 201) {
-      const friendshipRequestModel = {
-        id: response.data.id,
-        userId,
-        status: "pending",
-      };
-      dispatch(outgoingFriendship(friendshipRequestModel));
-      usersData();
+      // const friendshipRequestModel = {
+      //   id: response.data.id,
+      //   userId,
+      //   status: "pending",
+      //   incoming: false,
+      // };
+      dispatch(addFriendship(response.data));
+      addUsersData();
+      // dispatch(addUser(response.data.user));
     } else {
       setShowError(true);
       setTimeout(() => {

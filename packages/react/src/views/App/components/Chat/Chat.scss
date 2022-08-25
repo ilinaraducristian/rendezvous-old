@@ -1,33 +1,101 @@
 @import "../../../../utils/Styles/variables.scss";
 
-.chat-container {
+.chat-wrapper {
   display: flex;
   flex-wrap: wrap;
-  flex-grow: 1;
-  //   flex-direction: column;
+  width: 100%;
+  height: 100%;
+  flex-direction: column;
   .chat-header {
     width: 100%;
     height: 7rem;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     background-color: #4b494c65;
-    .back-arrow {
-      &.MuiSvgIcon-root {
+    .chat-header-info {
+      display: flex;
+      align-items: center;
+      .back-arrow {
+        &.MuiSvgIcon-root {
+          font-size: 4rem;
+          color: $whiteColor;
+          margin-left: 5rem;
+          cursor: pointer;
+          display: none;
+          @media only screen and (max-width: 600px) {
+            display: unset;
+          }
+        }
+      }
+      span {
+        font-size: 2rem;
+        color: $whiteColor;
+        font-weight: $semi-bold;
+        padding-left: 5rem;
+      }
+    }
+    .chat-header-menu {
+      position: relative;
+      .MuiSvgIcon-root {
         font-size: 4rem;
         color: $whiteColor;
-        margin-left: 5rem;
         cursor: pointer;
-        display: none;
-        @media only screen and (max-width: 600px) {
-          display: unset;
+      }
+      div {
+        background-color: rgb(138, 128, 128);
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 12rem;
+        height: 10rem;
+        top: 5rem;
+        right: 2rem;
+        span {
+          font-size: 1.6rem;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
         }
       }
     }
-    span {
-      font-size: 2rem;
-      color: $whiteColor;
-      font-weight: $semi-bold;
-      padding-left: 5rem;
+  }
+  .chat-content {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    justify-content: flex-end;
+    padding: 2rem;
+    .message-wrapper-left {
+      margin: 0.5rem 0rem;
+      width: 100%;
+      display: flex;
+      justify-content: flex-end;
+      .timestamp {
+        padding-left: 2rem;
+        color: $whiteColor;
+        opacity: 50%;
+      }
+      .message {
+        font-size: 1.8rem;
+        color: $whiteColor;
+      }
+    }
+    .message-wrapper-right {
+      width: 100%;
+      display: flex;
+      align-items: right;
+      .timestamp {
+        padding-left: 2rem;
+        color: $whiteColor;
+        opacity: 50%;
+      }
+      .message {
+        font-size: 1.8rem;
+        color: $whiteColor;
+      }
     }
   }
   .chat-message-wrapper {
@@ -59,6 +127,7 @@
         font-size: 4rem;
         color: $whiteColor;
         margin: 0rem 3rem;
+        cursor: pointer;
       }
     }
   }

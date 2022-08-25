@@ -32,7 +32,7 @@ const UserContent = (props) => {
   // HANDLERS FUNCTIONS
   switch (content) {
     case "direct-message":
-      return <DirectMessage />;
+      return <DirectMessage onClick={onClick}/>;
     case "profile":
       return <Profile />;
     case "friendships":

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 // STYLES
 import "./Friendships.scss";
@@ -6,13 +6,8 @@ import userIcon from "../../../../../../assets/user/userIcon.png";
 
 // LIBRARIES
 
-// CONSTANTS & MOCKS
-import { getUsersData } from "./helpers";
-
-// AXIOS
-import { getData } from "../../../../../../config/axiosConfig";
-
 // REDUX
+import { useSelector } from "react-redux";
 
 // COMPONENTS
 
@@ -21,29 +16,12 @@ const Friendships = (props) => {
   const { onClick = () => {} } = props;
 
   // CONSTANTS USING LIBRARIES
-
-  // CONSTANTS USING HOOKS
-  const [friendships, setFriendships] = useState([]);
-  const [users, setUsers] = useState([]);
-
-  const getFriendships = async () => {
-    const response = await getData("/friendships");
-    setFriendships([
-      ...response.data.friendships.incoming,
-      ...response.data.friendships.outgoing,
-    ]);
-  };
-
-  const getUsers = async () => {
-    const response = await getData(`/users/data`);
-    setUsers(response.data.users);
-  };
+  const userData = useSelector((state) => state.userData.user);
+  const users = new Map(
+    userData.users.map((user) => [user.id, user])
+  );
 
   // USE EFFECT FUNCTION
-  useEffect(() => {
-    getFriendships();
-    getUsers();
-  }, []);
 
   // REQUEST API FUNCTIONS
 
@@ -55,22 +33,26 @@ const Friendships = (props) => {
         <input placeholder="🔍 Search" />
       </div>
       <div className="friendships-content">
-        {friendships?.map((user, index) => {
-          if (user.status === "accepted") {
-            const userInfo = getUsersData(user.userId, users);
+        {userData?.friendships?.map((friendship, index) => {
+          if (friendship.status === "accepted") {
             return (
               <div
                 key={`user-${index}`}
                 className="user-wrapper"
                 onClick={() => {
-                  onClick("friendship-user");
+                  onClick("friendship-user", {
+                    friendshipId: friendship.id,
+                    name: users.get(friendship.userId)?.name,
+                  });
                 }}
               >
                 <div className="user-avatar-wrapper">
                   <img src={userIcon} alt="user icon" />
                 </div>
                 <div className="user-info">
-                  <span className="user-name">{userInfo?.name}</span>
+                  <span className="user-name">
+                    {users.get(friendship.userId)?.name}
+                  </span>
                 </div>
               </div>
             );

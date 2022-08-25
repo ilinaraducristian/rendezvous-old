@@ -11,88 +11,80 @@ export const slice = createSlice({
     userModel: (state, action) => {
       state.user = action.payload;
     },
-    outgoingFriendship: (state, action) => {
+    addFriendship: (state, action) => {
       state.user = {
         ...state.user,
-        friendships: {
-          ...state.user.friendships,
-          outgoing: [
-            ...state.user.friendships.outgoing,
-            action.payload,
-          ],
-        },
+        friendships: [...state.user.friendships, action.payload],
       };
     },
-    incomingFriendship: (state, action) => {
+    addUser: (state, action) => {
+      if (state.user.users.length > 0) {
+        state.user.users.forEach((user) => {
+          if (user.id !== action.payload.id) {
+            state.user = {
+              ...state.user,
+              users: [...state.user.users, action.payload],
+            };
+          }
+        });
+      } else {
+        state.user = {
+          ...state.user,
+          users: [...state.user.users, action.payload],
+        };
+      }
+    },
+    deleteFriendship: (state, action) => {
       state.user = {
         ...state.user,
-        friendships: {
-          ...state.user.friendships,
-          incoming: [
-            ...state.user.friendships.incoming,
-            action.payload,
-          ],
-        },
+        friendships: state.user.friendships.filter((friendship) => {
+          return friendship.id !== action.payload;
+        }),
       };
     },
-    getUsersData: (state, action) => {
-      state.user = {
-        ...state.user,
-        users: action.payload,
-      };
-    },
-    deleteIncomingFriendship: (state, action) => {
-      state.user = {
-        ...state.user,
-        friendships: {
-          ...state.user.friendships,
-          incoming: state.user.friendships.incoming.filter(
-            (friendship) => {
-              return friendship.id !== action.payload;
-            }
-          ),
-        },
-      };
-    },
-    deleteOutgoingFriendship: (state, action) => {
-      state.user = {
-        ...state.user,
-        friendships: {
-          ...state.user.friendships,
-          outgoing: state.user.friendships.outgoing.filter(
-            (friendship) => {
-              return friendship.id !== action.payload;
-            }
-          ),
-        },
-      };
-    },
-    acceptIncomingFriendshipRequest: (state, action) => {
-      state.user.friendships.incoming.forEach((friendship) => {
+    acceptFriendship: (state, action) => {
+      state.user.friendships.forEach((friendship) => {
         if (friendship.id === action.payload) {
           friendship.status = "accepted";
         }
       });
     },
-    acceptOutgoingFriendshipRequest: (state, action) => {
-      state.user.friendships.outgoing.forEach((friendship) => {
-        if (friendship.id === action.payload) {
-          friendship.status = "accepted";
-        }
-      });
+    setConversation: (state, action) => {
+      if (state.user.conversations.length > 0) {
+        state.user.conversations.forEach((user) => {
+          if (user.friendshipId !== action.payload.friendshipId) {
+            state.user = {
+              ...state.user,
+              conversations: [
+                ...state.user.conversations,
+                action.payload,
+              ],
+            };
+          } else {
+            user.userId = action.payload.userId;
+            user.text = action.payload.text;
+          }
+        });
+      } else {
+        state.user = {
+          ...state.user,
+          conversations: [
+            ...state.user.conversations,
+            action.payload,
+          ],
+        };
+      }
     },
   },
 });
 
 export const {
   userModel,
-  outgoingFriendship,
-  incomingFriendship,
-  getUsersData,
-  deleteIncomingFriendship,
-  deleteOutgoingFriendship,
-  acceptIncomingFriendshipRequest,
-  acceptOutgoingFriendshipRequest,
+  deleteFriendship,
+  acceptFriendship,
+  addUser,
+  addFriendship,
+  setConversation,
 } = slice.actions;
 
 export default slice.reducer;
