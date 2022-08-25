@@ -1,5 +1,6 @@
 import { Prop } from "@nestjs/mongoose";
 import { Types } from "mongoose";
+import Reaction from "./reaction.schema";
 
 export default class Message {
 
@@ -11,4 +12,10 @@ export default class Message {
 
   @Prop({ required: true })
   text: string;
+
+  replyId: Types.ObjectId | null;
+
+  @Prop({ default: [] })
+  reactions: Reaction[];
+
 }

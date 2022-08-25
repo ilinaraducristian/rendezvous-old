@@ -8,6 +8,9 @@ export type GroupMessageDocument = GroupMessage & Document;
 export class GroupMessage extends Message{
   @Prop({ required: true, type: Types.ObjectId, ref: 'Group' })
   groupId: Types.ObjectId;
+
+  @Prop({ default: null, type: Types.ObjectId, ref: 'GroupMessage' })
+  replyId: Types.ObjectId | null;
 }
 
 export const GroupMessageSchema = SchemaFactory.createForClass(GroupMessage);

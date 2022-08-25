@@ -27,6 +27,10 @@ import { Server, ServerSchema } from "./entities/server.schema";
 import { ServerController } from "./server/server.controller";
 import { ServerService } from "./server/server.service";
 import { ChannelMessage, ChannelMessageSchema } from "./entities/channel-message.schema";
+import { FriendshipMessageService } from "./friendship/message/friendship-message.service";
+import { GroupMessageService } from "./group/message/group-message.service";
+import { FriendshipMessageController } from "./friendship/message/friendship-message.controller";
+import { GroupMessageController } from "./group/message/group-message.controller";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
@@ -63,7 +67,7 @@ export class AppModule {
         }),
       }),
     ],
-    controllers: [AuthController, UserController, FriendshipController, GroupController, ConversationController, ServerController],
+    controllers: [AuthController, UserController, FriendshipController, FriendshipMessageController, GroupController, GroupMessageController, ConversationController, ServerController],
     providers: [
       LocalStrategy,
       JwtStrategy,
@@ -71,7 +75,9 @@ export class AppModule {
       SseService,
       UserService,
       FriendshipService,
+      FriendshipMessageService,
       GroupService,
+      GroupMessageService,
       ConversationService,
       ServerService,
       {

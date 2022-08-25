@@ -1,8 +1,8 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post, Query } from "@nestjs/common";
-import { GroupMessageDto } from "../dtos/message.dto";
-import { GroupDto } from "../dtos/user-dtos";
 import { UserDocument } from "../entities/user.schema";
+import { ObjectIdPipe } from "../object-id.pipe";
 import { ExtractAuthenticatedUser } from "../util";
+import { GroupDto, JoinGroupDto, NewGroupDto } from "./group.dto";
 import { GroupService } from "./group.service";
 
 @Controller("groups")
@@ -10,34 +10,38 @@ export class GroupController {
   constructor(private readonly groupService: GroupService) { }
 
   @Post()
-  createGroup(@ExtractAuthenticatedUser() user: UserDocument, @Body() { name }: { name: string }): Promise<GroupDto> {
-    return this.groupService.createGroup(user, name);
+  async createGroup(
+    @ExtractAuthenticatedUser() user: UserDocument,
+    @Body() { name }: NewGroupDto
+  ): Promise<GroupDto> {
+    const group = await this.groupService.createGroup(user, name);
+    return new GroupDto(group);
   }
 
   @Get()
-  getGroups(@ExtractAuthenticatedUser() user: UserDocument): Promise<GroupDto[]> {
-    return this.groupService.getGroups(user);
+  async getGroups(
+    @ExtractAuthenticatedUser() user: UserDocument
+  ): Promise<GroupDto[]> {
+    const groups = await this.groupService.getGroups(user);
+    return groups.map(group => new GroupDto(group));
   }
 
   @Delete(":id")
   @HttpCode(204)
-  deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string) {
-    return this.groupService.deleteGroup(user, id);
+  async deleteGroup(
+    @ExtractAuthenticatedUser() user: UserDocument,
+    @Param("id", new ObjectIdPipe()) id: string
+  ): Promise<void> {
+    await this.groupService.deleteGroup(user, id);
   }
 
   @Post('members')
-  createMemberSelf(@ExtractAuthenticatedUser() user: UserDocument, @Body() body: { invitation: string }) {
-    return this.groupService.createMemberSelf(user, body.invitation);
-  }
-
-  @Post(":id/messages")
-  createGroupMessage(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Body() body: { text: string }): Promise<GroupMessageDto> {
-    return this.groupService.createGroupMessage(user, id, body.text);
-  }
-
-  @Get(':id/messages')
-  getGroupMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param("id") id: string, @Query("offset") offset: number = 0, @Query("limit") limit: number = 100): Promise<GroupMessageDto[]> {
-    return this.groupService.getGroupMessages(user, id, offset, limit);
+  async createMemberSelf(
+    @ExtractAuthenticatedUser() user: UserDocument,
+    @Body() { invitation }: JoinGroupDto
+  ): Promise<GroupDto> {
+    const group = await this.groupService.createMemberSelf(user, invitation);
+    return new GroupDto(group);
   }
 
 }

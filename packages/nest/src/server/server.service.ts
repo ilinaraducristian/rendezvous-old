@@ -36,8 +36,8 @@ export class ServerService {
     return server;
   }
 
-  async getServers(user: UserDocument): Promise<ServerDto[]> {
-    return (await this.serverModel.find({ _id: { $in: user.servers } })).map(server => new ServerDto(server));
+  getServers(user: UserDocument) {
+    return this.serverModel.find({ _id: { $in: user.servers } });
   }
 
   async deleteServerInvitation(user: UserDocument, id: string) {
@@ -104,7 +104,7 @@ export class ServerService {
   async getChannelMessages(user: UserDocument, serverId: string, groupId: string, id: string, offset: number, limit: number) {
     const channel = await this.getChannel(user, serverId, groupId, id);
     const messages = await this.channelMessageModel.find({ channelId: channel._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
-    return messages.map(message => new ChannelMessageDto(message, serverId, groupId));
+    return messages.map(message => new ChannelMessageDto(message, serverId, groupId)).reverse();
   }
 
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Subject } from "rxjs";
 import { FriendshipMessageDto } from "./dtos/message.dto";
-import { FriendshipDto } from "./dtos/user-dtos";
+import { FriendshipDto } from "./friendship/friendship.dto";
 import MessageEvent from "./message-event";
 import SseEvents from "./sse-events";
 

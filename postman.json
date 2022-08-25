@@ -140,6 +140,41 @@
 					"name": "Messages",
 					"item": [
 						{
+							"name": "Reactions",
+							"item": [
+								{
+									"name": "Create a reaction",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"text\": \"😂\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{api}}/friendships/{{friendshipId}}/messages/{{friendshipMessageId}}/reactions",
+											"host": [
+												"{{api}}"
+											],
+											"path": [
+												"friendships",
+												"{{friendshipId}}",
+												"messages",
+												"{{friendshipMessageId}}",
+												"reactions"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
 							"name": "Send a message",
 							"event": [
 								{
@@ -713,9 +748,21 @@
 		},
 		{
 			"name": "Get user data",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
 			"request": {
 				"method": "GET",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"users\": []\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "{{api}}/users/data",
 					"host": [

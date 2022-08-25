@@ -30,7 +30,7 @@ export class UserService {
     return users;
   }
 
-  async getUserData(user: UserDocument): Promise<UserDataDto> {
+  async getUserData(user: UserDocument) {
     const [friendships, groups, servers, conversations] = await Promise.all([
       this.friendshipService.getFriendships(user),
       this.groupService.getGroups(user),
@@ -39,14 +39,15 @@ export class UserService {
     ]);
     const userIds = new Map<string, Types.ObjectId>();
     friendships.forEach(friendship => {
-      userIds.set(friendship.userId, new Types.ObjectId(friendship.userId));
+      const otherId = user.id === friendship.user1.toString() ? friendship.user2 : friendship.user1;
+      userIds.set(otherId.toString(), otherId);
     })
-    groups.map(group => group.members).flat().forEach(userId => userIds.set(userId, new Types.ObjectId(userId)));
-    servers.map(server => server.members).flat().forEach(userId => userIds.set(userId, new Types.ObjectId(userId)));
+    groups.map(group => group.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
+    servers.map(server => server.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
     userIds.delete(user.id);
-    const users = (await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } })).map(user => new UserDto(user));
+    const users = await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } });
     return {
-      ...new MyUserDto(user),
+      user,
       friendships,
       conversations,
       groups,

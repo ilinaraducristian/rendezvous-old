@@ -35,3 +35,9 @@ export class FriendshipExistsHttpException extends HttpException{
     super('friendship exists', HttpStatus.BAD_REQUEST);
   }
 }
+
+export class ReplyMessageDoesntExistHttpException extends HttpException {
+  constructor() {
+    super("reply message doesn't exist", HttpStatus.BAD_REQUEST);
+  }
+}

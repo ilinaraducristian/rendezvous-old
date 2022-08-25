@@ -5,6 +5,11 @@ import { SseService } from "../sse.service";
 import { ExtractAuthenticatedUser } from "../util";
 import { UserService } from "./user.service";
 import MessageEvent from "../message-event";
+import { MyUserDto, UserDataDto, UserDto } from "../dtos/user-dtos";
+import { FriendshipDto } from "../friendship/friendship.dto";
+import { ServerDto } from "../dtos/server.dto";
+import { FriendshipMessageDto, GroupMessageDto, MessageDto } from "../dtos/message.dto";
+import { GroupDto } from "../group/group.dto";
 
 @Controller("users")
 export class UserController {
@@ -28,8 +33,20 @@ export class UserController {
   }
 
   @Get('data')
-  getUserData(@ExtractAuthenticatedUser() user: UserDocument) {
-    return this.userService.getUserData(user);
+  async getUserData(@ExtractAuthenticatedUser() user: UserDocument): Promise<UserDataDto> {
+    const userData = await this.userService.getUserData(user);
+    return {
+      ...new MyUserDto(userData.user),
+      friendships: userData.friendships.map(friendship => new FriendshipDto(user, friendship)),
+      conversations: userData.conversations.map(conversation => {
+        if (conversation.friendshipId !== undefined)
+          return new FriendshipMessageDto(conversation)
+        else return new GroupMessageDto(conversation);
+      }),
+      groups: userData.groups.map(group => new GroupDto(group)),
+      servers: userData.servers.map(server => new ServerDto(server)),
+      users: userData.users.map(user => new UserDto(user))
+    }
   }
 
   @Sse('sse')

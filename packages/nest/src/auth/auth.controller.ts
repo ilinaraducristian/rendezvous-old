@@ -10,7 +10,7 @@ import { UserDocument } from "../entities/user.schema";
 @Controller('auth')
 export class AuthController {
 
-  static readonly COOKIES_OPTIONS: CookieSerializeOptions = { httpOnly: true, path: '/', sameSite: 'none', secure: process.env.NODE_ENV === 'production' };
+  static readonly COOKIES_OPTIONS: CookieSerializeOptions = { httpOnly: true, path: '/', sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'strict', secure: process.env.NODE_ENV === 'production' };
 
   constructor(private readonly authService: AuthService) { }
 

@@ -1,11 +1,10 @@
 import { Strategy } from "passport-jwt";
 import { PassportStrategy } from "@nestjs/passport";
-import { Injectable } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { User, UserDocument } from "../../entities/user.schema";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
-import { UserNotFoundHttpException } from "../../exceptions";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -18,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate({id}: {id: string}) {
     const user = await this.userModel.findById(id);
-    if(user === null) throw new UserNotFoundHttpException();
+    if(user === null) throw new UnauthorizedException();
     return user;
   }
 }

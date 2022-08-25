@@ -8,6 +8,9 @@ export type FriendshipMessageDocument = FriendshipMessage & Document;
 export class FriendshipMessage extends Message {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Friendship' })
   friendshipId: Types.ObjectId;
+
+  @Prop({ default: null, type: Types.ObjectId, ref: 'FriendshipMessage' })
+  replyId: Types.ObjectId | null;
 }
 
 export const FriendshipMessageSchema = SchemaFactory.createForClass(FriendshipMessage);
