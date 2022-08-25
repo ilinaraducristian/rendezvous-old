@@ -2,7 +2,7 @@ import { Body, Controller, Get, Param, Sse } from "@nestjs/common";
 import { filter, map, Observable } from "rxjs";
 import { UserDocument } from "../entities/user.schema";
 import { SseService } from "../sse.service";
-import { ExtractAuthenticatedUser } from "../util";
+import { ExtractAuthenticatedUser, extractOtherId } from "../util";
 import { UserService } from "./user.service";
 import MessageEvent from "../message-event";
 import { MyUserDto, UserDataDto, UserDto } from "../dtos/user-dtos";
@@ -37,7 +37,10 @@ export class UserController {
     const userData = await this.userService.getUserData(user);
     return {
       ...new MyUserDto(userData.user),
-      friendships: userData.friendships.map(friendship => new FriendshipDto(user._id, friendship)),
+      friendships: userData.friendships.map(friendship => {
+        const otherId = extractOtherId(user, friendship);
+        return new FriendshipDto(otherId, friendship);
+      }),
       conversations: userData.conversations.map(conversation => {
         if (conversation.friendshipId !== undefined)
           return new FriendshipMessageDto(conversation)

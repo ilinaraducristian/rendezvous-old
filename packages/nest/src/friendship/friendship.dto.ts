@@ -35,7 +35,7 @@ export class FriendshipDto {
     this.id = friendshipDocument.id;
     this.userId = userId.toString();
     this.status = friendshipDocument.status;
-    this.incoming = userId.toString() === friendshipDocument.user2.toString();
+    this.incoming = userId.toString() === friendshipDocument.user1.toString();
   }
 
 };

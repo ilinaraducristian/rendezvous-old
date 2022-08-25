@@ -17,14 +17,17 @@ export class FriendshipController {
   async createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { id }: NewFriendshipDto): Promise<FriendshipDto> {
     const friendship = await this.friendshipService.createFriendship(user, id);
     const otherId = extractOtherId(user, friendship);
-    this.sseService.friendRequest(user.id, new FriendshipDto(otherId, friendship));
-    return new FriendshipDto(user._id, friendship);
+    this.sseService.friendRequest(otherId.toString(), new FriendshipDto(user._id, friendship));
+    return new FriendshipDto(otherId, friendship);
   }
 
   @Get()
   async getFriendships(@ExtractAuthenticatedUser() user: UserDocument): Promise<FriendshipDto[]> {
     const friendships = await this.friendshipService.getFriendships(user);
-    return friendships.map(friendshipDocument => new FriendshipDto(user._id, friendshipDocument));
+    return friendships.map(friendshipDocument => {
+      const otherId = extractOtherId(user, friendshipDocument);
+      return new FriendshipDto(otherId, friendshipDocument);
+    });
   }
 
   @Patch(":id/accept")
