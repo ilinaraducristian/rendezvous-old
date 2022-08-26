@@ -9,5 +9,4 @@ export default class Reaction {
     this.userId = userId;
     this.text = text;
   }
-
 }

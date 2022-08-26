@@ -10,7 +10,7 @@ export class GroupMessageService {
   constructor(
     @InjectModel(GroupMessage.name) private readonly groupMessageModel: Model<GroupMessageDocument>,
     private readonly groupService: GroupService
-  ) { }
+  ) {}
 
   async createGroupMessage(user: UserDocument, id: string, text: string) {
     const group = await this.groupService.getGroup(user, id);
@@ -23,5 +23,4 @@ export class GroupMessageService {
     const messages = await this.groupMessageModel.find({ groupId: group._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
     return messages;
   }
-
 }

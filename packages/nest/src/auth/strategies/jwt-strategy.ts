@@ -10,14 +10,14 @@ import { InjectModel } from "@nestjs/mongoose";
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(private readonly configService: ConfigService, @InjectModel(User.name) private readonly userModel: Model<UserDocument>) {
     super({
-      jwtFromRequest: ({cookies: {access_token}}) => access_token,
+      jwtFromRequest: ({ cookies: { access_token } }) => access_token,
       secretOrKey: configService.get<string>("JWT_SECRET"),
     });
   }
 
-  async validate({id}: {id: string}) {
+  async validate({ id }: { id: string }) {
     const user = await this.userModel.findById(id);
-    if(user === null) throw new UnauthorizedException();
+    if (user === null) throw new UnauthorizedException();
     return user;
   }
 }

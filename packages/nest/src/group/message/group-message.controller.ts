@@ -8,10 +8,7 @@ import { GroupMessageService } from "./group-message.service";
 
 @Controller("groups/:groupId")
 export class GroupMessageController {
-  constructor(
-    private readonly groupMessageService: GroupMessageService,
-    private readonly sseService: SseService
-    ) { }
+  constructor(private readonly groupMessageService: GroupMessageService, private readonly sseService: SseService) {}
 
   @Post("messages")
   async createGroupMessage(
@@ -25,15 +22,14 @@ export class GroupMessageController {
     return messageDto;
   }
 
-  @Get('messages')
+  @Get("messages")
   async getGroupMessages(
     @ExtractAuthenticatedUser() user: UserDocument,
     @Param("groupId", new ObjectIdPipe()) groupId: string,
-    @Query("offset") offset: number = 0,
-    @Query("limit") limit: number = 100
+    @Query("offset") offset = 0,
+    @Query("limit") limit = 100
   ): Promise<GroupMessageDto[]> {
     const messages = await this.groupMessageService.getGroupMessages(user, groupId, offset, limit);
-    return messages.map(message => new GroupMessageDto(message)).reverse();
+    return messages.map((message) => new GroupMessageDto(message)).reverse();
   }
-
 }

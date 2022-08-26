@@ -19,13 +19,18 @@ export class FriendshipService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
     @InjectModel(Friendship.name) private readonly friendshipModel: Model<FriendshipDocument>
-  ) { }
+  ) {}
 
   async createFriendship(user: UserDocument, friendUserId: string) {
     if (user.id === friendUserId) throw new CannotBeFriendWithYourselfHttpException();
     const friendUser = await this.userModel.findById(friendUserId);
     if (friendUser === null) throw new UserNotFoundHttpException();
-    const exisingFriendship = await this.friendshipModel.findOne({ $or: [{ user1: user._id, user2: friendUser._id }, { user1: friendUser._id, user2: user._id }] });
+    const exisingFriendship = await this.friendshipModel.findOne({
+      $or: [
+        { user1: user._id, user2: friendUser._id },
+        { user1: friendUser._id, user2: user._id },
+      ],
+    });
     if (exisingFriendship !== null) throw new FriendshipExistsHttpException();
     const friendship = await new this.friendshipModel({ user1: user._id, user2: friendUser._id }).save();
     user.friendships.push(friendship.id);
@@ -35,7 +40,7 @@ export class FriendshipService {
   }
 
   async getFriendship(user: UserDocument, id: string) {
-    const friendshipId = user.friendships.find(friendshipId => friendshipId.toString() === id);
+    const friendshipId = user.friendships.find((friendshipId) => friendshipId.toString() === id);
     if (friendshipId === undefined) throw new FriendshipNotFoundHttpException();
     const friendship = await this.friendshipModel.findById(id);
     return friendship;
@@ -49,7 +54,7 @@ export class FriendshipService {
   async acceptFriendshipRequest(user: UserDocument, id: string) {
     const friendship = await this.getFriendship(user, id);
     if (friendship.user1.toString() === user.id) throw new UserLacksPermissionForFriendshipHttpException();
-    if (friendship.status === 'accepted') throw new FriendshipAcceptedHttpException();
+    if (friendship.status === "accepted") throw new FriendshipAcceptedHttpException();
     friendship.status = FriendshipStatus.accepted;
     await Promise.all([user.save(), friendship.save()]);
     return friendship;
@@ -60,12 +65,11 @@ export class FriendshipService {
     if (deletedFriendship === null) throw new FriendshipNotFoundHttpException();
     const otherId = extractOtherId(user, deletedFriendship);
     const friendUser = await this.userModel.findById(otherId);
-    const friendshipIndex1 = user.friendships.findIndex(friendshipId => friendshipId.toString() === id);
-    const friendshipIndex2 = friendUser.friendships.findIndex(friendshipId => friendshipId.toString() === id);
+    const friendshipIndex1 = user.friendships.findIndex((friendshipId) => friendshipId.toString() === id);
+    const friendshipIndex2 = friendUser.friendships.findIndex((friendshipId) => friendshipId.toString() === id);
     user.friendships.splice(friendshipIndex1, 1);
     friendUser.friendships.splice(friendshipIndex2, 1);
     await Promise.all([user.save(), friendUser.save()]);
     return deletedFriendship;
   }
-
 }

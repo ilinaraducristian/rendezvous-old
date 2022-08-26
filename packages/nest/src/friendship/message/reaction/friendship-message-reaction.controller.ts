@@ -6,20 +6,18 @@ import { ExtractAuthenticatedUser } from "../../../util";
 import { NewFriendshipMessageReactionDto } from "../../friendship.dto";
 import { FriendshipMessageReactionService } from "./friendship-message-reaction.service";
 
-
 @Controller("friendships/:friendshipId/messages/:messageId")
 export class FriendshipMessageReactionController {
-  constructor(private readonly friendshipMessageService: FriendshipMessageReactionService) { }
+  constructor(private readonly friendshipMessageService: FriendshipMessageReactionService) {}
 
   @Post("reactions")
   async createFriendshipMessageReaction(
     @ExtractAuthenticatedUser() user: UserDocument,
     @Param("friendshipId", new ObjectIdPipe()) friendshipId: string,
-    @Param('messageId', new ObjectIdPipe()) messageId: string,
+    @Param("messageId", new ObjectIdPipe()) messageId: string,
     @Body() { text }: NewFriendshipMessageReactionDto
-    ): Promise<FriendshipMessageReactionDto> {
+  ): Promise<FriendshipMessageReactionDto> {
     const reaction = await this.friendshipMessageService.createFriendshipMessageReaction(user, friendshipId, messageId, text);
-    return new FriendshipMessageReactionDto(reaction, friendshipId, messageId)
+    return new FriendshipMessageReactionDto(reaction, friendshipId, messageId);
   }
-
 }

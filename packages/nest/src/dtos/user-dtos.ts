@@ -12,8 +12,7 @@ export class UserDto {
     this.id = userDocument.id;
     this.name = userDocument.name;
   }
-
-};
+}
 
 export class MyUserDto extends UserDto {
   email: string;
@@ -22,15 +21,14 @@ export class MyUserDto extends UserDto {
     super(userDocument);
     this.email = userDocument.email;
   }
-
-};
+}
 
 export type ConversationsDto = MessageDto[];
 
 export type UserDataDto = MyUserDto & {
-  friendships: FriendshipDto[],
-  groups: GroupDto[],
-  conversations: ConversationsDto,
-  servers: ServerDto[],
-  users: UserDto[]
+  friendships: FriendshipDto[];
+  groups: GroupDto[];
+  conversations: ConversationsDto;
+  servers: ServerDto[];
+  users: UserDto[];
 };

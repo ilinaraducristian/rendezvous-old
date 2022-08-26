@@ -7,15 +7,13 @@ import { ValidationPipe } from "@nestjs/common";
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
-  if (process.env.NODE_ENV === 'production')
-    app.enableCors({ origin: "http://localhost:3000", credentials: true });
-  else
-    app.enableCors({ origin: "http://127.0.0.1:5500", credentials: true });
+  if (process.env.NODE_ENV === "production") app.enableCors({ origin: "http://localhost:3000", credentials: true });
+  else app.enableCors({ origin: "http://127.0.0.1:5500", credentials: true });
   const configService = app.get(ConfigService);
   await app.register(fastifyCookie, {
     secret: configService.get<string>("COOKIE_SECRET"),
   });
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
-  await app.listen(process.env.PORT || 3100, '0.0.0.0');
+  await app.listen(process.env.PORT || 3100, "0.0.0.0");
 }
 bootstrap();

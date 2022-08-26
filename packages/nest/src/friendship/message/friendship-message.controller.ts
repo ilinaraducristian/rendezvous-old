@@ -9,10 +9,7 @@ import { FriendshipMessageService } from "./friendship-message.service";
 
 @Controller("friendships/:friendshipId")
 export class FriendshipMessageController {
-  constructor(
-    private readonly friendshipMessageService: FriendshipMessageService,
-    private readonly sseService: SseService
-  ) { }
+  constructor(private readonly friendshipMessageService: FriendshipMessageService, private readonly sseService: SseService) {}
 
   @Post("messages")
   async createFriendshipMessage(
@@ -27,15 +24,15 @@ export class FriendshipMessageController {
     return friendshipMessageDto;
   }
 
-  @Get('messages')
+  @Get("messages")
   async getFriendshipMessages(
     @ExtractAuthenticatedUser() user: UserDocument,
     @Param("friendshipId") friendshipId: string,
-    @Query("offset") offset: number = 0,
-    @Query("limit") limit: number = 100
+    @Query("offset") offset = 0,
+    @Query("limit") limit = 100
   ): Promise<FriendshipMessageDto[]> {
     const friendshipMessages = await this.friendshipMessageService.getFriendshipMessages(user, friendshipId, offset, limit);
-    return friendshipMessages.map(message => new FriendshipMessageDto(message)).reverse();
+    return friendshipMessages.map((message) => new FriendshipMessageDto(message)).reverse();
   }
 
   // @Get(':friendshipId/messages/:id')
@@ -61,5 +58,4 @@ export class FriendshipMessageController {
   ): Promise<void> {
     await this.friendshipMessageService.deleteFriendshipMessages(user, friendshipId);
   }
-
 }

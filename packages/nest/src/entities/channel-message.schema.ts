@@ -6,10 +6,10 @@ export type ChannelMessageDocument = ChannelMessage & Document;
 
 @Schema()
 export class ChannelMessage extends Message {
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Channel' })
+  @Prop({ required: true, type: Types.ObjectId, ref: "Channel" })
   channelId: Types.ObjectId;
 
-  @Prop({ default: null, type: Types.ObjectId, ref: 'ChannelMessage' })
+  @Prop({ default: null, type: Types.ObjectId, ref: "ChannelMessage" })
   replyId: Types.ObjectId | null;
 }
 export const ChannelMessageSchema = SchemaFactory.createForClass(ChannelMessage);

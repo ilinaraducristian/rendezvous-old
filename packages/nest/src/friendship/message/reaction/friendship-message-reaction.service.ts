@@ -5,9 +5,7 @@ import { FriendshipMessageService } from "../friendship-message.service";
 
 @Injectable()
 export class FriendshipMessageReactionService {
-  constructor(
-    private readonly friendshipMessageService: FriendshipMessageService
-  ) { }
+  constructor(private readonly friendshipMessageService: FriendshipMessageService) {}
 
   async createFriendshipMessageReaction(user: UserDocument, friendshipId: string, id: string, text: string) {
     const message = await this.friendshipMessageService.getFriendshipMessage(user, friendshipId, id);
@@ -16,5 +14,4 @@ export class FriendshipMessageReactionService {
     await message.save();
     return reaction;
   }
-
 }

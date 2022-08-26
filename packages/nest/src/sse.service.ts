@@ -1,16 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import { Subject } from "rxjs";
-import { FriendshipMessageDto, GroupMessageDto } from "./dtos/message.dto";
+import { ChannelMessageDto, FriendshipMessageDto, GroupMessageDto } from "./dtos/message.dto";
+import { ChannelDto, GroupDto } from "./dtos/server.dto";
 import { FriendshipDto } from "./friendship/friendship.dto";
 import MessageEvent from "./message-event";
 import SseEvents from "./sse-events";
 
-type MessageType = MessageEvent & { userId?: Types.ObjectId, groupId?: Types.ObjectId, serverId?: Types.ObjectId };
+type MessageType = MessageEvent & { userId?: Types.ObjectId; groupId?: Types.ObjectId; serverId?: Types.ObjectId };
 
 @Injectable()
 export class SseService {
-
   private readonly sse = new Subject<MessageType>();
 
   get sse$() {
@@ -23,12 +23,14 @@ export class SseService {
 
   friendRequest(userId: Types.ObjectId, data: FriendshipDto) {
     return this.next({
-      type: SseEvents.friendRequest, userId, data
+      type: SseEvents.friendRequest,
+      userId,
+      data,
     });
   }
 
   acceptFriendshipRequest(userId: Types.ObjectId, id: string) {
-    return this.next({ type: SseEvents.friendRequestAccepted, userId, data: { id } })
+    return this.next({ type: SseEvents.friendRequestAccepted, userId, data: { id } });
   }
 
   deleteFriendship(userId: Types.ObjectId, id: string) {
@@ -37,7 +39,9 @@ export class SseService {
 
   friendshipMessage(userId: Types.ObjectId, data: FriendshipMessageDto) {
     return this.next({
-      type: SseEvents.friendshipMessage, userId, data
+      type: SseEvents.friendshipMessage,
+      userId,
+      data,
     });
   }
 
@@ -49,4 +53,15 @@ export class SseService {
     return this.next({ type: SseEvents.groupMessage, groupId, data });
   }
 
+  channel(serverId: Types.ObjectId, data: ChannelDto) {
+    return this.next({ type: SseEvents.channel, serverId, data });
+  }
+
+  group(serverId: Types.ObjectId, data: GroupDto) {
+    return this.next({ type: SseEvents.group, serverId, data });
+  }
+
+  channelMessage(serverId: Types.ObjectId, data: ChannelMessageDto) {
+    return this.next({ type: SseEvents.channelMessage, serverId, data });
+  }
 }

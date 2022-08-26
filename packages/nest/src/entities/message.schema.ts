@@ -3,8 +3,7 @@ import { Types } from "mongoose";
 import Reaction from "./reaction.schema";
 
 export default class Message {
-
-  @Prop({ required: true, type: Types.ObjectId, ref: 'User' })
+  @Prop({ required: true, type: Types.ObjectId, ref: "User" })
   userId: Types.ObjectId;
 
   @Prop({ required: true })
@@ -17,5 +16,4 @@ export default class Message {
 
   @Prop({ default: [] })
   reactions: Reaction[];
-
 }

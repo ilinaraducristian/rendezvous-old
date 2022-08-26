@@ -7,9 +7,7 @@ import { GroupNotFoundHttpException, UserAlreadyInServerHttpException, UserNotMe
 
 @Injectable()
 export class GroupService {
-  constructor(
-    @InjectModel(Group.name) private readonly groupModel: Model<GroupDocument>,
-  ) { }
+  constructor(@InjectModel(Group.name) private readonly groupModel: Model<GroupDocument>) {}
 
   async createGroup(user: UserDocument, name: string) {
     const newGroup = await new this.groupModel({ name, members: [user._id] }).save();
@@ -19,7 +17,7 @@ export class GroupService {
   }
 
   async getGroup(user: UserDocument, id: string) {
-    const userGroup = user.groups.find(groupId => groupId.toString() === id);
+    const userGroup = user.groups.find((groupId) => groupId.toString() === id);
     if (userGroup === undefined) throw new UserNotMemberOfGroupHttpException();
     const group = await this.groupModel.findById(userGroup);
     if (group === null) throw new GroupNotFoundHttpException();
@@ -27,13 +25,13 @@ export class GroupService {
   }
 
   async getGroups(user: UserDocument) {
-    return (await this.groupModel.find({ _id: { $in: user.groups } }));
+    return await this.groupModel.find({ _id: { $in: user.groups } });
   }
 
   async deleteGroup(user: UserDocument, id: string) {
     const deleteGroup = await this.groupModel.findByIdAndDelete(id);
     if (deleteGroup === null) throw new GroupNotFoundHttpException();
-    const groupIndex = user.groups.findIndex(groupId => groupId.toString() === id);
+    const groupIndex = user.groups.findIndex((groupId) => groupId.toString() === id);
     user.groups.splice(groupIndex, 1);
     await user.save();
     return deleteGroup;
@@ -42,12 +40,11 @@ export class GroupService {
   async createMemberSelf(user: UserDocument, invitation: string) {
     const group = await this.groupModel.findOne({ invitation });
     if (group === null) throw new GroupNotFoundHttpException();
-    const groupId = user.groups.find(groupId => groupId.toString() === group.id);
+    const groupId = user.groups.find((groupId) => groupId.toString() === group.id);
     if (groupId !== undefined) throw new UserAlreadyInServerHttpException();
     group.members.push(user._id);
     user.groups.push(group._id);
     await Promise.all([group.save(), user.save()]);
     return group;
   }
-
 }

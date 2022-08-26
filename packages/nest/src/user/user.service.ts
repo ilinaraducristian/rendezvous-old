@@ -16,8 +16,8 @@ export class UserService {
     private readonly friendshipService: FriendshipService,
     private readonly groupService: GroupService,
     private readonly conversationService: ConversationService,
-    private readonly serverService: ServerService,
-  ) { }
+    private readonly serverService: ServerService
+  ) {}
 
   async getUser(id: string) {
     const user = await this.userModel.findById(id);
@@ -26,7 +26,7 @@ export class UserService {
   }
 
   async getUsers(ids: string[]) {
-    const users = await this.userModel.find({ id: { $in: ids } })
+    const users = await this.userModel.find({ id: { $in: ids } });
     return users;
   }
 
@@ -35,15 +35,21 @@ export class UserService {
       this.friendshipService.getFriendships(user),
       this.groupService.getGroups(user),
       this.serverService.getServers(user),
-      this.conversationService.getConversations(user)
+      this.conversationService.getConversations(user),
     ]);
     const userIds = new Map<string, Types.ObjectId>();
-    friendships.forEach(friendship => {
+    friendships.forEach((friendship) => {
       const otherId = extractOtherId(user, friendship);
       userIds.set(otherId.toString(), otherId);
-    })
-    groups.map(group => group.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
-    servers.map(server => server.members).flat().forEach(userId => userIds.set(userId.toString(), userId));
+    });
+    groups
+      .map((group) => group.members)
+      .flat()
+      .forEach((userId) => userIds.set(userId.toString(), userId));
+    servers
+      .map((server) => server.members)
+      .flat()
+      .forEach((userId) => userIds.set(userId.toString(), userId));
     userIds.delete(user.id);
     const users = await this.userModel.find({ _id: { $in: Array.from(userIds.values()) } });
     return {
@@ -52,8 +58,7 @@ export class UserService {
       conversations,
       groups,
       servers,
-      users
-    }
+      users,
+    };
   }
-
 }

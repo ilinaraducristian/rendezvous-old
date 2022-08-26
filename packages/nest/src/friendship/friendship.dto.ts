@@ -11,19 +11,19 @@ export class NewFriendshipDto {
 export class NewFriendshipMessageDto {
   @IsString()
   @IsNotEmpty()
-  text: string
+  text: string;
 }
 
 export class NewFriendshipMessageReactionDto {
   @IsString()
   @IsNotEmpty()
-  text: string
+  text: string;
 }
 
 export enum FriendshipStatus {
-  pending = 'pending',
-  accepted = 'accepted'
-};
+  pending = "pending",
+  accepted = "accepted",
+}
 
 export class FriendshipDto {
   id: string;
@@ -37,5 +37,4 @@ export class FriendshipDto {
     this.status = friendshipDocument.status;
     this.incoming = userId.toString() === friendshipDocument.user1.toString();
   }
-
-};
+}

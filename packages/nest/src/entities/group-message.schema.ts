@@ -5,11 +5,11 @@ import Message from "./message.schema";
 export type GroupMessageDocument = GroupMessage & Document;
 
 @Schema()
-export class GroupMessage extends Message{
-  @Prop({ required: true, type: Types.ObjectId, ref: 'Group' })
+export class GroupMessage extends Message {
+  @Prop({ required: true, type: Types.ObjectId, ref: "Group" })
   groupId: Types.ObjectId;
 
-  @Prop({ default: null, type: Types.ObjectId, ref: 'GroupMessage' })
+  @Prop({ default: null, type: Types.ObjectId, ref: "GroupMessage" })
   replyId: Types.ObjectId | null;
 }
 

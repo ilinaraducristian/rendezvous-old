@@ -8,10 +8,7 @@ import { FriendshipService } from "./friendship.service";
 
 @Controller("friendships")
 export class FriendshipController {
-  constructor(
-    private readonly friendshipService: FriendshipService,
-    private readonly sseService: SseService
-  ) { }
+  constructor(private readonly friendshipService: FriendshipService, private readonly sseService: SseService) {}
 
   @Post()
   async createFriendship(@ExtractAuthenticatedUser() user: UserDocument, @Body() { id }: NewFriendshipDto): Promise<FriendshipDto> {
@@ -24,7 +21,7 @@ export class FriendshipController {
   @Get()
   async getFriendships(@ExtractAuthenticatedUser() user: UserDocument): Promise<FriendshipDto[]> {
     const friendships = await this.friendshipService.getFriendships(user);
-    return friendships.map(friendshipDocument => {
+    return friendships.map((friendshipDocument) => {
       const otherId = extractOtherId(user, friendshipDocument);
       return new FriendshipDto(otherId, friendshipDocument);
     });
@@ -45,5 +42,4 @@ export class FriendshipController {
     const otherId = extractOtherId(user, friendship);
     this.sseService.deleteFriendship(otherId, id);
   }
-
 }

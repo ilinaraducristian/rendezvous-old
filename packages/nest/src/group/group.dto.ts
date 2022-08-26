@@ -23,7 +23,6 @@ export class GroupDto {
     this.id = groupDocument.id;
     this.name = groupDocument.name;
     this.invitation = groupDocument.invitation;
-    this.members = groupDocument.members.map(memberId => memberId.toString());
+    this.members = groupDocument.members.map((memberId) => memberId.toString());
   }
-
-};
+}

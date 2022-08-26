@@ -19,7 +19,6 @@ export class MessageDto<T extends ReactionDto = ReactionDto> {
     this.text = messageDocument.text;
     this.replyId = messageDocument.replyId?.toString();
   }
-
 }
 
 export class ReactionDto {
@@ -34,7 +33,6 @@ export class ReactionDto {
     this.text = reaction.text;
     this.messageId = messageId;
   }
-
 }
 
 export class FriendshipMessageDto extends MessageDto<FriendshipMessageReactionDto> {
@@ -43,9 +41,10 @@ export class FriendshipMessageDto extends MessageDto<FriendshipMessageReactionDt
   constructor(friendshipMessageDocument: FriendshipMessageDocument) {
     super(friendshipMessageDocument);
     this.friendshipId = friendshipMessageDocument.friendshipId.toString();
-    this.reactions = friendshipMessageDocument.reactions.map(reaction => new FriendshipMessageReactionDto(reaction, friendshipMessageDocument.id, this.friendshipId));
+    this.reactions = friendshipMessageDocument.reactions.map(
+      (reaction) => new FriendshipMessageReactionDto(reaction, friendshipMessageDocument.id, this.friendshipId)
+    );
   }
-
 }
 
 export class FriendshipMessageReactionDto extends ReactionDto {
@@ -55,7 +54,6 @@ export class FriendshipMessageReactionDto extends ReactionDto {
     super(reaction, messageId);
     this.friendshipId = friendshipId;
   }
-
 }
 
 export class GroupMessageDto extends MessageDto<GroupMessageReactionDto> {
@@ -64,9 +62,8 @@ export class GroupMessageDto extends MessageDto<GroupMessageReactionDto> {
   constructor(groupMessageDocument: GroupMessageDocument) {
     super(groupMessageDocument);
     this.groupId = groupMessageDocument.groupId.toString();
-    this.reactions = groupMessageDocument.reactions.map(reaction => new GroupMessageReactionDto(reaction, groupMessageDocument.id, this.groupId));
+    this.reactions = groupMessageDocument.reactions.map((reaction) => new GroupMessageReactionDto(reaction, groupMessageDocument.id, this.groupId));
   }
-
 }
 
 export class GroupMessageReactionDto extends ReactionDto {
@@ -76,7 +73,6 @@ export class GroupMessageReactionDto extends ReactionDto {
     super(reaction, messageId);
     this.groupId = groupId;
   }
-
 }
 
 export class ChannelMessageDto extends MessageDto<ChannelMessageReactionDto> {
@@ -89,9 +85,10 @@ export class ChannelMessageDto extends MessageDto<ChannelMessageReactionDto> {
     this.serverId = serverId;
     this.groupId = groupId;
     this.channelId = channelMessageDocument.channelId.toString();
-    this.reactions = channelMessageDocument.reactions.map(reaction => new ChannelMessageReactionDto(reaction, channelMessageDocument.id, this.serverId, this.groupId, this.channelId));
+    this.reactions = channelMessageDocument.reactions.map(
+      (reaction) => new ChannelMessageReactionDto(reaction, this.serverId, this.groupId, this.channelId, this.id)
+    );
   }
-
 }
 
 export class ChannelMessageReactionDto extends ReactionDto {
@@ -99,11 +96,10 @@ export class ChannelMessageReactionDto extends ReactionDto {
   groupId: string;
   channelId: string;
 
-  constructor(reaction: Reaction, messageId: string, serverId: string, groupId: string, channelId: string) {
+  constructor(reaction: Reaction, serverId: string, groupId: string, channelId: string, messageId: string) {
     super(reaction, messageId);
     this.serverId = serverId;
     this.groupId = groupId;
     this.channelId = channelId;
   }
-
 }

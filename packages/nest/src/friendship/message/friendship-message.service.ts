@@ -6,7 +6,7 @@ import { FriendshipMessage, FriendshipMessageDocument } from "../../entities/fri
 import Reaction from "../../entities/reaction.schema";
 import { UserDocument } from "../../entities/user.schema";
 import { extractOtherId } from "../../util";
-import { FriendshipMessageNotFoundHttpException, ReplyMessageDoesntExistHttpException } from "../exceptions";
+import { FriendshipMessageNotFoundHttpException } from "../exceptions";
 import { FriendshipService } from "../friendship.service";
 
 @Injectable()
@@ -14,7 +14,7 @@ export class FriendshipMessageService {
   constructor(
     private readonly friendshipService: FriendshipService,
     @InjectModel(FriendshipMessage.name) private readonly friendshipMessageModel: Model<FriendshipMessageDocument>
-  ) { }
+  ) {}
 
   async createFriendshipMessage(user: UserDocument, id: string, text: string, replyId: string = null) {
     const friendship = await this.friendshipService.getFriendship(user, id);
@@ -32,13 +32,13 @@ export class FriendshipMessageService {
     message.friendship = friendship;
     return message;
   }
-  
-    async getFriendshipMessage(user: UserDocument, friendshipId: string, id: string) {
-      const friendship = await this.friendshipService.getFriendship(user, friendshipId);
-      const message = await this.friendshipMessageModel.findOne({ _id: new Types.ObjectId(id), friendshipId: friendship._id });
-      if (message === null) throw new FriendshipMessageNotFoundHttpException();
-      return message;
-    }
+
+  async getFriendshipMessage(user: UserDocument, friendshipId: string, id: string) {
+    const friendship = await this.friendshipService.getFriendship(user, friendshipId);
+    const message = await this.friendshipMessageModel.findOne({ _id: new Types.ObjectId(id), friendshipId: friendship._id });
+    if (message === null) throw new FriendshipMessageNotFoundHttpException();
+    return message;
+  }
 
   async getFriendshipMessages(user: UserDocument, id: string, offset: number, limit: number) {
     const friendship = await this.friendshipService.getFriendship(user, id);
@@ -68,5 +68,4 @@ export class FriendshipMessageService {
     await message.save();
     return new FriendshipMessageReactionDto(reaction, friendshipId, id);
   }
-
 }

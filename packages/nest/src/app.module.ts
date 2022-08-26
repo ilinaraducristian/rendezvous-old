@@ -31,10 +31,15 @@ import { FriendshipMessageService } from "./friendship/message/friendship-messag
 import { GroupMessageService } from "./group/message/group-message.service";
 import { FriendshipMessageController } from "./friendship/message/friendship-message.controller";
 import { GroupMessageController } from "./group/message/group-message.controller";
+import { ServerGroupController } from "./server/group/server-group.controller";
+import { ChannelController } from "./server/group/channel/channel.controller";
+import { ChannelMessageController } from "./server/group/channel/message/channel-message.controller";
+import { ServerGroupService } from "./server/group/server-group.service";
+import { ChannelService } from "./server/group/channel/channel.service";
+import { ChannelMessageService } from "./server/group/channel/message/channel-message.service";
 
 @Module(AppModule.MODULE_METADATA)
 export class AppModule {
-
   static MODULE_METADATA = {
     imports: [
       ConfigModule.forRoot({
@@ -67,8 +72,24 @@ export class AppModule {
         }),
       }),
     ],
-    controllers: [AuthController, UserController, FriendshipController, FriendshipMessageController, GroupController, GroupMessageController, ConversationController, ServerController],
+    controllers: [
+      AuthController,
+      UserController,
+      FriendshipController,
+      FriendshipMessageController,
+      GroupController,
+      GroupMessageController,
+      ConversationController,
+      ServerController,
+      ServerGroupController,
+      ChannelController,
+      ChannelMessageController,
+    ],
     providers: [
+      {
+        provide: APP_GUARD,
+        useClass: JwtAuthGuard,
+      },
       LocalStrategy,
       JwtStrategy,
       AuthService,
@@ -80,11 +101,9 @@ export class AppModule {
       GroupMessageService,
       ConversationService,
       ServerService,
-      {
-        provide: APP_GUARD,
-        useClass: JwtAuthGuard,
-      },
+      ServerGroupService,
+      ChannelService,
+      ChannelMessageService,
     ],
   };
-
 }
