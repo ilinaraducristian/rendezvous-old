@@ -2,9 +2,9 @@ import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { Types } from "mongoose";
 import { ChannelMessageDto } from "../../../../dtos/message.dto";
 import { UserDocument } from "../../../../entities/user.schema";
-import { ObjectIdPipe } from "../../../../object-id.pipe";
 import { SseService } from "../../../../sse.service";
 import { ExtractAuthenticatedUser } from "../../../../util";
+import { ChannelParams } from "../../../server.dto";
 import { ChannelMessageService } from "./channel-message.service";
 
 @Controller("servers/:serverId/groups/:groupId/channels/:channelId/messages")
@@ -14,9 +14,7 @@ export class ChannelMessageController {
   @Post()
   async createChannelMessage(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param("serverId", new ObjectIdPipe()) serverId: string,
-    @Param("groupId", new ObjectIdPipe()) groupId: string,
-    @Param("channelId", new ObjectIdPipe()) channelId: string,
+    @Param() { serverId, groupId, channelId}: ChannelParams,
     @Body() { text }: { text: string }
   ) {
     const message = await this.channelMessageService.createChannelMessage(user, serverId, groupId, channelId, text);
@@ -27,9 +25,7 @@ export class ChannelMessageController {
   @Get()
   getChannelMessages(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param("serverId", new ObjectIdPipe()) serverId: string,
-    @Param("groupId", new ObjectIdPipe()) groupId: string,
-    @Param("channelId", new ObjectIdPipe()) channelId: string,
+    @Param() { serverId, groupId, channelId}: ChannelParams,
     @Query("offset") offset = 0,
     @Query("limit") limit = 100
   ) {

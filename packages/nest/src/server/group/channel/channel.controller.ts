@@ -1,8 +1,7 @@
 import { Body, Controller, Param, Post } from "@nestjs/common";
 import { Types } from "mongoose";
-import { ChannelDto } from "../../../dtos/server.dto";
+import { ChannelDto, ServerGroupParams } from "../../server.dto";
 import { UserDocument } from "../../../entities/user.schema";
-import { ObjectIdPipe } from "../../../object-id.pipe";
 import { SseService } from "../../../sse.service";
 import { ExtractAuthenticatedUser } from "../../../util";
 import { ChannelService } from "./channel.service";
@@ -14,8 +13,7 @@ export class ChannelController {
   @Post()
   async createChannel(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param("serverId", new ObjectIdPipe()) serverId: string,
-    @Param("groupId", new ObjectIdPipe()) groupId: string,
+    @Param() { serverId, groupId }: ServerGroupParams,
     @Body() { name }: { name: string }
   ) {
     const channel = await this.channelService.createChannel(user, serverId, groupId, name);

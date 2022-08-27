@@ -1,8 +1,7 @@
 import { Body, Controller, Param, Post } from "@nestjs/common";
 import { Types } from "mongoose";
-import { GroupDto } from "../../dtos/server.dto";
+import { GroupDto, ServerParams } from "../server.dto";
 import { UserDocument } from "../../entities/user.schema";
-import { ObjectIdPipe } from "../../object-id.pipe";
 import { SseService } from "../../sse.service";
 import { ExtractAuthenticatedUser } from "../../util";
 import { ServerGroupService } from "./server-group.service";
@@ -14,7 +13,7 @@ export class ServerGroupController {
   @Post()
   async createGroup(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param("serverId", new ObjectIdPipe()) serverId: string,
+    @Param() { serverId }: ServerParams,
     @Body() body: { name: string }
   ) {
     const group = await this.serverGroupService.createGroup(user, serverId, body.name);

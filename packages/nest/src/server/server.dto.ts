@@ -1,3 +1,4 @@
+import { IsMongoId } from "class-validator";
 import { Channel } from "../entities/channel.schema";
 import { ServerGroup as Group } from "../entities/server-group.schema";
 import { ServerDocument } from "../entities/server.schema";
@@ -44,4 +45,24 @@ export class ServerDto {
     this.groups = serverDocument.groups.map((group) => new GroupDto(group, this.id));
     this.members = serverDocument.members.map((memberId) => memberId.toString());
   }
+}
+
+export class ServerParams {
+  @IsMongoId()
+  serverId: string;
+}
+
+export class ServerGroupParams extends ServerParams {
+  @IsMongoId()
+  groupId: string;
+}
+
+export class ChannelParams extends ServerGroupParams {
+  @IsMongoId()
+  channelId: string;
+}
+
+export class ChannelMessageParams extends ChannelParams {
+  @IsMongoId()
+  messageId: string;
 }

@@ -1,8 +1,7 @@
 import { Body, Controller, Delete, Get, HttpCode, Param, Post } from "@nestjs/common";
 import { UserDocument } from "../entities/user.schema";
-import { ObjectIdPipe } from "../object-id.pipe";
 import { ExtractAuthenticatedUser } from "../util";
-import { GroupDto, JoinGroupDto, NewGroupDto } from "./group.dto";
+import { GroupDto, GroupParams, JoinGroupDto, NewGroupDto } from "./group.dto";
 import { GroupService } from "./group.service";
 
 @Controller("groups")
@@ -21,10 +20,10 @@ export class GroupController {
     return groups.map((group) => new GroupDto(group));
   }
 
-  @Delete(":id")
+  @Delete()
   @HttpCode(204)
-  async deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param("id", new ObjectIdPipe()) id: string): Promise<void> {
-    await this.groupService.deleteGroup(user, id);
+  async deleteGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param() { groupId }: GroupParams): Promise<void> {
+    await this.groupService.deleteGroup(user, groupId);
   }
 
   @Post("members")

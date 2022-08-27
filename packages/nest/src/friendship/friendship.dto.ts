@@ -1,12 +1,6 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
 import { Types } from "mongoose";
 import { FriendshipDocument } from "../entities/friendship.schema";
-
-export class NewFriendshipDto {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
-}
 
 export class NewFriendshipMessageDto {
   @IsString()
@@ -37,4 +31,14 @@ export class FriendshipDto {
     this.status = friendshipDocument.status;
     this.incoming = userId.toString() === friendshipDocument.user1.toString();
   }
+}
+
+export class FriendshipParams {
+  @IsMongoId()
+  friendshipId: string;
+}
+
+export class FriendshipMessageParams extends FriendshipParams {
+  @IsMongoId()
+  messageId: string;
 }

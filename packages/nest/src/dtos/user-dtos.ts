@@ -1,5 +1,5 @@
 import { UserDocument } from "../entities/user.schema";
-import { ServerDto } from "./server.dto";
+import { ServerDto } from "../server/server.dto";
 import { MessageDto } from "./message.dto";
 import { FriendshipDto } from "../friendship/friendship.dto";
 import { GroupDto } from "../group/group.dto";

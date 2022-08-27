@@ -7,7 +7,7 @@ import { UserService } from "./user.service";
 import MessageEvent from "../message-event";
 import { MyUserDto, UserDataDto, UserDto } from "../dtos/user-dtos";
 import { FriendshipDto } from "../friendship/friendship.dto";
-import { ServerDto } from "../dtos/server.dto";
+import { ServerDto } from "../server/server.dto";
 import { FriendshipMessageDto, GroupMessageDto } from "../dtos/message.dto";
 import { GroupDto } from "../group/group.dto";
 

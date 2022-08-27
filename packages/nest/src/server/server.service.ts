@@ -6,7 +6,7 @@ import { UserDocument } from "../entities/user.schema";
 import { ServerNotFoundHttpException, UserAlreadyInServerHttpException, UserNotInServerHttpException } from "./exceptions";
 import { ServerGroup as Group } from "../entities/server-group.schema";
 import { Channel } from "../entities/channel.schema";
-import { ServerDto } from "../dtos/server.dto";
+import { ServerDto } from "./server.dto";
 
 @Injectable()
 export class ServerService {

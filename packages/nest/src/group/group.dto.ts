@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString } from "class-validator";
+import { IsMongoId, IsNotEmpty, IsString } from "class-validator";
 import { GroupDocument } from "../entities/group.schema";
 
 export class NewGroupDto {
@@ -25,4 +25,16 @@ export class GroupDto {
     this.invitation = groupDocument.invitation;
     this.members = groupDocument.members.map((memberId) => memberId.toString());
   }
+}
+
+export class GroupParams {
+  @IsMongoId()
+  groupId: string;
+}
+
+export class GroupMessageParams extends GroupParams{
+  @IsMongoId()
+  groupId: string;
+  @IsMongoId()
+  messageId: string;
 }

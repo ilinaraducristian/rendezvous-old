@@ -1,19 +1,19 @@
 import { Body, Controller, Get, Param, Post, Query } from "@nestjs/common";
 import { GroupMessageDto } from "../../dtos/message.dto";
 import { UserDocument } from "../../entities/user.schema";
-import { ObjectIdPipe } from "../../object-id.pipe";
 import { SseService } from "../../sse.service";
 import { ExtractAuthenticatedUser } from "../../util";
+import { GroupParams } from "../group.dto";
 import { GroupMessageService } from "./group-message.service";
 
-@Controller("groups/:groupId")
+@Controller("groups/:groupId/messages")
 export class GroupMessageController {
   constructor(private readonly groupMessageService: GroupMessageService, private readonly sseService: SseService) {}
 
-  @Post("messages")
+  @Post()
   async createGroupMessage(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param("groupId", new ObjectIdPipe()) groupId: string,
+    @Param() { groupId }: GroupParams,
     @Body() body: { text: string }
   ): Promise<GroupMessageDto> {
     const message = await this.groupMessageService.createGroupMessage(user, groupId, body.text);
@@ -22,10 +22,10 @@ export class GroupMessageController {
     return messageDto;
   }
 
-  @Get("messages")
+  @Get()
   async getGroupMessages(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param("groupId", new ObjectIdPipe()) groupId: string,
+    @Param() { groupId }: GroupParams,
     @Query("offset") offset = 0,
     @Query("limit") limit = 100
   ): Promise<GroupMessageDto[]> {

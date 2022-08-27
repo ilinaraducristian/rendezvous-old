@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { Types } from "mongoose";
 import { Subject } from "rxjs";
 import { ChannelMessageDto, FriendshipMessageDto, GroupMessageDto } from "./dtos/message.dto";
-import { ChannelDto, GroupDto } from "./dtos/server.dto";
+import { ChannelDto, GroupDto } from "./server/server.dto";
 import { FriendshipDto } from "./friendship/friendship.dto";
 import MessageEvent from "./message-event";
 import SseEvents from "./sse-events";
