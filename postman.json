@@ -284,6 +284,35 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "Edit a message",
+							"request": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"edited message\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{api}}/friendships/{{friendshipId}}/messages/{{friendshipMessageId}}",
+									"host": [
+										"{{api}}"
+									],
+									"path": [
+										"friendships",
+										"{{friendshipId}}",
+										"messages",
+										"{{friendshipMessageId}}"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				},
@@ -309,7 +338,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"id\": \"{{friendUserId}}\"\n}",
+							"raw": "{\n    \"userId\": \"{{friendUserId}}\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -643,7 +672,22 @@
 					"response": []
 				},
 				{
-					"name": "Create a message",
+					"name": "Send a message",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set the message id\", function() {",
+									"    pm.response.to.have.jsonSchema({id: 'string'});",
+									"    const {id} = pm.response.json();",
+									"    pm.collectionVariables.set(\"channelMessageId\", id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [],
