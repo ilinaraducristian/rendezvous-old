@@ -45,6 +45,14 @@ export class SseService {
     });
   }
 
+  friendshipMessageEdit(userId: Types.ObjectId, data: { messageId: string; text: string }) {
+    return this.next({
+      type: SseEvents.friendshipMessageEdit,
+      userId,
+      data,
+    });
+  }
+
   deleteFriendshipMessage(userId: Types.ObjectId, friendshipId: string, id: string) {
     return this.next({ type: SseEvents.friendshipMessageDeleted, userId, data: { friendshipId, id } });
   }
@@ -63,5 +71,9 @@ export class SseService {
 
   channelMessage(serverId: Types.ObjectId, data: ChannelMessageDto) {
     return this.next({ type: SseEvents.channelMessage, serverId, data });
+  }
+
+  channelMessageEdit(serverId: Types.ObjectId, data: ChannelMessageDto) {
+    return this.next({ type: SseEvents.channelMessageEdit, serverId, data });
   }
 }

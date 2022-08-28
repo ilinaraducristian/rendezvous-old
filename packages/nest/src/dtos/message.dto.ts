@@ -21,6 +21,10 @@ export class MessageDto<T extends ReactionDto = ReactionDto> {
   }
 }
 
+export class EditMessageDto {
+  text: string;
+}
+
 export class ReactionDto {
   id: string;
   userId: string;

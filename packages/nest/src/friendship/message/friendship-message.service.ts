@@ -37,6 +37,7 @@ export class FriendshipMessageService {
     const friendship = await this.friendshipService.getFriendship(user, friendshipId);
     const message = await this.friendshipMessageModel.findOne({ _id: new Types.ObjectId(id), friendshipId: friendship._id });
     if (message === null) throw new FriendshipMessageNotFoundHttpException();
+    message.friendship = friendship;
     return message;
   }
 
@@ -44,6 +45,12 @@ export class FriendshipMessageService {
     const friendship = await this.friendshipService.getFriendship(user, id);
     const messages = await this.friendshipMessageModel.find({ friendshipId: friendship._id }).sort({ timestamp: -1 }).skip(offset).limit(limit);
     return messages;
+  }
+
+  async editMessage(user: UserDocument, friendshipId: string, messageId: string, text: string) {
+    const message = await this.getFriendshipMessage(user, friendshipId, messageId);
+    message.text = text;
+    return await message.save();
   }
 
   async deleteFriendshipMessage(user: UserDocument, friendshipId: string, id: string) {

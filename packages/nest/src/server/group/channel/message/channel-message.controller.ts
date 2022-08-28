@@ -14,7 +14,7 @@ export class ChannelMessageController {
   @Post()
   async createChannelMessage(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param() { serverId, groupId, channelId}: ChannelParams,
+    @Param() { serverId, groupId, channelId }: ChannelParams,
     @Body() { text }: { text: string }
   ) {
     const message = await this.channelMessageService.createChannelMessage(user, serverId, groupId, channelId, text);
@@ -25,7 +25,7 @@ export class ChannelMessageController {
   @Get()
   getChannelMessages(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param() { serverId, groupId, channelId}: ChannelParams,
+    @Param() { serverId, groupId, channelId }: ChannelParams,
     @Query("offset") offset = 0,
     @Query("limit") limit = 100
   ) {

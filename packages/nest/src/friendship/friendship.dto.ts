@@ -33,6 +33,11 @@ export class FriendshipDto {
   }
 }
 
+export class NewFriendshipParams {
+  @IsMongoId()
+  userId: string;
+}
+
 export class FriendshipParams {
   @IsMongoId()
   friendshipId: string;

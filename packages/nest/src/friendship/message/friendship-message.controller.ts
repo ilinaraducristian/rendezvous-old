@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Query } from "@nestjs/common";
-import { FriendshipMessageDto } from "../../dtos/message.dto";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { EditMessageDto, FriendshipMessageDto } from "../../dtos/message.dto";
 import { UserDocument } from "../../entities/user.schema";
 import { SseService } from "../../sse.service";
 import { ExtractAuthenticatedUser, extractOtherId } from "../../util";
@@ -8,10 +8,7 @@ import { FriendshipMessageService } from "./friendship-message.service";
 
 @Controller("friendships/:friendshipId/messages")
 export class FriendshipMessageController {
-  constructor(
-    private readonly friendshipMessageService: FriendshipMessageService,
-    private readonly sseService: SseService
-  ) { }
+  constructor(private readonly friendshipMessageService: FriendshipMessageService, private readonly sseService: SseService) {}
 
   @Post()
   async createFriendshipMessage(
@@ -42,10 +39,21 @@ export class FriendshipMessageController {
   //   return this.friendshipMessageService.getFriendshipMessage(user, friendshipId, id);
   // }
 
+  @Patch(":messageId")
+  async editMessage(
+    @ExtractAuthenticatedUser() user: UserDocument,
+    @Param() { friendshipId, messageId }: FriendshipMessageParams,
+    @Body() { text }: EditMessageDto
+  ) {
+    const message = await this.friendshipMessageService.editMessage(user, friendshipId, messageId, text);
+    const otherId = extractOtherId(user, message.friendship);
+    this.sseService.friendshipMessageEdit(otherId, { messageId, text });
+  }
+
   @Delete(":messageId")
   async deleteFriendshipMessage(
     @ExtractAuthenticatedUser() user: UserDocument,
-    @Param() { friendshipId, messageId }: FriendshipMessageParams,
+    @Param() { friendshipId, messageId }: FriendshipMessageParams
   ): Promise<void> {
     const message = await this.friendshipMessageService.deleteFriendshipMessage(user, friendshipId, messageId);
     const otherId = extractOtherId(user, message.friendship);
@@ -53,10 +61,7 @@ export class FriendshipMessageController {
   }
 
   @Delete()
-  async deleteFriendshipMessages(
-    @ExtractAuthenticatedUser() user: UserDocument,
-    @Param() { friendshipId }: FriendshipParams
-  ): Promise<void> {
+  async deleteFriendshipMessages(@ExtractAuthenticatedUser() user: UserDocument, @Param() { friendshipId }: FriendshipParams): Promise<void> {
     await this.friendshipMessageService.deleteFriendshipMessages(user, friendshipId);
   }
 }

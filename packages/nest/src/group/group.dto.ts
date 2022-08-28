@@ -32,7 +32,7 @@ export class GroupParams {
   groupId: string;
 }
 
-export class GroupMessageParams extends GroupParams{
+export class GroupMessageParams extends GroupParams {
   @IsMongoId()
   groupId: string;
   @IsMongoId()

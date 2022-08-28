@@ -11,11 +11,7 @@ export class ServerGroupController {
   constructor(private readonly serverGroupService: ServerGroupService, private readonly sseService: SseService) {}
 
   @Post()
-  async createGroup(
-    @ExtractAuthenticatedUser() user: UserDocument,
-    @Param() { serverId }: ServerParams,
-    @Body() body: { name: string }
-  ) {
+  async createGroup(@ExtractAuthenticatedUser() user: UserDocument, @Param() { serverId }: ServerParams, @Body() body: { name: string }) {
     const group = await this.serverGroupService.createGroup(user, serverId, body.name);
     this.sseService.group(new Types.ObjectId(serverId), new GroupDto(group, serverId));
   }
