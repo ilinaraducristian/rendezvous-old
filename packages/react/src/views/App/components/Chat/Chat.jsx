@@ -18,6 +18,7 @@ import {
 import {
   createMessages,
   addMessages,
+  deleteMessage,
 } from "../../../../slices/messages";
 
 // AXIOS
@@ -46,20 +47,23 @@ const Chat = ({
   // CONSTANTS USING HOOKS
   const [showSettings, setShowSettings] = useState(false);
   const [message, setMessage] = useState("");
-
+  const [showEditMessage, setEditMessage] = useState(false);
+  const [currentMessage, setCurrentMessage] = useState(0);
   const handleDelete = () => {
     deleteData(`/friendships/${userData.friendshipId}`);
     dispatch(deleteFriendship(userData.friendshipId));
   };
 
   const handleSendMessage = async () => {
-    const response = await postData(
-      `/friendships/${userData.friendshipId}/messages`,
-      { text: message }
-    );
-    console.log(response.data);
-    dispatch(addMessages(response.data));
-    dispatch(setConversation(response.data));
+    if (message !== "") {
+      const response = await postData(
+        `/friendships/${userData.friendshipId}/messages`,
+        { text: message }
+      );
+      dispatch(addMessages(response.data));
+      dispatch(setConversation(response.data));
+      setMessage("");
+    }
   };
 
   const getMessages = async () => {
@@ -67,6 +71,22 @@ const Chat = ({
       `/friendships/${userData.friendshipId}/messages?offset=0&limit=100`
     );
     dispatch(createMessages(response.data));
+  };
+
+  const handleDeleteMessage = async (message) => {
+    deleteData(
+      `/friendships/${message.friendshipId}/messages/${message.id}`
+    );
+    dispatch(deleteMessage(message.id));
+    setEditMessage(!showEditMessage);
+  };
+
+  const timeMessage = (timestamp) => {
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString(navigator.language, {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
   };
 
   useEffect(() => {
@@ -108,23 +128,54 @@ const Chat = ({
       <div className="chat-content">
         {messages.map((message, index) => (
           <div
+            key={`message-${index}`}
             className={`message-wrapper-${
-              message.userId === user.id ? "left" : "right"
+              message.userId === user.id ? "right" : "left"
             }`}
           >
-            <span className="message">{message.text}</span>
-            <span className="timestamp">
-              {new Date(message.timestamp).toLocaleDateString(
-                "en-US"
+            <div className="messageContainer">
+              <div className="message">
+                <span className="message-time">
+                  {timeMessage(message.timestamp)}
+                </span>
+                <span className="message-text">{message.text}</span>
+                <div className="message-edit">
+                  {message.userId === user.id && (
+                    <MoreVertIcon
+                      onClick={() => {
+                        setEditMessage(!showEditMessage);
+                        setCurrentMessage(index);
+                      }}
+                    />
+                  )}
+                </div>
+              </div>
+              {showEditMessage && currentMessage === index && (
+                <div className="message-edit-info">
+                  <span>Edit</span>
+                  <span
+                    onClick={() => {
+                      handleDeleteMessage(message);
+                    }}
+                  >
+                    Delete
+                  </span>
+                </div>
               )}
-            </span>
+            </div>
           </div>
         ))}
       </div>
       <div className="chat-message-wrapper">
         <textarea
+          value={message}
           onChange={(event) => {
             setMessage(event.target.value);
+          }}
+          onKeyPress={(event) => {
+            if (event.key === "Enter") {
+              handleSendMessage();
+            }
           }}
         ></textarea>
         <SendIcon

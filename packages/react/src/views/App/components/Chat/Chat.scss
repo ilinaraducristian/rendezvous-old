@@ -6,6 +6,7 @@
   width: 100%;
   height: 100%;
   flex-direction: column;
+  justify-content: space-between;
   .chat-header {
     width: 100%;
     height: 7rem;
@@ -62,7 +63,8 @@
     }
   }
   .chat-content {
-    flex-grow: 1;
+    // flex-grow: 1;
+    height: 70%;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
@@ -72,7 +74,73 @@
       margin: 0.5rem 0rem;
       width: 100%;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
+      .messageContainer {
+        width: 50%;
+        overflow: hidden;
+        margin-top: 0.5rem;
+        position: relative;
+        .message {
+          position: relative;
+          background: #2a2735;
+          text-align: left;
+          width: 90%;
+          padding: 1rem 1rem;
+          border-radius: 6px;
+          border: 1px solid #2a2735;
+          float: right;
+          right: 20px;
+          margin-top: 0.8rem;
+          line-height: 1.8rem;
+          display: flex;
+          flex-direction: row-reverse;
+          justify-content: space-between;
+          // animation: showError 0.25s linear forwards;
+          &::before {
+            content: "";
+            position: absolute;
+            visibility: visible;
+            top: -0.1rem;
+            left: -1rem;
+            border: 0.9rem solid transparent;
+            border-top: 0.4rem solid #2a2735;
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            visibility: visible;
+            top: 0rem;
+            left: -0.8rem;
+            border: 1rem solid transparent;
+            border-top: 1rem solid #2a2735;
+            clear: both;
+          }
+          span {
+            font-size: 1.4rem;
+            color: $whiteColor;
+          }
+          .message-text {
+            width: 100%;
+            overflow-wrap: break-word;
+          }
+          .message-time {
+            width: 18%;
+          }
+        }
+        .message-edit-info {
+          position: absolute;
+          width: 10rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          bottom: -1rem;
+          background-color: red;
+          span {
+            padding: 0.2rem;
+          }
+        }
+      }
       .timestamp {
         padding-left: 2rem;
         color: $whiteColor;
@@ -86,15 +154,88 @@
     .message-wrapper-right {
       width: 100%;
       display: flex;
-      align-items: right;
-      .timestamp {
-        padding-left: 2rem;
-        color: $whiteColor;
-        opacity: 50%;
-      }
-      .message {
-        font-size: 1.8rem;
-        color: $whiteColor;
+      justify-content: flex-end;
+      .messageContainer {
+        width: 50%;
+        margin-top: 0.5rem;
+        position: relative;
+        .message {
+          position: relative;
+          background: #2a2735;
+          text-align: left;
+          width: 90%;
+          padding: 1rem 1rem;
+          border-radius: 6px;
+          border: 1px solid #2a2735;
+          float: right;
+          right: 20px;
+          margin-top: 0.8rem;
+          line-height: 1.8rem;
+          display: flex;
+          justify-content: space-between;
+          // animation: showError 0.25s linear forwards;
+          &::before {
+            content: "";
+            position: absolute;
+            visibility: visible;
+            top: -0.1rem;
+            right: -1rem;
+            border: 0.9rem solid transparent;
+            border-top: 0.4rem solid #2a2735;
+          }
+
+          &::after {
+            content: "";
+            position: absolute;
+            visibility: visible;
+            top: 0rem;
+            right: -0.8rem;
+            border: 1rem solid transparent;
+            border-top: 1rem solid #2a2735;
+            clear: both;
+          }
+          span {
+            font-size: 1.4rem;
+            color: $whiteColor;
+          }
+          .message-text {
+            width: 70%;
+            overflow-wrap: break-word;
+          }
+          .message-time {
+            width: 16%;
+          }
+          .message-edit {
+            width: 4rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            .MuiSvgIcon-root {
+              font-size: 2rem;
+              color: $whiteColor;
+              cursor: pointer;
+            }
+          }
+        }
+        .message-edit-info {
+          position: absolute;
+          width: 10rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          top: 4rem;
+          right: 6rem;
+          background-color: rgb(63, 56, 56);
+          z-index: 9;
+          padding: 1rem 0;
+          span {
+            padding: 0.2rem;
+            color: $whiteColor;
+            font-weight: $semi-bold;
+            cursor: pointer;
+          }
+        }
       }
     }
   }

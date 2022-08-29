@@ -19,7 +19,7 @@ import {
   acceptFriendship,
   setConversation,
 } from "../../slices/slices";
-import { addMessages } from "../../slices/messages";
+import { addMessages, deleteMessage } from "../../slices/messages";
 // LIBRARIES
 import Div100vh from "react-div-100vh";
 
@@ -79,26 +79,29 @@ const App = () => {
     );
     evtSource.addEventListener("friendRequest", (event) => {
       const request = JSON.parse(event.data);
-      console.log(request);
       dispatch(addFriendship(request));
       getUsersData(request.userId);
     });
     evtSource.addEventListener("friendshipDeleted", (event) => {
       const request = JSON.parse(event.data).id;
       dispatch(deleteFriendship(request));
-      console.log(request);
     });
     evtSource.addEventListener("friendRequestAccepted", (event) => {
       const request = JSON.parse(event.data).id;
       dispatch(acceptFriendship(request));
-      console.log(request);
     });
     evtSource.addEventListener("friendshipMessage", (event) => {
       const request = JSON.parse(event.data);
-      console.log("request", request);
       dispatch(addMessages(request));
       dispatch(setConversation(request));
     });
+    evtSource.addEventListener(
+      "friendshipMessageDeleted",
+      (event) => {
+        const request = JSON.parse(event.data);
+        dispatch(deleteMessage(request.id));
+      }
+    );
     // eslint-disable-next-line
   }, []);
 
