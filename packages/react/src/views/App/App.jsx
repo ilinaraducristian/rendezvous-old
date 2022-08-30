@@ -127,6 +127,7 @@ const App = () => {
       case "direct-message":
         setNameClass("active");
         setUserMessageData(value);
+        setUserContentType("direct-message");
         break;
       default:
         break;

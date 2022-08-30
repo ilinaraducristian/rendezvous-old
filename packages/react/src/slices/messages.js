@@ -1,4 +1,4 @@
-import { createSlice, current } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   messages: [],
@@ -19,10 +19,22 @@ export const messagesSlice = createSlice({
         return message.id !== action.payload;
       });
     },
+    updateMessage: (state, action) => {
+      console.log(action.payload);
+      state.messages.forEach((message) => {
+        if (message.id === action.payload.message.id) {
+          message.text = action.payload.newText;
+        }
+      });
+    },
   },
 });
 
-export const { createMessages, addMessages, deleteMessage } =
-  messagesSlice.actions;
+export const {
+  createMessages,
+  addMessages,
+  deleteMessage,
+  updateMessage,
+} = messagesSlice.actions;
 
 export default messagesSlice.reducer;

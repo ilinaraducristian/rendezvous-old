@@ -26,12 +26,28 @@ export const deleteData = (path) => {
 
 export const acceptFriendshipRequest = (path) => {
   axios
-  .patch(baseURL + path,
-  {
-    status:"accepted",
-  },
-  {
-    withCredentials: true,
-  })
-  .catch(({ response }) => response);
-}
+    .patch(
+      baseURL + path,
+      {
+        status: "accepted",
+      },
+      {
+        withCredentials: true,
+      }
+    )
+    .catch(({ response }) => response);
+};
+
+export const updateMessageRequest = (path, data) => {
+  axios
+    .patch(
+      baseURL + path,
+      {
+        text: data,
+      },
+      {
+        withCredentials: true,
+      }
+    )
+    .catch(({ response }) => response);
+};

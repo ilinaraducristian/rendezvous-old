@@ -120,9 +120,11 @@
             font-size: 1.4rem;
             color: $whiteColor;
           }
+
           .message-text {
             width: 100%;
             overflow-wrap: break-word;
+            padding-left: 2rem;
           }
           .message-time {
             width: 18%;
@@ -173,6 +175,7 @@
           line-height: 1.8rem;
           display: flex;
           justify-content: space-between;
+          align-items: center;
           // animation: showError 0.25s linear forwards;
           &::before {
             content: "";
@@ -198,6 +201,14 @@
             font-size: 1.4rem;
             color: $whiteColor;
           }
+          input {
+            background-color: transparent;
+            width: 70%;
+            outline: none;
+            border-width: 0;
+            color: $whiteColor;
+            font-size: 1.4rem;
+          }
           .message-text {
             width: 70%;
             overflow-wrap: break-word;
@@ -211,6 +222,10 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            .edit-buttons {
+              display: flex;
+              gap: 1rem;
+            }
             .MuiSvgIcon-root {
               font-size: 2rem;
               color: $whiteColor;

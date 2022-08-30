@@ -5,6 +5,8 @@ import "./Chat.scss";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import SendIcon from "@mui/icons-material/Send";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import CheckIcon from "@mui/icons-material/Check";
+import CancelIcon from "@mui/icons-material/Cancel";
 // LIBRARIES
 
 // CONSTANTS & MOCKS
@@ -19,6 +21,7 @@ import {
   createMessages,
   addMessages,
   deleteMessage,
+  updateMessage,
 } from "../../../../slices/messages";
 
 // AXIOS
@@ -26,6 +29,7 @@ import {
   deleteData,
   postData,
   getData,
+  updateMessageRequest,
 } from "../../../../config/axiosConfig";
 
 // COMPONENTS
@@ -47,8 +51,11 @@ const Chat = ({
   // CONSTANTS USING HOOKS
   const [showSettings, setShowSettings] = useState(false);
   const [message, setMessage] = useState("");
-  const [showEditMessage, setEditMessage] = useState(false);
-  const [currentMessage, setCurrentMessage] = useState(0);
+  const [showEditMessage, setShowEditMessage] = useState(false);
+  const [currentInfoMessage, setCurrentInfoMessage] = useState(-1);
+  const [currentEditMessage, setCurrentEditMessage] = useState(-1);
+  const [editableMessage, setEditableMessage] = useState("");
+
   const handleDelete = () => {
     deleteData(`/friendships/${userData.friendshipId}`);
     dispatch(deleteFriendship(userData.friendshipId));
@@ -70,7 +77,9 @@ const Chat = ({
     const response = await getData(
       `/friendships/${userData.friendshipId}/messages?offset=0&limit=100`
     );
-    dispatch(createMessages(response.data));
+    if (response.status !== 400) {
+      dispatch(createMessages(response.data));
+    }
   };
 
   const handleDeleteMessage = async (message) => {
@@ -78,7 +87,15 @@ const Chat = ({
       `/friendships/${message.friendshipId}/messages/${message.id}`
     );
     dispatch(deleteMessage(message.id));
-    setEditMessage(!showEditMessage);
+    setShowEditMessage(!showEditMessage);
+  };
+
+  const handleEditMessage = async (message, newText) => {
+    updateMessageRequest(
+      `/friendships/${message.friendshipId}/messages/${message.id}`,
+      newText
+    );
+    dispatch(updateMessage({ message, newText }));
   };
 
   const timeMessage = (timestamp) => {
@@ -126,7 +143,7 @@ const Chat = ({
         </div>
       </div>
       <div className="chat-content">
-        {messages.map((message, index) => (
+        {messages?.map((message, index) => (
           <div
             key={`message-${index}`}
             className={`message-wrapper-${
@@ -138,21 +155,61 @@ const Chat = ({
                 <span className="message-time">
                   {timeMessage(message.timestamp)}
                 </span>
-                <span className="message-text">{message.text}</span>
+                {currentEditMessage === index ? (
+                  <input
+                    type="text"
+                    value={editableMessage}
+                    onChange={(event) => {
+                      setEditableMessage(event.target.value);
+                    }}
+                  />
+                ) : (
+                  <span className="message-text">{message.text}</span>
+                )}
+
                 <div className="message-edit">
-                  {message.userId === user.id && (
-                    <MoreVertIcon
-                      onClick={() => {
-                        setEditMessage(!showEditMessage);
-                        setCurrentMessage(index);
-                      }}
-                    />
-                  )}
+                  {message.userId === user.id &&
+                    (currentEditMessage !== index ? (
+                      <MoreVertIcon
+                        onClick={() => {
+                          setShowEditMessage(!showEditMessage);
+                          setCurrentInfoMessage(index);
+                        }}
+                      />
+                    ) : (
+                      <div className="edit-buttons">
+                        <CheckIcon
+                          onClick={() => {
+                            if (editableMessage !== message.text) {
+                              handleEditMessage(
+                                message,
+                                editableMessage
+                              );
+                            }
+                            setCurrentEditMessage(-1);
+                          }}
+                        />
+                        <CancelIcon
+                          onClick={() => {
+                            setShowEditMessage(false);
+                            setCurrentEditMessage(-1);
+                          }}
+                        />
+                      </div>
+                    ))}
                 </div>
               </div>
-              {showEditMessage && currentMessage === index && (
+              {showEditMessage && currentInfoMessage === index && (
                 <div className="message-edit-info">
-                  <span>Edit</span>
+                  <span
+                    onClick={() => {
+                      setShowEditMessage(false);
+                      setCurrentEditMessage(index);
+                      setEditableMessage(message.text);
+                    }}
+                  >
+                    Edit
+                  </span>
                   <span
                     onClick={() => {
                       handleDeleteMessage(message);

@@ -7,6 +7,7 @@ import "./User.scss";
 import PersonIcon from "@mui/icons-material/Person";
 import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
 import MessageIcon from "@mui/icons-material/Message";
+import RecentActorsIcon from "@mui/icons-material/RecentActors";
 
 // CONSTANTS & MOCKS
 
@@ -34,6 +35,13 @@ const User = (props) => {
       <div className="icons-wrapper">
         <div
           onClick={() => {
+            onClick("direct-message");
+          }}
+        >
+          <MessageIcon />
+        </div>
+        <div
+          onClick={() => {
             onClick("profile");
           }}
         >
@@ -51,7 +59,7 @@ const User = (props) => {
             onClick("friendships");
           }}
         >
-          <MessageIcon />
+          <RecentActorsIcon />
         </div>
       </div>
     </div>
