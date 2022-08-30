@@ -85,7 +85,7 @@
           background: #2a2735;
           text-align: left;
           width: 90%;
-          padding: 1rem 1rem;
+          padding: 2rem 1rem;
           border-radius: 6px;
           border: 1px solid #2a2735;
           float: right;
@@ -130,18 +130,6 @@
             width: 18%;
           }
         }
-        .message-edit-info {
-          position: absolute;
-          width: 10rem;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          bottom: -1rem;
-          background-color: red;
-          span {
-            padding: 0.2rem;
-          }
-        }
       }
       .timestamp {
         padding-left: 2rem;
@@ -159,14 +147,14 @@
       justify-content: flex-end;
       .messageContainer {
         width: 50%;
-        margin-top: 0.5rem;
+        margin-top: 1.5rem;
         position: relative;
         .message {
           position: relative;
           background: #2a2735;
           text-align: left;
           width: 90%;
-          padding: 1rem 1rem;
+          padding: 2rem 1rem;
           border-radius: 6px;
           border: 1px solid #2a2735;
           float: right;
