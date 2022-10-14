@@ -1,0 +1,44 @@
+.theme-discord {
+	--primary-color: #1e1e1e;
+	--secondary-color: hsl(220, 1.7%, 22.9%);
+	--third-color: #fff;
+	--forth-color: hsl(235, 85.6%, 64.7%);
+	--fifth-color: #000;
+	--sixth-color: hsl(223, 6.9%, 19.8%);
+	--seventh-color: hsl(220, 7.7%, 22.9%);
+	--eigth-color: hsl(218, 7.9%, 27.3%);
+}
+
+body {
+	margin: 0;
+	height: 100vh;
+	width: 100vw;
+	display: flex;
+}
+
+button {
+	padding: 0;
+}
+
+ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	overflow-y: auto;
+}
+
+.firstPanel,
+.secondPanel {
+	display: flex;
+	flex-direction: column;
+	flex-shrink: 0;
+}
+
+*::-webkit-scrollbar {
+	background-color: var(--primary-color);
+	width: 5px;
+}
+*::-webkit-scrollbar-thumb {
+	background-color: var(--third-color);
+	border-radius: 3px;
+}
